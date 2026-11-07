@@ -1255,7 +1255,7 @@ const online = (() => {
   async function rpc(fn, args){
     const r = await fetch(CFG.supabaseUrl.replace(/\/$/, "") + "/rest/v1/rpc/" + fn, {
       method: "POST",
-      headers: { apikey: CFG.supabaseKey, Authorization: "Bearer " + CFG.supabaseKey, "Content-Type": "application/json" },
+      headers: Object.assign({ apikey: CFG.supabaseKey, "Content-Type": "application/json" }, /^eyJ/.test(CFG.supabaseKey) ? { Authorization: "Bearer " + CFG.supabaseKey } : {}),
       body: JSON.stringify(args || {})
     });
     const txt = await r.text(); let data = null;

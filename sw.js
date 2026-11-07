@@ -1,5 +1,5 @@
 /* Vestigia service worker: de app werkt offline; de ranglijst gaat altijd via het netwerk. */
-const VERSION = "vestigia-202611071031";
+const VERSION = "vestigia-202611071054";
 const SHELL = ["./", "index.html", "config.js", "manifest.webmanifest",
   "icons/icon.svg", "icons/icon-192.png", "icons/icon-512.png", "icons/maskable-512.png", "icons/apple-touch-icon.png"];
 

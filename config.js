@@ -1,7 +1,6 @@
-/* Vul hier de gegevens van je Supabase-project in (Project Settings → API).
-   Dit zijn openbare gegevens die bedoeld zijn om in een app te staan; de database is beveiligd met de functies uit supabase.sql.
-   Laat ze leeg om Vestigia zonder ranglijst te gebruiken. */
+/* Supabase-project van Vestigia. Dit zijn openbare gegevens die bedoeld zijn om in een app te staan;
+   de database is beveiligd met de functies uit supabase.sql. */
 window.VESTIGIA_CONFIG = {
-  supabaseUrl: "",
-  supabaseKey: ""
+  supabaseUrl: "https://qspjhhqpcpfbkwyeejoi.supabase.co",
+  supabaseKey: "sb_publishable_BIZVUWsQbfj8j3EhAikPvA_HQuA4VJ2"
 };
