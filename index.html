@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vestigia</title>
+<meta name="description" content="Determinatiespel over beschermde fauna van Nederland: herken de soort aan habitat en sporen.">
+<meta name="theme-color" content="#4b7a5e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Vestigia">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Karla:ital,wght@0,400;0,500;0,700;1,400&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: een gedrukte veldgids in twee drukkleuren (groene inkt + oker). Kop met hoogtelijnenkaart,
+   links de waarnemingen als determinatiesleutel, rechts de determinatie en de vergelijkingstabel. */
+:root{
+  /* Stijl: helder, groen-op-wit veldwerkbureau. Rubik voor koppen, Karla voor tekst, Poppins voor labels. */
+  --paper:#ffffff;     /* pagina */
+  --leaf:#f4f8f2;      /* kaarten */
+  --ink:#2f3b40;       /* tekst */
+  --ink-2:#5f6c70;     /* secundaire tekst */
+  --rule:#d9e2db;      /* lijnen */
+  --green:#4b7a5e;     /* hoofdkleur */
+  --green-d:#3b6149;
+  --mint:#edfbe2;      /* lichtgroen accent */
+  --ochre:#4b7a5e;     /* accent (groen) */
+  --moss:#4b7a5e;      /* gelijk */
+  --ochre-soft:#e2b84e;/* overlap */
+  --none:#e7ece8;      /* anders */
+  --display:"Rubik", "Segoe UI", Helvetica, Arial, sans-serif;
+  --body:"Karla", "Segoe UI", Helvetica, Arial, sans-serif;
+  --caps:"Poppins", "Segoe UI", Helvetica, Arial, sans-serif;
+  --sans:"Karla", "Segoe UI", Helvetica, Arial, sans-serif;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--paper); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.5;
+  }
+button,input{font:inherit; color:inherit}
+:focus-visible{outline:2px solid var(--ochre); outline-offset:3px}
+.caps{font-family:var(--caps); text-transform:uppercase; font-weight:500; letter-spacing:.05em; font-size:.72rem}
+
+/* ── kop met kaart ── */
+.masthead{position:relative; color:#fff; background:linear-gradient(160deg, var(--green) 0%, var(--green-d) 100%); overflow:hidden}
+.masthead canvas{position:absolute; inset:0; width:100%; height:100%; display:block}
+.mh-in{position:relative; max-width:1260px; margin:0 auto; padding:calc(34px + env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) 0 max(20px, env(safe-area-inset-left)); display:grid; gap:22px}
+.mh-top{display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap}
+.series{font-family:var(--caps); text-transform:uppercase; letter-spacing:.12em; font-size:.72rem; color:var(--mint)}
+.mh h1, .mh-in h1{font-family:var(--display); font-weight:800; font-size:clamp(3rem,8vw,5.6rem); line-height:.9; margin:6px 0 0; letter-spacing:-.015em}
+.subtitle{margin:10px 0 0; max-width:46ch; font-size:1.08rem; color:#d9ded3}
+.colofon{font-family:var(--sans); font-size:.9rem; text-align:right; line-height:1.35; color:#d9ded3; border-left:1px solid rgba(239,238,230,.35); padding-left:16px}
+.colofon b{display:block; font-family:var(--display);  font-weight:700; font-size:2.1rem; color:var(--leaf); line-height:1}
+.tabs{display:flex; gap:2px; align-items:flex-end; flex-wrap:wrap}
+.tab{border:0; background:transparent; color:#d9ded3; padding:10px 18px 11px; cursor:pointer; font-family:var(--caps); text-transform:uppercase; letter-spacing:.08em; font-size:.92rem; font-weight:700; border-radius:3px 3px 0 0}
+.tab:hover{color:var(--leaf)}
+.tab[aria-pressed="true"]{background:var(--paper); color:var(--green)}
+.tabs .gap{flex:1}
+.toggle{display:inline-flex; align-items:center; gap:9px; padding:0 4px 10px; cursor:pointer; font-family:var(--caps); text-transform:uppercase; letter-spacing:.08em; font-size:.92rem; font-weight:700; color:#d9ded3}
+.toggle input{appearance:none; width:34px; height:18px; border-radius:9px; background:rgba(239,238,230,.25); position:relative; cursor:pointer; margin:0; transition:background .2s}
+.toggle input::after{content:""; position:absolute; top:2px; left:2px; width:14px; height:14px; border-radius:50%; background:var(--leaf); transition:transform .2s}
+.toggle input:checked{background:var(--mint)}
+.toggle input:checked::after{background:var(--green-d)}
+.toggle input:checked::after{transform:translateX(16px)}
+.helpbtn{border:0; background:none; color:#d9ded3; padding:0 4px 10px 14px; cursor:pointer; font-family:var(--caps); text-transform:uppercase; letter-spacing:.08em; font-size:.92rem; font-weight:700; text-decoration:underline; text-decoration-color:var(--mint); text-underline-offset:4px}
+
+/* ── pagina ── */
+.wrap{max-width:1260px; margin:0 auto; padding:28px max(20px, env(safe-area-inset-right)) calc(56px + env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left))}
+.layout{display:grid; grid-template-columns:minmax(280px,350px) 1fr; gap:34px; align-items:start}
+.layout>*,.work>*{min-width:0}
+@media (max-width:880px){ .layout{grid-template-columns:1fr; gap:28px} .colofon{text-align:left; border-left:0; padding-left:0} }
+.sechead{display:flex; justify-content:space-between; align-items:baseline; gap:12px; border-bottom:2px solid var(--green); padding-bottom:6px; margin:0 0 4px}
+.sechead h2{font-family:var(--display); font-weight:500; font-size:1.4rem; color:var(--green); margin:0; line-height:1.1}
+.sechead .caps{color:var(--ink-2)}
+
+/* waarnemingen als determinatiesleutel */
+.clues{list-style:none; margin:0; padding:0}
+.clue{display:grid; grid-template-columns:2.1rem 1fr; gap:0 6px; padding:14px 0 15px; border-bottom:1px solid var(--rule)}
+.clue .num{font-family:var(--display); font-weight:700; font-size:1.35rem; line-height:1.1; color:var(--ochre); }
+.clue .lab{display:block; color:var(--ink-2); margin-bottom:2px}
+.clue p{margin:0; text-wrap:pretty; hyphens:auto}
+.clue.locked .num{color:var(--rule)}
+.clue.locked p{color:transparent; height:1.2em; background:radial-gradient(circle, var(--rule) 1px, transparent 1.5px) 0 60%/7px 7px repeat-x}
+.clue.fresh p{animation:ink 1.6s ease-out}
+@keyframes ink{0%{color:var(--ochre)}100%{color:var(--ink)}}
+.clue.fresh .num{animation:pop .5s ease-out}
+@keyframes pop{0%{transform:scale(1.5)}100%{transform:none}}
+@media (prefers-reduced-motion:reduce){.clue.fresh p,.clue.fresh .num{animation:none}}
+.expertbar{display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; padding:14px 0 0; font-style:italic; color:var(--ink-2); font-size:.95rem}
+
+/* determinatie */
+.work{display:grid; gap:34px}
+.det{display:grid; gap:10px}
+.det-row{display:flex; gap:12px; align-items:stretch}
+.combo{position:relative; flex:1}
+.combo input{width:100%; padding:8px 2px 6px; border:0; border-bottom:2px solid var(--ink); background:transparent; font-family:var(--display);  font-size:1.6rem; outline:none}
+.combo input::placeholder{color:#97a093}
+.combo input:focus{border-color:var(--green); box-shadow:0 0 0 3px rgba(75,122,94,.15)}
+.combo input:disabled{opacity:.5}
+.opts{position:absolute; left:0; right:0; top:calc(100% + 4px); z-index:5; margin:0; padding:4px 0; list-style:none; background:#fff; border:1px solid var(--rule); border-radius:4px; max-height:320px; overflow:auto; box-shadow:0 10px 24px -12px rgba(28,51,38,.45)}
+.opts li{padding:7px 14px; cursor:pointer; display:flex; justify-content:space-between; align-items:baseline; gap:14px}
+.opts li span{font-weight:500}
+.opts li i{color:var(--ink-2); font-size:.92rem}
+.opts li[aria-selected="true"]{background:var(--mint); color:var(--ink)}
+.opts li[aria-selected="true"] i{color:var(--ink-2)}
+.btn{border:0; background:var(--green); color:#fff; padding:10px 20px; font-family:var(--caps); text-transform:uppercase; letter-spacing:.08em; font-weight:700; font-size:.95rem; cursor:pointer; border-radius:4px}
+.btn:hover:not(:disabled){background:var(--green-d)}
+.btn:disabled{background:#b7c4bb; cursor:not-allowed}
+.btn.line{background:transparent; color:var(--green); box-shadow:inset 0 0 0 1.5px var(--green)}
+.btn.line:hover:not(:disabled){background:rgba(28,51,38,.07)}
+.det-status{display:flex; align-items:center; gap:14px; flex-wrap:wrap}
+.dots{display:flex; gap:6px}
+.dot{width:12px; height:12px; border-radius:50%; box-shadow:inset 0 0 0 1.5px var(--green)}
+.dot.used{background:var(--ink-2); box-shadow:none}
+.dot.hit{background:var(--moss); box-shadow:none}
+.msg{font-style:italic; color:var(--ink-2)}
+.msg.warn{color:#9b4a12; font-style:normal; font-weight:700}
+
+/* vergelijkingstabel */
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse; width:100%; min-width:720px; font-family:var(--sans); font-size:.86rem; line-height:1.3}
+thead th{color:var(--green)!important; font-family:var(--caps); text-transform:uppercase; font-weight:700; letter-spacing:.04em; font-size:.74rem; color:var(--ink-2); text-align:left; padding:10px 8px 6px; border-bottom:1px solid var(--green)}
+tbody td{padding:8px 7px 9px; vertical-align:top; border-bottom:1px solid var(--paper); border-left:3px solid var(--paper)}
+tbody td:first-child{border-left:0}
+td.name{font-family:var(--display); font-weight:700; font-size:.98rem; width:15%; border-bottom:1px solid var(--rule)}
+td.name i{display:block; font-weight:400; font-size:.88rem; color:var(--ink-2)}
+td.ok{background:var(--moss); color:#fbfbf6}
+td.part{background:var(--ochre-soft); color:#2c2208}
+td.no{background:var(--none); color:#6a7468}
+td .v{font-weight:700; display:flex; justify-content:space-between; gap:6px}
+td .sym{font-weight:400; opacity:.75}
+td .sec{display:block; font-size:.8rem; margin-top:2px; opacity:.85}
+td.len .v{font-variant-numeric:lining-nums tabular-nums; white-space:nowrap}
+td.len .sym{font-weight:700; opacity:1; font-size:1rem}
+tr.win td.name{color:var(--moss)}
+tr.enter td:not(.name){animation:stamp .4s ease-out both}
+tr.enter td:nth-child(3){animation-delay:.05s} tr.enter td:nth-child(4){animation-delay:.1s}
+tr.enter td:nth-child(5){animation-delay:.15s} tr.enter td:nth-child(6){animation-delay:.2s}
+tr.enter td:nth-child(7){animation-delay:.25s} tr.enter td:nth-child(8){animation-delay:.3s}
+@keyframes stamp{from{opacity:0; transform:translateY(-4px)} to{opacity:1; transform:none}}
+@media (prefers-reduced-motion:reduce){tr.enter td{animation:none!important}}
+.empty{padding:16px 0 4px; color:var(--ink-2); max-width:62ch}
+.empty em{color:var(--ink); font-style:italic}
+.key{display:inline-block; width:.85em; height:.85em; vertical-align:-.05em; margin:0 .2em 0 .1em; border-radius:1px}
+.key.ok{background:var(--moss)} .key.part{background:var(--ochre-soft)} .key.no{background:var(--none); box-shadow:inset 0 0 0 1px var(--rule)}
+
+/* soortbeschrijving na afloop */
+.account{background:var(--leaf); border-radius:6px; border-top:6px solid var(--moss); padding:22px 24px 22px; display:grid; gap:14px; box-shadow:0 1px 0 var(--rule)}
+.account.lost{border-top-color:#b5553c}
+.account .verdict{color:var(--ink-2)}
+.account h3{font-family:var(--display); font-weight:800; font-size:clamp(2rem,4vw,2.8rem); line-height:1; margin:0}
+.account h3 i{display:block; font-weight:400; font-size:1.15rem; margin-top:6px; color:var(--ink-2)}
+.account p{margin:0; max-width:68ch}
+.status-line{display:grid; grid-template-columns:auto 1fr; gap:4px 14px; align-items:baseline}
+.status-line .caps{color:var(--ochre)}
+dl.traits{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px 18px; margin:0; padding:12px 0; border-top:1px solid var(--rule); border-bottom:1px solid var(--rule)}
+dl.traits div{display:grid}
+dl.traits dt{font-family:var(--caps); text-transform:uppercase; letter-spacing:.06em; font-size:.76rem; color:var(--ink-2)}
+dl.traits dd{margin:0; font-family:var(--sans); font-size:.95rem}
+.stats{display:flex; gap:28px; flex-wrap:wrap}
+.stats div{font-family:var(--caps); text-transform:uppercase; letter-spacing:.06em; font-size:.76rem; color:var(--ink-2)}
+.stats b{display:block; font-family:var(--display); font-size:1.9rem; font-weight:700; color:var(--ink); letter-spacing:0; line-height:1.1; font-variant-numeric:lining-nums}
+.actions{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+.copyout{width:100%; font-family:var(--sans); font-size:.9rem; padding:8px; border:1px solid var(--rule); background:#fff}
+
+/* register */
+details.register summary{cursor:pointer; list-style:none; display:flex; justify-content:space-between; align-items:baseline; border-bottom:2px solid var(--green); padding-bottom:6px}
+details.register summary::-webkit-details-marker{display:none}
+details.register summary h2{font-family:var(--display); font-weight:500; font-size:1.4rem; margin:0; color:var(--green)}
+details.register summary .caps{color:var(--ink-2)}
+details.register summary .caps::after{content:" ↓"}
+details.register[open] summary .caps::after{content:" ↑"}
+.splist{columns:3 200px; column-gap:28px; padding:12px 0 0; font-size:.95rem}
+.splist div{break-inside:avoid; padding:2px 0; border-bottom:1px dotted var(--rule)}
+.splist i{color:var(--ink-2); font-size:.88rem}
+.splist .tgt span::after{content:"*"; color:var(--green); font-weight:700; margin-left:1px}
+
+/* uitleg */
+.overlay{position:fixed; inset:0; background:rgba(20,36,27,.55); display:grid; place-items:center; padding:16px; z-index:20}
+.sheet{background:#fff; border-radius:8px; max-width:700px; max-height:88vh; overflow:auto; padding:26px 28px; display:grid; gap:12px; border-top:6px solid var(--green)}
+.sheet .top{display:flex; justify-content:space-between; align-items:baseline}
+.sheet h2{font-family:var(--display); font-weight:800; font-size:2rem; margin:0}
+.sheet h3{font-family:var(--caps); text-transform:uppercase; letter-spacing:.08em; font-size:.88rem; margin:8px 0 0; color:var(--ochre)}
+.sheet p,.sheet li{margin:0; max-width:64ch}
+.sheet ul{margin:0; padding-left:20px; display:grid; gap:4px}
+.closebtn{border:0; background:none; cursor:pointer; font-family:var(--caps); text-transform:uppercase; letter-spacing:.08em; font-weight:700; text-decoration:underline; text-decoration-color:var(--mint); text-underline-offset:4px}
+/* verwarringstip */
+.confuse{display:grid; grid-template-columns:auto 1fr; gap:4px 14px; align-items:baseline; background:var(--mint); border-radius:4px; padding:10px 12px; border-left:3px solid var(--ochre)}
+.confuse .caps{color:var(--ochre)}
+.confuse p{margin:0}
+.dexnote{font-style:italic; color:var(--ink-2)}
+.dexnote a, .linklike{color:var(--ink); font-style:normal; font-weight:700; text-decoration:underline; text-decoration-color:var(--mint); text-underline-offset:3px; cursor:pointer; background:none; border:0; padding:0; font:inherit}
+
+/* veldboek */
+:root{--g-Z:#7a4e34; --g-R:#6b7629; --g-A:#2e7267; --g-F:#2f5884; --g-B:#a8731b}
+.dexhead{display:grid; grid-template-columns:1fr auto; gap:18px 30px; align-items:end; border-bottom:2px solid var(--green); padding-bottom:16px}
+.dexhead h2{font-family:var(--display);  font-weight:800; font-size:clamp(2.2rem,5vw,3.2rem); line-height:1; margin:0}
+.dexhead p{margin:6px 0 0; color:var(--ink-2); max-width:56ch}
+.dexcount{font-family:var(--display); font-weight:800; font-size:3rem; line-height:1; text-align:right; font-variant-numeric:lining-nums}
+.dexcount small{display:block; font-family:var(--caps); text-transform:uppercase; font-size:.8rem; letter-spacing:.06em; font-weight:500; color:var(--ink-2)}
+.groupbars{grid-column:1/-1; display:grid; grid-template-columns:repeat(5,1fr); gap:14px}
+@media (max-width:700px){ .groupbars{grid-template-columns:repeat(2,1fr)} .dexhead{grid-template-columns:1fr} .dexcount{text-align:left} }
+.gbar{display:grid; gap:4px; font-family:var(--sans); font-size:.85rem}
+.gbar span{display:flex; justify-content:space-between}
+.gbar i{font-style:normal; color:var(--ink-2); font-variant-numeric:lining-nums tabular-nums}
+.gbar .track{height:6px; background:var(--none); border-radius:3px; overflow:hidden}
+.gbar .fill{height:100%; border-radius:3px}
+.trophies{padding:22px 0 8px; border-bottom:1px solid var(--rule); display:grid; gap:18px}
+.trophies h3{font-family:var(--display); font-weight:700; font-size:1.5rem; margin:0; display:flex; justify-content:space-between; align-items:baseline}
+.trophies h3 .caps{color:var(--ink-2); font-size:.8rem}
+.trophies h4{font-family:var(--caps); text-transform:uppercase; letter-spacing:.08em; font-size:.82rem; color:var(--ochre); margin:0 0 8px}
+.awardrow{display:grid; grid-template-columns:repeat(6,1fr); gap:12px}
+.medalrow{display:grid; grid-template-columns:repeat(5,1fr); gap:12px}
+@media (max-width:900px){ .awardrow{grid-template-columns:repeat(3,1fr)} .medalrow{grid-template-columns:repeat(3,1fr)} }
+@media (max-width:480px){ .awardrow,.medalrow{grid-template-columns:repeat(2,1fr)} }
+.award{display:grid; justify-items:center; text-align:center; gap:4px; padding:12px 8px 12px; background:#fff; border-radius:6px; box-shadow:0 0 0 1px var(--rule) inset}
+.award svg{width:78px; height:78px; display:block}
+.award .an{font-family:var(--display); font-weight:800; font-size:1.02rem; line-height:1.1}
+.award .ac{font-family:var(--sans); font-size:.78rem; color:var(--ink-2); line-height:1.25}
+.award .ap{width:80%; height:4px; background:var(--none); border-radius:2px; overflow:hidden; margin-top:4px}
+.award .ap i{display:block; height:100%}
+.award.locked .an{color:#8e978a}
+.award.got{box-shadow:0 0 0 1.5px var(--green) inset}
+.award.got .ac{color:var(--ink)}
+.plate.rare{box-shadow:0 0 0 2px #c79a2e inset}
+.plate.rare .band::after{content:"★"; position:absolute; left:50%; transform:translateX(-50%); color:var(--ochre-soft); font-size:.9rem}
+.plate .band{position:relative}
+.awardnote{background:var(--green); color:#fff; border-radius:4px; padding:10px 14px; display:flex; gap:12px; align-items:center}
+.awardnote b{font-family:var(--display);  font-size:1.15rem}
+.awardnote .caps{color:var(--mint)}
+.dexfilters{display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:16px 0 18px}
+.chipbtn{border:1.5px solid var(--rule); background:transparent; border-radius:999px; padding:4px 14px; cursor:pointer; font-family:var(--caps); text-transform:uppercase; letter-spacing:.06em; font-weight:700; font-size:.85rem}
+.chipbtn[aria-pressed="true"]{background:var(--green); color:#fff; border-color:var(--green)}
+.dexfilters .gap{flex:1}
+.switch-inline{display:inline-flex; gap:8px; align-items:center; font-family:var(--caps); text-transform:uppercase; letter-spacing:.06em; font-weight:700; font-size:.85rem; cursor:pointer}
+.switch-inline input{width:16px; height:16px; accent-color:var(--ink)}
+.dexgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(176px,1fr)); gap:14px}
+.plate{position:relative; text-align:left; border:0; padding:0; background:#fff; border-radius:6px; overflow:hidden; cursor:pointer; display:grid; grid-template-rows:auto 1fr auto; min-height:178px; box-shadow:0 1px 0 var(--rule), 0 0 0 1px var(--rule) inset; transition:transform .15s, box-shadow .15s}
+.plate:hover{transform:translateY(-2px); box-shadow:0 8px 18px -12px rgba(28,51,38,.55), 0 0 0 1px var(--rule) inset}
+.plate .band{display:flex; justify-content:space-between; align-items:center; padding:6px 10px; color:#fbfaf4; font-family:var(--caps); text-transform:uppercase; letter-spacing:.08em; font-size:.74rem; font-weight:700}
+.plate .band b{font-family:var(--display);  font-size:1.05rem; letter-spacing:0; font-variant-numeric:lining-nums}
+.plate .mid{padding:12px 12px 6px; display:grid; align-content:start; gap:2px}
+.plate .nm{font-family:var(--display); font-weight:800; font-size:1.15rem; line-height:1.1}
+.plate .sc{font-style:italic; color:var(--ink-2); font-size:.9rem; line-height:1.2}
+.plate .ft{padding:8px 12px 10px; font-family:var(--sans); font-size:.8rem; color:var(--ink-2); border-top:1px dotted var(--rule); display:flex; justify-content:space-between; gap:8px}
+.plate .ft b{color:var(--ink)}
+.plate.unknown{cursor:default; background:repeating-linear-gradient(-45deg, var(--leaf) 0 7px, #ebeae1 7px 14px)}
+.plate.unknown:hover{transform:none; box-shadow:0 1px 0 var(--rule), 0 0 0 1px var(--rule) inset}
+.plate.unknown .band{opacity:.55}
+.plate.unknown .q{font-family:var(--display);  font-weight:800; font-size:3.2rem; color:var(--rule); line-height:1; padding:4px 0 0}
+.plate.seen .nm{color:var(--ink-2)}
+.plate .stamp{position:absolute; right:10px; bottom:34px; font-family:var(--caps); text-transform:uppercase; font-size:.68rem; letter-spacing:.08em; font-weight:700; color:var(--moss); border:1.5px solid var(--moss); padding:1px 6px; transform:rotate(-6deg); border-radius:2px; background:rgba(247,246,240,.8)}
+.plate.seen .stamp{color:var(--ochre); border-color:var(--ochre)}
+.dexempty{padding:24px 0; color:var(--ink-2); font-style:italic}
+.sheet.wide{max-width:760px}
+.sheet .grp{display:inline-block; color:#fbfaf4; font-family:var(--caps); text-transform:uppercase; letter-spacing:.08em; font-size:.76rem; font-weight:700; padding:2px 10px; border-radius:2px}
+.sheet ol.cl{margin:0; padding-left:22px; display:grid; gap:6px}
+.sheet ol.cl li::marker{color:var(--ochre); font-weight:700}
+/* felicitatie */
+.award-pop{max-width:440px; text-align:center; justify-items:center; position:relative; overflow:hidden; padding:30px 28px 24px}
+.award-pop .badge svg{width:150px; height:150px; display:block; animation:popin .6s cubic-bezier(.2,1.4,.4,1) both}
+.award-pop .kind{font-family:var(--caps); text-transform:uppercase; letter-spacing:.1em; font-size:.75rem; color:var(--green)}
+.award-pop h2{font-family:var(--display); font-weight:700; font-size:2rem; margin:0; color:var(--ink)}
+.award-pop .nm{font-family:var(--display); font-weight:600; font-size:1.45rem; color:var(--green); margin:0}
+.award-pop p{margin:0; max-width:34ch}
+.award-pop .actions{justify-content:center; margin-top:6px}
+.award-pop .queue{font-size:.85rem; color:var(--ink-2)}
+@keyframes popin{0%{transform:scale(.3) rotate(-25deg); opacity:0} 100%{transform:none; opacity:1}}
+.confetti{position:absolute; inset:0; pointer-events:none; overflow:hidden}
+.confetti i{position:absolute; top:-12px; width:9px; height:14px; border-radius:2px; opacity:.9; animation:fall 1.9s ease-in forwards}
+@keyframes fall{0%{transform:translateY(0) rotate(0)} 100%{transform:translateY(520px) rotate(540deg); opacity:0}}
+@media (prefers-reduced-motion:reduce){ .award-pop .badge svg{animation:none} .confetti{display:none} }
+/* tweelingsoort */
+tr.twin td.name, .gcard.twin .gname b{color:#6b5bb0}
+.twintag{display:block; font-family:var(--caps); text-transform:uppercase; letter-spacing:.05em; font-size:.62rem; color:#6b5bb0; margin-top:3px; font-weight:600}
+/* kaartweergave tabel op telefoon */
+.gridcards{display:none; gap:10px; padding-top:10px}
+.gcard{background:#fff; border:1px solid var(--rule); border-radius:6px; padding:10px}
+.gcard.win{border-color:var(--moss)}
+.gcard .gname{margin-bottom:8px}
+.gcard .gname i{color:var(--ink-2); font-size:.88rem}
+.gcells{display:grid; grid-template-columns:1fr 1fr; gap:5px}
+.gc{padding:6px 8px; border-radius:4px; display:grid; gap:1px; font-family:var(--sans); font-size:.86rem}
+.gc:last-child{grid-column:1/-1}
+.gc .gl{font-family:var(--caps); text-transform:uppercase; letter-spacing:.04em; font-size:.6rem; opacity:.8}
+.gc .gv{display:flex; justify-content:space-between; gap:6px}
+.gc.ok{background:var(--moss); color:#fbfbf6} .gc.part{background:var(--ochre-soft); color:#2c2208} .gc.no{background:var(--none); color:#56615a}
+.gcard.enter .gc{animation:stamp .4s ease-out both}
+@media (max-width:640px){
+  .tablewrap{display:none}
+  .gridcards{display:grid}
+  .mh-in{padding-top:calc(18px + env(safe-area-inset-top)); gap:16px}
+  .mh-top{flex-direction:column; gap:10px}
+  .colofon{text-align:left; border-left:0; padding-left:0; display:flex; gap:10px; align-items:baseline; flex-wrap:wrap}
+  .colofon b{font-size:1.3rem}
+  .colofon br{display:none}
+  .tab{padding:9px 12px 10px; font-size:.8rem}
+  .tabs{row-gap:6px}
+  .tabs .gap{flex-basis:100%; height:0}
+  .toggle, .helpbtn{padding-bottom:8px}
+  .det-row{flex-direction:column}
+  .det-row .btn{width:100%}
+  .wrap{padding:20px 16px 44px}
+  .sechead h2{font-size:1.2rem}
+  .sechead{flex-wrap:wrap; row-gap:2px}
+  details.register summary{flex-wrap:wrap; row-gap:2px}
+  .account{padding:18px 16px}
+  .confuse, .status-line{grid-template-columns:1fr}
+  .sheet{padding:20px 18px}
+  .awardrow{grid-template-columns:repeat(2,1fr)}
+  .medalrow{grid-template-columns:repeat(2,1fr)}
+  .dexgrid{grid-template-columns:repeat(2,1fr); gap:10px}
+  .plate{min-height:150px}
+  .plate .nm{font-size:1rem}
+}
+/* melding + voortgang */
+.sheet.report{max-width:560px}
+.flab{font-family:var(--caps); text-transform:uppercase; letter-spacing:.05em; font-size:.7rem; color:var(--green); margin-top:4px}
+.sheet.report select, .sheet.report textarea, .sheet.report input{width:100%; padding:9px 11px; border:1.5px solid var(--rule); border-radius:4px; background:#fff; font:inherit}
+.sheet.report select:focus, .sheet.report textarea:focus, .sheet.report input:focus{border-color:var(--green); outline:none}
+.fine{font-size:.85rem; color:var(--ink-2)}
+.reportbtn{background:none; border:0; padding:0; cursor:pointer; color:var(--ink-2); text-decoration:underline; text-underline-offset:3px; font:inherit; font-size:.9rem}
+.reportbtn:hover{color:var(--green)}
+details.carry{margin:16px 0 0; border:1px solid var(--rule); border-radius:6px; background:#fff}
+details.carry summary{padding:10px 14px; cursor:pointer; font-weight:700; color:var(--green)}
+.carry-in{padding:0 14px 14px; display:grid; gap:10px}
+.carry-in p{margin:0; color:var(--ink-2); max-width:70ch}
+/* ranglijst */
+.playerbox{margin:16px 0 4px; padding:14px 16px; background:var(--leaf); border-radius:6px; display:grid; gap:10px}
+.playerbox p{margin:0}
+.playerbox .row2{display:flex; gap:8px; flex-wrap:wrap}
+.playerbox input{flex:1; min-width:180px; padding:10px 12px; border:1.5px solid var(--rule); border-radius:4px; font:inherit; background:#fff}
+.playerbox input:focus{border-color:var(--green); outline:none}
+.playerbox details summary{cursor:pointer; color:var(--green); font-weight:700}
+.ranklist{list-style:none; margin:0; padding:0; display:grid; gap:6px}
+.ranklist li{display:grid; grid-template-columns:2.4rem 1fr auto; gap:10px; align-items:center; padding:10px 12px; background:#fff; border:1px solid var(--rule); border-radius:6px}
+.ranklist li.me{border-color:var(--green); box-shadow:0 0 0 1px var(--green) inset; background:var(--mint)}
+.ranklist .pos{font-family:var(--display); font-weight:700; font-size:1.2rem; color:var(--ink-2); text-align:center}
+.ranklist li:nth-child(1) .pos{color:#c79a2e} .ranklist li:nth-child(2) .pos{color:#8d99a0} .ranklist li:nth-child(3) .pos{color:#a8693c}
+.ranklist .who b{font-family:var(--display); font-weight:600}
+.ranklist .who span{display:block; font-size:.85rem; color:var(--ink-2)}
+.ranklist .pts{font-family:var(--display); font-weight:700; font-size:1.25rem; color:var(--green); text-align:right; font-variant-numeric:tabular-nums}
+.ranklist .pts small{display:block; font-family:var(--caps); text-transform:uppercase; font-size:.6rem; letter-spacing:.05em; color:var(--ink-2); font-weight:500}
+.xbadge{display:inline-block; font-family:var(--caps); text-transform:uppercase; font-size:.58rem; letter-spacing:.05em; background:var(--ink); color:#fff; border-radius:3px; padding:1px 5px; margin-left:6px; vertical-align:2px}
+.rankempty{padding:18px 4px; color:var(--ink-2)}
+.welcome{background:var(--mint); border-radius:6px; padding:14px 16px; margin-bottom:22px; display:flex; gap:12px 20px; align-items:center; justify-content:space-between; flex-wrap:wrap}
+.welcome p{margin:0}
+.ptsline{font-family:var(--display); font-weight:600; color:var(--green)}
+.toast{position:fixed; left:50%; bottom:calc(18px + env(safe-area-inset-bottom)); transform:translateX(-50%); background:var(--ink); color:#fff; padding:10px 16px; border-radius:6px; z-index:40; display:flex; gap:12px; align-items:center; max-width:calc(100% - 32px); box-shadow:0 8px 24px -10px rgba(0,0,0,.5)}
+.toast button{background:var(--mint); color:var(--ink); border:0; border-radius:4px; padding:6px 10px; font-weight:700; cursor:pointer}
+footer{margin-top:44px; padding-top:12px; border-top:1px solid var(--rule); font-size:.86rem; color:var(--ink-2); max-width:92ch}
+</style>
+</head>
+<body>
+<header class="masthead">
+  <canvas id="topo" aria-hidden="true"></canvas>
+  <div class="mh-in">
+    <div class="mh-top">
+      <div>
+        <div class="series">Determinatiespel · beschermde fauna van Nederland</div>
+        <h1>Vestigia</h1>
+        <p class="subtitle">Herken de soort aan het habitat en de sporen die je in het veld vindt. Vijf waarnemingen, vijf pogingen.</p>
+      </div>
+      <div class="colofon" aria-label="Casusgegevens">
+        <b id="fCase">nº 1</b>
+        <span id="fDate">–</span><br>
+        <span id="fMode"></span>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab" id="mDaily" aria-pressed="true">Dagcasus</button>
+      <button class="tab" id="mFree" aria-pressed="false">Oefenen</button>
+      <button class="tab" id="mDex" aria-pressed="false">Veldboek</button>
+      <button class="tab" id="mRank" aria-pressed="false">Ranglijst</button>
+      <span class="gap"></span>
+      <label class="toggle"><input type="checkbox" id="expert"> Expert</label>
+      <button class="helpbtn" id="installBtn" hidden>Installeer</button>
+      <button class="helpbtn" id="openHelp">Spelregels</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div id="gameView">
+  <div class="welcome" id="welcome" hidden>
+    <p><b>Speel mee met je collega’s.</b> Kies een spelersnaam en je dagscore komt in de ranglijst.</p>
+    <div class="actions"><button class="btn" id="welcomeGo">Kies een spelersnaam</button><button class="linklike" id="welcomeLater">Later</button></div>
+  </div>
+  <main class="layout">
+    <section aria-labelledby="notesH">
+      <div class="sechead"><h2 id="notesH">Waarnemingen</h2><span class="caps" id="clueCount">1 van 5</span></div>
+      <ol class="clues" id="clues"></ol>
+      <div class="expertbar" id="notesFoot" hidden>
+        <span id="expertHint">Elke extra waarneming kost een punt.</span>
+        <button class="btn line" id="moreClue">Volgende waarneming</button>
+      </div>
+    </section>
+
+    <div class="work">
+      <section id="resultCard" hidden aria-live="polite"></section>
+
+      <section class="det" aria-labelledby="gLabel">
+        <div class="sechead"><h2 id="gLabel"><label for="gInput">Determinatie</label></h2><span class="caps" id="leftLabel"></span></div>
+        <div class="det-row">
+          <div class="combo">
+            <input id="gInput" type="text" autocomplete="off" spellcheck="false" placeholder="Nederlandse of wetenschappelijke naam"
+              role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="gOpts">
+            <ul class="opts" id="gOpts" role="listbox" hidden></ul>
+          </div>
+          <button class="btn" id="gBtn" disabled>Determineer</button>
+        </div>
+        <div class="det-status">
+          <div class="dots" id="pips" aria-hidden="true"></div>
+          <span class="msg" id="msg" aria-live="polite"></span>
+        </div>
+      </section>
+
+      <section aria-labelledby="gridH">
+        <div class="sechead"><h2 id="gridH">Vergelijkingstabel</h2><span class="caps">jouw soort tegenover de gezochte</span></div>
+        <div class="tablewrap">
+          <table id="grid">
+            <thead><tr>
+              <th scope="col">Soort</th><th scope="col">Leefgebied</th><th scope="col">Activiteit</th><th scope="col">Voedsel</th>
+              <th scope="col">Verblijfplaats</th><th scope="col">Winter</th><th scope="col">Lengte</th><th scope="col">Regime</th>
+            </tr></thead>
+            <tbody id="gridBody"></tbody>
+          </table>
+        </div>
+        <div id="gridCards" class="gridcards"></div>
+        <p class="empty" id="gridEmpty">Nog geen determinatie. Na elke poging vergelijk je hier jouw soort met de gezochte soort op zeven kenmerken: <span class="key ok"></span><em>gelijk</em>, <span class="key part"></span><em>overlap</em>, <span class="key no"></span><em>anders</em>. Bij lengte wijst de pijl naar de gezochte soort.</p>
+      </section>
+
+      <details class="register">
+        <summary><h2>Soortenregister</h2><span class="caps" id="listSum"></span></summary>
+        <div class="splist" id="splist"></div>
+      </details>
+    </div>
+  </main>
+  </div>
+
+  <section id="rankView" hidden aria-labelledby="rankH">
+    <div class="dexhead">
+      <div><h2 id="rankH">Ranglijst</h2><p>Speel de dagcasus en verdien punten: 5 punten als je hem in één poging hebt, 1 punt bij de vijfde. In de expertmodus levert elke waarneming die je niet nodig had een extra punt op.</p></div>
+      <div class="dexcount" id="rankMe">–<small>jouw punten deze week</small></div>
+    </div>
+    <div id="playerBox" class="playerbox"></div>
+    <div class="dexfilters" id="rankTabs">
+      <button class="chipbtn" data-r="day" aria-pressed="true">Vandaag</button>
+      <button class="chipbtn" data-r="week" aria-pressed="false">Deze week</button>
+      <button class="chipbtn" data-r="all" aria-pressed="false">Altijd</button>
+      <button class="chipbtn" data-r="dex" aria-pressed="false">Veldboek</button>
+    </div>
+    <ol class="ranklist" id="rankList"></ol>
+  </section>
+
+  <section id="dexView" hidden aria-labelledby="dexH">
+    <div class="dexhead">
+      <div><h2 id="dexH">Veldboek</h2><p>Elke soort die je determineert, krijgt een eigen plaat in je veldboek. Soorten die je zag maar niet goed had, worden als waargenomen genoteerd.</p></div>
+      <div class="dexcount" id="dexCount">0<small>van 100 gedetermineerd</small></div>
+      <div class="groupbars" id="groupBars"></div>
+    </div>
+    <section class="trophies" aria-labelledby="trophH">
+      <h3 id="trophH">Trofeeën <span class="caps" id="trophCount"></span></h3>
+      <div><h4>Titels</h4><div class="awardrow" id="titleRow"></div></div>
+      <div><h4>Medailles voor de vijf lastigste soorten</h4><div class="medalrow" id="medalRow"></div></div>
+    </section>
+    <details class="carry">
+      <summary>Voortgang meenemen naar een ander apparaat</summary>
+      <div class="carry-in">
+        <p>Je veldboek staat alleen in deze browser. Kopieer je voortgangscode en plak hem op je andere apparaat. Bestaande voortgang daar wordt samengevoegd, niet overschreven.</p>
+        <div class="actions"><button class="btn line" id="codeCopy">Kopieer voortgangscode</button><span class="msg" id="codeMsg"></span></div>
+        <textarea id="codeIn" class="copyout" rows="3" placeholder="Plak hier een voortgangscode"></textarea>
+        <div class="actions"><button class="btn" id="codeLoad">Voortgang toevoegen</button></div>
+      </div>
+    </details>
+    <div class="dexfilters" id="dexFilters"></div>
+    <div class="dexgrid" id="dexGrid"></div>
+  </section>
+
+  <footer>
+    Beschermingsregimes volgens de Omgevingswet (art. 11.37, 11.46 en 11.54 Bal; bijlage IX Bal) en de landelijke basistabel van jaarrond beschermde nesten. Provincies kunnen eigen nestlijsten en vrijstellingen hanteren. Kenmerken zijn vereenvoudigd tot hoofd- en nevencategorieën; lengte is de gemiddelde totale lengte van een volwassen dier.
+  </footer>
+</div>
+
+<div class="toast" id="toast" hidden role="status"></div>
+
+<div class="overlay" id="reportPop" hidden role="dialog" aria-modal="true" aria-labelledby="reportH">
+  <div class="sheet report">
+    <div class="top"><h2 id="reportH">Meld een fout</h2><button class="closebtn" id="closeReport">Sluiten</button></div>
+    <p id="reportFor" class="dexnote"></p>
+    <label class="flab" for="repPart">Wat klopt er niet?</label>
+    <select id="repPart"></select>
+    <label class="flab" for="repText">Toelichting</label>
+    <textarea id="repText" rows="4" placeholder="Bijvoorbeeld: deze frequentie hoort bij een andere soort, of dit habitat past niet."></textarea>
+    <label class="flab" for="repSrc">Bron of verbetervoorstel (optioneel)</label>
+    <input id="repSrc" type="text" autocomplete="off">
+    <div class="actions"><button class="btn" id="repCopy">Kopieer melding</button><span class="msg" id="repMsg"></span></div>
+    <textarea id="repOut" class="copyout" rows="7" readonly hidden></textarea>
+    <p class="fine" id="repFine">De melding wordt gekopieerd, niet verstuurd. Plak hem in een bericht aan de maker van Vestigia.</p>
+  </div>
+</div>
+
+<div class="overlay" id="awardPop" hidden role="dialog" aria-modal="true" aria-labelledby="awardH">
+  <div class="sheet award-pop" id="awardSheet"></div>
+</div>
+
+<div class="overlay" id="plateView" hidden role="dialog" aria-modal="true" aria-labelledby="plateH">
+  <div class="sheet wide" id="plateSheet"></div>
+</div>
+
+<div class="overlay" id="help" hidden role="dialog" aria-modal="true" aria-labelledby="helpH">
+  <div class="sheet">
+    <div class="top"><h2 id="helpH">Spelregels</h2><button class="closebtn" id="closeHelp">Sluiten</button></div>
+    <p>Elke casus is een waarneming in het veld. Je begint met de locatie en het seizoen. Bij elke foute determinatie komt er een waarneming bij. De waarnemingen zijn kaal: je krijgt alleen wat je ziet of hoort, de interpretatie is aan jou. Je hebt vijf pogingen, en het kan best dat je de soort niet vindt.</p>
+    <h3>Vergelijkingstabel</h3>
+    <p>Na elke poging zie je per kenmerk hoe jouw soort zich verhoudt tot de gezochte soort. Elke soort heeft per kenmerk een hoofdwaarde (vet) en soms nevenwaarden.</p>
+    <ul>
+      <li><span class="key ok"></span> <b>Gelijk:</b> dezelfde hoofdwaarde.</li>
+      <li><span class="key part"></span> <b>Overlap:</b> de hoofdwaarde van de ene soort komt voor bij de andere.</li>
+      <li><span class="key no"></span> <b>Anders:</b> geen overlap.</li>
+      <li><b>Lengte</b> is groen binnen ±15%. Daarbuiten zie je alleen een pijl: ↑ betekent dat de gezochte soort groter is, maar niet hoeveel.</li>
+      <li>Twee varianten van de Vogelrichtlijn tellen als overlap. Een kolom ‘diergroep’ is er bewust niet.</li>
+      <li><b>Tweelingsoorten</b>, zoals de gewone en grijze grootoorvleermuis: gok je de tweelingsoort van het antwoord, dan telt die poging niet mee en gaan alle waarnemingen open.</li>
+    </ul>
+    <h3>Wie kan het antwoord zijn?</h3>
+    <p>Alleen beschermde soorten met een uitgewerkte casus (met * in het register). Vind je dat er iets niet klopt, gebruik dan na afloop ‘Meld een fout’. Alle andere soorten kun je wel gokken om kenmerken te vergelijken; daar zitten bewust ook niet-beschermde soorten tussen.</p>
+    <h3>Veldboek</h3>
+    <p>Elke soort die je goed determineert (in welke modus dan ook) komt als genummerde plaat in je veldboek, met je beste score. Je voortgang wordt in deze browser bewaard.</p>
+    <h3>Trofeeën</h3>
+    <p>Heb je alle soorten van een diergroep gedetermineerd, dan verdien je de titel van die groep. Met alle 100 soorten word je Veldheer van Vestigia. Vijf extra lastige soorten leveren een medaille op; welke dat zijn, zie je pas als je ze hebt gevonden.</p>
+    <h3>Ranglijst</h3>
+    <p>Met een spelersnaam doe je mee aan de ranglijst. Alleen je eerste poging aan de dagcasus telt: 5 punten in één poging, 1 punt bij de vijfde. In de expertmodus krijg je 6 punten als je na één waarneming goed zit. Speel je allebei, dan telt je beste score van die dag.</p>
+    <h3>Installeren</h3>
+    <ul>
+      <li><b>iPhone:</b> open Vestigia in Safari, tik op Deel en kies ‘Zet op beginscherm’.</li>
+      <li><b>Android:</b> tik op ‘Installeer’ bovenaan, of kies in het menu van Chrome ‘App installeren’.</li>
+      <li>Na installatie werkt Vestigia ook zonder internet. Je dagscore wordt verstuurd zodra je weer verbinding hebt.</li>
+    </ul>
+    <h3>Modi</h3>
+    <ul>
+      <li><b>Dagcasus:</b> elke dag één nieuwe casus, voor iedereen dezelfde, en passend bij het seizoen.</li>
+      <li><b>Oefenen:</b> onbeperkt willekeurige casussen.</li>
+      <li><b>Expert:</b> je opent zelf waarnemingen en hebt één determinatie. Je score is het aantal waarnemingen dat je nodig had.</li>
+    </ul>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script>
+// Veldcasus — soortendata
+// Regimes gecontroleerd tegen de lijst beschermde soorten Omgevingswet (art. 11.37, 11.46, 11.54 Bal; bijlage IX Bal;
+// landelijke basistabel jaarrond beschermde nesten). Lengte = gemiddelde totale lengte adult in cm (incl. staart).
+const LABELS = {
+  h: { BOS:"Bos", HALF:"Halfopen landschap", OPEN:"Open agrarisch", HEI:"Heide & hoogveen", DUIN:"Duin & kaal zand",
+       MOER:"Moeras & riet", STIL:"Stilstaand water", STROOM:"Stromend water", ZEE:"Zee & kust", BEB:"Bebouwd" },
+  a: { DAG:"Dag", SCHEMER:"Schemer", NACHT:"Nacht" },
+  v: { PLANT:"Plantaardig", ONG:"Ongewervelden", VIS:"Vis", GEW:"Gewervelden" },
+  b: { HOL:"Hol of burcht", BOOM:"Boom(holte)", GEB:"Gebouw of bouwwerk", VEG:"Nest in vegetatie",
+       GROND:"Bodem of strooisel", WATER:"In het water", STEEN:"Muur of rots" },
+  w: { ACT:"Actief", SLAAP:"Winterslaap/-rust", TREK:"Trekt weg" },
+  r: { HR:"Habitatrichtlijn IV", BAL:"Bal bijlage IX", VRJ:"Vogelrichtlijn · nest jaarrond", VR:"Vogelrichtlijn", NB:"Niet beschermd" }
+};
+
+const REGIME_INFO = {
+  HR: "Strikt beschermd via bijlage IV van de Habitatrichtlijn of de verdragen van Bern/Bonn (art. 11.46 Bal). Verboden zijn onder meer opzettelijk doden, vangen en verstoren, en het beschadigen of vernielen van voortplantings- en rustplaatsen.",
+  BAL: "Nationaal beschermde ‘andere soort’ uit bijlage IX van het Bal (art. 11.54). Voor algemene soorten geldt vaak een provinciale vrijstelling bij ruimtelijke ingrepen; voor zeldzame soorten niet.",
+  VRJ: "Vogelrichtlijnsoort (art. 11.37 Bal). Het nest staat in de landelijke basistabel van jaarrond beschermde nesten (categorie 1–4), dus ook buiten het broedseizoen beschermd. Een deel van de provincies hanteert een eigen tabel.",
+  VR: "Vogelrichtlijnsoort (art. 11.37 Bal): alle in het wild levende vogels zijn beschermd. Het nest is alleen beschermd zolang het in gebruik is (of categorie 5: alleen bij zwaarwegende feiten).",
+  NB: "Niet beschermd onder de soortenbescherming van de Omgevingswet. De algemene zorgplicht voor dieren geldt wel."
+};
+
+const CLUE_TYPES = ["Locatie & seizoen","Habitat","Microhabitat","Spoor of geluid","Kenmerk"];
+
+const GROUPS = { Z:"Zoogdieren", R:"Reptielen", A:"Amfibieën", F:"Vissen", B:"Vogels" };
+const SPECIES = [{"g": "Z", "n": "Das", "s": "Meles meles", "r": "BAL", "l": 85, "h": ["HALF", "BOS"], "a": ["NACHT", "SCHEMER"], "v": ["ONG", "PLANT", "GEW"], "b": ["HOL"], "w": ["ACT"], "c": ["Oost-Brabant, maart. Kleinschalig landschap met houtwallen, een beekdal en maïsakkers.", "Een steile, zandige rand langs het beekdal, begroeid met eiken en braam.", "Grasland tegen de houtwal, waar de zode op veel plekken is opengewoeld.", "Langs de akkerrand een kuiltje met uitwerpselen; aan het prikkeldraad hangen grove haren.", "Prent met vijf tenen naast elkaar en lange nagelafdrukken."], "x": "Vos", "t": "Een vossenburcht heeft minder en kleinere pijpen, zonder beddingmateriaal ervoor, en ruikt scherp. Vossenuitwerpselen liggen los op opvallende plekken, niet in latrinekuiltjes."}, {"g": "Z", "n": "Otter", "s": "Lutra lutra", "r": "HR", "l": 110, "h": ["STROOM", "MOER", "STIL"], "a": ["NACHT", "SCHEMER"], "v": ["VIS", "GEW"], "b": ["HOL"], "w": ["ACT"], "c": ["Noordwest-Overijssel, januari. Laagveenmoeras met petgaten.", "Schoon, visrijk water met brede rietkragen en wat elzenbroek.", "Oevers die ’s winters door kwel deels ijsvrij blijven, met rustige, onbegaanbare delen.", "Op een paaltje aan het water kleine hoopjes zoetig ruikende uitwerpselen met visgraten.", "Ronde prent met vijf tenen, ±6 cm, en het sleepspoor van een dikke staart."], "x": "Bever", "t": "Bevers laten geen visresten achter maar knaagsporen en ontschorste takken. Hun uitwerpselen vind je zelden, omdat ze in het water poepen."}, {"g": "Z", "n": "Bever", "s": "Castor fiber", "r": "HR", "l": 120, "h": ["STROOM", "STIL", "MOER"], "a": ["SCHEMER", "NACHT"], "v": ["PLANT"], "b": ["HOL", "WATER"], "w": ["ACT"], "c": ["Zoetwatergetijdengebied, februari. Kreken en eilanden met een wisselende waterstand.", "Wilgenvloedbos met veel schietwilg en populier langs het water.", "Steile oevers en luwe kreekjes waar het water nooit helemaal droogvalt.", "Schuin afgesneden takken en een schietwilg met een zandlopervormige knaagplek.", "Een platte, geschubde staart."], "x": "Muskusrat", "t": "De muskusrat is veel kleiner, heeft een zijdelings afgeplatte staart en knaagt geen bomen om; zijn vraatsporen zijn biezen, riet en lisdodde."}, {"g": "Z", "n": "Hamster", "s": "Cricetus cricetus", "r": "HR", "l": 28, "h": ["OPEN"], "a": ["SCHEMER", "NACHT"], "v": ["PLANT", "ONG"], "b": ["HOL"], "w": ["SLAAP"], "c": ["Zuid-Limburg, augustus. Het lössplateau, net na de oogst.", "Grote akkers met wintertarwe en luzerne op diepe, droge lössgrond.", "Langs de percelen blijven bewust stroken graan staan; het grondwater zit diep.", "In de stoppels ronde gaten die recht naar beneden gaan, zonder grondhoop.", "Een knaagdier met een zwarte buik en witte vlekken op de flanken."], "x": "Bruine rat", "t": "Een rattenhol heeft meerdere ingangen met uitgegraven grond en duidelijke looppaden ertussen, meestal bij water of erven. Loodrechte valpijpen zonder grondhoop ontbreken."}, {"g": "Z", "n": "Hazelmuis", "s": "Muscardinus avellanarius", "r": "HR", "l": 14, "h": ["BOS", "HALF"], "a": ["NACHT"], "v": ["PLANT", "ONG"], "b": ["VEG", "BOOM"], "w": ["SLAAP"], "c": ["Zuid-Limburg, september. Hellingbossen en houtwallen in het heuvelland.", "Een gevarieerde, aaneengesloten struiklaag van hazelaar, braam, kamperfoelie en meidoorn.", "De struiken zijn via de kronen met elkaar verbonden; er zit geen open gat in de houtwal.", "Lege hazelnoten met een rond gat; de rand is glad, met schuine tandsporen aan de binnenkant.", "Oranjebruin, met grote zwarte ogen en een behaarde staart."], "x": "Bosmuis", "t": "De bosmuis knaagt ook een rond gat in hazelnoten, maar laat tandsporen achter op het buitenoppervlak rond het gat."}, {"g": "Z", "n": "Eikelmuis", "s": "Eliomys quercinus", "r": "BAL", "l": 25, "h": ["BOS", "BEB"], "a": ["NACHT"], "v": ["ONG", "PLANT"], "b": ["GEB", "BOOM", "STEEN"], "w": ["SLAAP"], "c": ["Zuid-Limburg, juni. Een droog dal met hellingbos en kalkgrasland.", "Een oude mergelgroeve en een carréboerderij met hoogstamfruit.", "Mergelmuren vol kieren en een hooizolder die nauwelijks nog wordt gebruikt.", "Op de zolder keutels van ±1 cm, een rommelig nest en lege slakkenhuisjes.", "Zwart rond de ogen en een staart met een witte pluim."], "x": "Hazelmuis", "t": "De hazelmuis heeft geen zwart masker, is kleiner en oranjebruin, en leeft in de struiklaag in plaats van in muren en gebouwen."}, {"g": "Z", "n": "Boommarter", "s": "Martes martes", "r": "BAL", "l": 70, "h": ["BOS"], "a": ["NACHT", "SCHEMER"], "v": ["GEW", "PLANT"], "b": ["BOOM"], "w": ["ACT"], "c": ["Veluwe, april. Een groot, aaneengesloten boscomplex.", "Oud gemengd bos met grove den, beuk en eik en veel staand dood hout.", "Grote, ovale holen hoog in de beuken; weinig paden en weinig verstoring.", "Gedraaide uitwerpselen met haren en bessenpitten op een omgevallen stam; krabsporen op de bast.", "Een gelige keelvlek zonder vork."], "x": "Steenmarter", "t": "De steenmarter heeft een witte, vaak gevorkte keelvlek die doorloopt over de voorpoten en een lichte neus, en rust bij voorkeur in gebouwen."}, {"g": "Z", "n": "Steenmarter", "s": "Martes foina", "r": "BAL", "l": 70, "h": ["BEB", "HALF"], "a": ["NACHT"], "v": ["GEW", "PLANT"], "b": ["GEB"], "w": ["ACT"], "c": ["De Betuwe, mei. Een dorpskern tussen boomgaarden.", "Oude boerderijen met rieten kappen, schuren en houtstapels.", "Een zolder met losse isolatie, bereikbaar via een kier onder de dakgoot.", "Gedraaide uitwerpselen vol kersenpitten; ’s nachts gestommel, en de buren hebben een kapotte bougiekabel.", "Een witte, gevorkte keelvlek die doorloopt over de voorpoten."], "x": "Boommarter", "t": "De boommarter heeft een romige tot oranjegele keelvlek die niet gevorkt is, behaarde voetzolen en grotere oren, en rust in boomholtes."}, {"g": "Z", "n": "Eekhoorn", "s": "Sciurus vulgaris", "r": "BAL", "l": 40, "h": ["BOS", "BEB"], "a": ["DAG"], "v": ["PLANT"], "b": ["BOOM"], "w": ["ACT"], "c": ["Landgoed bij Hilversum, oktober.", "Gemengd bos met beuk, fijnspar, grove den en een paar oude walnoten.", "Hoge, met elkaar verbonden boomkronen en weinig open plekken.", "Kegelspillen met een rafelig topje; hazelnoten in twee helften gekraakt.", "Een pluimstaart en, in de winter, oorpluimpjes."], "x": "Bosmuis", "t": "Muizen laten een kort en glad afgeknaagde kegelspil achter zonder rafelig topje, en hazelnoten krijgen een rond gaatje in plaats van in tweeën te worden gekraakt."}, {"g": "Z", "n": "Watervleermuis", "s": "Myotis daubentonii", "r": "HR", "l": 9, "h": ["STIL", "BOS"], "a": ["NACHT"], "v": ["ONG"], "b": ["BOOM", "GEB"], "w": ["SLAAP"], "c": ["Landgoed in Utrecht, augustus.", "Een gracht en vijvers met een gladde, beschutte waterspiegel.", "Oude beuken met spechtenholen langs het water, en een ijskelder.", "Detector: droge, regelmatige tikken met een piek rond 45 kHz, laag boven het water.", "Grote voeten met borstelharen."], "x": "Meervleermuis", "t": "De meervleermuis is groter (spanwijdte ±30 cm), jaagt boven bredere wateren en heeft zijn meeste energie rond 35 kHz in plaats van rond 45 kHz."}, {"g": "Z", "n": "Laatvlieger", "s": "Eptesicus serotinus", "r": "HR", "l": 12, "h": ["BEB", "HALF"], "a": ["NACHT", "SCHEMER"], "v": ["ONG"], "b": ["GEB"], "w": ["SLAAP"], "c": ["Zuid-Holland, juni. Een woonwijk aan de rand van het veenweidegebied.", "Weilanden met vee direct achter de tuinen; laanbomen en bosjes.", "Woningen uit de jaren dertig met spouwmuren en pannendaken.", "Onder de nok keutels van ±1 cm; detector: luide, langzame signalen rond 25–30 kHz.", "Groot en donker; de laatste staartwervels steken buiten de vlieghuid uit."], "x": "Rosse vleermuis", "t": "De rosse vleermuis vliegt hoger en sneller met smalle vleugels, roept met afwisselende ‘plip-plop’-signalen rond 20 kHz en woont in boomholtes."}, {"g": "Z", "n": "Waterspitsmuis", "s": "Neomys fodiens", "r": "BAL", "l": 15, "h": ["STROOM", "STIL", "MOER"], "a": ["NACHT", "DAG"], "v": ["ONG", "VIS"], "b": ["HOL"], "w": ["ACT"], "c": ["Veenweidegebied, mei.", "Een sloot met helder, schoon water vol ongewervelden.", "Een onbeschoeide, begroeide oever met stenen en wortels op de waterlijn.", "Op een steen kleine uitwerpselen met resten van kokerjuffers en vlokreeftjes.", "Zwart met een witte buik en een kiel van stijve haren onder de staart."], "x": "Gewone bosspitsmuis", "t": "De bosspitsmuis is driekleurig (donkere rug, bruine flank, lichte buik), mist de haarkiel onder de staart en jaagt niet onder water."}, {"g": "Z", "n": "Hermelijn", "s": "Mustela erminea", "r": "BAL", "l": 35, "h": ["HALF", "OPEN", "DUIN"], "a": ["DAG", "NACHT"], "v": ["GEW"], "b": ["HOL"], "w": ["ACT"], "c": ["Kop van Noord-Holland, januari. De overgang van duin naar polder.", "Een duinvallei en vochtige graslanden met veel woelmuizen.", "Takkenrillen, steenhopen en houtwallen als dekking.", "Dunne, gedraaide uitwerpselen; in de sneeuw steeds twee prenten schuin naast elkaar.", "Een staartpunt die altijd zwart is."], "x": "Wezel", "t": "De wezel is kleiner, heeft een korte staart zonder zwarte punt, en de grens tussen bruin en wit is grillig in plaats van recht."}, {"g": "Z", "n": "Bruinvis", "s": "Phocoena phocoena", "r": "HR", "l": 155, "h": ["ZEE"], "a": ["DAG", "NACHT"], "v": ["VIS"], "b": ["WATER"], "w": ["ACT"], "c": ["Noordzeekust bij Egmond, maart.", "Ondiepe kustzee met veel haring en zandspiering.", "Je kijkt vanaf de duinrand over zee, met een telescoop.", "Akoestische monitoring vangt zeer hoge klikken op; een kleine, driehoekige vin rolt boven water.", "Geen snavel, en schopvormige tanden."], "x": "Tuimelaar", "t": "De tuimelaar is twee keer zo groot (±3 m), heeft een duidelijke snavel en een hoge, sikkelvormige rugvin, en springt vaak boven water uit."}, {"n": "Vos", "s": "Vulpes vulpes", "g": "Z", "r": "BAL", "l": 105, "h": ["HALF", "BOS", "BEB", "DUIN"], "a": ["NACHT", "SCHEMER"], "v": ["GEW", "ONG", "PLANT"], "b": ["HOL"], "w": ["ACT"], "c": ["Duinen bij Castricum, februari.", "Open duingrasland met struweel van duindoorn en meidoorn.", "Zandige hellingen met konijnen en een rustige, begroeide duinvallei.", "Een uitwerpsel met een gedraaide punt boven op een graspol; ’s nachts een hees gekrijs.", "Ovale prent met vier tenen; tussen de buitenste tenen en de bal past een kruis."], "x": "Das", "t": "Een dassenburcht heeft grote zandhopen met beddingmateriaal ervoor en in de buurt een latrine met kuiltjes. De dassenprent heeft vijf tenen naast elkaar met lange nagels, geen ovale prent met vier tenen."}, {"n": "Ree", "s": "Capreolus capreolus", "g": "Z", "r": "BAL", "l": 115, "h": ["BOS", "HALF", "OPEN"], "a": ["SCHEMER", "DAG", "NACHT"], "v": ["PLANT"], "b": ["VEG"], "w": ["ACT"], "c": ["Achterhoek, eind juli.", "Kleinschalig landschap van bosjes, maïs en grasland.", "Bosranden met jonge opslag en ruigte als dekking.", "Laag kapotgeschuurde boompjes en glanzend zwarte keutels; in de schemering een blaffend geluid.", "Smalle hoefprent van ±4–5 cm."], "x": "Damhert", "t": "Het damhert is groter, heeft een lange staart met een zwarte streep, vaak een gevlekte vacht en een schopvormig gewei. Het bronst in oktober, niet in de zomer."}, {"n": "Edelhert", "s": "Cervus elaphus", "g": "Z", "r": "BAL", "l": 220, "h": ["BOS", "HEI"], "a": ["SCHEMER", "NACHT"], "v": ["PLANT"], "b": ["VEG"], "w": ["ACT"], "c": ["Veluwe, eind september.", "Uitgestrekt bos, afgewisseld met heidevelden en zandverstuivingen.", "Grote, rustige open plekken met een paar modderige poelen.", "Bast op borsthoogte in brede stroken geschild; in de schemering een diep, langgerekt geluid.", "Grote hoefprent van ±8–9 cm."], "x": "Damhert", "t": "Het damhert is kleiner en heeft een schopvormig gewei en een lange staart met zwarte streep. Een bronstig damhert boert kort en rochelend; het edelhert brult langgerekt."}, {"n": "Damhert", "s": "Dama dama", "g": "Z", "r": "BAL", "l": 150, "h": ["DUIN", "BOS", "HALF"], "a": ["SCHEMER", "DAG"], "v": ["PLANT"], "b": ["VEG"], "w": ["ACT"], "c": ["Duinen bij Amsterdam, oktober.", "Duinbos, struweel en open duingrasland.", "Een gebied zonder grote roofdieren, met een hoge graasdruk.", "Keutels groter dan die van een ree; een kort, rochelend geluid bij een uitgekrabde kuil.", "Een lange staart met een zwarte streep."], "x": "Ree", "t": "Het ree is kleiner, heeft vrijwel geen zichtbare staart, een effen vacht en een klein, rechtopstaand gewei. Het bronst in de zomer, niet in oktober."}, {"n": "Wild zwijn", "s": "Sus scrofa", "g": "Z", "r": "BAL", "l": 160, "h": ["BOS"], "a": ["NACHT", "SCHEMER"], "v": ["PLANT", "ONG"], "b": ["VEG"], "w": ["ACT"], "c": ["Veluwe, november.", "Gemengd bos met veel eik en beuk, in een mastjaar.", "Vochtige laagten met modderpoelen.", "Grote stukken omgewoelde bodem; bomen met modder op kniehoogte.", "Prent met twee hoeven en breed uitstaande bijhoeven."], "x": "Edelhert", "t": "Een hertenprent heeft smallere hoeven. Als de bijhoeven al zichtbaar zijn, staan die recht achter de hoeven en niet breed uitstaand."}, {"n": "Haas", "s": "Lepus europaeus", "g": "Z", "r": "BAL", "l": 60, "h": ["OPEN", "HALF"], "a": ["SCHEMER", "NACHT"], "v": ["PLANT"], "b": ["GROND"], "w": ["ACT"], "c": ["Groningen, maart.", "Grootschalige kleiakkers en graslanden.", "Weinig dekking: geen houtwallen, alleen sloten en een paar bermen.", "Een ondiepe kuil in de akker en platte, ronde keutels met grove vezels.", "Lange oren met zwarte punten."], "x": "Konijn", "t": "Het konijn is kleiner, graaft burchten met veel pijpen en heeft kortere oren zonder zwarte punten. Zijn jongen worden naakt en blind geboren."}, {"n": "Konijn", "s": "Oryctolagus cuniculus", "g": "Z", "r": "BAL", "l": 45, "h": ["DUIN", "HALF", "BEB"], "a": ["SCHEMER"], "v": ["PLANT"], "b": ["HOL"], "w": ["ACT"], "c": ["Zeeuwse duinen, mei.", "Kort begraasd duingrasland met struweel.", "Zandige hellingen waar je makkelijk kunt graven.", "Een hoop ronde keutels op een duintopje en veel kleine krabkuiltjes.", "Korte oren zonder zwarte punten."], "x": "Haas", "t": "De haas is groter, graaft niet maar ligt in een ondiepe kuil, en heeft lange oren met zwarte punten. Zijn keutels zijn platter en groter."}, {"n": "Egel", "s": "Erinaceus europaeus", "g": "Z", "r": "BAL", "l": 25, "h": ["HALF", "BEB"], "a": ["NACHT"], "v": ["ONG"], "b": ["VEG"], "w": ["SLAAP"], "c": ["Een vinexwijk, juni.", "Tuinen met gazons, borders en heggen.", "Ruige hoeken met bladhopen en schuttingen met hier en daar een gat.", "Glanzende, zwarte uitwerpselen vol keverresten; ’s nachts luid gesnuif.", "Prent met vijf tenen, ±3 cm."], "x": "Bruine rat", "t": "Rattenuitwerpselen zijn kleiner (±1–2 cm), hebben stompe uiteinden en bevatten geen keverresten. Ratten lopen vaste paden met holen erlangs."}, {"n": "Wezel", "s": "Mustela nivalis", "g": "Z", "r": "BAL", "l": 22, "h": ["HALF", "OPEN"], "a": ["DAG", "NACHT"], "v": ["GEW"], "b": ["HOL"], "w": ["ACT"], "c": ["Hoeksche Waard, juli.", "Akkers met brede grasbermen en slootkanten.", "Een jaar met heel veel veldmuizen.", "Heel dunne, gedraaide uitwerpselen van ±2–3 mm; een muizenhol met een nest van muizenhaar.", "Een korte staart zonder zwarte punt."], "x": "Hermelijn", "t": "De hermelijn is groter, heeft een langere staart met altijd een zwarte punt, en de grens tussen bruin en wit loopt recht."}, {"n": "Bunzing", "s": "Mustela putorius", "g": "Z", "r": "BAL", "l": 50, "h": ["HALF", "MOER"], "a": ["NACHT"], "v": ["GEW"], "b": ["HOL", "GEB"], "w": ["ACT"], "c": ["Utrecht, december. Veenweidegebied.", "Sloten met veel kikkers, en knotwilgen.", "Een boerenerf met houtstapels en een schuur met een kruipruimte.", "Een voorraad padden met een beet in de kop; een sterke, onaangename geur.", "Een licht gezichtsmasker op een donkere kop."], "x": "Steenmarter", "t": "De steenmarter is groter, heeft een witte keelvlek en geen gezichtsmasker, klimt veel en woont vooral op zolders."}, {"n": "Gewone zeehond", "s": "Phoca vitulina", "g": "Z", "r": "BAL", "l": 160, "h": ["ZEE"], "a": ["DAG", "NACHT"], "v": ["VIS"], "b": ["WATER"], "w": ["ACT"], "c": ["Waddenzee, juni.", "Zandplaten die bij laagwater droogvallen.", "Rustige platen langs geulen, waar dieren snel het water in kunnen.", "Tientallen dieren bij elkaar; jongen gaan binnen enkele uren te water.", "V-vormige neusgaten."], "x": "Grijze zeehond", "t": "De grijze zeehond is groter, heeft een langgerekte kop met een ‘Romeins’ profiel en parallelle neusgaten, en jongt rond de jaarwisseling."}, {"n": "Wilde kat", "s": "Felis silvestris", "g": "Z", "r": "HR", "l": 90, "h": ["BOS"], "a": ["NACHT", "SCHEMER"], "v": ["GEW"], "b": ["BOOM", "HOL"], "w": ["ACT"], "c": ["Zuid-Limburg, januari.", "Groot hellingbos met open plekken en ruige bosranden.", "Ver van bebouwing, en aansluitend op grote bossen over de grens.", "Uitwerpselen, niet begraven, op een stronk; haren op een lokstok met valeriaan.", "Een dikke, stompe staart met zwarte ringen."], "x": "Huiskat", "t": "Een verwilderde huiskat heeft een dunnere, spits toelopende staart, en de rugstreep loopt vaak door over de staart. Alleen DNA geeft zekerheid."}, {"n": "Bosmuis", "s": "Apodemus sylvaticus", "g": "Z", "r": "BAL", "l": 18, "h": ["BOS", "HALF"], "a": ["NACHT"], "v": ["PLANT", "ONG"], "b": ["HOL"], "w": ["ACT"], "c": ["Utrechtse Heuvelrug, oktober.", "Gemengd bos met beuk en hazelaar.", "Een dikke strooisellaag met veel beukennootjes.", "Lege hazelnoten met tandsporen op de buitenkant rond het gat.", "Grote oren, grote ogen en een lange staart."], "x": "Hazelmuis", "t": "De hazelmuis laat een gladde rand achter met schuine tandsporen langs de binnenkant en vrijwel geen sporen op het oppervlak. Ze heeft een pluizige staart."}, {"n": "Dwergmuis", "s": "Micromys minutus", "g": "Z", "r": "BAL", "l": 12, "h": ["MOER"], "a": ["DAG", "NACHT"], "v": ["PLANT", "ONG"], "b": ["VEG"], "w": ["ACT"], "c": ["Langs de Vecht, september.", "Hoge rietkragen en ruigte met zegge.", "Vegetatie die ook in de winter blijft staan.", "Op een meter hoogte een balletje van gespleten bladeren die nog vastzitten.", "Oranjebruin, ±6 gram, met een grijpstaart."], "x": "Hazelmuis", "t": "Het hazelmuisnest is gemaakt van gestripte kamperfoeliebast en zit in struiken, niet in riet. De hazelmuis heeft een pluizige staart en grote zwarte ogen."}, {"n": "Woelrat", "s": "Arvicola amphibius", "g": "Z", "r": "BAL", "l": 30, "h": ["STIL", "MOER", "STROOM"], "a": ["DAG", "NACHT"], "v": ["PLANT"], "b": ["HOL"], "w": ["ACT"], "c": ["Noord-Holland, april. Veenweidegebied.", "Sloten met een ruige, begroeide oever.", "Flauwe, onbeschoeide oevers met weinig onderhoud.", "Hoopjes schuin afgeknipt riet en keutels van ±1 cm op vaste plekken.", "Een stompe snuit en een behaarde staart."], "x": "Bruine rat", "t": "De bruine rat heeft een spitse snuit, grotere oren en een lange, kale, geschubde staart. Zijn keutels zijn groter, met stompe uiteinden."}, {"n": "Aardmuis", "s": "Microtus agrestis", "g": "Z", "r": "BAL", "l": 15, "h": ["MOER", "HALF"], "a": ["DAG", "NACHT"], "v": ["PLANT"], "b": ["VEG"], "w": ["ACT"], "c": ["Biesbosch, juni.", "Ruig, ongemaaid grasland.", "Hoog, dicht gras op een vochtige ondergrond.", "Paadjes met afgeknipte halmen en groene keutels van ±5 mm.", "Een ruige, grijsbruine vacht en een korte staart."], "x": "Veldmuis", "t": "De veldmuis heeft een kortere, gladdere, meer geelbruine vacht en leeft in kort grasland, met veel open holletjes in plaats van paadjes door hoog gras."}, {"n": "Rosse woelmuis", "s": "Clethrionomys glareolus", "g": "Z", "r": "BAL", "l": 15, "h": ["BOS"], "a": ["DAG", "NACHT"], "v": ["PLANT"], "b": ["HOL"], "w": ["ACT"], "c": ["Veluwe, mei.", "Een bosrand met een rijke ondergroei van braam.", "Een dikke strooisellaag en veel dood hout.", "Braamscheuten zonder bast; hazelnoten met een ruw gat, zonder sporen op de buitenkant.", "Een roodbruine rug."], "x": "Bosmuis", "t": "De bosmuis heeft grote oren en ogen, een lange staart en springt. Bij hazelnoten laat ze tandsporen achter op het buitenoppervlak rond het gat."}, {"n": "Gewone bosspitsmuis", "s": "Sorex araneus", "g": "Z", "r": "BAL", "l": 12, "h": ["BOS", "HALF"], "a": ["NACHT", "DAG"], "v": ["ONG"], "b": ["GROND"], "w": ["ACT"], "c": ["Twente, augustus.", "Heggen, houtwallen en bosranden.", "Een vochtige, dikke strooisellaag.", "Schelle piepjes uit het strooisel; een dood diertje dat door katten is laten liggen.", "Rode tandpunten en een driekleurige vacht."], "x": "Huisspitsmuis", "t": "De huisspitsmuis heeft witte tandpunten, grote, opvallende oren en lange, losse haren op de staart."}, {"n": "Huisspitsmuis", "s": "Crocidura russula", "g": "Z", "r": "BAL", "l": 11, "h": ["BEB", "HALF"], "a": ["NACHT"], "v": ["ONG"], "b": ["GROND"], "w": ["ACT"], "c": ["Achterhoek, oktober.", "Een boerenerf met moestuin en schuren.", "Warme composthopen en stapels hout.", "Jongen lopen in een treintje; in kerkuilbraakballen zitten schedeltjes met witte tanden.", "Grote oren en losse haren op de staart."], "x": "Gewone bosspitsmuis", "t": "De bosspitsmuis heeft rode tandpunten, kleine oren die in de vacht wegvallen, en een driekleurige vacht."}, {"n": "Gewone dwergvleermuis", "s": "Pipistrellus pipistrellus", "g": "Z", "r": "HR", "l": 7, "h": ["BEB", "HALF"], "a": ["NACHT"], "v": ["ONG"], "b": ["GEB"], "w": ["SLAAP"], "c": ["Brabant, juni.", "Een nieuwbouwwijk met een stadspark en een vijver.", "Woningen met spouwmuren en open stootvoegen.", "Kleine, droge keutels onder een stootvoeg; detector: smakkende signalen, piek rond 45 kHz.", "Een heel kleine, donkere vleermuis."], "x": "Ruige dwergvleermuis", "t": "De ruige dwergvleermuis is iets groter, roept rond 38–40 kHz, en is vooral in de trektijd en bij water te vinden."}, {"n": "Ruige dwergvleermuis", "s": "Pipistrellus nathusii", "g": "Z", "r": "HR", "l": 8, "h": ["MOER", "BOS", "STIL"], "a": ["NACHT"], "v": ["ONG"], "b": ["BOOM", "GEB"], "w": ["TREK", "SLAAP"], "c": ["Een veenplas, september.", "Moerasbos met els en wilg langs open water.", "Kasten en holtes in bomen langs de oever.", "Sociale roepen uit een kast; detector: piek rond 38–40 kHz.", "Een behaarde staartvlieghuid."], "x": "Gewone dwergvleermuis", "t": "De gewone dwergvleermuis is kleiner, roept rond 45 kHz, trekt niet en heeft grote kraamkolonies in woningen."}, {"n": "Rosse vleermuis", "s": "Nyctalus noctula", "g": "Z", "r": "HR", "l": 13, "h": ["BOS", "STIL"], "a": ["NACHT", "SCHEMER"], "v": ["ONG"], "b": ["BOOM"], "w": ["SLAAP"], "c": ["Den Haag, mei.", "Een oud parkbos met grote beuken bij een vijver.", "Hoge spechtenholen in dikke stammen.", "Overdag gekwetter uit een hol; detector: ‘plip-plop’ rond 20 kHz.", "Smalle, puntige vleugels en een roodbruine vacht."], "x": "Laatvlieger", "t": "De laatvlieger heeft brede vleugels, fladdert langzamer langs boomranden, roept rond 25–30 kHz en woont in gebouwen."}, {"n": "Meervleermuis", "s": "Myotis dasycneme", "g": "Z", "r": "HR", "l": 11, "h": ["STIL", "STROOM"], "a": ["NACHT"], "v": ["ONG"], "b": ["GEB"], "w": ["SLAAP"], "c": ["Friesland, juli.", "Open veenweide met brede vaarten en meren.", "Een dorp met oude woningen met spouwmuren, vlak bij het water.", "Een grote kolonie in een spouw; detector: piek rond 35 kHz, laag boven een vaart.", "Een grote Myotis met lange voeten."], "x": "Watervleermuis", "t": "De watervleermuis is kleiner, jaagt boven vijvers en smallere wateren, roept rond 45 kHz en heeft kraamkolonies in bomen."}, {"n": "Franjestaart", "s": "Myotis nattereri", "g": "Z", "r": "HR", "l": 8, "h": ["BOS", "HALF"], "a": ["NACHT"], "v": ["ONG"], "b": ["BOOM", "GEB"], "w": ["SLAAP"], "c": ["Fort van de Waterlinie, januari.", "Grachten, bomen en bos rond het fort.", "Koele, vochtige ruimtes met kieren in de muren.", "Vleermuizen in winterslaap diep in kieren; in de zomer zitten ze in boomholtes.", "Een rand van stijve haartjes langs de staartvlieghuid."], "x": "Watervleermuis", "t": "De watervleermuis heeft geen haarrand langs de staartvlieghuid, maar grote voeten, en jaagt laag boven het water."}, {"n": "Ingekorven vleermuis", "s": "Myotis emarginatus", "g": "Z", "r": "HR", "l": 9, "h": ["BOS", "HALF"], "a": ["NACHT"], "v": ["ONG"], "b": ["GEB"], "w": ["SLAAP"], "c": ["Zuid-Limburg, juli.", "Een dorp tussen hoogstamboomgaarden, weilanden en hellingbos.", "Een warme kerkzolder, en koeienstallen vol vliegen.", "Een dichte tros open aan de nok, met resten van spinnen eronder.", "Een inkeping in de buitenrand van het oor."], "x": "Franjestaart", "t": "De franjestaart heeft geen inkeping in het oor, maar een haarrand langs de staartvlieghuid. Zijn kolonies zitten verborgen in kieren, niet open aan de nok."}, {"n": "Tweekleurige vleermuis", "s": "Vespertilio murinus", "g": "Z", "r": "HR", "l": 11, "h": ["BEB", "STIL"], "a": ["NACHT"], "v": ["ONG"], "b": ["GEB"], "w": ["SLAAP"], "c": ["Oost-Nederland, november.", "Een stadswijk met hoogbouw naast een grote plas.", "Hoge gebouwen met gevelbekleding en kieren.", "Een hoorbaar, hoog getsjirp rond de flat; detector: piek rond 25 kHz.", "Zilvergrijze haarpunten op een donkere rug."], "x": "Laatvlieger", "t": "De laatvlieger is groter, egaal donkerbruin zonder zilverige haarpunten, en heeft geen hoorbare baltszang."}, {"n": "Grijze grootoorvleermuis", "s": "Plecotus austriacus", "g": "Z", "r": "HR", "l": 9, "h": ["HALF", "BEB"], "a": ["NACHT"], "v": ["ONG"], "b": ["GEB"], "w": ["SLAAP"], "c": ["Zuid-Limburg, juli.", "Open, agrarisch landschap met akkers en boomgaarden.", "Een dorpskerk met een rustige zolder.", "Losse vlindervleugels onder een balk; op de detector vrijwel niets.", "Zeer lange oren, een donker gezicht en een duim korter dan 6 mm."], "x": "Gewone grootoorvleermuis", "t": "De gewone grootoor is bruiner, heeft een lichter gezicht en een duim van meer dan 6 mm, en komt in heel Nederland voor, vooral bij bos."}, {"g": "Z", "n": "Gewone grootoorvleermuis", "s": "Plecotus auritus", "r": "HR", "l": 9, "h": ["BOS", "HALF", "BEB"], "a": ["NACHT"], "v": ["ONG"], "b": ["GEB", "BOOM"], "w": ["SLAAP"], "c": ["Drenthe, juli. Een esdorp aan de rand van een boswachterij.", "Een erf met oude eiken en lindes, dat overgaat in loofbos met een dichte struiklaag.", "Een rustige kerkzolder met houten balken en een kleine opening onder de dakrand.", "Onder één balk losse vlindervleugels; op de detector is bijna niets te horen.", "Zeer lange oren en een duim langer dan 6 mm."], "x": "Grijze grootoorvleermuis", "t": "De grijze grootoor heeft een grijzere vacht, een donker gezichtsmasker en een duim korter dan 6 mm, en komt vooral in het zuiden voor."}, {"g": "Z", "n": "Noordse woelmuis", "s": "Microtus oeconomus", "r": "HR", "l": 18, "h": ["MOER"], "a": ["DAG", "NACHT"], "v": ["PLANT"], "b": ["VEG"], "w": ["ACT"], "c": ["Zuidwest-Friesland, mei. Laagveen langs een groot meer.", "Ruig rietland met zeggen en biezen, nauwelijks gemaaid.", "Lage, natte delen die bij hoog water onderlopen, met hogere pollen ertussen.", "Paadjes door de vegetatie, afgeknipte stukjes zegge en groene keutels van ±6 mm.", "Een donkere woelmuis met een staart van ongeveer een derde van de lichaamslengte."], "x": "Aardmuis", "t": "De aardmuis is iets kleiner, heeft een kortere staart en een ruigere, meer grijsbruine vacht. Hij leeft in vrijwel dezelfde habitat en verdringt de noordse woelmuis."}, {"g": "Z", "n": "Grijze zeehond", "s": "Halichoerus grypus", "r": "BAL", "l": 220, "h": ["ZEE"], "a": ["DAG", "NACHT"], "v": ["VIS"], "b": ["WATER"], "w": ["ACT"], "c": ["Waddenzee, december. Bij een zeegat met sterke stroming.", "Hoge zandplaten die ook bij normaal hoogwater deels droog blijven.", "Rustige platen ver van vaargeulen, dicht bij open zee.", "Brede sleepsporen; een wollig, wit jong ligt alleen op de plaat.", "Langgerekte kop met parallelle neusgaten."], "x": "Gewone zeehond", "t": "De gewone zeehond heeft een ronde ‘hondenkop’ met V-vormige neusgaten en jongt in juni–juli. Zijn jongen verliezen hun witte vacht al vóór de geboorte."}, {"g": "R", "n": "Zandhagedis", "s": "Lacerta agilis", "r": "HR", "l": 20, "h": ["HEI", "DUIN"], "a": ["DAG"], "v": ["ONG"], "b": ["GROND"], "w": ["SLAAP"], "c": ["Drenthe, eind mei.", "Droge heide op zandgrond met struikhei en vliegdennen.", "Zuidgerichte randen met kale, open zandplekken.", "Kleine, schuine gangetjes in het zand en in juni gegraven kuiltjes.", "Groene flanken en rijen witte vlekjes over de rug."], "x": "Levendbarende hagedis", "t": "De levendbarende hagedis is slanker en bruiner, heeft geen witte oogvlekjes, en mannetjes hebben een oranje buik in plaats van groene flanken. Hij legt geen eieren."}, {"g": "R", "n": "Gladde slang", "s": "Coronella austriaca", "r": "HR", "l": 60, "h": ["HEI"], "a": ["DAG"], "v": ["GEW"], "b": ["GROND"], "w": ["SLAAP"], "c": ["Veluwe, september.", "Heide met struikhei en pijpenstrootje.", "Een structuurrijke overgang van heide naar bos, met veel hagedissen.", "Een vervellingshuid met gladde, niet gekielde schubben.", "Ronde pupil en een donkere streep door het oog."], "x": "Adder", "t": "De adder heeft een doorlopende zigzagband, een verticale spleetpupil en gekielde schubben."}, {"g": "R", "n": "Adder", "s": "Vipera berus", "r": "BAL", "l": 60, "h": ["HEI", "MOER"], "a": ["DAG"], "v": ["GEW"], "b": ["GROND"], "w": ["SLAAP"], "c": ["Dwingelderveld, maart.", "Natte en droge heide met pijpenstrootje en dennenopslag.", "Een beschutte zuidrand die vroeg in het jaar al warm wordt.", "Meerdere slangen dicht bij elkaar in de zon; in april duwen twee slangen tegen elkaar.", "Verticale spleetpupil en een zigzagband."], "x": "Gladde slang", "t": "De gladde slang heeft geen doorlopende zigzagband, maar een ronde pupil, gladde schubben en een donkere streep door het oog."}, {"g": "R", "n": "Ringslang", "s": "Natrix helvetica", "r": "BAL", "l": 90, "h": ["MOER", "STIL"], "a": ["DAG"], "v": ["GEW", "VIS"], "b": ["GROND"], "w": ["SLAAP"], "c": ["Vechtplassen, juli.", "Moerasbos, rietlanden en open water met veel kikkers.", "Bij een boerderij een grote mesthoop en composthopen.", "Lege, leerachtige eischalen in de composthoop; een slang zwemt met de kop boven water.", "Lichte halvemaanvlekken achter de kop."], "x": "Adder", "t": "Ook een adder kan zwemmen, maar de ringslang heeft gele halvemaanvlekken in de nek, een ronde pupil en wordt veel groter."}, {"g": "R", "n": "Hazelworm", "s": "Anguis fragilis", "r": "BAL", "l": 40, "h": ["BOS", "HEI", "HALF"], "a": ["SCHEMER", "DAG"], "v": ["ONG"], "b": ["GROND"], "w": ["SLAAP"], "c": ["Achterhoek, juni.", "Bosranden en ruige bermen.", "Een dikke strooisellaag, houtstapels en vochtige plekken na regen.", "Onder een plank iets glanzends en koperkleurigs, zonder poten; de staart breekt af.", "Het dier knippert met zijn ogen."], "x": "Gladde slang", "t": "Een slang kan zijn ogen niet sluiten en kan zijn staart niet afwerpen. De hazelworm heeft beweegbare oogleden en een stijve, glanzende bouw."}, {"n": "Levendbarende hagedis", "s": "Zootoca vivipara", "g": "R", "r": "BAL", "l": 15, "h": ["HEI", "MOER"], "a": ["DAG"], "v": ["ONG"], "b": ["GROND"], "w": ["SLAAP"], "c": ["Drenthe, april.", "Hoogveenrestant met natte heide en veenmos.", "Pollen pijpenstrootje en een koel, vochtig microklimaat.", "In augustus piepkleine, zwarte jongen; nergens eieren te vinden.", "Een oranje buik met zwarte vlekjes."], "x": "Zandhagedis", "t": "De zandhagedis is gedrongener, heeft rijen witte oogvlekjes op de rug en groene flanken bij de mannetjes in het voorjaar, en legt eieren in warm zand."}, {"n": "Muurhagedis", "s": "Podarcis muralis", "g": "R", "r": "HR", "l": 20, "h": ["BEB"], "a": ["DAG"], "v": ["ONG"], "b": ["STEEN"], "w": ["SLAAP"], "c": ["Zuid-Limburg, mei. Een oude binnenstad.", "Vestingmuren van natuursteen.", "Muren op het zuiden met veel voegen en kieren.", "Hagedissen schieten de voegen in en rennen verticaal omhoog.", "Een netvormige tekening en een platte kop."], "x": "Zandhagedis", "t": "De zandhagedis is gedrongener, leeft op zandgrond in heide en duinen en heeft rijen witte oogvlekjes in plaats van een netvormige tekening."}, {"g": "A", "n": "Kamsalamander", "s": "Triturus cristatus", "r": "HR", "l": 15, "h": ["STIL", "HALF", "BOS"], "a": ["NACHT"], "v": ["ONG"], "b": ["WATER", "GROND"], "w": ["SLAAP"], "c": ["Twente, april.", "Kleinschalig landschap met houtwallen en grasland.", "Een zonnige, visloze poel vol waterplanten.", "Dubbelgevouwen blaadjes met lichte eitjes; larven zweven midden in het water.", "Een wrattige, donkere huid en een oranje buik met zwarte vlekken."], "x": "Kleine watersalamander", "t": "De kleine watersalamander is kleiner (±9 cm), heeft een gladde huid, en bij het mannetje loopt de golvende kam door tot op de staart. De larven blijven dichter bij bodem en planten."}, {"g": "A", "n": "Boomkikker", "s": "Hyla arborea", "r": "HR", "l": 4.5, "h": ["HALF", "STIL"], "a": ["NACHT", "SCHEMER"], "v": ["ONG"], "b": ["VEG", "WATER"], "w": ["SLAAP"], "c": ["Achterhoek, mei.", "Coulisselandschap met bramenstruwelen.", "Ondiepe, zonbeschenen poelen zonder vis.", "Overdag dieren hoog in de bramen; ’s avonds een luid ‘kè-kè-kè’.", "Kleefschijfjes aan de tenen."], "x": "Poelkikker", "t": "Groene kikkers zitten aan de waterkant in plaats van hoog in struiken, missen de kleefschijfjes en kwaken met kwaakblazen aan de zijkant van de bek."}, {"g": "A", "n": "Rugstreeppad", "s": "Epidalea calamita", "r": "HR", "l": 7, "h": ["DUIN", "HEI"], "a": ["NACHT"], "v": ["ONG"], "b": ["GROND"], "w": ["SLAAP"], "c": ["Bouwlocatie, mei.", "Opgespoten zand met nauwelijks vegetatie.", "Tijdelijke, ondiepe plassen die snel opwarmen.", "Eisnoeren in een kale plas; op een warme avond een luid geratel.", "Een lichte streep over het midden van de rug."], "x": "Gewone pad", "t": "De gewone pad heeft geen gele rugstreep, springt of loopt langzaam, legt eisnoeren met twee tot vier rijen eitjes in diepere wateren en roept zacht."}, {"g": "A", "n": "Knoflookpad", "s": "Pelobates fuscus", "r": "HR", "l": 6, "h": ["OPEN", "HEI"], "a": ["NACHT"], "v": ["ONG"], "b": ["GROND"], "w": ["SLAAP"], "c": ["Noord-Brabant, april.", "Zandige akkers en een stuk heide.", "Een diepe, vegetatierijke poel naast losse, goed vergraafbare grond.", "Met een hydrofoon zacht geklok onder water; in juli zeer grote larven.", "Een verticale pupil en een hoornige graafschop."], "x": "Gewone pad", "t": "De gewone pad heeft een horizontale pupil en geen hoornige graafschop, en zijn larven blijven klein en zwart."}, {"g": "A", "n": "Geelbuikvuurpad", "s": "Bombina variegata", "r": "HR", "l": 4.5, "h": ["STIL", "BOS"], "a": ["DAG", "NACHT"], "v": ["ONG"], "b": ["WATER", "GROND"], "w": ["SLAAP"], "c": ["Zuid-Limburg, juni.", "Een groeve en bospaden met kale, verdichte grond.", "Karrensporen en ondiepe plasjes vol regenwater.", "Losse eitjes in een modderig plasje; een zacht ‘oe… oe’.", "Een hartvormige pupil."], "x": "Vroedmeesterpad", "t": "De vroedmeesterpad heeft een verticale pupil en geen felgekleurde buik, en het mannetje draagt de eieren mee."}, {"g": "A", "n": "Vroedmeesterpad", "s": "Alytes obstetricans", "r": "HR", "l": 5, "h": ["HALF", "BEB"], "a": ["NACHT"], "v": ["ONG"], "b": ["STEEN", "GROND"], "w": ["SLAAP"], "c": ["Zuid-Limburg, juni.", "Een oude mergelgroeve met stenige hellingen.", "Een vijver bij een boerderij en droge muren vol kieren.", "’s Nachts een helder fluitje; een mannetje met eisnoeren om de achterpoten.", "Klein, grijsbruin, met een verticale pupil."], "x": "Geelbuikvuurpad", "t": "De geelbuikvuurpad heeft een hartvormige pupil en een gele buik met zwarte vlekken, en legt losse eitjes in tijdelijke plasjes."}, {"g": "A", "n": "Heikikker", "s": "Rana arvalis", "r": "HR", "l": 6.5, "h": ["HEI", "MOER"], "a": ["DAG", "NACHT"], "v": ["ONG"], "b": ["WATER", "GROND"], "w": ["SLAAP"], "c": ["Drenthe, maart.", "Natte heide en hoogveenrestanten.", "Zure, voedselarme vennen met ondiepe, zonnige oevers.", "Eiklompen dicht bij elkaar; onder water een zacht ‘woeb-woeb’.", "Een spitse snuit en een grote, harde knobbel aan de achterpoot."], "x": "Bruine kikker", "t": "De bruine kikker heeft een stompere snuit, een kleine, zachte knobbel aan de achterpoot en vaak een gevlekte buik, en kleurt niet blauw."}, {"g": "A", "n": "Vuursalamander", "s": "Salamandra salamandra", "r": "BAL", "l": 17, "h": ["BOS", "STROOM"], "a": ["NACHT"], "v": ["ONG"], "b": ["GROND"], "w": ["SLAAP"], "c": ["Zuid-Limburg, oktober, regennacht.", "Hellingbos van beuk en eik.", "Bronnetjes en koele, kleine bronbeken.", "Larven met een lichte vlek bij elke poot in de beek; nergens eieren.", "Zwart met gele vlekken."], "x": "Alpenwatersalamander", "t": "De alpenwatersalamander is kleiner, leeft in het voorjaar in het water, heeft een egaal oranje buik en geen gele vlekken op de rug."}, {"n": "Gewone pad", "s": "Bufo bufo", "g": "A", "r": "BAL", "l": 10, "h": ["BOS", "HALF", "BEB"], "a": ["NACHT"], "v": ["ONG"], "b": ["GROND"], "w": ["SLAAP"], "c": ["Gelderland, maart.", "Een bos met een weg erdoor en een vijver aan de overkant.", "Een diepe vijver met vis.", "Lange eisnoeren om waterplanten; langs de weg schermen met emmers.", "Een koperkleurig oog met horizontale pupil."], "x": "Rugstreeppad", "t": "De rugstreeppad heeft een gele rugstreep en korte achterpoten, rent in plaats van te springen, legt eisnoeren met één of twee rijen eitjes in ondiepe plassen zonder vis, en roept luid ratelend."}, {"n": "Bruine kikker", "s": "Rana temporaria", "g": "A", "r": "BAL", "l": 8, "h": ["HALF", "BOS", "STIL"], "a": ["NACHT", "DAG"], "v": ["ONG"], "b": ["GROND", "WATER"], "w": ["SLAAP"], "c": ["Utrecht, februari.", "Weilanden met slootjes, en tuinen.", "Ondiep, stilstaand water met ijs langs de randen.", "Grote eiklompen, de eerste van het jaar; onder water een zacht gegrom.", "Een stompe snuit en een kleine, zachte knobbel aan de achterpoot."], "x": "Heikikker", "t": "De heikikker heeft een spitse snuit en een grote, harde knobbel aan de achterpoot, leeft in zure, voedselarme wateren, en de mannetjes kleuren in de paartijd blauw."}, {"n": "Kleine watersalamander", "s": "Lissotriton vulgaris", "g": "A", "r": "BAL", "l": 9, "h": ["STIL", "HALF"], "a": ["NACHT"], "v": ["ONG"], "b": ["WATER", "GROND"], "w": ["SLAAP"], "c": ["Haarlem, april.", "Tuinen in een woonwijk.", "Een tuinvijver zonder vis, met waterplanten.", "Dubbelgevouwen blaadjes met eitjes; een mannetje met een golvende kam.", "Een gestippelde keel."], "x": "Kamsalamander", "t": "De kamsalamander is groter (±15 cm), heeft een wrattige, donkere huid en een getande kam die bij de staartwortel onderbroken is."}, {"n": "Alpenwatersalamander", "s": "Ichthyosaura alpestris", "g": "A", "r": "BAL", "l": 10, "h": ["BOS", "STIL"], "a": ["NACHT"], "v": ["ONG"], "b": ["WATER", "GROND"], "w": ["SLAAP"], "c": ["Veluwe, april.", "Loofbos op de hogere zandgronden.", "Een koele, schaduwrijke bospoel zonder vis.", "Een mannetje met blauwe flanken; de dieren overwinteren in de bosbodem.", "Een oranje buik zonder vlekken."], "x": "Vinpootsalamander", "t": "De vinpootsalamander is kleiner, heeft een lichte, ongevlekte keel en een lichtgeel tot oranje streepje op de buik; mannetjes hebben donkere zwemvliezen en een draadje aan de staartpunt."}, {"n": "Vinpootsalamander", "s": "Lissotriton helveticus", "g": "A", "r": "BAL", "l": 8, "h": ["HEI", "BOS", "STIL"], "a": ["NACHT"], "v": ["ONG"], "b": ["WATER", "GROND"], "w": ["SLAAP"], "c": ["De Kempen, april.", "Heide en bos op zandgrond.", "Een zuur, voedselarm ven met veenmos.", "Mannetjes met donkere achterpoten en een draadje aan de staartpunt.", "Een lichte, ongevlekte keel."], "x": "Kleine watersalamander", "t": "De kleine watersalamander heeft een gestippelde keel; het mannetje heeft een hoge, golvende kam in plaats van een draadje aan de staart."}, {"n": "Poelkikker", "s": "Pelophylax lessonae", "g": "A", "r": "HR", "l": 7, "h": ["STIL", "HEI"], "a": ["DAG"], "v": ["ONG"], "b": ["WATER"], "w": ["SLAAP"], "c": ["Veluwe, mei.", "Heide en bos op voedselarme zandgrond.", "Een voedselarm ven met een zonnige oever.", "Een luid, snorrend koor met witte kwaakblazen; ’s winters niet in het water.", "Een grote, halvemaanvormige knobbel aan de achterpoot."], "x": "Meerkikker", "t": "De meerkikker is veel groter, heeft grijze kwaakblazen en een kleine knobbel aan de achterpoot, en overwintert in het water."}, {"n": "Meerkikker", "s": "Pelophylax ridibundus", "g": "A", "r": "BAL", "l": 11, "h": ["STIL", "STROOM"], "a": ["DAG"], "v": ["ONG", "GEW"], "b": ["WATER"], "w": ["SLAAP"], "c": ["Zuid-Holland, juni.", "Een polder met brede boezemwateren.", "Groot, open en voedselrijk water.", "Een luid geratel met grijze kwaakblazen; ’s winters op de bodem van het water.", "Groot, met een kleine knobbel aan de achterpoot."], "x": "Poelkikker", "t": "De poelkikker is kleiner, heeft witte kwaakblazen en een grote, halvemaanvormige knobbel aan de achterpoot, en overwintert op het land."}, {"g": "F", "n": "Grote modderkruiper", "s": "Misgurnus fossilis", "r": "BAL", "l": 25, "h": ["STIL", "MOER"], "a": ["NACHT", "SCHEMER"], "v": ["ONG"], "b": ["WATER"], "w": ["ACT"], "c": ["Zuid-Holland, juni. Een veenpolder.", "Kleine slootjes met krabbescheer en veel waterplanten.", "Een dikke laag organische modder en ’s zomers bijna geen zuurstof.", "Een positief eDNA-monster; diep in de modder kronkelt een langgerekte vis.", "Tien baarddraden."], "x": "Kleine modderkruiper", "t": "De kleine modderkruiper heeft zes korte baarddraden en een rij donkere vlekken langs de flank, en leeft op zandige bodems in helder water. Hij valt niet onder de soortenbescherming."}, {"g": "F", "n": "Beekprik", "s": "Lampetra planeri", "r": "BAL", "l": 14, "h": ["STROOM"], "a": ["NACHT"], "v": ["PLANT"], "b": ["WATER"], "w": ["ACT"], "c": ["Veluwe, april.", "Een koude sprengenbeek onder een bladerdak.", "Grindbanken afgewisseld met slibrijke plekken.", "Kleine kuiltjes in het grind; in het slib blinde, wormachtige larven.", "Geen kaken, maar een zuigmond."], "x": "Rivierprik", "t": "De rivierprik trekt naar zee, wordt veel groter (±30–40 cm) en paait als volwassen dier in grotere rivieren. Hij valt niet onder de soortenbescherming van de Omgevingswet."}, {"g": "F", "n": "Kwabaal", "s": "Lota lota", "r": "BAL", "l": 45, "h": ["STROOM", "STIL"], "a": ["NACHT"], "v": ["VIS", "ONG"], "b": ["WATER"], "w": ["ACT"], "c": ["IJssel, januari.", "Uiterwaarden met strangen en kribvakken.", "IJskoud, helder water; in het voorjaar ondergelopen graslanden.", "Overdag verscholen onder stenen; paai juist in de koudste weken.", "Eén baarddraad aan de kin."], "x": "Aal", "t": "De aal heeft geen baarddraad en geen afzonderlijke rugvinnen: rug-, staart- en aarsvin lopen in één zoom door."}, {"n": "Elrits", "s": "Phoxinus phoxinus", "g": "F", "r": "BAL", "l": 9, "h": ["STROOM"], "a": ["DAG"], "v": ["ONG"], "b": ["WATER"], "w": ["ACT"], "c": ["Zuid-Limburg, mei.", "Een ondiepe, schaduwrijke beek.", "Helder, zuurstofrijk water over grind.", "Scholen kleine visjes; mannetjes met een rode buik.", "Zeer fijne schubben en een donkere lengteband."], "x": "Gestippelde alver", "t": "De gestippelde alver is hoger gebouwd en heeft een opvallende dubbele rij donkere stippen langs de zijlijn."}, {"n": "Beekdonderpad", "s": "Cottus rhenanus", "g": "F", "r": "BAL", "l": 12, "h": ["STROOM"], "a": ["NACHT"], "v": ["ONG"], "b": ["WATER"], "w": ["ACT"], "c": ["Zuid-Limburg, maart.", "Een snelstromende beek in het heuvelland.", "Een stenige bodem, stroomopwaarts van een stuw.", "Oranje eitjes onder een platte steen; de vis hipt over de bodem.", "Een brede, platte kop en waaiervormige borstvinnen."], "x": "Rivierdonderpad", "t": "De rivierdonderpad lijkt sterk op de beekdonderpad, maar leeft in grote rivieren, kanalen en meren, vaak tussen stortsteen. Hij valt niet onder de soortenbescherming van de Omgevingswet."}, {"n": "Gestippelde alver", "s": "Alburnoides bipunctatus", "g": "F", "r": "BAL", "l": 12, "h": ["STROOM"], "a": ["DAG"], "v": ["ONG"], "b": ["WATER"], "w": ["ACT"], "c": ["Zuid-Limburg, juni.", "Een snelstromende beek.", "Grindbanken afgewisseld met diepere kuilen.", "Een school zilverachtige visjes van ±10 cm boven grind.", "Een dubbele rij stippen langs de zijlijn."], "x": "Elrits", "t": "De elrits is ronder en kleiner, heeft zeer fijne schubben en een donkere lengteband, maar geen dubbele stippenrij langs de zijlijn."}, {"n": "Noordzeehouting", "s": "Coregonus oxyrinchus", "g": "F", "r": "HR", "l": 40, "h": ["ZEE", "STROOM", "STIL"], "a": ["DAG"], "v": ["ONG"], "b": ["WATER"], "w": ["ACT"], "c": ["Afsluitdijk, november.", "De overgang van zout Waddenwater naar het zoete IJsselmeer.", "De spuisluizen, waar zoet water naar zee stroomt.", "Zilverachtige vissen verzamelen zich om naar zoet water te trekken.", "Een kleine vetvin en een spitse, overhangende snuit."], "x": "Spiering", "t": "De spiering is kleiner, heeft een grote bek met tanden en geen spitse, overhangende snuit, en ruikt naar komkommer."}, {"g": "B", "n": "Steenuil", "s": "Athene noctua", "r": "VRJ", "l": 22, "h": ["HALF", "OPEN"], "a": ["SCHEMER", "NACHT"], "v": ["ONG", "GEW"], "b": ["BOOM", "GEB"], "w": ["ACT"], "c": ["Achterhoek, maart.", "Kleinschalig agrarisch landschap met erven.", "Hoogstamboomgaarden, knotwilgen en kort begraasde weides.", "Kleine braakballen met keverschildjes; in de schemering een klagend ‘kiew’.", "Gele ogen in een platte kop."], "x": "Kerkuil", "t": "Kerkuilbraakballen zijn groter, zwart en glanzend, en bevatten complete muizenschedels. Die van de steenuil zijn klein, grijs en zitten vol insectenresten."}, {"g": "B", "n": "Gierzwaluw", "s": "Apus apus", "r": "VRJ", "l": 17, "h": ["BEB"], "a": ["DAG"], "v": ["ONG"], "b": ["GEB"], "w": ["TREK"], "c": ["Haarlem, juni.", "Een binnenstad met oude bebouwing.", "Huizen van rond 1900 met pannendaken en gootlijsten.", "Gillende groepen scheren ’s avonds door de straten; aan de gevel is niets te zien.", "Sikkelvormige vleugels."], "x": "Huiszwaluw", "t": "De huiszwaluw heeft een witte stuit en buik, bouwt een zichtbaar modderkommetje onder de dakgoot en gaat wel op draden zitten."}, {"g": "B", "n": "Kerkuil", "s": "Tyto alba", "r": "VRJ", "l": 34, "h": ["OPEN", "HALF"], "a": ["NACHT"], "v": ["GEW"], "b": ["GEB"], "w": ["ACT"], "c": ["Friesland, augustus.", "Uitgestrekte graslanden met ruige slootkanten.", "Een boerderij met een rustige, open hooizolder.", "Grote, zwart glanzende braakballen met complete schedeltjes.", "Een hartvormige, witte sluier."], "x": "Bosuil", "t": "Bosuilbraakballen zijn grijs, dof en brokkelig. De bosuil roept het bekende bibberende ‘hoe-hoe’ en broedt vooral in boomholtes."}, {"g": "B", "n": "Ooievaar", "s": "Ciconia ciconia", "r": "VRJ", "l": 100, "h": ["OPEN", "MOER"], "a": ["DAG"], "v": ["GEW", "ONG"], "b": ["GEB"], "w": ["TREK", "ACT"], "c": ["Bij Arnhem, april.", "Uiterwaarden met natte graslanden.", "Poelen, plas-dras en een boerderij met een hoge paal.", "Witte vegen op de paal; snavelklepperen.", "Rode snavel en rode poten."], "x": "Blauwe reiger", "t": "De blauwe reiger vliegt met ingetrokken nek, is grijs, en broedt in kolonies hoog in bomen."}, {"g": "B", "n": "IJsvogel", "s": "Alcedo atthis", "r": "VR", "l": 17, "h": ["STROOM", "STIL"], "a": ["DAG"], "v": ["VIS"], "b": ["HOL"], "w": ["ACT"], "c": ["Twente, februari.", "Een meanderende, visrijke beek.", "Steile, kale oeverwanden en overhangende takken.", "Een rond gat in de oeverwand dat naar vis ruikt; een hoog ‘tiet’.", "Een lange dolksnavel op een kleine vogel."], "x": "Oeverzwaluw", "t": "Oeverzwaluwen graven in kolonie tientallen kleinere gaten bij elkaar, zonder vislucht of witte veeg uit de opening."}, {"g": "B", "n": "Roek", "s": "Corvus frugilegus", "r": "VRJ", "l": 46, "h": ["OPEN", "BEB"], "a": ["DAG"], "v": ["ONG", "PLANT"], "b": ["BOOM"], "w": ["ACT"], "c": ["Drenthe, maart.", "Een dorpsrand met grasland en akkers.", "Een rij hoge populieren langs een weg.", "Tientallen takkennesten bij elkaar en een kakofonie van schorre roepen.", "Een kale, grijswitte snavelbasis."], "x": "Zwarte kraai", "t": "De zwarte kraai heeft een volledig bevederde snavelbasis, broedt solitair en heeft geen ‘broekje’."}, {"g": "B", "n": "Oeverzwaluw", "s": "Riparia riparia", "r": "VR", "l": 12, "h": ["STIL", "STROOM", "OPEN"], "a": ["DAG"], "v": ["ONG"], "b": ["HOL"], "w": ["TREK"], "c": ["Noord-Limburg, mei.", "Een zandwinning met een grote plas.", "Een steile, kale zandwand die door afgraving steeds verschuift.", "Tientallen gaten vlak onder de rand; kleine vogels jagen laag boven het water.", "Een bruine borstband op een witte buik."], "x": "IJsvogel", "t": "Een ijsvogelhol is groter, ligt alleen, en ruikt sterk naar vis; uit de opening loopt vaak een witte veeg."}, {"g": "B", "n": "Slechtvalk", "s": "Falco peregrinus", "r": "VRJ", "l": 43, "h": ["BEB", "ZEE"], "a": ["DAG"], "v": ["GEW"], "b": ["GEB"], "w": ["ACT"], "c": ["Rotterdamse haven, maart.", "Industrie, met open water en slikken in de buurt.", "Hoge schoorstenen, koeltorens en masten.", "Plukresten van duiven en steltlopers op een richel; een steile duikvlucht.", "Een brede, zwarte baardstreep."], "x": "Torenvalk", "t": "De torenvalk is kleiner en roodbruin, bidt boven open terrein en jaagt op muizen in plaats van op vogels in de vlucht."}, {"g": "B", "n": "Ransuil", "s": "Asio otus", "r": "VRJ", "l": 36, "h": ["HALF", "BOS", "BEB"], "a": ["NACHT"], "v": ["GEW"], "b": ["BOOM"], "w": ["ACT"], "c": ["Groningen, januari.", "Een woonwijk aan de rand van open akkers.", "Een plantsoen met dichte coniferen naast een begraafplaats.", "Tientallen grijze braakballen met veldmuizen; overdag meerdere vogels in één boom.", "Lange oorpluimen en oranje ogen."], "x": "Bosuil", "t": "De bosuil heeft geen oorpluimen en donkere ogen, en roest niet in groepen."}, {"n": "Huismus", "s": "Passer domesticus", "g": "B", "r": "VRJ", "l": 15, "h": ["BEB"], "a": ["DAG"], "v": ["PLANT", "ONG"], "b": ["GEB"], "w": ["ACT"], "c": ["Leeuwarden, april.", "Een rijtjeswijk uit de jaren zestig.", "Dichte heggen, pannendaken en tuinen met kale plekjes.", "Stro onder de dakpannen, stofbaden en luid getjilp uit een haag.", "Een zwarte bef."], "x": "Spreeuw", "t": "De spreeuw broedt ook onder dakpannen, maar is groter, zwart met een metaalglans en lichte stippen in de winter, en heeft een lange, spitse snavel."}, {"n": "Oehoe", "s": "Bubo bubo", "g": "B", "r": "VRJ", "l": 65, "h": ["BOS"], "a": ["NACHT", "SCHEMER"], "v": ["GEW"], "b": ["STEEN", "GEB"], "w": ["ACT"], "c": ["Zuid-Limburg, februari.", "Groot bos met hellingen.", "Een groeve met steile wanden en richels.", "Zeer grote braakballen met egelstekels; een diep, ver dragend roepen.", "Oranje ogen en oorpluimen, ±65 cm."], "x": "Ransuil", "t": "De ransuil heeft ook oranje ogen en oorpluimen, maar is ruim de helft kleiner, broedt in oude kraaiennesten en eet vooral muizen."}, {"n": "Buizerd", "s": "Buteo buteo", "g": "B", "r": "VRJ", "l": 53, "h": ["HALF", "BOS"], "a": ["DAG"], "v": ["GEW"], "b": ["BOOM"], "w": ["ACT"], "c": ["Gelderse Vallei, maart.", "Halfopen landschap met bosjes en houtwallen.", "Graslanden met paaltjes, en hoge eiken aan de bosrand.", "Een groot takkennest met verse twijgen; een miauwend ‘pieuw’.", "Breed en gedrongen, met een zeer variabel verenkleed."], "x": "Wespendief", "t": "De wespendief heeft een smallere, duifachtige kop, een langere staart met twee smalle banden bij de basis en één brede aan het eind, en is een zomergast die wespennesten uitgraaft."}, {"n": "Havik", "s": "Astur gentilis", "g": "B", "r": "VRJ", "l": 55, "h": ["BOS"], "a": ["DAG"], "v": ["GEW"], "b": ["BOOM"], "w": ["ACT"], "c": ["Utrechtse Heuvelrug, maart.", "Een groot, oud bos.", "Hoge douglassparren en grove dennen, met weinig verstoring.", "Een plukplaats met veren van houtduif en kraai; een kakelend ‘kjek-kjek’.", "Een witte wenkbrauwstreep en oranje ogen."], "x": "Sperwer", "t": "De sperwer is veel kleiner, slaat vooral zangvogels, heeft lange, dunne poten en jaagt ook in tuinen in de bebouwde kom."}, {"n": "Sperwer", "s": "Accipiter nisus", "g": "B", "r": "VRJ", "l": 34, "h": ["BOS", "BEB"], "a": ["DAG"], "v": ["GEW"], "b": ["BOOM"], "w": ["ACT"], "c": ["Amersfoort, januari.", "Een woonwijk met veel groen.", "Tuinen met voederplekken en een plantsoen met naaldbomen.", "Een plukplaats met mezenveertjes; een vogel schiet laag over een schutting.", "Korte, ronde vleugels en lange, dunne poten."], "x": "Havik", "t": "De havik is veel groter, heeft een witte wenkbrauwstreep en een fijner gebandeerde buik, en slaat duiven en kraaien in plaats van zangvogels."}, {"n": "Wespendief", "s": "Pernis apivorus", "g": "B", "r": "VRJ", "l": 55, "h": ["BOS"], "a": ["DAG"], "v": ["ONG"], "b": ["BOOM"], "w": ["TREK"], "c": ["Veluwe, juli.", "Een groot bos.", "Open plekken, bermen en heide met veel wespen.", "Opgegraven wespennesten; een nest bekleed met groen blad.", "Een smalle, duifachtige kop."], "x": "Buizerd", "t": "De buizerd heeft een bredere kop en een kortere staart met veel fijne bandjes, blijft het hele jaar en jaagt vooral op muizen."}, {"n": "Boomvalk", "s": "Falco subbuteo", "g": "B", "r": "VRJ", "l": 32, "h": ["HALF", "MOER"], "a": ["DAG", "SCHEMER"], "v": ["ONG", "GEW"], "b": ["BOOM"], "w": ["TREK"], "c": ["Overijssel, augustus.", "Laagveen met rietlanden en petgaten.", "Elzenbroek en bosranden met oude kraaiennesten.", "Libellen worden in de vlucht gevangen; in september is hij weg.", "Een rode ‘broek’."], "x": "Slechtvalk", "t": "De slechtvalk is groter en zwaarder, heeft een gebandeerde in plaats van gestreepte buik, geen rode broek, en broedt op gebouwen of richels."}, {"n": "Grote gele kwikstaart", "s": "Motacilla cinerea", "g": "B", "r": "VRJ", "l": 19, "h": ["STROOM"], "a": ["DAG"], "v": ["ONG"], "b": ["GEB", "STEEN"], "w": ["ACT"], "c": ["Twente, april.", "Een snelstromende beek.", "Een watermolen en een stuw met oude muren.", "Een nestje in een nis boven het water; een scherp ‘tsi-tsit’.", "Gele onderkant en een grijze rug."], "x": "Witte kwikstaart", "t": "De witte kwikstaart is zwart-wit-grijs zonder geel en broedt in allerlei gebouwen, niet speciaal bij stromend water."}, {"n": "Bosuil", "s": "Strix aluco", "g": "B", "r": "VR", "l": 38, "h": ["BOS", "BEB"], "a": ["NACHT"], "v": ["GEW"], "b": ["BOOM"], "w": ["ACT"], "c": ["Bij Den Haag, december.", "Een landgoed met oude bomen.", "Holle beuken naast een begraafplaats.", "Grijze, doffe braakballen; ’s nachts een bibberend roepen.", "Donkere ogen en een ronde kop."], "x": "Ransuil", "t": "De ransuil heeft lange oorpluimen en oranje ogen, broedt in oude kraaiennesten en roest ’s winters in groepen in coniferen."}, {"n": "Torenvalk", "s": "Falco tinnunculus", "g": "B", "r": "VR", "l": 34, "h": ["OPEN", "BEB"], "a": ["DAG"], "v": ["GEW"], "b": ["GEB", "BOOM"], "w": ["ACT"], "c": ["Noord-Holland, mei.", "Open polder met weilanden.", "Wegbermen, slootkanten en een schuur met een kast.", "Braakballen met veldmuizen; een vogel hangt stil in de lucht.", "Een roodbruine rug met zwarte vlekjes."], "x": "Boomvalk", "t": "De boomvalk bidt niet, jaagt op libellen en zwaluwen, heeft een leigrijze rug en een rode broek, en is een zomergast."}, {"n": "Boerenzwaluw", "s": "Hirundo rustica", "g": "B", "r": "VR", "l": 18, "h": ["OPEN"], "a": ["DAG"], "v": ["ONG"], "b": ["GEB"], "w": ["TREK"], "c": ["Friesland, juni.", "Graslanden en sloten bij een melkveebedrijf.", "Een open koeienstal met balken.", "Open modderkommetjes op de balken; vogels scheren laag over het gras.", "Lange staartpennen."], "x": "Huiszwaluw", "t": "De huiszwaluw heeft een witte stuit en een kortere, minder diep gevorkte staart, en bouwt gesloten modderkommetjes aan de buitenkant van gebouwen."}, {"n": "Huiszwaluw", "s": "Delichon urbicum", "g": "B", "r": "VR", "l": 13, "h": ["BEB", "OPEN"], "a": ["DAG"], "v": ["ONG"], "b": ["GEB"], "w": ["TREK"], "c": ["Overijssel, juni.", "Een dorp met een plas in de buurt.", "Woningen met overstekende dakgoten.", "Gesloten modderkommetjes onder de goot; vogels rapen modder bij de plas.", "Een witte stuit."], "x": "Boerenzwaluw", "t": "De boerenzwaluw heeft lange staartpennen en een roodbruine keel, en bouwt open nesten binnen in stallen en schuren."}, {"n": "Blauwe reiger", "s": "Ardea cinerea", "g": "B", "r": "VR", "l": 95, "h": ["STIL", "OPEN"], "a": ["DAG", "SCHEMER"], "v": ["VIS", "GEW"], "b": ["BOOM"], "w": ["ACT"], "c": ["Noord-Holland, maart.", "Veenweide met veel sloten.", "Hoge bomen in een eendenkooi.", "Tientallen grote takkennesten met visresten eronder; een schor ‘kraak’.", "Een lange, gele snavel en een zwarte kuifveer."], "x": "Ooievaar", "t": "De ooievaar vliegt met gestrekte nek, is wit met zwarte slagpennen en een rode snavel, en broedt alleen of in kleine groepen op palen en daken."}, {"n": "Zwarte specht", "s": "Dryocopus martius", "g": "B", "r": "VR", "l": 46, "h": ["BOS"], "a": ["DAG"], "v": ["ONG"], "b": ["BOOM"], "w": ["ACT"], "c": ["Veluwe, februari.", "Een groot, oud bos.", "Oude beuken met gladde stammen en veel dood hout.", "Een groot, verticaal ovaal hol; uitgehakte stronken; een klagend ‘kliuu’.", "Geheel zwart, met een rode kruin."], "x": "Groene specht", "t": "De groene specht is kleiner en groen met een gele stuit, foerageert vooral op de grond en maakt ronde, kleinere holen."}, {"n": "Groene specht", "s": "Picus viridis", "g": "B", "r": "VR", "l": 32, "h": ["HALF", "BOS"], "a": ["DAG"], "v": ["ONG"], "b": ["BOOM"], "w": ["ACT"], "c": ["Een landgoed, april.", "Parkachtig landschap.", "Grasvelden met veel mieren en oude bomen.", "Kegelvormige gaten in het gazon; een luid, lachend roepen.", "Een gele stuit."], "x": "Zwarte specht", "t": "De zwarte specht is veel groter, helemaal zwart met een rode kruin, en hakt grote, ovale holen in beuken."}, {"n": "Tapuit", "s": "Oenanthe oenanthe", "g": "B", "r": "VR", "l": 15, "h": ["DUIN"], "a": ["DAG"], "v": ["ONG"], "b": ["HOL"], "w": ["TREK"], "c": ["Een Waddeneiland, mei.", "Grijze duinen met korte, mosrijke vegetatie.", "Veel konijnenholen in open zand.", "Een vogel duikt een konijnenhol in; buiginkjes op een paaltje.", "Een witte stuit met een zwarte ‘T’ op de staart."], "x": "Roodborsttapuit", "t": "De roodborsttapuit broedt op de grond in de vegetatie, niet in holen, heeft geen witte stuit, en het mannetje heeft een zwarte kop en een oranjerode borst."}, {"n": "Kievit", "s": "Vanellus vanellus", "g": "B", "r": "VR", "l": 30, "h": ["OPEN"], "a": ["DAG", "NACHT"], "v": ["ONG"], "b": ["GROND"], "w": ["ACT", "TREK"], "c": ["Friesland, april.", "Open grasland en akkers.", "Kale, net bewerkte akkers zonder bomen in de buurt.", "Een kuiltje met vier gevlekte eieren; een tuimelende baltsvlucht.", "Een lange, smalle kuif."], "x": "Grutto", "t": "De grutto broedt in hoog, kruidenrijk grasland, heeft een lange, rechte snavel, lange poten en geen kuif."}, {"n": "Spreeuw", "s": "Sturnus vulgaris", "g": "B", "r": "VR", "l": 21, "h": ["BEB", "OPEN"], "a": ["DAG"], "v": ["ONG", "PLANT"], "b": ["BOOM", "GEB"], "w": ["ACT"], "c": ["Een wijk naast een polder, mei.", "Daken, tuinen en kort gras.", "Holtes onder dakpannen en in oude bomen.", "Rasperig gebedel onder een dakpan; in de herfst bewegende wolken.", "Lichte stippen op een glanzend zwart verenkleed."], "x": "Merel", "t": "De merel is groter, heeft een langere staart, het mannetje is egaal zwart met een oranje snavel, en hij broedt in open nesten in struiken."}, {"g": "Z", "n": "Veldmuis", "s": "Microtus arvalis", "r": "BAL", "l": 13, "h": ["OPEN"], "a": ["DAG", "NACHT"], "v": ["PLANT"], "b": ["HOL"], "w": ["ACT"]}, {"g": "Z", "n": "Mol", "s": "Talpa europaea", "r": "NB", "l": 16, "h": ["OPEN", "HALF"], "a": ["DAG", "NACHT"], "v": ["ONG"], "b": ["HOL"], "w": ["ACT"]}, {"g": "Z", "n": "Bruine rat", "s": "Rattus norvegicus", "r": "NB", "l": 40, "h": ["BEB", "STIL"], "a": ["NACHT"], "v": ["PLANT", "ONG", "GEW"], "b": ["HOL"], "w": ["ACT"]}, {"g": "Z", "n": "Huismuis", "s": "Mus musculus", "r": "NB", "l": 16, "h": ["BEB"], "a": ["NACHT"], "v": ["PLANT"], "b": ["GEB"], "w": ["ACT"]}, {"g": "Z", "n": "Muskusrat", "s": "Ondatra zibethicus", "r": "NB", "l": 55, "h": ["STIL", "MOER"], "a": ["SCHEMER", "NACHT"], "v": ["PLANT"], "b": ["HOL"], "w": ["ACT"]}, {"g": "Z", "n": "Wasbeer", "s": "Procyon lotor", "r": "NB", "l": 80, "h": ["BOS", "BEB"], "a": ["NACHT"], "v": ["ONG", "PLANT", "VIS"], "b": ["BOOM", "GEB"], "w": ["ACT"]}, {"g": "B", "n": "Gewone baardvleermuis", "s": "Myotis mystacinus", "r": "HR", "l": 8, "h": ["BOS", "HALF"], "a": ["NACHT"], "v": ["ONG"], "b": ["GEB", "BOOM"], "w": ["SLAAP"]}, {"g": "A", "n": "Amerikaanse brulkikker", "s": "Lithobates catesbeianus", "r": "NB", "l": 15, "h": ["STIL"], "a": ["NACHT", "DAG"], "v": ["GEW", "ONG"], "b": ["WATER"], "w": ["SLAAP"]}, {"g": "R", "n": "Roodwangschildpad", "s": "Trachemys scripta", "r": "NB", "l": 25, "h": ["STIL", "BEB"], "a": ["DAG"], "v": ["ONG", "PLANT"], "b": ["WATER"], "w": ["SLAAP"]}, {"g": "F", "n": "Europese steur", "s": "Acipenser sturio", "r": "HR", "l": 200, "h": ["STROOM", "ZEE"], "a": ["NACHT", "DAG"], "v": ["ONG"], "b": ["WATER"], "w": ["ACT"]}, {"g": "F", "n": "Kleine modderkruiper", "s": "Cobitis taenia", "r": "NB", "l": 10, "h": ["STIL", "STROOM"], "a": ["NACHT"], "v": ["ONG"], "b": ["WATER"], "w": ["ACT"]}, {"g": "F", "n": "Bittervoorn", "s": "Rhodeus amarus", "r": "NB", "l": 7, "h": ["STIL"], "a": ["DAG"], "v": ["PLANT", "ONG"], "b": ["WATER"], "w": ["ACT"]}, {"g": "F", "n": "Snoek", "s": "Esox lucius", "r": "NB", "l": 80, "h": ["STIL", "MOER"], "a": ["DAG", "SCHEMER"], "v": ["VIS"], "b": ["WATER"], "w": ["ACT"]}, {"g": "F", "n": "Aal", "s": "Anguilla anguilla", "r": "NB", "l": 70, "h": ["STIL", "STROOM"], "a": ["NACHT"], "v": ["ONG", "VIS"], "b": ["WATER"], "w": ["ACT"]}, {"g": "B", "n": "Boomklever", "s": "Sitta europaea", "r": "VR", "l": 14, "h": ["BOS"], "a": ["DAG"], "v": ["ONG", "PLANT"], "b": ["BOOM"], "w": ["ACT"]}, {"g": "B", "n": "Kauw", "s": "Corvus monedula", "r": "VR", "l": 34, "h": ["BEB", "HALF"], "a": ["DAG"], "v": ["ONG", "PLANT"], "b": ["GEB", "BOOM"], "w": ["ACT"]}, {"g": "B", "n": "Zwarte kraai", "s": "Corvus corone", "r": "VR", "l": 47, "h": ["OPEN", "BEB"], "a": ["DAG"], "v": ["ONG", "PLANT", "GEW"], "b": ["BOOM"], "w": ["ACT"]}, {"g": "B", "n": "Grauwe gans", "s": "Anser anser", "r": "VR", "l": 80, "h": ["MOER", "OPEN"], "a": ["DAG"], "v": ["PLANT"], "b": ["VEG"], "w": ["ACT"]}, {"n": "Tuimelaar", "s": "Tursiops truncatus", "g": "Z", "r": "HR", "l": 300, "h": ["ZEE"], "a": ["DAG", "NACHT"], "v": ["VIS"], "b": ["WATER"], "w": ["ACT"]}, {"n": "Huiskat", "s": "Felis catus", "g": "Z", "r": "NB", "l": 75, "h": ["BEB", "HALF"], "a": ["NACHT", "SCHEMER"], "v": ["GEW"], "b": ["GEB"], "w": ["ACT"]}, {"n": "Beverrat", "s": "Myocastor coypus", "g": "Z", "r": "NB", "l": 90, "h": ["STIL", "MOER"], "a": ["SCHEMER", "NACHT"], "v": ["PLANT"], "b": ["HOL"], "w": ["ACT"]}, {"n": "Middelste groene kikker", "s": "Pelophylax kl. esculentus", "g": "A", "r": "BAL", "l": 9, "h": ["STIL"], "a": ["DAG"], "v": ["ONG"], "b": ["WATER"], "w": ["SLAAP"]}, {"n": "Rivierprik", "s": "Lampetra fluviatilis", "g": "F", "r": "NB", "l": 35, "h": ["STROOM", "ZEE"], "a": ["NACHT"], "v": ["GEW"], "b": ["WATER"], "w": ["ACT"]}, {"n": "Rivierdonderpad", "s": "Cottus perifretum", "g": "F", "r": "NB", "l": 12, "h": ["STROOM", "STIL"], "a": ["NACHT"], "v": ["ONG"], "b": ["WATER"], "w": ["ACT"]}, {"n": "Spiering", "s": "Osmerus eperlanus", "g": "F", "r": "NB", "l": 20, "h": ["STIL", "ZEE"], "a": ["DAG"], "v": ["ONG", "VIS"], "b": ["WATER"], "w": ["ACT"]}, {"n": "Witte kwikstaart", "s": "Motacilla alba", "g": "B", "r": "VR", "l": 18, "h": ["BEB", "OPEN"], "a": ["DAG"], "v": ["ONG"], "b": ["GEB"], "w": ["ACT", "TREK"]}, {"n": "Roodborsttapuit", "s": "Saxicola rubicola", "g": "B", "r": "VR", "l": 12, "h": ["HEI", "DUIN"], "a": ["DAG"], "v": ["ONG"], "b": ["VEG"], "w": ["ACT", "TREK"]}, {"n": "Grutto", "s": "Limosa limosa", "g": "B", "r": "VR", "l": 40, "h": ["OPEN"], "a": ["DAG"], "v": ["ONG"], "b": ["GROND"], "w": ["TREK"]}, {"n": "Merel", "s": "Turdus merula", "g": "B", "r": "VR", "l": 25, "h": ["BEB", "BOS", "HALF"], "a": ["DAG"], "v": ["ONG", "PLANT"], "b": ["VEG"], "w": ["ACT"]}, {"n": "Houtduif", "s": "Columba palumbus", "g": "B", "r": "VR", "l": 41, "h": ["BEB", "OPEN", "BOS"], "a": ["DAG"], "v": ["PLANT"], "b": ["BOOM"], "w": ["ACT"]}];
+
+</script>
+<script>
+(function(){
+"use strict";
+const TARGETS = SPECIES.filter(s => s.c);
+const BY_NAME = new Map(SPECIES.map(s => [s.n, s]));
+const MAX = 5;
+const COLS = ["h","a","v","b","w","l","r"];
+const COL_LABEL = { h:"Leefgebied", a:"Activiteit", v:"Voedsel", b:"Verblijfplaats", w:"Winter", l:"Lengte", r:"Regime" };
+const START = Date.UTC(2026,10,6);
+
+/* ---------- hulpfuncties ---------- */
+const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function rng(seed){ return function(){ seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed>>>15, 1|seed); t = t + Math.imul(t ^ t>>>7, 61|t) ^ t; return ((t ^ t>>>14) >>> 0) / 4294967296; }; }
+function shuffled(arr, seed){ const r = rng(seed), a = arr.slice(); for(let i=a.length-1;i>0;i--){ const j = Math.floor(r()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; }
+const MONTHS = ["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"];
+const CLUE_MONTH = new Map(TARGETS.map(t => { const m = t.c[0].toLowerCase().match(new RegExp(MONTHS.join("|"))); return [t.n, m ? MONTHS.indexOf(m[0]) : -1]; }));
+const DAILY = [];
+/* De dagcasus past bij het seizoen: een soort waarvan de casus in deze maand (± 1 maand) speelt,
+   en die de afgelopen drie weken niet aan de beurt was. Voor iedereen gelijk, want het hangt alleen van de datum af. */
+function dailyName(i){
+  while (DAILY.length <= i){
+    const d = DAILY.length, m = new Date(START + d * 864e5).getUTCMonth();
+    const recent = new Set(DAILY.slice(-21));
+    const near = TARGETS.filter(t => { const cm = CLUE_MONTH.get(t.n); if (cm < 0) return false; const diff = Math.min((cm - m + 12) % 12, (m - cm + 12) % 12); return diff <= 1; });
+    let pool = near.filter(t => !recent.has(t.n));
+    if (!pool.length) pool = TARGETS.filter(t => !recent.has(t.n));
+    if (!pool.length) pool = TARGETS;
+    DAILY.push(pool[Math.floor(rng(20261106 + d * 7919)() * pool.length)].n);
+  }
+  return DAILY[i];
+}
+function todayIndex(){ const d = new Date(); return Math.max(0, Math.round((Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) - START) / 864e5)); }
+function dailyTarget(i){ return BY_NAME.get(dailyName(i)); }
+
+const store = {
+  get(){ try{ return JSON.parse(localStorage.getItem("veldcasus:v1")) || {}; }catch(e){ return {}; } },
+  set(v){ try{ localStorage.setItem("veldcasus:v1", JSON.stringify(v)); }catch(e){} }
+};
+
+/* ---------- tweelingsoorten ---------- */
+const TWINS = {
+  "Gewone grootoorvleermuis":"Grijze grootoorvleermuis", "Grijze grootoorvleermuis":"Gewone grootoorvleermuis",
+  "Gewone dwergvleermuis":"Ruige dwergvleermuis", "Ruige dwergvleermuis":"Gewone dwergvleermuis",
+  "Beekdonderpad":"Rivierdonderpad", "Noordse woelmuis":"Aardmuis", "Poelkikker":"Middelste groene kikker"
+};
+const isTwin = n => TWINS[S.target] === n;
+const usedTries = () => S.guesses.filter(n => !isTwin(n)).length;
+
+/* ---------- vergelijken ---------- */
+function cmpSet(g, t, k){
+  const gv = g[k], tv = t[k];
+  let cls = "no";
+  if (gv[0] === tv[0]) cls = "ok";
+  else if (tv.includes(gv[0]) || gv.includes(tv[0])) cls = "part";
+  return { cls, main: LABELS[k][gv[0]], sec: gv.slice(1).map(x => LABELS[k][x]).join(", ") };
+}
+function cmpLen(g, t){
+  const ratio = t.l / g.l;
+  let cls = "no";
+  if (ratio >= 0.85 && ratio <= 1/0.85) cls = "ok";
+  
+  const arrow = cls === "ok" ? "" : (t.l > g.l ? "↑" : "↓");
+  const fmt = g.l >= 100 ? (g.l/100).toLocaleString("nl-NL",{maximumFractionDigits:1}) + " m" : g.l.toLocaleString("nl-NL") + " cm";
+  return { cls, main: fmt, arrow };
+}
+function cmpReg(g, t){
+  let cls = "no";
+  if (g.r === t.r) cls = "ok";
+  else if (g.r.startsWith("VR") && t.r.startsWith("VR")) cls = "part";
+  return { cls, main: LABELS.r[g.r] };
+}
+function compare(g, t){
+  return { h:cmpSet(g,t,"h"), a:cmpSet(g,t,"a"), v:cmpSet(g,t,"v"), b:cmpSet(g,t,"b"), w:cmpSet(g,t,"w"), l:cmpLen(g,t), r:cmpReg(g,t) };
+}
+
+/* ---------- toestand ---------- */
+let S = null;          // {mode, expert, target(name), guesses[], revealed, status, caseNo}
+let freshClue = -1, freshRow = false;
+
+function newGame(mode, expert, targetName, caseNo){
+  return { mode, expert, target: targetName, guesses: [], revealed: 1, status: "playing", caseNo };
+}
+function dailyKey(i, expert){ return "d" + i + (expert ? "x" : ""); }
+
+function loadDaily(expert){
+  const i = todayIndex(), st = store.get();
+  const saved = st.games && st.games[dailyKey(i, expert)];
+  const g = newGame("daily", expert, dailyTarget(i).n, i + 1);
+  if (saved && saved.target === g.target){ Object.assign(g, saved, { mode:"daily", expert }); }
+  return g;
+}
+function saveDaily(){
+  if (S.mode !== "daily") return;
+  const st = store.get(); st.games = st.games || {};
+  st.games[dailyKey(S.caseNo - 1, S.expert)] = { target:S.target, guesses:S.guesses, revealed:S.revealed, status:S.status };
+  store.set(st);
+}
+function recordDex(){
+  const st = store.get(); st.dex = st.dex || {};
+  const before = earned(st.dex);
+  const e = st.dex[S.target] || { w:0, seen:0 };
+  e.seen++;
+  if (S.status === "won"){
+    e.w++;
+    const score = S.expert ? S.revealed : usedTries(), k = S.expert ? "bx" : "b";
+    e[k] = Math.min(e[k] || 99, score);
+    if (!e.f) e.f = new Date().toISOString().slice(0,10);
+  }
+  st.dex[S.target] = e; store.set(st);
+  S.newAwards = earned(st.dex).filter(k => !before.includes(k));
+}
+function recordStats(){
+  if (S.mode !== "daily") return;
+  const st = store.get(); const key = S.expert ? "statsX" : "stats";
+  const s = st[key] || { played:0, won:0, streak:0, best:0, last:-1 };
+  const i = S.caseNo - 1;
+  if (s.last === i) return;
+  s.played++;
+  if (S.status === "won"){ s.won++; s.streak = (s.last === i - 1) ? s.streak + 1 : 1; s.best = Math.max(s.best, s.streak); }
+  else s.streak = 0;
+  s.last = i; st[key] = s; store.set(st);
+}
+function randomFree(exclude){
+  const st = store.get(); const recent = st.recent || [];
+  const upcoming = new Set(Array.from({length:8}, (_, k) => dailyName(todayIndex() + k)));
+  let pool = TARGETS.filter(t => t.n !== exclude && !recent.includes(t.n) && !upcoming.has(t.n));
+  if (!pool.length) pool = TARGETS.filter(t => t.n !== exclude);
+  const t = pool[Math.floor(Math.random() * pool.length)];
+  st.recent = [t.n].concat(recent).slice(0, Math.min(20, TARGETS.length - 2)); store.set(st);
+  return t.n;
+}
+
+function points(){
+  if (S.status !== "won") return 0;
+  return S.expert ? Math.max(1, 7 - S.revealed) : Math.max(1, 6 - usedTries());
+}
+
+/* ---------- acties ---------- */
+function submitGuess(name){
+  if (S.status !== "playing") return;
+  const g = BY_NAME.get(name);
+  if (!g){ setMsg("Kies een soort uit de lijst.", true); return; }
+  if (S.guesses.includes(name)){ setMsg("Die soort heb je al geprobeerd.", true); return; }
+  S.guesses.push(name);
+  freshRow = true;
+  if (name === S.target){ S.status = "won"; }
+  else if (isTwin(name)){ S.revealed = MAX; freshClue = MAX - 1; }
+  else if (S.expert || usedTries() >= MAX){ S.status = "lost"; }
+  else { S.revealed = Math.min(MAX, S.revealed + 1); freshClue = S.revealed - 1; }
+  if (S.status !== "playing"){
+    recordStats(); recordDex();
+    if (S.status === "won") try { navigator.vibrate && navigator.vibrate([30, 50, 70]); } catch(e){}
+    online.afterGame();
+  }
+  saveDaily(); render();
+  if (S.newAwards && S.newAwards.length){ const a = S.newAwards; S.newAwards = []; setTimeout(() => showAwards(a), 700); }
+  if (S.status !== "playing") document.getElementById("resultCard").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"nearest"});
+}
+function moreClue(){
+  if (!S.expert || S.status !== "playing" || S.revealed >= MAX) return;
+  S.revealed++; freshClue = S.revealed - 1; saveDaily(); render();
+}
+
+/* ---------- weergave ---------- */
+const $ = id => document.getElementById(id);
+function setMsg(t, warn){ const m = $("msg"); m.textContent = t; m.className = "msg" + (warn ? " warn" : ""); }
+
+function renderClues(){
+  const t = BY_NAME.get(S.target);
+  const showAll = S.status !== "playing";
+  $("clues").innerHTML = t.c.map((txt, i) => {
+    const open = i < S.revealed || showAll;
+    const fresh = i === freshClue ? " fresh" : "";
+    return `<li class="clue${open ? "" : " locked"}${fresh}"><span class="num">${i+1}</span><div><span class="lab caps">${CLUE_TYPES[i]}</span><p>${open ? esc(txt) : "nog niet waargenomen"}</p></div></li>`;
+  }).join("");
+  $("clueCount").textContent = (showAll ? MAX : S.revealed) + " van " + MAX;
+  $("notesFoot").hidden = !(S.expert && S.status === "playing");
+  $("moreClue").disabled = S.revealed >= MAX;
+  $("expertHint").textContent = `Je score is het aantal geopende waarnemingen: nu ${S.revealed}.`;
+  freshClue = -1;
+}
+
+function cell(k, c){
+  const sym = c.cls === "ok" ? "✓" : c.cls === "part" ? "~" : "✕";
+  if (k === "l") return `<td class="${c.cls} len"><span class="v">${esc(c.main)} <span class="sym">${c.arrow || sym}</span></span></td>`;
+  return `<td class="${c.cls}"><span class="v">${esc(c.main)} <span class="sym" aria-hidden="true">${sym}</span></span>${c.sec ? `<span class="sec">+ ${esc(c.sec)}</span>` : ""}</td>`;
+}
+function renderGrid(){
+  const t = BY_NAME.get(S.target);
+  const rows = S.guesses.slice().reverse().map((n, idx) => {
+    const g = BY_NAME.get(n), c = compare(g, t);
+    const cls = (n === S.target ? "win" : "") + (isTwin(n) ? " twin" : "") + (idx === 0 && freshRow ? " enter" : "");
+    return `<tr class="${cls.trim()}"><td class="name">${esc(g.n)}<i>${esc(g.s)}</i>${isTwin(n) ? `<span class="twintag">tweelingsoort · telt niet mee</span>` : ""}</td>${COLS.map(k => cell(k, c[k])).join("")}</tr>`;
+  });
+  $("gridBody").innerHTML = rows.join("");
+  /* kaartweergave voor smalle schermen */
+  $("gridCards").innerHTML = S.guesses.slice().reverse().map((n, idx) => {
+    const g = BY_NAME.get(n), c = compare(g, t);
+    const cls = (n === S.target ? " win" : "") + (isTwin(n) ? " twin" : "") + (idx === 0 && freshRow ? " enter" : "");
+    return `<div class="gcard${cls}"><div class="gname"><b>${esc(g.n)}</b> <i>${esc(g.s)}</i>${isTwin(n) ? `<span class="twintag">tweelingsoort · telt niet mee</span>` : ""}</div>
+      <div class="gcells">${COLS.map(k => { const x = c[k], sym = x.cls === "ok" ? "✓" : x.cls === "part" ? "~" : "✕";
+        return `<div class="gc ${x.cls}"><span class="gl">${COL_LABEL[k]}</span><span class="gv"><b>${esc(x.main)}</b> <span class="sym">${k === "l" ? (x.arrow || sym) : sym}</span></span></div>`; }).join("")}</div></div>`;
+  }).join("");
+  $("gridEmpty").hidden = S.guesses.length > 0;
+  freshRow = false;
+}
+
+function shareText(){
+  const t = BY_NAME.get(S.target);
+  const head = `Vestigia ${S.mode === "daily" ? "#" + S.caseNo : "(oefenen)"}${S.expert ? " · expert" : ""}`;
+  const emo = { ok:"🟩", part:"🟨", no:"⬜" };
+  if (S.expert) return `${head}\n${S.status === "won" ? `Gedetermineerd na ${S.revealed} aanwijzing${S.revealed > 1 ? "en" : ""}` : "Niet gedetermineerd"} 🔎`;
+  const lines = S.guesses.map(n => { const c = compare(BY_NAME.get(n), t); return COLS.map(k => emo[c[k].cls]).join("") + (isTwin(n) ? " ≈ tweeling" : ""); });
+  return `${head} · ${S.status === "won" ? usedTries() : "X"}/${MAX}\n${lines.join("\n")}`;
+}
+
+function renderResult(){
+  const card = $("resultCard");
+  if (S.status === "playing"){ card.hidden = true; card.innerHTML = ""; return; }
+  const t = BY_NAME.get(S.target), won = S.status === "won";
+  const traits = [["Leefgebied","h"],["Activiteit","a"],["Voedsel","v"],["Verblijf","b"],["Winter","w"]]
+    .map(([lab,k]) => `<div><dt>${lab}</dt><dd>${t[k].map(x => LABELS[k][x]).join(", ")}</dd></div>`).join("")
+    + `<div><dt>Lengte</dt><dd>± ${t.l.toLocaleString("nl-NL")} cm</dd></div>`;
+  const score = S.expert
+    ? (won ? `Gedetermineerd na ${S.revealed} van de ${MAX} aanwijzingen.` : `Je determinatie (${esc(S.guesses[0] || "")}) klopte niet.`)
+    : (won ? `Gedetermineerd in ${usedTries()} van de ${MAX} pogingen.` : `Na ${MAX} pogingen niet gevonden.`);
+  let stats = "";
+  if (S.mode === "daily"){
+    const s = store.get()[S.expert ? "statsX" : "stats"];
+    if (s) stats = `<div class="stats"><div><b>${s.played}</b>gespeeld</div><div><b>${s.played ? Math.round(100*s.won/s.played) : 0}%</b>gedetermineerd</div><div><b>${s.streak}</b>huidige reeks</div><div><b>${s.best}</b>langste reeks</div></div>`;
+  }
+  card.className = "account" + (won ? "" : " lost");
+  card.innerHTML = `
+    <span class="verdict caps">${won ? "Goed gedetermineerd" : "Niet gedetermineerd · het was"}</span>
+    <h3>${esc(t.n)}<i>${esc(t.s)}</i></h3>
+    <p>${score}${S.mode === "daily" ? ` <span class="ptsline">${points() ? "+" + points() + " punt" + (points() > 1 ? "en" : "") : "0 punten"} voor de ranglijst</span>` : ""}</p>
+    <div class="status-line"><span class="caps">Status</span><p><b>${esc(LABELS.r[t.r])}.</b> ${esc(REGIME_INFO[t.r])}</p></div>
+    <dl class="traits">${traits}</dl>
+    <div class="confuse"><span class="caps">Verwar niet met</span><p><b>${esc(t.x)}.</b> ${S.guesses.includes(t.x) ? "Die soort heb je in deze casus ook geprobeerd. " : ""}${esc(t.t)}</p></div>
+    ${(S.newAwards || []).map(k => { const [kind, name] = awardLabel(k); return `<div class="awardnote"><span class="caps">Nieuwe ${kind.toLowerCase()}</span><b>${esc(name)}</b></div>`; }).join("")}
+    <p class="dexnote">${won ? `Plaat <b>nº ${dexNo(t.n)}</b> staat nu in je veldboek.` : `Genoteerd als waargenomen in je veldboek (nº ${dexNo(t.n)}).`} <button class="linklike" id="toDex">Open het veldboek</button></p>
+    ${stats}
+    <div class="actions">
+      <button class="btn" id="copyBtn">Deel resultaat</button>
+      <button class="btn line" id="nextBtn">${S.mode === "daily" ? "Speel een oefencasus" : "Nieuwe casus"}</button>
+      <span class="msg" id="copyMsg"></span>
+    </div>
+    <button class="reportbtn" id="repFromResult">Klopt er iets niet in deze casus? Meld een fout</button>`;
+  card.hidden = false;
+  $("copyBtn").onclick = () => {
+    const txt = shareText();
+    const done = () => { $("copyMsg").textContent = "Gekopieerd."; };
+    const fallback = () => {
+      if (!$("copyOut")){ const ta = document.createElement("textarea"); ta.id = "copyOut"; ta.className = "copyout"; ta.rows = 8; ta.readOnly = true; card.appendChild(ta); }
+      $("copyOut").value = txt; $("copyOut").select(); $("copyMsg").textContent = "Kopiëren lukt hier niet automatisch: selecteer de tekst hieronder.";
+    };
+    if (navigator.share && matchMedia("(pointer: coarse)").matches){
+      navigator.share({ text: txt }).catch(() => {});
+      return;
+    }
+    try { navigator.clipboard.writeText(txt).then(done, fallback); } catch(e){ fallback(); }
+  };
+  $("nextBtn").onclick = () => startFree();
+  $("toDex").onclick = () => showDex();
+  $("repFromResult").onclick = e => openReport(t.n, e.currentTarget);
+}
+
+function renderPips(){
+  const n = S.expert ? 1 : MAX, real = S.guesses.filter(g => !isTwin(g));
+  let h = "";
+  for (let i = 0; i < n; i++){
+    const used = i < real.length, hit = used && real[i] === S.target;
+    h += `<span class="dot${hit ? " hit" : used ? " used" : ""}"></span>`;
+  }
+  $("pips").innerHTML = h;
+  if (S.status === "playing"){
+    const left = n - real.length, twinNow = S.guesses.length && isTwin(S.guesses[S.guesses.length - 1]);
+    if (twinNow) setMsg("Tweelingsoort! Je zit er heel dicht bij. Deze poging telt niet mee, en alle waarnemingen zijn nu open.", false);
+    else setMsg(S.expert ? "Je hebt één determinatie. Open eerst zoveel waarnemingen als je nodig denkt te hebben." : `Nog ${left} ${left === 1 ? "poging" : "pogingen"}.`, false);
+    $("leftLabel").textContent = S.expert ? "1 poging" : `poging ${real.length + 1} van ${MAX}`;
+  } else { setMsg(S.status === "won" ? "Casus afgerond." : "Casus afgesloten.", false); $("leftLabel").textContent = "afgerond"; }
+}
+
+function renderHead(){
+  $("fCase").textContent = S.mode === "daily" ? "nº " + S.caseNo : "oefencasus";
+  const d = S.mode === "daily" ? new Date(START + (S.caseNo - 1) * 864e5) : new Date();
+  $("fDate").textContent = d.toLocaleDateString("nl-NL", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
+  $("fMode").textContent = S.expert ? "expertmodus" : "";
+  setTabs(!$("dexView").hidden ? "dex" : !$("rankView").hidden ? "rank" : "game");
+  $("expert").checked = S.expert;
+  const inp = $("gInput"); inp.disabled = S.status !== "playing";
+  if (S.status !== "playing"){ inp.value = ""; closeOpts(); }
+  $("gBtn").disabled = !BY_NAME.has(matchExact(inp.value)) || S.status !== "playing";
+}
+
+function render(){ renderHead(); renderClues(); renderGrid(); renderPips(); renderResult(); }
+
+/* ---------- autocomplete ---------- */
+let optList = [], optIdx = -1;
+function matchExact(v){
+  const q = norm(v); if (!q) return null;
+  const s = SPECIES.find(x => norm(x.n) === q || norm(x.s) === q);
+  return s ? s.n : null;
+}
+function closeOpts(){ $("gOpts").hidden = true; $("gInput").setAttribute("aria-expanded","false"); $("gInput").removeAttribute("aria-activedescendant"); optIdx = -1; }
+function openOpts(){
+  const q = norm($("gInput").value);
+  if (!q){ closeOpts(); return; }
+  const used = new Set(S.guesses);
+  optList = SPECIES.filter(x => !used.has(x.n)).map(x => {
+    const a = norm(x.n), b = norm(x.s);
+    let score = -1;
+    if (a.startsWith(q)) score = 0; else if (a.split(" ").some(w => w.startsWith(q))) score = 1;
+    else if (b.startsWith(q) || b.split(" ").some(w => w.startsWith(q))) score = 2; else if (a.includes(q)) score = 3;
+    return { x, score };
+  }).filter(o => o.score >= 0).sort((p, q2) => p.score - q2.score || p.x.n.localeCompare(q2.x.n, "nl")).slice(0, 8).map(o => o.x);
+  const ul = $("gOpts");
+  if (!optList.length){ ul.innerHTML = `<li aria-disabled="true"><span>Geen soort gevonden</span></li>`; ul.hidden = false; optIdx = -1; return; }
+  optIdx = 0;
+  ul.innerHTML = optList.map((x, i) => `<li role="option" id="opt${i}" data-n="${esc(x.n)}" aria-selected="${i === optIdx}"><span>${esc(x.n)}</span><i>${esc(x.s)}</i></li>`).join("");
+  ul.hidden = false; $("gInput").setAttribute("aria-expanded","true"); $("gInput").setAttribute("aria-activedescendant","opt0");
+}
+function moveOpt(d){
+  if (!optList.length) return;
+  optIdx = (optIdx + d + optList.length) % optList.length;
+  [...$("gOpts").children].forEach((li, i) => li.setAttribute("aria-selected", i === optIdx));
+  $("gInput").setAttribute("aria-activedescendant", "opt" + optIdx);
+  $("opt" + optIdx).scrollIntoView({ block:"nearest" });
+}
+function pick(name){ $("gInput").value = name; closeOpts(); $("gBtn").disabled = false; }
+function commit(){
+  if (!norm($("gInput").value)) return;
+  const v = matchExact($("gInput").value);
+  if (!v){ setMsg("Kies een soort uit de lijst.", true); return; }
+  $("gInput").value = ""; $("gBtn").disabled = true; closeOpts();
+  submitGuess(v);
+  if (S.status === "playing") $("gInput").focus();
+}
+
+$("gInput").addEventListener("input", () => { openOpts(); $("gBtn").disabled = !matchExact($("gInput").value); if ($("msg").classList.contains("warn")) renderPips(); });
+$("gInput").addEventListener("keydown", e => {
+  if (e.key === "ArrowDown"){ e.preventDefault(); if ($("gOpts").hidden) openOpts(); else moveOpt(1); }
+  else if (e.key === "ArrowUp"){ e.preventDefault(); moveOpt(-1); }
+  else if (e.key === "Escape"){ closeOpts(); }
+  else if (e.key === "Enter"){
+    e.preventDefault();
+    if (!$("gOpts").hidden && optIdx >= 0 && optList[optIdx]){ const n = optList[optIdx].n; if (matchExact($("gInput").value) === n) commit(); else pick(n); }
+    else commit();
+  }
+});
+$("gOpts").addEventListener("mousedown", e => { const li = e.target.closest("li[data-n]"); if (li){ e.preventDefault(); pick(li.dataset.n); $("gInput").focus(); } });
+$("gInput").addEventListener("blur", () => setTimeout(closeOpts, 120));
+$("gBtn").addEventListener("click", commit);
+$("moreClue").addEventListener("click", moreClue);
+
+/* ---------- modi ---------- */
+function setTabs(v){
+  $("mDaily").setAttribute("aria-pressed", v === "game" && S.mode === "daily");
+  $("mFree").setAttribute("aria-pressed", v === "game" && S.mode === "free");
+  $("mDex").setAttribute("aria-pressed", v === "dex");
+  $("mRank").setAttribute("aria-pressed", v === "rank");
+}
+function showGame(){ $("gameView").hidden = false; $("dexView").hidden = true; $("rankView").hidden = true; render(); setTabs("game"); }
+function startDaily(){ S = loadDaily($("expert").checked); showGame(); }
+function startFree(){
+  const expert = $("expert").checked;
+  S = newGame("free", expert, randomFree(S && S.target), 0);
+  showGame(); window.scrollTo({ top:0, behavior:"auto" });
+}
+$("mDaily").addEventListener("click", () => { if (S.mode === "daily") showGame(); else startDaily(); });
+$("mFree").addEventListener("click", () => { if (S.mode !== "free" || S.status !== "playing") startFree(); else showGame(); });
+$("mDex").addEventListener("click", () => showDex());
+$("expert").addEventListener("change", () => {
+  if (S.mode === "daily") startDaily();
+  else if (S.guesses.length === 0 && S.status === "playing"){ S.expert = $("expert").checked; S.revealed = 1; render(); }
+  else startFree();
+});
+
+/* ---------- trofeeën ---------- */
+const RARE = ["Grijze grootoorvleermuis","Tweekleurige vleermuis","Noordse woelmuis","Knoflookpad","Gestippelde alver"];
+const TITLES = { Z:"Keutelkoning", R:"Slangenbezweerder", A:"Poelenprofessor", F:"Kieuwenkenner", B:"Braakbalbaron" };
+const TITLE_ALL = "Veldheer van Vestigia";
+function earned(dex){
+  const got = n => dex[n] && dex[n].w > 0, out = [];
+  for (const g of Object.keys(TITLES)) if (TARGETS.filter(t => t.g === g).every(t => got(t.n))) out.push("T:" + g);
+  if (TARGETS.every(t => got(t.n))) out.push("T:ALL");
+  for (const n of RARE) if (got(n)) out.push("M:" + n);
+  return out;
+}
+function awardLabel(k){
+  if (k === "T:ALL") return ["Titel", TITLE_ALL];
+  if (k.startsWith("T:")) return ["Titel", TITLES[k.slice(2)]];
+  return ["Medaille", k.slice(2)];
+}
+function rosette(color, on, label){
+  const pts = [];
+  for (let i = 0; i < 32; i++){ const r = i % 2 ? 34 : 38, a = Math.PI * i / 16; pts.push((40 + r*Math.cos(a)).toFixed(1) + "," + (40 + r*Math.sin(a)).toFixed(1)); }
+  return `<svg viewBox="0 0 80 80" aria-hidden="true"><polygon points="${pts.join(" ")}" fill="${on ? color : "none"}" stroke="${on ? color : "#b9c0b1"}" stroke-width="1.5" ${on ? "" : 'stroke-dasharray="3 3"'}/>
+    <circle cx="40" cy="40" r="25" fill="${on ? "#f7f6f0" : "none"}" stroke="${on ? "#f7f6f0" : "#b9c0b1"}" stroke-width="1"/>
+    <circle cx="40" cy="40" r="21" fill="none" stroke="${on ? color : "#d3d8cd"}" stroke-width="1"/>
+    <text x="40" y="45.5" text-anchor="middle" font-family="Rubik, Arial, sans-serif" font-weight="600" font-size="16" fill="${on ? color : "#b9c0b1"}">${label}</text></svg>`;
+}
+function medal(on, no){
+  return `<svg viewBox="0 0 80 80" aria-hidden="true">
+    <path d="M27 4 L37 34 L30 38 L20 8 Z" fill="${on ? "#1c3326" : "#d3d8cd"}"/><path d="M53 4 L43 34 L50 38 L60 8 Z" fill="${on ? "#4a7a46" : "#e3e3da"}"/>
+    <circle cx="40" cy="52" r="23" fill="${on ? "#c98d26" : "none"}" stroke="${on ? "#a8731b" : "#b9c0b1"}" stroke-width="2" ${on ? "" : 'stroke-dasharray="3 3"'}/>
+    <circle cx="40" cy="52" r="17" fill="none" stroke="${on ? "#e8c06a" : "#d3d8cd"}" stroke-width="1.2"/>
+    <text x="40" y="57" text-anchor="middle" font-family="Rubik, Arial, sans-serif" font-weight="600" font-size="13" fill="${on ? "#fbfaf4" : "#b9c0b1"}">${on ? "nº" + no : "?"}</text></svg>`;
+}
+function renderTrophies(dex){
+  const got = n => dex[n] && dex[n].w > 0, have = earned(dex);
+  const cells = Object.entries(TITLES).map(([g, name]) => {
+    const all = TARGETS.filter(t => t.g === g), f = all.filter(t => got(t.n)).length, on = have.includes("T:" + g);
+    return `<div class="award${on ? " got" : " locked"}">${rosette(`var(--g-${g})`, on, all.length)}<span class="an">${name}</span>
+      <span class="ac">${on ? "Alle " + GROUPS[g].toLowerCase() + " gedetermineerd" : `${f} van ${all.length} ${GROUPS[g].toLowerCase()}`}</span>
+      <span class="ap"><i style="width:${100*f/all.length}%; background:var(--g-${g})"></i></span></div>`;
+  });
+  const fAll = TARGETS.filter(t => got(t.n)).length, onAll = have.includes("T:ALL");
+  cells.push(`<div class="award${onAll ? " got" : " locked"}">${rosette("var(--ink)", onAll, "100")}<span class="an">${TITLE_ALL}</span>
+    <span class="ac">${onAll ? "Het hele veldboek is compleet" : `${fAll} van ${TARGETS.length} soorten`}</span>
+    <span class="ap"><i style="width:${fAll}%; background:var(--ink)"></i></span></div>`);
+  $("titleRow").innerHTML = cells.join("");
+  $("medalRow").innerHTML = RARE.map(n => {
+    const on = got(n), t = BY_NAME.get(n);
+    return `<div class="award${on ? " got" : " locked"}">${medal(on, dexNo(n))}<span class="an">${on ? esc(n) : "Zeldzame soort"}</span>
+      <span class="ac">${on ? "<i>" + esc(t.s) + "</i>" : "Nog niet gevonden"}</span></div>`;
+  }).join("");
+  $("trophCount").textContent = `${have.length} van ${Object.keys(TITLES).length + 1 + RARE.length} behaald`;
+}
+
+/* ---------- meld een fout ---------- */
+let reportSpecies = null, reportReturn = null;
+function openReport(n, from){
+  const t = BY_NAME.get(n);
+  reportSpecies = n; reportReturn = from || null;
+  $("reportFor").innerHTML = `Over: <b>${esc(t.n)}</b> (<i>${esc(t.s)}</i>), plaat nº ${dexNo(n)}`;
+  const parts = t.c.map((c, i) => [`w${i}`, `Waarneming ${i+1} (${CLUE_TYPES[i].toLowerCase()})`])
+    .concat([["kenmerken","Kenmerken in de vergelijkingstabel"],["tip","Verwarringstip"],["regime","Beschermingsregime"],["naam","Nederlandse of wetenschappelijke naam"],["anders","Iets anders"]]);
+  $("repPart").innerHTML = parts.map(([v, l]) => `<option value="${v}">${esc(l)}</option>`).join("");
+  $("repText").value = ""; $("repSrc").value = ""; $("repOut").hidden = true; $("repMsg").textContent = "";
+  $("repCopy").textContent = online.enabled ? "Verstuur melding" : "Kopieer melding";
+  $("repFine").textContent = online.enabled ? "De melding gaat rechtstreeks naar de maker van Vestigia." : "De melding wordt gekopieerd, niet verstuurd. Plak hem in een bericht aan de maker van Vestigia.";
+  $("reportPop").hidden = false; $("repPart").focus();
+}
+function closeReport(){ $("reportPop").hidden = true; if (reportReturn && document.contains(reportReturn)) reportReturn.focus(); }
+function reportText(){
+  const t = BY_NAME.get(reportSpecies), part = $("repPart").value;
+  let quote = "";
+  if (part.startsWith("w")) quote = `\nTekst in het spel: "${t.c[+part.slice(1)]}"`;
+  else if (part === "tip") quote = `\nTekst in het spel: "Verwar niet met ${t.x}. ${t.t}"`;
+  else if (part === "regime") quote = `\nIn het spel: ${LABELS.r[t.r]}`;
+  else if (part === "kenmerken") quote = "\nIn het spel: " + ["h","a","v","b","w"].map(k => `${COL_LABEL[k]}: ${t[k].map(x => LABELS[k][x]).join(", ")}`).join("; ") + `; Lengte: ${t.l} cm`;
+  return `Vestigia – foutmelding
+Soort: ${t.n} (${t.s}), plaat nº ${dexNo(t.n)}
+Onderdeel: ${$("repPart").selectedOptions[0].textContent}${quote}
+Toelichting: ${$("repText").value.trim() || "–"}
+Bron/voorstel: ${$("repSrc").value.trim() || "–"}
+Gemeld op: ${new Date().toLocaleDateString("nl-NL")}`;
+}
+$("repCopy").addEventListener("click", async () => {
+  if (!$("repText").value.trim()){ $("repMsg").textContent = "Schrijf eerst kort wat er niet klopt."; $("repText").focus(); return; }
+  if (online.enabled){
+    const t = BY_NAME.get(reportSpecies), part = $("repPart").value;
+    const quote = part.startsWith("w") ? t.c[+part.slice(1)] : part === "tip" ? `Verwar niet met ${t.x}. ${t.t}` : part === "regime" ? LABELS.r[t.r] : "";
+    $("repCopy").disabled = true; $("repMsg").textContent = "Versturen…";
+    try {
+      await online.rpc("submit_report", { p_name: online.player()?.name || null, p_species: t.n, p_part: $("repPart").selectedOptions[0].textContent,
+        p_quote: quote, p_body: $("repText").value.trim(), p_source: $("repSrc").value.trim() || null });
+      $("repMsg").textContent = "Verstuurd. Dank je wel!"; $("repCopy").disabled = false;
+      setTimeout(closeReport, 1400); return;
+    } catch(e){ $("repCopy").disabled = false; $("repMsg").textContent = "Versturen lukte niet. De melding is daarom gekopieerd."; }
+  }
+  const txt = reportText();
+  const fallback = () => { $("repOut").hidden = false; $("repOut").value = txt; $("repOut").select(); $("repMsg").textContent = "Kopiëren lukt hier niet automatisch: selecteer de tekst hieronder."; };
+  try { navigator.clipboard.writeText(txt).then(() => { $("repMsg").textContent = "Gekopieerd. Plak de melding in een bericht aan de maker."; }, fallback); } catch(e){ fallback(); }
+});
+$("closeReport").addEventListener("click", closeReport);
+$("reportPop").addEventListener("click", e => { if (e.target === $("reportPop")) closeReport(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("reportPop").hidden) closeReport(); });
+
+/* ---------- voortgangscode ---------- */
+function progressCode(){
+  const st = store.get();
+  const json = JSON.stringify({ v:1, dex: st.dex || {}, stats: st.stats || null, statsX: st.statsX || null });
+  return "VESTIGIA-" + btoa(unescape(encodeURIComponent(json)));
+}
+function mergeProgress(code){
+  const raw = code.trim().replace(/^VESTIGIA-/, "");
+  const data = JSON.parse(decodeURIComponent(escape(atob(raw))));
+  if (!data || typeof data.dex !== "object") throw new Error("ongeldig");
+  const st = store.get(); st.dex = st.dex || {};
+  for (const [n, e] of Object.entries(data.dex)){
+    if (!BY_NAME.has(n) || typeof e !== "object") continue;
+    const cur = st.dex[n] || { w:0, seen:0 };
+    const out = { w: Math.max(cur.w || 0, +e.w || 0), seen: Math.max(cur.seen || 0, +e.seen || 0) };
+    for (const k of ["b","bx"]){ const vals = [cur[k], e[k]].filter(x => typeof x === "number"); if (vals.length) out[k] = Math.min(...vals); }
+    const fs = [cur.f, e.f].filter(x => typeof x === "string" && /^\d{4}-\d{2}-\d{2}$/.test(x)).sort(); if (fs.length) out.f = fs[0];
+    st.dex[n] = out;
+  }
+  for (const k of ["stats","statsX"]) if (data[k] && (!st[k] || (data[k].played || 0) > (st[k].played || 0))) st[k] = data[k];
+  store.set(st);
+}
+$("codeCopy").addEventListener("click", () => {
+  const code = progressCode();
+  try { navigator.clipboard.writeText(code).then(() => { $("codeMsg").textContent = "Gekopieerd."; }, () => { $("codeIn").value = code; $("codeIn").select(); $("codeMsg").textContent = "Selecteer en kopieer de code hieronder."; }); }
+  catch(e){ $("codeIn").value = code; $("codeIn").select(); }
+});
+$("codeLoad").addEventListener("click", () => {
+  try { mergeProgress($("codeIn").value); $("codeIn").value = ""; $("codeMsg").textContent = "Voortgang toegevoegd."; renderDex(); online.syncSoon(); }
+  catch(e){ $("codeMsg").textContent = "Deze code wordt niet herkend. Controleer of je hem volledig hebt geplakt."; }
+});
+
+/* ---------- felicitatie bij een nieuwe titel of medaille ---------- */
+let awardQueue = [];
+function showAwards(list){ awardQueue = list.slice(); nextAward(); }
+function nextAward(){
+  const k = awardQueue.shift();
+  if (!k){ $("awardPop").hidden = true; return; }
+  let badge, kind, name, text;
+  if (k.startsWith("M:")){
+    const n = k.slice(2), t = BY_NAME.get(n);
+    badge = medal(true, dexNo(n)); kind = "Nieuwe medaille"; name = n;
+    text = `Je hebt de ${esc(n.toLowerCase())} (<i>${esc(t.s)}</i>) gedetermineerd, een van de vijf lastigste soorten van Vestigia. De medaille hangt nu in je veldboek.`;
+  } else if (k === "T:ALL"){
+    badge = rosette("#2f3b40", true, "100"); kind = "Eindtitel"; name = TITLE_ALL;
+    text = `Alle ${TARGETS.length} soorten staan in je veldboek. Een groter compliment heeft Vestigia niet.`;
+  } else {
+    const g = k.slice(2), n = TARGETS.filter(t => t.g === g).length;
+    badge = rosette(`var(--g-${g})`, true, n); kind = "Nieuwe titel"; name = TITLES[g];
+    text = `Je hebt alle ${n} ${GROUPS[g].toLowerCase()} gedetermineerd. Vanaf nu ben je officieel <b>${esc(TITLES[g])}</b>.`;
+  }
+  const colors = ["#4b7a5e","#edfbe2","#e2b84e","#7a4e34","#2e7267","#a8731b"];
+  const conf = Array.from({length:26}, (_, i) => `<i style="left:${(i*37)%100}%; background:${colors[i % colors.length]}; animation-delay:${(i%9)*0.07}s; transform:rotate(${i*23}deg)"></i>`).join("");
+  $("awardSheet").innerHTML = `<div class="confetti" aria-hidden="true">${conf}</div>
+    <span class="kind">${kind}</span><div class="badge">${badge}</div>
+    <h2 id="awardH">Gefeliciteerd!</h2><p class="nm">${esc(name)}</p><p>${text}</p>
+    <div class="actions"><button class="btn" id="awardNext">${awardQueue.length ? "Volgende" : "Verder spelen"}</button><button class="btn line" id="awardDex">Bekijk veldboek</button></div>
+    ${awardQueue.length ? `<span class="queue">Nog ${awardQueue.length} andere trofee${awardQueue.length > 1 ? "ën" : ""}</span>` : ""}`;
+  $("awardPop").hidden = false;
+  $("awardNext").focus();
+  $("awardNext").onclick = nextAward;
+  $("awardDex").onclick = () => { awardQueue = []; $("awardPop").hidden = true; showDex(); };
+}
+$("awardPop").addEventListener("click", e => { if (e.target === $("awardPop")) nextAward(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("awardPop").hidden){ awardQueue = []; $("awardPop").hidden = true; } });
+
+/* ---------- veldboek ---------- */
+const DEX = TARGETS.map(t => t.n);
+function dexNo(n){ return String(DEX.indexOf(n) + 1).padStart(3, "0"); }
+let dexFilter = "ALL", dexOnlyFound = false;
+function showDex(){
+  $("gameView").hidden = true; $("rankView").hidden = true; $("dexView").hidden = false; setTabs("dex");
+  renderDex(); window.scrollTo({ top:0, behavior:"auto" });
+}
+function renderDex(){
+  const dex = store.get().dex || {};
+  const found = DEX.filter(n => dex[n] && dex[n].w > 0).length;
+  $("dexCount").innerHTML = `${found}<small>van ${DEX.length} gedetermineerd</small>`;
+  renderTrophies(dex);
+  $("groupBars").innerHTML = Object.entries(GROUPS).map(([g, lab]) => {
+    const all = TARGETS.filter(t => t.g === g), f = all.filter(t => dex[t.n] && dex[t.n].w > 0).length;
+    return `<div class="gbar"><span>${lab}<i>${f}/${all.length}</i></span><div class="track"><div class="fill" style="width:${100*f/all.length}%; background:var(--g-${g})"></div></div></div>`;
+  }).join("");
+  $("dexFilters").innerHTML = [["ALL","Alles"]].concat(Object.entries(GROUPS)).map(([g, lab]) =>
+    `<button class="chipbtn" data-g="${g}" aria-pressed="${dexFilter === g}">${lab}</button>`).join("")
+    + `<span class="gap"></span><label class="switch-inline"><input type="checkbox" id="onlyFound"${dexOnlyFound ? " checked" : ""}> alleen gedetermineerd</label>`;
+  $("dexFilters").querySelectorAll(".chipbtn").forEach(b => b.onclick = () => { dexFilter = b.dataset.g; renderDex(); });
+  $("onlyFound").onchange = e => { dexOnlyFound = e.target.checked; renderDex(); };
+  const list = TARGETS.filter(t => (dexFilter === "ALL" || t.g === dexFilter) && (!dexOnlyFound || (dex[t.n] && dex[t.n].w > 0)));
+  $("dexGrid").innerHTML = list.length ? list.map(t => {
+    const e = dex[t.n], no = dexNo(t.n), band = `<div class="band" style="background:var(--g-${t.g})"><span>${GROUPS[t.g]}</span><b>nº ${no}</b></div>`;
+    if (!e) return `<div class="plate unknown" aria-label="Plaat ${no}: nog niet waargenomen">${band}<div class="mid"><span class="q">?</span><span class="sc">nog niet waargenomen</span></div><div class="ft"><span>&nbsp;</span></div></div>`;
+    const won = e.w > 0;
+    const best = won ? [e.b ? `beste ${e.b}${e.b <= MAX ? "/" + MAX : ""}` : "", e.bx ? `expert ${e.bx}` : ""].filter(Boolean).join(" · ") : "nog niet gedetermineerd";
+    return `<button class="plate${won ? "" : " seen"}${won && RARE.includes(t.n) ? " rare" : ""}" data-n="${esc(t.n)}">${band}<div class="mid"><span class="nm">${esc(t.n)}</span><span class="sc">${esc(t.s)}</span></div>
+      <span class="stamp">${won ? "gedetermineerd" : "waargenomen"}</span><div class="ft"><span>${best}</span><span>${won ? `<b>${e.w}×</b>` : ""}</span></div></button>`;
+  }).join("") : `<p class="dexempty">Nog geen platen in deze selectie. Speel een casus om je veldboek te vullen.</p>`;
+  $("dexGrid").querySelectorAll("button.plate").forEach(b => b.onclick = () => openPlate(b.dataset.n, b));
+}
+let plateReturn = null;
+function openPlate(n, from){
+  const t = BY_NAME.get(n), e = (store.get().dex || {})[n] || {};
+  const traits = [["Leefgebied","h"],["Activiteit","a"],["Voedsel","v"],["Verblijf","b"],["Winter","w"]]
+    .map(([lab,k]) => `<div><dt>${lab}</dt><dd>${t[k].map(x => LABELS[k][x]).join(", ")}</dd></div>`).join("")
+    + `<div><dt>Lengte</dt><dd>± ${t.l.toLocaleString("nl-NL")} cm</dd></div>`;
+  const fd = e.f ? new Date(e.f + "T12:00:00").toLocaleDateString("nl-NL", { day:"numeric", month:"long", year:"numeric" }) : null;
+  $("plateSheet").innerHTML = `
+    <div class="top"><span class="grp" style="background:var(--g-${t.g})">${GROUPS[t.g]} · nº ${dexNo(n)}</span><button class="closebtn" id="closePlate">Sluiten</button></div>
+    <h2 id="plateH">${esc(t.n)}</h2>
+    <p style="margin-top:-8px"><i>${esc(t.s)}</i></p>
+    <p class="dexnote">${fd ? `Voor het eerst gedetermineerd op ${fd}. ` : "Nog niet gedetermineerd. "}${e.w ? `${e.w}× gedetermineerd${e.b ? `, beste score ${e.b}/${MAX}` : ""}${e.bx ? `, in expertmodus na ${e.bx} waarneming${e.bx > 1 ? "en" : ""}` : ""}.` : ""}</p>
+    <h3>Status</h3><p><b>${esc(LABELS.r[t.r])}.</b> ${esc(REGIME_INFO[t.r])}</p>
+    <h3>Kenmerken</h3><dl class="traits">${traits}</dl>
+    <h3>Waarnemingen uit de casus</h3><ol class="cl">${t.c.map((c, i) => `<li><span class="caps" style="color:var(--ink-2)">${CLUE_TYPES[i]}</span><br>${esc(c)}</li>`).join("")}</ol>
+    <div class="confuse"><span class="caps">Verwar niet met</span><p><b>${esc(t.x)}.</b> ${esc(t.t)}</p></div>
+    <button class="reportbtn" id="repFromPlate">Klopt er iets niet? Meld een fout</button>`;
+  plateReturn = from || null;
+  $("plateView").hidden = false; $("closePlate").focus();
+  $("closePlate").onclick = closePlate;
+  $("repFromPlate").onclick = () => { closePlate(); openReport(n, from); };
+}
+function closePlate(){ $("plateView").hidden = true; if (plateReturn) plateReturn.focus(); }
+$("plateView").addEventListener("click", e => { if (e.target === $("plateView")) closePlate(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("plateView").hidden) closePlate(); });
+
+/* ---------- help + soortenlijst ---------- */
+const help = $("help");
+$("openHelp").addEventListener("click", () => { help.hidden = false; $("closeHelp").focus(); });
+$("closeHelp").addEventListener("click", () => { help.hidden = true; $("openHelp").focus(); });
+help.addEventListener("click", e => { if (e.target === help){ help.hidden = true; } });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !help.hidden){ help.hidden = true; $("openHelp").focus(); } });
+
+const sorted = SPECIES.slice().sort((a, b) => a.n.localeCompare(b.n, "nl"));
+$("splist").innerHTML = sorted.map(x => `<div class="${x.c ? "tgt" : ""}"><span>${esc(x.n)}</span> <i>${esc(x.s)}</i></div>`).join("");
+$("listSum").textContent = `${SPECIES.length} soorten · ${TARGETS.length} met casus (*)`;
+
+/* ---------- hoogtelijnenkaart in de kop ---------- */
+function drawTopo(){
+  const cv = $("topo"), box = cv.parentElement.getBoundingClientRect();
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  const W = Math.ceil(box.width), H = Math.ceil(box.height);
+  cv.width = W * dpr; cv.height = H * dpr;
+  const cx = cv.getContext("2d"); cx.setTransform(dpr,0,0,dpr,0,0); cx.clearRect(0,0,W,H);
+  const r = rng(1988), G = 12, perm = [];
+  for (let i = 0; i < 256; i++) perm.push(r());
+  const hash = (x, y) => perm[((x * 73856093) ^ (y * 19349663)) & 255];
+  const smooth = t => t * t * (3 - 2 * t);
+  function noise(x, y){
+    const xi = Math.floor(x), yi = Math.floor(y), xf = smooth(x - xi), yf = smooth(y - yi);
+    const a = hash(xi, yi), b = hash(xi+1, yi), c = hash(xi, yi+1), d = hash(xi+1, yi+1);
+    return a + (b - a) * xf + (c - a) * yf + (a - b - c + d) * xf * yf;
+  }
+  const f = (x, y) => noise(x/260, y/260)*0.62 + noise(x/120 + 9, y/120 + 4)*0.28 + noise(x/55 + 3, y/55 + 7)*0.10;
+  const cols = Math.ceil(W / G) + 1, rows = Math.ceil(H / G) + 1, v = [];
+  for (let j = 0; j <= rows; j++){ v[j] = []; for (let i = 0; i <= cols; i++) v[j][i] = f(i * G, j * G); }
+  const levels = 22;
+  for (let L = 1; L < levels; L++){
+    const th = 0.18 + L * (0.66 / levels), major = L % 5 === 0;
+    cx.beginPath();
+    for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++){
+      const a = v[j][i], b = v[j][i+1], c = v[j+1][i+1], d = v[j+1][i];
+      const idx = (a > th ? 8 : 0) | (b > th ? 4 : 0) | (c > th ? 2 : 0) | (d > th ? 1 : 0);
+      if (idx === 0 || idx === 15) continue;
+      const x = i * G, y = j * G, lerp = (p, q) => (th - p) / (q - p);
+      const T = [x + G * lerp(a, b), y], R = [x + G, y + G * lerp(b, c)], B = [x + G * lerp(d, c), y + G], Lf = [x, y + G * lerp(a, d)];
+      const segs = {1:[Lf,B],2:[B,R],3:[Lf,R],4:[T,R],5:[Lf,T,B,R],6:[T,B],7:[Lf,T],8:[Lf,T],9:[T,B],10:[T,R,Lf,B],11:[T,R],12:[Lf,R],13:[B,R],14:[Lf,B]}[idx];
+      for (let s = 0; s < segs.length; s += 2){ cx.moveTo(segs[s][0], segs[s][1]); cx.lineTo(segs[s+1][0], segs[s+1][1]); }
+    }
+    cx.strokeStyle = major ? "rgba(237,251,226,.38)" : "rgba(255,255,255,.12)";
+    cx.lineWidth = major ? 1.3 : 0.8;
+    cx.stroke();
+  }
+}
+drawTopo();
+let topoT; window.addEventListener("resize", () => { clearTimeout(topoT); topoT = setTimeout(drawTopo, 150); });
+document.fonts && document.fonts.ready.then(drawTopo);
+
+/* ---------- start ---------- */
+function start(data){
+  if (data && data.S && BY_NAME.has(data.S.target)){ S = data.S; render(); }
+  else startDaily();
+}
+/* ---------- online: ranglijst, synchronisatie, meldingen ---------- */
+const online = (() => {
+  const CFG = window.VESTIGIA_CONFIG || {};
+  const enabled = !!(CFG.supabaseUrl && CFG.supabaseKey);
+  const PKEY = "vestigia:player";
+  const player = () => { try { return JSON.parse(localStorage.getItem(PKEY)); } catch(e){ return null; } };
+  const setPlayer = p => { try { p ? localStorage.setItem(PKEY, JSON.stringify(p)) : localStorage.removeItem(PKEY); } catch(e){} };
+  async function rpc(fn, args){
+    const r = await fetch(CFG.supabaseUrl.replace(/\/$/, "") + "/rest/v1/rpc/" + fn, {
+      method: "POST",
+      headers: { apikey: CFG.supabaseKey, Authorization: "Bearer " + CFG.supabaseKey, "Content-Type": "application/json" },
+      body: JSON.stringify(args || {})
+    });
+    const txt = await r.text(); let data = null;
+    try { data = txt ? JSON.parse(txt) : null; } catch(e){}
+    if (!r.ok) throw Object.assign(new Error((data && data.message) || r.statusText), { status: r.status });
+    return data;
+  }
+  /* resultaten die offline zijn gespeeld, worden later alsnog verstuurd */
+  const queue = () => { try { return JSON.parse(localStorage.getItem("vestigia:queue")) || []; } catch(e){ return []; } };
+  const setQueue = q => { try { localStorage.setItem("vestigia:queue", JSON.stringify(q)); } catch(e){} };
+  async function flush(){
+    const p = player(); if (!enabled || !p) return;
+    const q = queue(); if (!q.length) return;
+    const rest = [];
+    for (const item of q){
+      try { await rpc("submit_result", Object.assign({ p_id: p.id, p_key: p.key }, item)); }
+      catch(e){ if (!e.status || e.status >= 500) rest.push(item); }
+    }
+    setQueue(rest);
+  }
+  let syncT;
+  function syncSoon(){
+    const p = player(); if (!enabled || !p) return;
+    clearTimeout(syncT);
+    syncT = setTimeout(async () => {
+      const st = store.get(), dex = st.dex || {};
+      const found = TARGETS.filter(t => dex[t.n] && dex[t.n].w > 0).length;
+      try { await rpc("save_progress", { p_id: p.id, p_key: p.key, p_progress: { v:1, dex, stats: st.stats || null, statsX: st.statsX || null }, p_found: found, p_trophies: earned(dex).length }); }
+      catch(e){}
+    }, 800);
+  }
+  function afterGame(){
+    if (!enabled || !player()) return;
+    if (S.mode === "daily"){
+      const q = queue(); q.push({ p_day: S.caseNo - 1, p_expert: S.expert, p_won: S.status === "won", p_tries: Math.min(usedTries(), MAX), p_clues: S.revealed });
+      setQueue(q); flush();
+    }
+    syncSoon();
+  }
+  /* ranglijst */
+  let rankMode = "day";
+  function weekStart(i){ const dow = (new Date(START + i * 864e5).getUTCDay() + 6) % 7; return i - dow; }
+  async function renderRank(){
+    renderPlayerBox();
+    const list = $("rankList");
+    $("rankTabs").querySelectorAll(".chipbtn").forEach(b => b.setAttribute("aria-pressed", b.dataset.r === rankMode));
+    if (!enabled){ list.innerHTML = `<li class="rankempty" style="display:block">De ranglijst is nog niet ingesteld voor deze versie van Vestigia.</li>`; return; }
+    list.innerHTML = `<p class="rankempty">Ranglijst laden…</p>`;
+    const me = (player() || {}).name, today = todayIndex();
+    try {
+      let rows, html;
+      if (rankMode === "day"){
+        rows = await rpc("leaderboard_day", { p_day: today });
+        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}"><span class="pos">${i + 1}</span>
+          <span class="who"><b>${esc(r.name)}</b>${r.expert ? `<span class="xbadge">expert</span>` : ""}<span>${r.won ? (r.expert ? `gedetermineerd na ${r.clues} waarneming${r.clues > 1 ? "en" : ""}` : `gedetermineerd in ${r.tries} ${r.tries === 1 ? "poging" : "pogingen"}`) : "niet gevonden"}</span></span>
+          <span class="pts">${r.points}<small>punten</small></span></li>`).join("");
+        if (!rows.length) html = `<p class="rankempty">Nog niemand heeft dagcasus nº ${today + 1} gespeeld. Ben jij de eerste?</p>`;
+      } else if (rankMode === "week" || rankMode === "all"){
+        const from = rankMode === "week" ? weekStart(today) : 0;
+        rows = await rpc("leaderboard_range", { p_from: from, p_to: today });
+        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}"><span class="pos">${i + 1}</span>
+          <span class="who"><b>${esc(r.name)}</b><span>${r.won} van ${r.played} dagcasussen gedetermineerd</span></span>
+          <span class="pts">${r.points}<small>punten</small></span></li>`).join("");
+        if (!rows.length) html = `<p class="rankempty">${rankMode === "week" ? "Deze week" : "Tot nu toe"} zijn er nog geen dagcasussen gespeeld.</p>`;
+      } else {
+        rows = await rpc("leaderboard_dex");
+        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}"><span class="pos">${i + 1}</span>
+          <span class="who"><b>${esc(r.name)}</b><span>${r.trophies} ${r.trophies === 1 ? "trofee" : "trofeeën"}</span></span>
+          <span class="pts">${r.found}<small>van ${TARGETS.length}</small></span></li>`).join("");
+        if (!rows.length) html = `<p class="rankempty">Nog niemand heeft platen in zijn veldboek.</p>`;
+      }
+      list.innerHTML = html;
+      if (me){
+        const wk = await rpc("leaderboard_range", { p_from: weekStart(today), p_to: today });
+        const mine = wk.find(r => r.name === me);
+        $("rankMe").innerHTML = `${mine ? mine.points : 0}<small>jouw punten deze week</small>`;
+      }
+    } catch(e){
+      list.innerHTML = `<p class="rankempty">De ranglijst is nu niet bereikbaar. Controleer je internetverbinding en probeer het later opnieuw.</p>`;
+    }
+  }
+  function renderPlayerBox(){
+    const box = $("playerBox"), p = player();
+    if (!enabled){ box.hidden = true; return; }
+    box.hidden = false;
+    if (p){
+      box.innerHTML = `<p>Je speelt als <b>${esc(p.name)}</b>. Je dagscores en je veldboek worden automatisch bewaard.</p>
+        <details><summary>Op een ander apparaat verder spelen</summary>
+          <p class="fine" style="margin-top:8px">Kopieer je spelerscode en plak hem op je andere apparaat. Deel hem met niemand: met deze code speel je als jou.</p>
+          <div class="row2"><button class="btn line" id="pcCopy">Kopieer spelerscode</button><span class="msg" id="pcMsg"></span></div>
+        </details>`;
+      $("pcCopy").onclick = () => {
+        const code = "VSP-" + p.id + "." + p.key;
+        try { navigator.clipboard.writeText(code).then(() => $("pcMsg").textContent = "Gekopieerd.", () => $("pcMsg").textContent = code); } catch(e){ $("pcMsg").textContent = code; }
+      };
+    } else {
+      box.innerHTML = `<p><b>Doe mee aan de ranglijst.</b> Kies een spelersnaam. Je hebt geen account of e-mailadres nodig.</p>
+        <div class="row2"><input id="pName" maxlength="20" placeholder="Bijvoorbeeld Tom of Dassenjager" autocomplete="nickname"><button class="btn" id="pJoin">Meedoen</button></div>
+        <span class="msg" id="pMsg"></span>
+        <details><summary>Ik heb al een spelerscode</summary>
+          <div class="row2" style="margin-top:8px"><input id="pCode" placeholder="VSP-…"><button class="btn line" id="pLogin">Verder spelen</button></div>
+        </details>`;
+      $("pJoin").onclick = join;
+      $("pName").addEventListener("keydown", e => { if (e.key === "Enter") join(); });
+      $("pLogin").onclick = login;
+    }
+  }
+  async function join(){
+    const name = $("pName").value.trim();
+    if (name.length < 2){ $("pMsg").textContent = "Kies een naam van minstens 2 tekens."; return; }
+    $("pJoin").disabled = true; $("pMsg").textContent = "Even geduld…";
+    try {
+      const rows = await rpc("register_player", { p_name: name });
+      const r = Array.isArray(rows) ? rows[0] : rows;
+      setPlayer({ id: r.id, key: r.key, name });
+      $("welcome").hidden = true;
+      syncSoon(); renderRank(); toast(`Welkom, ${name}! Je doet nu mee aan de ranglijst.`);
+    } catch(e){ $("pJoin").disabled = false; $("pMsg").textContent = e.status && e.status < 500 ? e.message : "Aanmelden lukte niet. Controleer je internetverbinding."; }
+  }
+  async function login(){
+    const m = $("pCode").value.trim().match(/^VSP-([0-9a-f-]{36})\.([0-9a-f]{64})$/i);
+    if (!m){ $("pMsg").textContent = "Deze spelerscode klopt niet. Kopieer hem opnieuw op je andere apparaat."; return; }
+    try {
+      const name = await rpc("player_name", { p_id: m[1], p_key: m[2] });
+      setPlayer({ id: m[1], key: m[2], name });
+      const prog = await rpc("get_progress", { p_id: m[1], p_key: m[2] });
+      if (prog && prog.dex) mergeProgress("VESTIGIA-" + btoa(unescape(encodeURIComponent(JSON.stringify(prog)))));
+      $("welcome").hidden = true; syncSoon(); renderRank(); toast(`Welkom terug, ${name}! Je veldboek is bijgewerkt.`);
+    } catch(e){ $("pMsg").textContent = "Deze spelerscode wordt niet herkend."; }
+  }
+  return { enabled, rpc, player, afterGame, flush, syncSoon, renderRank, setMode: m => { rankMode = m; renderRank(); } };
+})();
+
+function showRank(){
+  $("gameView").hidden = true; $("dexView").hidden = true; $("rankView").hidden = false; setTabs("rank");
+  online.renderRank(); window.scrollTo({ top:0, behavior:"auto" });
+}
+$("mRank").addEventListener("click", showRank);
+$("rankTabs").querySelectorAll(".chipbtn").forEach(b => b.addEventListener("click", () => online.setMode(b.dataset.r)));
+$("welcomeGo").addEventListener("click", () => { showRank(); setTimeout(() => $("pName") && $("pName").focus(), 50); });
+$("welcomeLater").addEventListener("click", () => { $("welcome").hidden = true; try { localStorage.setItem("vestigia:welcomeLater", "1"); } catch(e){} });
+if (online.enabled && !online.player() && !localStorage.getItem("vestigia:welcomeLater")) $("welcome").hidden = false;
+if (!online.enabled) $("mRank").hidden = true;
+window.addEventListener("online", () => online.flush());
+online.flush();
+
+/* ---------- melding in beeld ---------- */
+let toastT;
+function toast(msg, action){
+  const t = $("toast");
+  t.innerHTML = `<span>${esc(msg)}</span>` + (action ? `<button id="toastBtn">${esc(action.label)}</button>` : "");
+  t.hidden = false;
+  if (action) $("toastBtn").onclick = action.run;
+  clearTimeout(toastT);
+  if (!action) toastT = setTimeout(() => { t.hidden = true; }, 3500);
+}
+
+/* ---------- installeren en updates ---------- */
+let installEvt = null;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; $("installBtn").hidden = false; });
+$("installBtn").addEventListener("click", async () => {
+  if (!installEvt) return;
+  installEvt.prompt(); await installEvt.userChoice.catch(() => {}); installEvt = null; $("installBtn").hidden = true;
+});
+window.addEventListener("appinstalled", () => { $("installBtn").hidden = true; toast("Vestigia staat nu op je beginscherm."); });
+if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")){
+  navigator.serviceWorker.register("sw.js").then(reg => {
+    reg.addEventListener("updatefound", () => {
+      const nw = reg.installing;
+      nw && nw.addEventListener("statechange", () => {
+        if (nw.state === "installed" && navigator.serviceWorker.controller)
+          toast("Er is een nieuwe versie van Vestigia.", { label: "Vernieuwen", run: () => nw.postMessage("skipWaiting") });
+      });
+    });
+  }).catch(() => {});
+  let reloaded = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => { if (!reloaded){ reloaded = true; location.reload(); } });
+}
+
+start({});
+window.__veld = { compare, BY_NAME, TARGETS, dailyName, todayIndex, online };
+})();
+</script>
+</body>
+</html>
