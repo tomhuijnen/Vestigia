@@ -2,13 +2,21 @@
 "use strict";
 /* ---------- help + soortenlijst ---------- */
 const help = $("help");
-$("openHelp").addEventListener("click", () => { help.hidden = false; $("closeHelp").focus(); });
-$("closeHelp").addEventListener("click", () => { help.hidden = true; $("openHelp").focus(); });
-help.addEventListener("click", e => { if (e.target === help){ help.hidden = true; } });
-document.addEventListener("keydown", e => { if (e.key === "Escape" && !help.hidden){ help.hidden = true; $("openHelp").focus(); } });
+function openHelp(){ help.hidden = false; $("closeHelp").focus(); }
+function closeHelp(){ help.hidden = true; $("menuBtn").focus({ preventScroll: true }); }
+$("closeHelp").addEventListener("click", closeHelp);
+help.addEventListener("click", e => { if (e.target === help) closeHelp(); });
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  if (!help.hidden) closeHelp();
+  else if (!$("modeInfo").hidden) closeModeInfo();
+});
+
+/* namen in beeld uit data/teksten.js */
+document.querySelectorAll("[data-naam]").forEach(el => { if (NAAM[el.dataset.naam]) el.textContent = NAAM[el.dataset.naam]; });
 
 const sorted = SPECIES.slice().sort((a, b) => a.n.localeCompare(b.n, "nl"));
-$("splist").innerHTML = sorted.map(x => `<div class="${x.c ? "tgt" : ""}"><span>${esc(x.n)}</span> <i>${esc(x.s)}</i></div>`).join("");
+$("splist").innerHTML = sorted.map(x => `<div class="${x.cs ? "tgt" : ""}"><span>${esc(x.n)}</span> <i>${esc(x.s)}</i></div>`).join("");
 $("listSum").textContent = `${SPECIES.length} soorten · ${TARGETS.length} met casus (*)`;
 /* aantallen in de spelregels en het veldboek komen uit de data, zodat ze kloppen als er soorten bijkomen */
 document.querySelectorAll("[data-tel=doelsoorten]").forEach(el => el.textContent = TARGETS.length);
@@ -75,10 +83,10 @@ function toast(msg, action){
 /* ---------- installeren en updates ---------- */
 let installEvt = null;
 window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; $("installBtn").hidden = false; });
-$("installBtn").addEventListener("click", async () => {
+async function installApp(){
   if (!installEvt) return;
   installEvt.prompt(); await installEvt.userChoice.catch(() => {}); installEvt = null; $("installBtn").hidden = true;
-});
+}
 window.addEventListener("appinstalled", () => { $("installBtn").hidden = true; toast("Vestigia staat nu op je beginscherm."); });
 if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")){
   navigator.serviceWorker.register("sw.js").then(reg => {

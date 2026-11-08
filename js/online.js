@@ -49,17 +49,36 @@ const online = (() => {
     if (!enabled || !player()) return;
     if (S.mode === "daily"){
       const q = queue(); q.push({ p_day: S.caseNo - 1, p_expert: S.expert, p_won: S.status === "won", p_tries: Math.min(usedTries(), MAX), p_clues: S.revealed });
-      setQueue(q); flush();
+      setQueue(q); flush().then(() => refreshWeek()).catch(() => {});
     }
     syncSoon();
   }
   /* ranglijst */
   let rankMode = "day";
   function weekStart(i){ const dow = (new Date(START + i * 864e5).getUTCDay() + 6) % 7; return i - dow; }
+  /* Je plaats deze week, voor de tegel in de kop. Bewaard met het weeknummer, zodat hij offline nog te zien is
+     (alleen in dezelfde week). */
+  async function refreshWeek(){
+    const p = player(); if (!enabled || !p) return null;
+    const today = todayIndex(), w = weekStart(today);
+    const rows = await rpc("leaderboard_range", { p_from: w, p_to: today });
+    const pos = rows.findIndex(r => r.name === p.name);
+    const info = { w, pos: pos + 1, n: rows.length, pts: pos >= 0 ? +rows[pos].points : 0 };
+    try { localStorage.setItem("vestigia:week", JSON.stringify(info)); } catch(e){}
+    renderTiles();
+    return info;
+  }
+  const RANK_RULE = {
+    day: "Punten uit de dagcasus van vandaag. Oefenen telt niet mee.",
+    week: "Punten uit de dagcasussen van deze week (vanaf maandag). Oefenen telt niet mee.",
+    all: "Alle punten uit de dagcasussen sinds de start. Oefenen telt niet mee.",
+    dex: `Platen in het ${NAAM.vestiarium}, uit alle modi, ook uit oefenen.`
+  };
   async function renderRank(){
     renderPlayerBox();
     const list = $("rankList");
     $("rankTabs").querySelectorAll(".chipbtn").forEach(b => b.setAttribute("aria-pressed", b.dataset.r === rankMode));
+    $("rankRule").textContent = RANK_RULE[rankMode];
     if (!enabled){ list.innerHTML = `<li class="rankempty" style="display:block">De ranglijst is nog niet ingesteld voor deze versie van Vestigia.</li>`; return; }
     list.innerHTML = `<p class="rankempty">Ranglijst laden…</p>`;
     const me = (player() || {}).name, today = todayIndex();
@@ -83,13 +102,12 @@ const online = (() => {
         html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}"><span class="pos">${i + 1}</span>
           <span class="who"><b>${esc(r.name)}</b><span>${r.trophies} ${r.trophies === 1 ? "trofee" : "trofeeën"}</span></span>
           <span class="pts">${r.found}<small>van ${TARGETS.length}</small></span></li>`).join("");
-        if (!rows.length) html = `<p class="rankempty">Nog niemand heeft platen in zijn veldboek.</p>`;
+        if (!rows.length) html = `<p class="rankempty">Nog niemand heeft platen in zijn ${NAAM.vestiarium}.</p>`;
       }
       list.innerHTML = html;
       if (me){
-        const wk = await rpc("leaderboard_range", { p_from: weekStart(today), p_to: today });
-        const mine = wk.find(r => r.name === me);
-        $("rankMe").innerHTML = `${mine ? mine.points : 0}<small>jouw punten deze week</small>`;
+        const wk = await refreshWeek();
+        $("rankMe").innerHTML = `${wk ? wk.pts : 0}<small>jouw punten deze week</small>`;
       }
     } catch(e){
       list.innerHTML = `<p class="rankempty">De ranglijst is nu niet bereikbaar. Controleer je internetverbinding en probeer het later opnieuw.</p>`;
@@ -100,7 +118,7 @@ const online = (() => {
     if (!enabled){ box.hidden = true; return; }
     box.hidden = false;
     if (p){
-      box.innerHTML = `<p>Je speelt als <b>${esc(p.name)}</b>. Je dagscores en je veldboek worden automatisch bewaard.</p>
+      box.innerHTML = `<p>Je speelt als <b>${esc(p.name)}</b>. Je dagscores en je ${NAAM.vestiarium} worden automatisch bewaard.</p>
         <details><summary>Op een ander apparaat verder spelen</summary>
           <p class="fine" style="margin-top:8px">Kopieer je spelerscode en plak hem op je andere apparaat. Deel hem met niemand: met deze code speel je als jou.</p>
           <div class="row2"><button class="btn line" id="pcCopy">Kopieer spelerscode</button><span class="msg" id="pcMsg"></span></div>
@@ -141,22 +159,22 @@ const online = (() => {
       setPlayer({ id: m[1], key: m[2], name });
       const prog = await rpc("get_progress", { p_id: m[1], p_key: m[2] });
       if (prog && (prog.dex || prog.dexId)) mergeProgressData(prog);
-      $("welcome").hidden = true; syncSoon(); renderRank(); toast(`Welkom terug, ${name}! Je veldboek is bijgewerkt.`);
+      $("welcome").hidden = true; syncSoon(); renderRank(); renderTiles(); toast(`Welkom terug, ${name}! Je ${NAAM.vestiarium} is bijgewerkt.`);
     } catch(e){ $("pMsg").textContent = "Deze spelerscode wordt niet herkend."; }
   }
-  return { enabled, rpc, player, afterGame, flush, syncSoon, renderRank, setMode: m => { rankMode = m; renderRank(); } };
+  return { enabled, rpc, player, afterGame, flush, syncSoon, renderRank, refreshWeek, setMode: m => { rankMode = m; renderRank(); } };
 })();
 
-function showRank(){
-  $("gameView").hidden = true; $("dexView").hidden = true; $("rankView").hidden = false; setTabs("rank");
-  online.renderRank(); window.scrollTo({ top:0, behavior:"auto" });
+function showRank(mode){
+  setView("rank");
+  if (mode) online.setMode(mode); else online.renderRank();
+  window.scrollTo({ top:0, behavior:"auto" });
 }
-$("mRank").addEventListener("click", showRank);
 $("rankTabs").querySelectorAll(".chipbtn").forEach(b => b.addEventListener("click", () => online.setMode(b.dataset.r)));
 $("welcomeGo").addEventListener("click", () => { showRank(); setTimeout(() => $("pName") && $("pName").focus(), 50); });
 $("welcomeLater").addEventListener("click", () => { $("welcome").hidden = true; try { localStorage.setItem("vestigia:welcomeLater", "1"); } catch(e){} });
 if (online.enabled && !online.player() && !localStorage.getItem("vestigia:welcomeLater")) $("welcome").hidden = false;
-if (!online.enabled) $("mRank").hidden = true;
+if (!online.enabled) $("menuRank").parentElement.hidden = true;
 window.addEventListener("online", () => online.flush());
-online.flush();
+online.flush().then(() => online.refreshWeek()).catch(() => {});
 
