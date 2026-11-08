@@ -220,12 +220,14 @@ function renderResult(){
       <button class="btn line" id="nextBtn">${S.mode === "daily" ? "Speel een oefencasus" : "Nieuwe casus"}</button>
       <span class="msg" id="copyMsg"></span>
     </div>
+    ${S.mode === "daily" && online.enabled ? `<p class="inviteline">Samen spelen is leuker. <button class="linklike" id="inviteFromResult">Nodig een speler uit</button></p>` : ""}
     <button class="reportbtn" id="repFromResult">Klopt er iets niet in deze casus? Meld een fout</button>`;
   card.hidden = false;
   $("copyBtn").onclick = () => shareOut(resultShare(), $("copyMsg"), card);
   $("nextBtn").onclick = () => startFree();
   $("toDex").onclick = () => showDex();
   $("repFromResult").onclick = e => openReport(t.id, e.currentTarget, S.k);
+  if ($("inviteFromResult")) $("inviteFromResult").onclick = () => League.openUitnodigen();
 }
 
 function renderPips(){

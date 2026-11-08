@@ -92,8 +92,22 @@ const online = (() => {
     }
     setQueue(q);
   }
-  /* ranglijst */
-  let rankMode = "day";
+  /* ranglijst: Iedereen of een van je leagues (scope), en Vandaag / Deze week / Altijd / Streeplijst */
+  let rankMode = "day", scope = null;
+  function renderScope(){
+    const box = $("rankScope"), ls = player() ? League.cached() : [];
+    if (scope && !ls.some(l => l.id === scope)) scope = null;
+    if (!ls.length){ box.hidden = true; box.innerHTML = ""; return; }
+    box.hidden = false;
+    box.innerHTML = `<button class="chipbtn" data-s="" aria-pressed="${!scope}">Iedereen</button>` +
+      ls.map(l => `<button class="chipbtn" data-s="${esc(l.id)}" aria-pressed="${scope === l.id}">${esc(l.name)}</button>`).join("");
+    box.querySelectorAll(".chipbtn").forEach(b => b.onclick = () => setScope(b.dataset.s || null));
+  }
+  function setScope(id){
+    scope = id || null;
+    if (scope){ League.setLast(scope); if (rankMode === "dex") rankMode = "week"; League.vernieuwTegel().catch(() => {}); }
+    renderRank();
+  }
   function weekStart(i){ const dow = (new Date(START + i * 864e5).getUTCDay() + 6) % 7; return i - dow; }
   /* Je plaats deze week, voor de tegel in de kop. Bewaard met het weeknummer, zodat hij offline nog te zien is
      (alleen in dezelfde week). */
@@ -105,6 +119,7 @@ const online = (() => {
     const info = { w, pos: pos + 1, n: rows.length, pts: pos >= 0 ? +rows[pos].points : 0 };
     try { localStorage.setItem("vestigia:week", JSON.stringify(info)); } catch(e){}
     renderTiles();
+    if (typeof League !== "undefined") League.bijwerken();
     return info;
   }
   const RANK_RULE = {
@@ -114,16 +129,26 @@ const online = (() => {
     dex: `Platen in het ${NAAM.vestiarium}, uit alle modi, ook uit oefenen.`
   };
   async function renderRank(){
-    renderPlayerBox();
-    const list = $("rankList");
-    $("rankTabs").querySelectorAll(".chipbtn").forEach(b => b.setAttribute("aria-pressed", b.dataset.r === rankMode));
-    $("rankRule").textContent = RANK_RULE[rankMode];
+    renderPlayerBox(); renderScope();
+    const list = $("rankList"), lg = scope && League.cached().find(l => l.id === scope);
+    $("rankTabs").querySelectorAll(".chipbtn").forEach(b => { b.setAttribute("aria-pressed", b.dataset.r === rankMode); if (b.dataset.r === "dex") b.hidden = !!lg; });
+    $("rankRule").textContent = lg
+      ? `Alleen de ${lg.members} ${+lg.members === 1 ? "lid" : "leden"} van ${lg.name}. Iedereen telt mee vanaf de dag dat hij of zij lid werd. ` + RANK_RULE[rankMode]
+      : RANK_RULE[rankMode];
     if (!enabled){ list.innerHTML = `<li class="rankempty" style="display:block">De ranglijst is nog niet ingesteld voor deze versie van Vestigia.</li>`; return; }
     list.innerHTML = `<p class="rankempty">Ranglijst laden…</p>`;
     const me = (player() || {}).name, today = todayIndex();
     try {
       let rows, html;
-      if (rankMode === "day"){
+      if (lg){
+        const from = rankMode === "day" ? today : rankMode === "week" ? weekStart(today) : 0;
+        rows = await rpc("league_board", { p_id: player().id, p_key: player().key, p_league: lg.id, p_from: from, p_to: today });
+        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}"><span class="pos">${i + 1}</span>
+          <span class="who"><b>${esc(r.name)}</b><span>${rankMode === "day"
+            ? (+r.played ? (+r.won ? "gedetermineerd" : "niet gevonden") : "nog niet gespeeld")
+            : `${r.won} van ${r.played} dagcasussen gedetermineerd`}</span></span>
+          <span class="pts">${r.points}<small>punten</small></span></li>`).join("");
+      } else if (rankMode === "day"){
         rows = await rpc("leaderboard_day", { p_day: today });
         html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}"><span class="pos">${i + 1}</span>
           <span class="who"><b>${esc(r.name)}</b>${r.expert ? `<span class="xbadge">expert</span>` : ""}<span>${r.won ? (r.expert ? `gedetermineerd na ${r.clues} waarneming${r.clues > 1 ? "en" : ""}` : `gedetermineerd in ${r.tries} ${r.tries === 1 ? "poging" : "pogingen"}`) : "niet gevonden"}</span></span>
@@ -187,7 +212,9 @@ const online = (() => {
       const r = Array.isArray(rows) ? rows[0] : rows;
       setPlayer({ id: r.id, key: r.key, name });
       $("welcome").hidden = true;
-      queueRecentDaily(); syncSoon(); flush().then(() => refreshWeek()).catch(() => {}); renderRank(); toast(`Welkom, ${name}! Je doet nu mee aan de ranglijst.`);
+      /* eerst een uitnodiging en league uit een link: de server neemt een uitnodiging alleen aan vóór je eerste resultaat */
+      const extra = await League.naNaam(true);
+      queueRecentDaily(); syncSoon(); flush().then(() => refreshWeek()).catch(() => {}); renderRank(); renderMenu(); toast(`Welkom, ${name}! Je doet nu mee aan de ranglijst.${extra}`);
     } catch(e){ $("pJoin").disabled = false; $("pMsg").textContent = e.status && e.status < 500 ? e.message : "Aanmelden lukte niet. Controleer je internetverbinding."; }
   }
   async function login(){
@@ -198,23 +225,34 @@ const online = (() => {
       setPlayer({ id: m[1], key: m[2], name });
       const prog = await rpc("get_progress", { p_id: m[1], p_key: m[2] });
       if (prog && (prog.dex || prog.dexId)) mergeProgressData(prog);
-      $("welcome").hidden = true; syncSoon(); renderRank(); flush(); renderTiles(); toast(`Welkom terug, ${name}! Je ${NAAM.vestiarium} is bijgewerkt.`);
+      $("welcome").hidden = true; syncSoon(); renderRank(); flush(); renderTiles(); renderMenu();
+      const extra = await League.naNaam(false);
+      toast(`Welkom terug, ${name}! Je ${NAAM.vestiarium} is bijgewerkt.${extra}`);
     } catch(e){ $("pMsg").textContent = "Deze spelerscode wordt niet herkend."; }
   }
-  return { enabled, rpc, player, afterGame, flush, syncSoon, renderRank, refreshWeek, setMode: m => { rankMode = m; renderRank(); } };
+  return { enabled, rpc, player, afterGame, flush, syncSoon, renderRank, refreshWeek, renderScope, setScope,
+           setMode: (m, s) => { rankMode = m; if (s !== undefined) setScope(s); else renderRank(); } };
 })();
 
-function showRank(mode){
+function showRank(mode, scopeId){
   setView("rank");
-  if (mode) online.setMode(mode); else online.renderRank();
+  if (mode) online.setMode(mode, scopeId); else online.renderRank();
   window.scrollTo({ top:0, behavior:"auto" });
 }
 $("rankTabs").querySelectorAll(".chipbtn").forEach(b => b.addEventListener("click", () => online.setMode(b.dataset.r)));
 $("welcomeGo").addEventListener("click", () => { showRank(); setTimeout(() => $("pName") && $("pName").focus(), 50); });
 $("welcomeLater").addEventListener("click", () => { $("welcome").hidden = true; try { localStorage.setItem("vestigia:welcomeLater", "1"); } catch(e){} });
-/* De vraag om een spelersnaam komt na de openingsanimatie en de uitleg (zie start() in js/app.js). */
-function toonWelkom(){ try { if (online.enabled && !online.player() && !localStorage.getItem("vestigia:welcomeLater")) $("welcome").hidden = false; } catch(e){} }
-if (!online.enabled) $("menuRank").parentElement.hidden = true;
+/* De vraag om een spelersnaam komt na de openingsanimatie en de uitleg (zie start() in js/app.js).
+   Wie via een uitnodigings- of leaguelink binnenkomt, krijgt hem altijd, met van wie de uitnodiging is. */
+function toonWelkom(){
+  try {
+    if (!online.enabled || online.player()) return;
+    const link = League.welkomTekst();
+    if (link) $("welcomeText").innerHTML = link;
+    if (link || !localStorage.getItem("vestigia:welcomeLater")) $("welcome").hidden = false;
+  } catch(e){}
+}
+if (!online.enabled) ["menuRank", "menuLeague", "menuInvite"].forEach(id => $(id).parentElement.hidden = true);
 window.addEventListener("online", () => online.flush());
 online.flush().then(() => online.refreshWeek()).catch(() => {});
 

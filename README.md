@@ -24,6 +24,7 @@ Determinatiespel over beschermde fauna van Nederland: herken de soort aan habita
 | `js/opening.js` | openingsanimatie (één keer per sessie, nooit het spoor van de dagcasus) |
 | `js/uitleg.js` | uitleg bij de eerste keer, en via het menu |
 | `js/online.js` | ranglijst en synchronisatie met Supabase |
+| `js/league.js` | uitnodigen en leagues, en de links `?van=` en `?league=` |
 | `js/app.js` | spelregels, kop, installeren en opstarten |
 | `sw.js` | service worker (offline en updates) |
 

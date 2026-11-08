@@ -5,7 +5,7 @@
 let VIEW = "game";
 function setView(v){
   VIEW = v;
-  $("gameView").hidden = v !== "game"; $("dexView").hidden = v !== "dex"; $("rankView").hidden = v !== "rank";
+  $("gameView").hidden = v !== "game"; $("dexView").hidden = v !== "dex"; $("rankView").hidden = v !== "rank"; $("leagueView").hidden = v !== "league";
   closeMenu(true);
   renderMenu();
 }
@@ -61,14 +61,20 @@ const TILES = [
     else { try { const c = JSON.parse(localStorage.getItem("vestigia:week")); if (c && c.w === w){ pts = Math.max(pts, c.pts || 0); if (c.pos > 0) sub = `${c.pos}e van ${c.n} ${c.n === 1 ? "speler" : "spelers"}`; } } catch(e){} }
     return { label: "Deze week", value: `${pts} ${pts === 1 ? "punt" : "punten"}`, sub };
   }},
+  /* alleen als je in een league zit: je plaats deze week in de league die je het laatst bekeek */
+  { id: "league", show: () => !!League.tegel(), go: () => { const t = League.tegel(); showRank("week", t && t.league.id); }, render(){
+    const t = League.tegel(), s = t.stand;
+    return { label: t.league.name, value: s && s.pos > 0 ? `${s.pos}e van ${s.n}` : "–", sub: s ? `deze week · ${s.pts} ${s.pts === 1 ? "punt" : "punten"}` : "deze week" };
+  }},
   { id: "dex", go: () => showDex(), render(st){
     const dex = st.dex || {}, found = TARGETS.filter(t => dex[t.id] && dex[t.id].w > 0).length;
     return { label: NAAM.vestiarium, value: String(found), unit: `/ ${TARGETS.length} platen`, bar: found / TARGETS.length };
   }}
 ];
 function renderTiles(){
-  const st = store.get();
-  $("tiles").innerHTML = TILES.map(t => {
+  const st = store.get(), zicht = TILES.filter(t => !t.show || t.show());
+  $("tiles").classList.toggle("vijf", zicht.length === 5);
+  $("tiles").innerHTML = zicht.map(t => {
     const r = t.render(st), tag = t.go ? "button" : "div";
     return `<${tag} class="tile" data-tile="${t.id}"${t.go ? ' type="button"' : ""}>
       <span class="tl">${esc(r.label)}</span>
@@ -114,6 +120,8 @@ function renderMenu(){
   const st = store.get(), dex = st.dex || {};
   $("menuDex").textContent = `${TARGETS.filter(t => dex[t.id] && dex[t.id].w > 0).length}/${TARGETS.length}`;
   const cur = VIEW === "game" ? (S && S.mode === "free" ? "free" : "daily") : VIEW;
+  const nl = online.enabled && online.player() ? League.cached().length : 0;
+  $("menuLeagueN").textContent = nl ? String(nl) : "";
   $("menu").querySelectorAll(".menulist button").forEach(b => b.dataset.go === cur ? b.setAttribute("aria-current", "page") : b.removeAttribute("aria-current"));
   const p = online.enabled ? online.player() : null, mp = $("menuPlayer");
   mp.hidden = !online.enabled;
@@ -165,6 +173,8 @@ const MENU_GO = {
   free: () => goFree(),
   dex: () => showDex(),
   rank: () => showRank(),
+  league: () => showLeague(),
+  invite: () => { closeMenu(true); League.openUitnodigen(); },
   help: () => { closeMenu(true); openHelp(); },
   uitleg: () => { closeMenu(true); Uitleg.start(); },
   install: () => { closeMenu(true); installApp(); },
