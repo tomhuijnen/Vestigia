@@ -57,27 +57,33 @@ const online = (() => {
     } catch(e){} finally { logBusy = false; }
   }
   let syncT;
-  function syncSoon(){
+  async function syncNu(){
     const p = player(); if (!enabled || !p) return;
     clearTimeout(syncT);
-    syncT = setTimeout(async () => {
-      const st = store.get(), dex = st.dex || {};
-      const found = TARGETS.filter(t => dex[t.id] && dex[t.id].w > 0).length;
-      /* Supabase accepteert tot 200 kB; een heel lang logboek gaat dan alleen met de laatste 1000 spellen mee (lokaal blijft alles) */
-      let prog = progressData(st, true);
-      if (JSON.stringify(prog).length > 150000) prog.log = prog.log.slice(-1000);
-      try { await rpc("save_progress", { p_id: p.id, p_key: p.key, p_progress: prog, p_found: found, p_trophies: earned(st).length }); }
-      catch(e){}
-    }, 800);
+    const st = store.get(), dex = st.dex || {};
+    const found = TARGETS.filter(t => dex[t.id] && dex[t.id].w > 0).length;
+    /* Supabase accepteert tot 200 kB; een heel lang logboek gaat dan alleen met de laatste 1000 spellen mee (lokaal blijft alles) */
+    let prog = progressData(st, true);
+    if (JSON.stringify(prog).length > 150000) prog.log = prog.log.slice(-1000);
+    try { await rpc("save_progress", { p_id: p.id, p_key: p.key, p_progress: prog, p_found: found, p_trophies: earned(st).length }); }
+    catch(e){}
   }
+  function syncSoon(){
+    if (!enabled || !player()) return;
+    clearTimeout(syncT);
+    syncT = setTimeout(syncNu, 800);
+  }
+  /* Na een spel: resultaat, logboek en voortgang versturen, en pas als dat allemaal binnen is de eikels
+     opnieuw ophalen, zodat de winst in de uitslag klopt (ook de 5 eikels voor een nieuwe plaat). */
   function afterGame(){
     if (!enabled || !player()) return;
+    const klaar = [];
     if (S.mode === "daily"){
       const q = queue(); q.push({ p_day: S.caseNo - 1, p_expert: S.expert, p_won: S.status === "won", p_tries: Math.min(usedTries(), MAX), p_clues: S.revealed });
-      setQueue(q); flush().then(() => refreshWeek()).catch(() => {});
-    }
-    syncSoon();
-    if (S.mode !== "daily") uploadLog(player());
+      setQueue(q); klaar.push(flush().then(() => refreshWeek()).catch(() => {}));
+    } else klaar.push(uploadLog(player()));
+    klaar.push(syncNu());
+    Promise.all(klaar).then(() => Profiel.naSpel()).catch(() => {});
   }
   /* Wie de dagcasus speelde vóór het kiezen van een naam, krijgt die score alsnog in de ranglijst:
      de afgeronde dagcasussen van vandaag en gisteren (ouder neemt de server niet aan). */
@@ -143,32 +149,33 @@ const online = (() => {
       if (lg){
         const from = rankMode === "day" ? today : rankMode === "week" ? weekStart(today) : 0;
         rows = await rpc("league_board", { p_id: player().id, p_key: player().key, p_league: lg.id, p_from: from, p_to: today });
-        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}"><span class="pos">${i + 1}</span>
+        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}" data-n="${esc(r.name)}"><span class="pos">${i + 1}</span>
           <span class="who"><b>${esc(r.name)}</b><span>${rankMode === "day"
             ? (+r.played ? (+r.won ? "gedetermineerd" : "niet gevonden") : "nog niet gespeeld")
             : `${r.won} van ${r.played} dagcasussen gedetermineerd`}</span></span>
           <span class="pts">${r.points}<small>punten</small></span></li>`).join("");
       } else if (rankMode === "day"){
         rows = await rpc("leaderboard_day", { p_day: today });
-        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}"><span class="pos">${i + 1}</span>
+        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}" data-n="${esc(r.name)}"><span class="pos">${i + 1}</span>
           <span class="who"><b>${esc(r.name)}</b>${r.expert ? `<span class="xbadge">expert</span>` : ""}<span>${r.won ? (r.expert ? `gedetermineerd na ${r.clues} waarneming${r.clues > 1 ? "en" : ""}` : `gedetermineerd in ${r.tries} ${r.tries === 1 ? "poging" : "pogingen"}`) : "niet gevonden"}</span></span>
           <span class="pts">${r.points}<small>punten</small></span></li>`).join("");
         if (!rows.length) html = `<p class="rankempty">Nog niemand heeft dagcasus nº ${today + 1} gespeeld. Ben jij de eerste?</p>`;
       } else if (rankMode === "week" || rankMode === "all"){
         const from = rankMode === "week" ? weekStart(today) : 0;
         rows = await rpc("leaderboard_range", { p_from: from, p_to: today });
-        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}"><span class="pos">${i + 1}</span>
+        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}" data-n="${esc(r.name)}"><span class="pos">${i + 1}</span>
           <span class="who"><b>${esc(r.name)}</b><span>${r.won} van ${r.played} dagcasussen gedetermineerd</span></span>
           <span class="pts">${r.points}<small>punten</small></span></li>`).join("");
         if (!rows.length) html = `<p class="rankempty">${rankMode === "week" ? "Deze week" : "Tot nu toe"} zijn er nog geen dagcasussen gespeeld.</p>`;
       } else {
         rows = await rpc("leaderboard_dex");
-        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}"><span class="pos">${i + 1}</span>
+        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}" data-n="${esc(r.name)}"><span class="pos">${i + 1}</span>
           <span class="who"><b>${esc(r.name)}</b><span>${r.trophies} ${r.trophies === 1 ? "trofee" : "trofeeën"}</span></span>
           <span class="pts">${r.found}<small>van ${TARGETS.length}</small></span></li>`).join("");
         if (!rows.length) html = `<p class="rankempty">Nog niemand heeft platen in zijn ${NAAM.vestiarium}.</p>`;
       }
-      list.innerHTML = html;
+      list.innerHTML = html; list.classList.remove("met-av");
+      Profiel.versier(list);
       if (me){
         const wk = await refreshWeek();
         $("rankMe").innerHTML = `${wk ? wk.pts : 0}<small>jouw punten deze week</small>`;
@@ -182,15 +189,9 @@ const online = (() => {
     if (!enabled){ box.hidden = true; return; }
     box.hidden = false;
     if (p){
-      box.innerHTML = `<p>Je speelt als <b>${esc(p.name)}</b>. Je dagscores en je ${NAAM.vestiarium} worden automatisch bewaard.</p>
-        <details><summary>Op een ander apparaat verder spelen</summary>
-          <p class="fine" style="margin-top:8px">Kopieer je spelerscode en plak hem op je andere apparaat. Deel hem met niemand: met deze code speel je als jou.</p>
-          <div class="row2"><button class="btn line" id="pcCopy">Kopieer spelerscode</button><span class="msg" id="pcMsg"></span></div>
-        </details>`;
-      $("pcCopy").onclick = () => {
-        const code = "VSP-" + p.id + "." + p.key;
-        try { navigator.clipboard.writeText(code).then(() => $("pcMsg").textContent = "Gekopieerd.", () => $("pcMsg").textContent = code); } catch(e){ $("pcMsg").textContent = code; }
-      };
+      box.innerHTML = `<p>Je speelt als <b>${esc(p.name)}</b>. Je dagscores en je ${NAAM.vestiarium} worden automatisch bewaard.
+        Je avatar, eikels, prestaties en je spelerscode (om op een ander apparaat verder te spelen) staan in <button class="linklike" id="pcProf">Mijn profiel</button>.</p>`;
+      $("pcProf").onclick = () => showProfiel();
     } else {
       box.innerHTML = `<p><b>Doe mee aan de ranglijst.</b> Kies een spelersnaam. Je hebt geen account of e-mailadres nodig.</p>
         <div class="row2"><input id="pName" maxlength="20" placeholder="Bijvoorbeeld Tom of Dassenjager" autocomplete="nickname"><button class="btn" id="pJoin">Meedoen</button></div>
@@ -214,6 +215,7 @@ const online = (() => {
       $("welcome").hidden = true;
       /* eerst een uitnodiging en league uit een link: de server neemt een uitnodiging alleen aan vóór je eerste resultaat */
       const extra = await League.naNaam(true);
+      Profiel.naNaam();
       queueRecentDaily(); syncSoon(); flush().then(() => refreshWeek()).catch(() => {}); renderRank(); renderMenu(); toast(`Welkom, ${name}! Je doet nu mee aan de ranglijst.${extra}`);
     } catch(e){ $("pJoin").disabled = false; $("pMsg").textContent = e.status && e.status < 500 ? e.message : "Aanmelden lukte niet. Controleer je internetverbinding."; }
   }
@@ -227,6 +229,7 @@ const online = (() => {
       if (prog && (prog.dex || prog.dexId)) mergeProgressData(prog);
       $("welcome").hidden = true; syncSoon(); renderRank(); flush(); renderTiles(); renderMenu();
       const extra = await League.naNaam(false);
+      Profiel.naNaam();
       toast(`Welkom terug, ${name}! Je ${NAAM.vestiarium} is bijgewerkt.${extra}`);
     } catch(e){ $("pMsg").textContent = "Deze spelerscode wordt niet herkend."; }
   }

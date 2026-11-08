@@ -208,6 +208,7 @@ function renderResult(){
   card.innerHTML = `
     <span class="verdict caps">${won ? "Goed gedetermineerd" : "Niet gedetermineerd · het was"}</span>
     <h3>${esc(t.n)}<i>${esc(t.s)}</i></h3>
+    <p class="eikelline" id="eikelGain" hidden></p>
     <p>${score}${S.mode === "daily" ? ` <span class="ptsline">${points() ? "+" + points() + " punt" + (points() > 1 ? "en" : "") : "0 punten"} voor de ranglijst</span>` : ""}</p>
     <div class="status-line"><span class="caps">Status</span><p><b>${esc(LABELS.r[t.r])}.</b> ${esc(REGIME_INFO[t.r])}</p></div>
     <dl class="traits">${traits}</dl>
@@ -228,6 +229,7 @@ function renderResult(){
   $("toDex").onclick = () => showDex();
   $("repFromResult").onclick = e => openReport(t.id, e.currentTarget, S.k);
   if ($("inviteFromResult")) $("inviteFromResult").onclick = () => League.openUitnodigen();
+  Profiel.toonWinst();
 }
 
 function renderPips(){

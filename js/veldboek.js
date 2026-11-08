@@ -139,7 +139,7 @@ function dexNo(id){ const t = BY_ID.get(id); return String(t && t.no || 0).padSt
 let dexFilter = "ALL", dexOnlyFound = false;
 function showDex(){
   setView("dex");
-  renderDex(); window.scrollTo({ top:0, behavior:"auto" });
+  renderDex(); Profiel.inVestiarium(); window.scrollTo({ top:0, behavior:"auto" });
 }
 function renderDex(){
   const st = store.get(), dex = st.dex || {};

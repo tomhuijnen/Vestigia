@@ -5,7 +5,7 @@
 let VIEW = "game";
 function setView(v){
   VIEW = v;
-  $("gameView").hidden = v !== "game"; $("dexView").hidden = v !== "dex"; $("rankView").hidden = v !== "rank"; $("leagueView").hidden = v !== "league";
+  $("gameView").hidden = v !== "game"; $("dexView").hidden = v !== "dex"; $("rankView").hidden = v !== "rank"; $("leagueView").hidden = v !== "league"; $("profielView").hidden = v !== "profiel";
   closeMenu(true);
   renderMenu();
 }
@@ -125,8 +125,10 @@ function renderMenu(){
   $("menu").querySelectorAll(".menulist button").forEach(b => b.dataset.go === cur ? b.setAttribute("aria-current", "page") : b.removeAttribute("aria-current"));
   const p = online.enabled ? online.player() : null, mp = $("menuPlayer");
   mp.hidden = !online.enabled;
+  const w = p && (() => { try { return JSON.parse(localStorage.getItem("vestigia:wallet")); } catch(e){ return null; } })();
+  mp.toggleAttribute("aria-current", VIEW === "profiel");
   mp.innerHTML = p
-    ? `<span class="av" aria-hidden="true">${esc(p.name.slice(0, 1).toUpperCase())}</span><span><b>${esc(p.name)}</b><small>speelt mee in de ranglijst</small></span>`
+    ? `${avatarSVG(Profiel.mijn(), "avatar menu")}<span><b>${esc(p.name)}</b><small>Mijn profiel${w ? ` · ${w.saldo} eikels` : ""}</small></span>`
     : `<span class="av" aria-hidden="true">?</span><span><b>Kies een spelersnaam</b><small>en speel mee in de ranglijst</small></span>`;
 }
 const setInert = on => {
@@ -156,6 +158,8 @@ function closeMenu(quiet, fromHistory){
 }
 window.addEventListener("popstate", () => { if (menuOpen) closeMenu(false, true); });
 $("menuBtn").addEventListener("click", openMenu);
+$("eikelBtn").addEventListener("click", () => showProfiel());
+$("slimEikel").addEventListener("click", () => showProfiel());
 $("slimMenu").addEventListener("click", openMenu);
 $("menuClose").addEventListener("click", () => closeMenu());
 $("menuBack").addEventListener("click", () => closeMenu());
@@ -178,7 +182,8 @@ const MENU_GO = {
   help: () => { closeMenu(true); openHelp(); },
   uitleg: () => { closeMenu(true); Uitleg.start(); },
   install: () => { closeMenu(true); installApp(); },
-  player: () => { showRank(); setTimeout(() => $("pName") && $("pName").focus(), 60); }
+  player: () => { if (online.enabled && online.player()) return showProfiel(); showRank(); setTimeout(() => $("pName") && $("pName").focus(), 60); },
+  profiel: () => showProfiel()
 };
 $("menu").addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b && MENU_GO[b.dataset.go]) MENU_GO[b.dataset.go](); });
 
