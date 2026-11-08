@@ -7,6 +7,12 @@ const online = (() => {
   const PKEY = "vestigia:player";
   const player = () => { try { return JSON.parse(localStorage.getItem(PKEY)); } catch(e){ return null; } };
   const setPlayer = p => { try { p ? localStorage.setItem(PKEY, JSON.stringify(p)) : localStorage.removeItem(PKEY); } catch(e){} };
+  /* Koppeling zonder naam: een verborgen account (niet in de ranglijst) waarmee je apparaten gelijk blijven.
+     account() = het account waarmee gesynchroniseerd wordt: je spelersnaam, anders de koppeling. */
+  const KKEY = "vestigia:sync";
+  const koppeling = () => { try { return JSON.parse(localStorage.getItem(KKEY)); } catch(e){ return null; } };
+  const setKoppeling = k => { try { k ? localStorage.setItem(KKEY, JSON.stringify(k)) : localStorage.removeItem(KKEY); } catch(e){} };
+  const account = () => player() || koppeling();
   async function rpc(fn, args){
     const r = await fetch(CFG.supabaseUrl.replace(/\/$/, "") + "/rest/v1/rpc/" + fn, {
       method: "POST",
@@ -22,7 +28,7 @@ const online = (() => {
   const queue = () => { try { return JSON.parse(localStorage.getItem("vestigia:queue")) || []; } catch(e){ return []; } };
   const setQueue = q => { try { localStorage.setItem("vestigia:queue", JSON.stringify(q)); } catch(e){} };
   async function flush(){
-    const p = player(); if (!enabled || !p) return;
+    const p = account(); if (!enabled || !p) return;
     const q = queue();
     if (q.length){
       const rest = [];
@@ -57,33 +63,40 @@ const online = (() => {
     } catch(e){} finally { logBusy = false; }
   }
   let syncT;
-  function syncSoon(){
-    const p = player(); if (!enabled || !p) return;
+  async function syncNu(){
+    const p = account(); if (!enabled || !p) return;
     clearTimeout(syncT);
-    syncT = setTimeout(async () => {
-      const st = store.get(), dex = st.dex || {};
-      const found = TARGETS.filter(t => dex[t.id] && dex[t.id].w > 0).length;
-      /* Supabase accepteert tot 200 kB; een heel lang logboek gaat dan alleen met de laatste 1000 spellen mee (lokaal blijft alles) */
-      let prog = progressData(st, true);
-      if (JSON.stringify(prog).length > 150000) prog.log = prog.log.slice(-1000);
-      try { await rpc("save_progress", { p_id: p.id, p_key: p.key, p_progress: prog, p_found: found, p_trophies: earned(st).length }); }
-      catch(e){}
-    }, 800);
+    const st = store.get(), dex = st.dex || {};
+    const found = TARGETS.filter(t => dex[t.id] && dex[t.id].w > 0).length;
+    /* Supabase accepteert tot 200 kB; een heel lang logboek gaat dan alleen met de laatste 1000 spellen mee (lokaal blijft alles) */
+    let prog = progressData(st, true);
+    if (JSON.stringify(prog).length > 150000) prog.log = prog.log.slice(-1000);
+    try { await rpc("save_progress", { p_id: p.id, p_key: p.key, p_progress: prog, p_found: found, p_trophies: earned(st).length }); }
+    catch(e){}
   }
+  function syncSoon(){
+    if (!enabled || !account()) return;
+    clearTimeout(syncT);
+    syncT = setTimeout(syncNu, 800);
+  }
+  /* Na een spel: resultaat, logboek en voortgang versturen, en pas als dat allemaal binnen is de eikels
+     opnieuw ophalen, zodat de winst in de uitslag klopt (ook de 5 eikels voor een nieuwe plaat). */
   function afterGame(){
-    if (!enabled || !player()) return;
-    if (S.mode === "daily"){
+    if (!enabled || !account()) return;
+    const klaar = [];
+    if (S.mode === "daily" && eersteModus(store.get(), S.caseNo - 1) === !!S.expert){   /* alleen je eerste modus van de dag */
       const q = queue(); q.push({ p_day: S.caseNo - 1, p_expert: S.expert, p_won: S.status === "won", p_tries: Math.min(usedTries(), MAX), p_clues: S.revealed });
-      setQueue(q); flush().then(() => refreshWeek()).catch(() => {});
-    }
-    syncSoon();
-    if (S.mode !== "daily") uploadLog(player());
+      setQueue(q); klaar.push(flush().then(() => refreshWeek()).catch(() => {}));
+    } else klaar.push(uploadLog(account()));
+    klaar.push(syncNu());
+    Promise.all(klaar).then(() => Profiel.naSpel()).catch(() => {});
   }
   /* Wie de dagcasus speelde vóór het kiezen van een naam, krijgt die score alsnog in de ranglijst:
      de afgeronde dagcasussen van vandaag en gisteren (ouder neemt de server niet aan). */
   function queueRecentDaily(){
     const st = store.get(), today = todayIndex(), q = queue();
     for (const i of [today - 1, today]) for (const x of [false, true]){
+      if (eersteModus(st, i) !== x) continue;          /* alleen de modus die je die dag als eerste speelde */
       const g = (st.games || {})[dailyKey(i, x)];
       if (!g || g.status === "playing" || i < 0) continue;
       const twin = (BY_ID.get(g.target) || {}).twin, tries = g.guesses.filter(n => n !== twin).length;
@@ -93,7 +106,7 @@ const online = (() => {
     setQueue(q);
   }
   /* ranglijst: Iedereen of een van je leagues (scope), en Vandaag / Deze week / Altijd / Streeplijst */
-  let rankMode = "day", scope = null;
+  let rankMode = "week", scope = null;      /* week: vroeg op de dag staat er bij Vandaag nog weinig */
   function renderScope(){
     const box = $("rankScope"), ls = player() ? League.cached() : [];
     if (scope && !ls.some(l => l.id === scope)) scope = null;
@@ -143,32 +156,33 @@ const online = (() => {
       if (lg){
         const from = rankMode === "day" ? today : rankMode === "week" ? weekStart(today) : 0;
         rows = await rpc("league_board", { p_id: player().id, p_key: player().key, p_league: lg.id, p_from: from, p_to: today });
-        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}"><span class="pos">${i + 1}</span>
+        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}" data-n="${esc(r.name)}"><span class="pos">${i + 1}</span>
           <span class="who"><b>${esc(r.name)}</b><span>${rankMode === "day"
             ? (+r.played ? (+r.won ? "gedetermineerd" : "niet gevonden") : "nog niet gespeeld")
             : `${r.won} van ${r.played} dagcasussen gedetermineerd`}</span></span>
           <span class="pts">${r.points}<small>punten</small></span></li>`).join("");
       } else if (rankMode === "day"){
         rows = await rpc("leaderboard_day", { p_day: today });
-        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}"><span class="pos">${i + 1}</span>
+        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}" data-n="${esc(r.name)}"><span class="pos">${i + 1}</span>
           <span class="who"><b>${esc(r.name)}</b>${r.expert ? `<span class="xbadge">expert</span>` : ""}<span>${r.won ? (r.expert ? `gedetermineerd na ${r.clues} waarneming${r.clues > 1 ? "en" : ""}` : `gedetermineerd in ${r.tries} ${r.tries === 1 ? "poging" : "pogingen"}`) : "niet gevonden"}</span></span>
           <span class="pts">${r.points}<small>punten</small></span></li>`).join("");
-        if (!rows.length) html = `<p class="rankempty">Nog niemand heeft dagcasus nº ${today + 1} gespeeld. Ben jij de eerste?</p>`;
+        if (!rows.length) html = `<p class="rankempty">Nog niemand heeft dagcasus #${today + 1} gespeeld. Ben jij de eerste?</p>`;
       } else if (rankMode === "week" || rankMode === "all"){
         const from = rankMode === "week" ? weekStart(today) : 0;
         rows = await rpc("leaderboard_range", { p_from: from, p_to: today });
-        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}"><span class="pos">${i + 1}</span>
+        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}" data-n="${esc(r.name)}"><span class="pos">${i + 1}</span>
           <span class="who"><b>${esc(r.name)}</b><span>${r.won} van ${r.played} dagcasussen gedetermineerd</span></span>
           <span class="pts">${r.points}<small>punten</small></span></li>`).join("");
         if (!rows.length) html = `<p class="rankempty">${rankMode === "week" ? "Deze week" : "Tot nu toe"} zijn er nog geen dagcasussen gespeeld.</p>`;
       } else {
         rows = await rpc("leaderboard_dex");
-        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}"><span class="pos">${i + 1}</span>
+        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}" data-n="${esc(r.name)}"><span class="pos">${i + 1}</span>
           <span class="who"><b>${esc(r.name)}</b><span>${r.trophies} ${r.trophies === 1 ? "trofee" : "trofeeën"}</span></span>
           <span class="pts">${r.found}<small>van ${TARGETS.length}</small></span></li>`).join("");
         if (!rows.length) html = `<p class="rankempty">Nog niemand heeft platen in zijn ${NAAM.vestiarium}.</p>`;
       }
-      list.innerHTML = html;
+      list.innerHTML = html; list.classList.remove("met-av");
+      Profiel.versier(list);
       if (me){
         const wk = await refreshWeek();
         $("rankMe").innerHTML = `${wk ? wk.pts : 0}<small>jouw punten deze week</small>`;
@@ -182,20 +196,14 @@ const online = (() => {
     if (!enabled){ box.hidden = true; return; }
     box.hidden = false;
     if (p){
-      box.innerHTML = `<p>Je speelt als <b>${esc(p.name)}</b>. Je dagscores en je ${NAAM.vestiarium} worden automatisch bewaard.</p>
-        <details><summary>Op een ander apparaat verder spelen</summary>
-          <p class="fine" style="margin-top:8px">Kopieer je spelerscode en plak hem op je andere apparaat. Deel hem met niemand: met deze code speel je als jou.</p>
-          <div class="row2"><button class="btn line" id="pcCopy">Kopieer spelerscode</button><span class="msg" id="pcMsg"></span></div>
-        </details>`;
-      $("pcCopy").onclick = () => {
-        const code = "VSP-" + p.id + "." + p.key;
-        try { navigator.clipboard.writeText(code).then(() => $("pcMsg").textContent = "Gekopieerd.", () => $("pcMsg").textContent = code); } catch(e){ $("pcMsg").textContent = code; }
-      };
+      box.innerHTML = `<p>Je speelt als <b>${esc(p.name)}</b>. Je dagscores en je ${NAAM.vestiarium} worden automatisch bewaard.
+        Je avatar, eikels, prestaties en je spelerscode (om op een ander apparaat verder te spelen) staan in <button class="linklike" id="pcProf">Mijn profiel</button>.</p>`;
+      $("pcProf").onclick = () => showProfiel();
     } else {
       box.innerHTML = `<p><b>Doe mee aan de ranglijst.</b> Kies een spelersnaam. Je hebt geen account of e-mailadres nodig.</p>
         <div class="row2"><input id="pName" maxlength="20" placeholder="Bijvoorbeeld Tom of Dassenjager" autocomplete="nickname"><button class="btn" id="pJoin">Meedoen</button></div>
         <span class="msg" id="pMsg"></span>
-        <details><summary>Ik heb al een spelerscode</summary>
+        <details><summary>Ik heb al een spelers- of koppelcode</summary>
           <div class="row2" style="margin-top:8px"><input id="pCode" placeholder="VSP-…"><button class="btn line" id="pLogin">Verder spelen</button></div>
         </details>`;
       $("pJoin").onclick = join;
@@ -208,29 +216,75 @@ const online = (() => {
     if (name.length < 2){ $("pMsg").textContent = "Kies een naam van minstens 2 tekens."; return; }
     $("pJoin").disabled = true; $("pMsg").textContent = "Even geduld…";
     try {
-      const rows = await rpc("register_player", { p_name: name });
-      const r = Array.isArray(rows) ? rows[0] : rows;
+      let r;
+      const k = koppeling();
+      if (k){ await rpc("claim_name", { p_id: k.id, p_key: k.key, p_name: name }); r = k; setKoppeling(null); }
+      else { const rows = await rpc("register_player", { p_name: name }); r = Array.isArray(rows) ? rows[0] : rows; }
       setPlayer({ id: r.id, key: r.key, name });
       $("welcome").hidden = true;
       /* eerst een uitnodiging en league uit een link: de server neemt een uitnodiging alleen aan vóór je eerste resultaat */
       const extra = await League.naNaam(true);
+      Profiel.naNaam();
       queueRecentDaily(); syncSoon(); flush().then(() => refreshWeek()).catch(() => {}); renderRank(); renderMenu(); toast(`Welkom, ${name}! Je doet nu mee aan de ranglijst.${extra}`);
     } catch(e){ $("pJoin").disabled = false; $("pMsg").textContent = e.status && e.status < 500 ? e.message : "Aanmelden lukte niet. Controleer je internetverbinding."; }
   }
   async function login(){
-    const m = $("pCode").value.trim().match(/^VSP-([0-9a-f-]{36})\.([0-9a-f]{64})$/i);
-    if (!m){ $("pMsg").textContent = "Deze spelerscode klopt niet. Kopieer hem opnieuw op je andere apparaat."; return; }
     try {
-      const name = await rpc("player_name", { p_id: m[1], p_key: m[2] });
-      setPlayer({ id: m[1], key: m[2], name });
-      const prog = await rpc("get_progress", { p_id: m[1], p_key: m[2] });
-      if (prog && (prog.dex || prog.dexId)) mergeProgressData(prog);
-      $("welcome").hidden = true; syncSoon(); renderRank(); flush(); renderTiles(); renderMenu();
-      const extra = await League.naNaam(false);
-      toast(`Welkom terug, ${name}! Je ${NAAM.vestiarium} is bijgewerkt.${extra}`);
-    } catch(e){ $("pMsg").textContent = "Deze spelerscode wordt niet herkend."; }
+      const name = await koppel($("pCode").value);
+      if (name){ $("welcome").hidden = true; renderRank(); renderMenu(); const extra = await League.naNaam(false); Profiel.naNaam(); toast(`Welkom terug, ${name}! Je ${NAAM.vestiarium} is bijgewerkt.${extra}`); }
+      else { renderRank(); toast("Gekoppeld. Dit apparaat blijft nu gelijk met je andere apparaat."); }
+    } catch(e){ $("pMsg").textContent = e.message === "code" ? "Deze code klopt niet. Kopieer hem opnieuw op je andere apparaat." : "Deze code wordt niet herkend."; }
   }
-  return { enabled, rpc, player, afterGame, flush, syncSoon, renderRank, refreshWeek, renderScope, setScope,
+
+  /* Voortgang van je andere apparaten ophalen en samenvoegen (platen, trofeeën, statistieken, logboek).
+     Bij het openen en als de app weer op de voorgrond komt (hooguit eens per minuut); daarna gaat de
+     samengevoegde voortgang weer naar Supabase, zodat geen apparaat de platen van een ander overschrijft. */
+  let laatsteHaal = 0;
+  async function haalVoortgang(){
+    const p = account(); if (!enabled || !p || Date.now() - laatsteHaal < 60000) return;
+    laatsteHaal = Date.now();
+    try {
+      /* koos je op een ander apparaat een naam voor dit gekoppelde account, dan speel je hier nu ook onder die naam */
+      if (!player()){
+        const naam = await rpc("player_name", { p_id: p.id, p_key: p.key });
+        if (naam && !String(naam).startsWith("~")){ setPlayer({ id: p.id, key: p.key, name: naam }); setKoppeling(null); $("welcome").hidden = true; Profiel.naNaam(); toast(`Je speelt nu als ${naam}, net als op je andere apparaat.`); }
+      }
+      const prog = await rpc("get_progress", { p_id: p.id, p_key: p.key });
+      if (prog && (prog.dex || prog.dexId)){ mergeProgressData(prog); naSamenvoegen(); syncSoon(); }
+    } catch(e){}
+  }
+  /* na samenvoegen: kop, menu en Vestiarium bijwerken; speelde je de dagcasus al op een ander apparaat,
+     dan staat hij hier ook als gespeeld (zolang je hier nog niets geprobeerd hebt) */
+  function naSamenvoegen(){
+    if (S && S.mode === "daily" && S.status === "playing" && !S.guesses.length && finished(store.get(), S.caseNo - 1, S.expert)) startDaily();
+    renderTiles(); renderMenu(); if (VIEW === "dex") renderDex();
+  }
+  /* code om een ander apparaat te koppelen: je spelerscode, of (zonder naam) de code van een verborgen account */
+  async function koppelcode(){
+    let a = account();
+    if (!a){
+      const rows = await rpc("register_hidden", {}), r = Array.isArray(rows) ? rows[0] : rows;
+      a = { id: r.id, key: r.key }; setKoppeling(a);
+      queueRecentDaily(); await syncNu(); flush();
+    }
+    return "VSP-" + a.id + "." + a.key;
+  }
+  /* een code van een ander apparaat gebruiken: spelerscode = verder spelen als die speler, koppelcode = koppelen */
+  async function koppel(code){
+    const m = String(code || "").trim().match(/^VSP-([0-9a-f-]{36})\.([0-9a-f]{64})$/i);
+    if (!m) throw new Error("code");
+    const name = await rpc("player_name", { p_id: m[1], p_key: m[2] });
+    if (String(name).startsWith("~")){
+      if (player()) throw new Error("naam");
+      setKoppeling({ id: m[1], key: m[2] });
+    } else { setPlayer({ id: m[1], key: m[2], name }); setKoppeling(null); }
+    const prog = await rpc("get_progress", { p_id: m[1], p_key: m[2] });
+    if (prog && (prog.dex || prog.dexId)) mergeProgressData(prog);
+    laatsteHaal = Date.now();
+    queueRecentDaily(); await syncNu(); flush(); naSamenvoegen();
+    return String(name).startsWith("~") ? null : name;
+  }
+  return { enabled, rpc, player, account, koppeling, koppelcode, koppel, afterGame, haalVoortgang, flush, syncSoon, renderRank, refreshWeek, renderScope, setScope,
            setMode: (m, s) => { rankMode = m; if (s !== undefined) setScope(s); else renderRank(); } };
 })();
 
@@ -254,5 +308,6 @@ function toonWelkom(){
 }
 if (!online.enabled) ["menuRank", "menuLeague", "menuInvite"].forEach(id => $(id).parentElement.hidden = true);
 window.addEventListener("online", () => online.flush());
-online.flush().then(() => online.refreshWeek()).catch(() => {});
+online.haalVoortgang().then(() => online.flush()).then(() => online.refreshWeek()).catch(() => {});
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") online.haalVoortgang(); });
 

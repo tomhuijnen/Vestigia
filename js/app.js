@@ -70,6 +70,7 @@ document.fonts && document.fonts.ready.then(drawTopo);
 function start(){
   store.upgrade();
   startDaily();
+  Profiel.start();
   Opening.run().then(() => Uitleg.automatisch()).then(toonWelkom).then(() => League.verwerk());
 }
 /* ---------- melding in beeld ---------- */

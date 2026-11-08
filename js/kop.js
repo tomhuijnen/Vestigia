@@ -5,7 +5,7 @@
 let VIEW = "game";
 function setView(v){
   VIEW = v;
-  $("gameView").hidden = v !== "game"; $("dexView").hidden = v !== "dex"; $("rankView").hidden = v !== "rank"; $("leagueView").hidden = v !== "league";
+  $("gameView").hidden = v !== "game"; $("dexView").hidden = v !== "dex"; $("rankView").hidden = v !== "rank"; $("leagueView").hidden = v !== "league"; $("profielView").hidden = v !== "profiel";
   closeMenu(true);
   renderMenu();
 }
@@ -18,7 +18,14 @@ function gamePoints(g, expert){
   const twin = BY_ID.get(g.target).twin, tries = g.guesses.filter(n => n !== twin).length;
   return Math.max(1, 6 - tries);
 }
-const dayPoints = (st, i) => Math.max(gamePoints(finished(st, i, false), false), gamePoints(finished(st, i, true), true));
+/* Klassiek en expert hebben dezelfde casus. Voor de ranglijst telt daarom alleen de modus die je die dag als eerste
+   speelde (het logboek staat op volgorde). null = vandaag nog niets afgerond. */
+function eersteModus(st, i){
+  const e = (st.log || []).find(l => l.m === "daily" && l.d === i);
+  if (e) return !!e.x;
+  return finished(st, i, false) ? false : finished(st, i, true) ? true : null;
+}
+const dayPoints = (st, i) => { const m = eersteModus(st, i); return m === null ? 0 : gamePoints(finished(st, i, m), m); };
 function weekStartDay(i){ const dow = (new Date(START + i * DAY).getUTCDay() + 6) % 7; return i - dow; }
 /* dagen op rij waarop je de dagcasus speelde (klassiek of expert); vandaag telt mee zodra je hem gespeeld hebt */
 function playStreak(st){
@@ -38,19 +45,21 @@ function resultWord(g, expert){
   return `✓ ${g.guesses.filter(n => n !== twin).length}/${MAX}`;
 }
 
+/* vlammetje bij de reeks */
+const VLAM = `<svg class="vlam" aria-hidden="true" viewBox="0 0 16 16" width="15" height="15"><path d="M8 1.2c.4 2.3 2.1 3.4 3.3 5 1 1.4 1.4 2.7 1.2 4.1-.4 2.6-2.6 4.5-5.1 4.5S3 13 2.9 10.4c-.1-1.6.6-3 1.6-4 .1 1 .6 1.8 1.4 2.2C5.5 6.2 6.6 3.5 8 1.2Z" fill="#e8743b"/><path d="M8.1 7.4c.3 1.2 1.3 1.8 1.7 2.8.5 1.4-.4 3-1.9 3s-2.4-1.3-2-2.6c.2-.7.7-1.1 1.2-1.4 0 .6.3 1 .7 1.2 0-1.2.1-2.1.3-3Z" fill="#f6c34a"/></svg>`;
 /* ---------- tegels ----------
    Een lijst, zodat er later tegels bij kunnen (eikels in stap 6, je league in stap 5) zonder de kop opnieuw te bouwen.
    Elke tegel: label, waarde, regel eronder, eventueel een balk, en waar je heen gaat als je erop tikt. */
 const TILES = [
   { id: "dag", go: () => goDaily(), render(st){
     const i = todayIndex(), c = finished(st, i, false), x = finished(st, i, true);
-    if (!c && !x) return { label: `Dagcasus nº ${i + 1}`, value: "Nog te spelen", sub: "klassiek en expert open" };
+    if (!c && !x) return { label: `Dagcasus #${i + 1}`, value: "Nog te spelen", sub: "klassiek of expert" };
     const p = dayPoints(st, i);
-    return { label: `Dagcasus nº ${i + 1}`, value: `${p} ${p === 1 ? "punt" : "punten"}`, sub: `klassiek ${resultWord(c, false)} · expert ${resultWord(x, true)}` };
+    return { label: `Dagcasus #${i + 1}`, value: `${p} ${p === 1 ? "punt" : "punten"}`, sub: `klassiek ${resultWord(c, false)} · expert ${resultWord(x, true)}` };
   }},
   { id: "reeks", render(st){
     const s = playStreak(st);
-    return { label: "Reeks", value: `${s.cur} ${s.cur === 1 ? "dag" : "dagen"}`, sub: s.best > s.cur ? `op rij · record ${s.best}` : "op rij gespeeld" };
+    return { label: "Reeks", icon: s.cur > 0 ? VLAM : "", value: `${s.cur} ${s.cur === 1 ? "dag" : "dagen"}`, sub: s.best > s.cur ? `op rij · record ${s.best}` : "op rij gespeeld" };
   }},
   { id: "week", go: () => showRank("week"), render(st){
     const today = todayIndex(), w = weekStartDay(today);
@@ -78,7 +87,7 @@ function renderTiles(){
     const r = t.render(st), tag = t.go ? "button" : "div";
     return `<${tag} class="tile" data-tile="${t.id}"${t.go ? ' type="button"' : ""}>
       <span class="tl">${esc(r.label)}</span>
-      <span class="tv">${esc(r.value)}${r.unit ? ` <small>${esc(r.unit)}</small>` : ""}</span>
+      <span class="tv">${r.icon || ""}${esc(r.value)}${r.unit ? ` <small>${esc(r.unit)}</small>` : ""}</span>
       ${r.bar !== undefined ? `<span class="tb" aria-hidden="true"><i style="width:${Math.round(100 * r.bar)}%"></i></span>` : `<span class="ts">${esc(r.sub || "")}</span>`}
     </${tag}>`;
   }).join("");
@@ -90,9 +99,9 @@ function renderKop(){
   let series;
   if (S.mode === "daily"){
     const d = new Date(START + (S.caseNo - 1) * DAY);
-    series = `Dagcasus nº ${S.caseNo} · ${d.toLocaleDateString("nl-NL", { weekday:"short", day:"numeric", month:"long", timeZone:"UTC" })}`;
+    series = `Dagcasus #${S.caseNo} · ${d.toLocaleDateString("nl-NL", { weekday:"short", day:"numeric", month:"long", timeZone:"UTC" })}`;
   } else series = "Oefencasus · telt niet voor de ranglijst";
-  $("fSeries").textContent = series; $("slimSeries").textContent = S.mode === "daily" ? `nº ${S.caseNo}` : "oefenen";
+  $("fSeries").textContent = series; $("slimSeries").textContent = S.mode === "daily" ? `#${S.caseNo}` : "oefenen";
   $("modeClassic").setAttribute("aria-pressed", !S.expert);
   $("modeExpert").setAttribute("aria-pressed", !!S.expert);
   const st = store.get(), i = todayIndex(), daily = S.mode === "daily";
@@ -125,8 +134,10 @@ function renderMenu(){
   $("menu").querySelectorAll(".menulist button").forEach(b => b.dataset.go === cur ? b.setAttribute("aria-current", "page") : b.removeAttribute("aria-current"));
   const p = online.enabled ? online.player() : null, mp = $("menuPlayer");
   mp.hidden = !online.enabled;
+  const w = p && (() => { try { return JSON.parse(localStorage.getItem("vestigia:wallet")); } catch(e){ return null; } })();
+  mp.toggleAttribute("aria-current", VIEW === "profiel");
   mp.innerHTML = p
-    ? `<span class="av" aria-hidden="true">${esc(p.name.slice(0, 1).toUpperCase())}</span><span><b>${esc(p.name)}</b><small>speelt mee in de ranglijst</small></span>`
+    ? `${avatarSVG(Profiel.mijn(), "avatar menu")}<span><b>${esc(p.name)}</b><small>Mijn profiel${w ? ` · ${w.saldo} eikels` : ""}</small></span>`
     : `<span class="av" aria-hidden="true">?</span><span><b>Kies een spelersnaam</b><small>en speel mee in de ranglijst</small></span>`;
 }
 const setInert = on => {
@@ -156,6 +167,8 @@ function closeMenu(quiet, fromHistory){
 }
 window.addEventListener("popstate", () => { if (menuOpen) closeMenu(false, true); });
 $("menuBtn").addEventListener("click", openMenu);
+$("eikelBtn").addEventListener("click", () => showProfiel());
+$("slimEikel").addEventListener("click", () => showProfiel());
 $("slimMenu").addEventListener("click", openMenu);
 $("menuClose").addEventListener("click", () => closeMenu());
 $("menuBack").addEventListener("click", () => closeMenu());
@@ -178,7 +191,8 @@ const MENU_GO = {
   help: () => { closeMenu(true); openHelp(); },
   uitleg: () => { closeMenu(true); Uitleg.start(); },
   install: () => { closeMenu(true); installApp(); },
-  player: () => { showRank(); setTimeout(() => $("pName") && $("pName").focus(), 60); }
+  player: () => { if (online.enabled && online.player()) return showProfiel(); showRank(); setTimeout(() => $("pName") && $("pName").focus(), 60); },
+  profiel: () => showProfiel()
 };
 $("menu").addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b && MENU_GO[b.dataset.go]) MENU_GO[b.dataset.go](); });
 

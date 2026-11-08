@@ -453,3 +453,60 @@ footer{margin-top:44px; padding-top:12px; border-top:1px solid var(--rule); font
 #leagueBody > .fine{color:var(--ink-2)}
 .inviteline{margin:4px 0 0; color:var(--ink-2)}
 #leaguePop .lgcode{cursor:default}
+
+/* ---------- stap 6: eikels, avatars, Mijn profiel, prestaties ---------- */
+.eikelbtn{margin-left:auto; height:36px; border-radius:18px; border:1.5px solid var(--mint); background:rgba(28,51,38,.35); color:#fff; display:flex; align-items:center; gap:6px; padding:0 12px 0 10px; cursor:pointer; font-family:var(--display); font-weight:600; font-size:.95rem; font-variant-numeric:tabular-nums}
+.eikelbtn:hover{background:rgba(28,51,38,.6)}
+.eikelbtn:focus-visible{outline:2px solid var(--mint); outline-offset:2px}
+.slimbar .eikelbtn{height:32px}
+.mh-bar .eikelbtn + .menubtn, .slimbar .eikelbtn + .menubtn{margin-left:0}
+svg.avatar{display:block; border-radius:50%}
+svg.avatar.klein{width:34px; height:34px}
+svg.avatar.menu{width:44px; height:44px; flex:0 0 44px}
+svg.avatar.mid{width:64px; height:64px}
+svg.avatar.groot{width:104px; height:104px; flex:0 0 104px}
+.ranklist.met-av li{grid-template-columns:2.4rem 34px 1fr auto}
+.ranklist .rav{display:block}
+.ranklist .who span.sub{color:var(--green-d); font-style:italic}
+.eikelline{margin:0; display:flex; align-items:center; gap:6px; font-family:var(--display); font-weight:600; color:#8a5a22}
+.eikel{flex:0 0 auto; vertical-align:-2px}
+#pfSaldo{display:flex; align-items:center; gap:6px; flex-wrap:wrap}
+#pfSaldo .eikel{width:22px; height:22px}
+.pfkaart{display:flex; align-items:center; gap:18px; margin:20px 0 6px}
+.pfkaart h3{margin:0; font-family:var(--display); font-size:1.6rem; font-weight:700}
+.pfsub{margin:2px 0 0; color:var(--green-d); font-style:italic}
+.pfsec{margin-top:22px; display:grid; gap:10px}
+.pfsec > h3{margin:0; font-family:var(--caps); text-transform:uppercase; letter-spacing:.08em; font-size:.88rem; color:var(--ochre); border-bottom:1px solid var(--rule); padding-bottom:6px}
+.pfsec .dexfilters{padding:0}
+.pfopties{display:grid; grid-template-columns:repeat(auto-fill, minmax(96px, 1fr)); gap:10px}
+.pfopt{display:flex; flex-direction:column; align-items:center; gap:4px; padding:10px 6px; border:1.5px solid var(--rule); background:#fff; border-radius:10px; cursor:pointer; font:inherit; color:var(--ink); text-align:center}
+.pfopt:hover{border-color:var(--green)}
+.pfopt.aan{border-color:var(--green); background:var(--mint)}
+.pfopt.dicht{opacity:.55; cursor:default}
+.pfopt .pl{font-weight:700; font-size:.85rem; line-height:1.2}
+.pfopt .ps{font-size:.75rem; color:var(--ink-2); display:flex; align-items:center; gap:4px; min-height:1em}
+.pfopt[data-zeker] .ps{color:var(--green-d); font-weight:700}
+.pfgeheim{width:64px; height:64px; border-radius:50%; display:grid; place-items:center; background:#e9ece6; color:var(--ink-2); font-family:var(--display); font-weight:700; font-size:1.6rem; border:2px dashed #c7cfc8}
+.pfnoot{grid-column:1 / -1; margin:0}
+.pftitels{grid-column:1 / -1; display:grid; grid-template-columns:repeat(auto-fill, minmax(170px, 1fr)); gap:8px}
+.pftitels .pfopt{align-items:flex-start; text-align:left; padding:10px 12px}
+.pfopbouw{display:grid; grid-template-columns:1fr auto; gap:4px 16px; margin:0; max-width:420px}
+.pfopbouw dt{color:var(--ink-2)} .pfopbouw dd{margin:0; text-align:right; font-variant-numeric:tabular-nums; font-weight:700}
+.pfopbouw .tot{border-top:1px solid var(--rule); padding-top:4px; color:var(--ink); font-weight:700}
+.prlist{display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:8px}
+.pr{display:flex; gap:10px; align-items:center; background:#fff; border:1px solid var(--rule); border-radius:8px; padding:10px 12px}
+.prniv{flex:0 0 30px; height:30px; border-radius:15px; display:grid; place-items:center; font-family:var(--display); font-weight:700; color:#fff; background:#d5dbd6}
+.pr.n1 .prniv{background:#a8693c} .pr.n2 .prniv{background:#8d99a0} .pr.n3 .prniv{background:#c79a2e}
+.prtxt{flex:1; min-width:0; display:grid; gap:2px}
+.prtxt b{font-size:.9rem; line-height:1.25}
+.prtxt > span{font-size:.78rem; color:var(--ink-2)}
+.prtxt .tb{display:block; height:5px; border-radius:3px; background:#e3e8e3; overflow:hidden}
+.prtxt .tb i{display:block; height:5px; background:var(--green)}
+.prestaties{margin-top:22px; display:grid; gap:10px}
+.prestaties h3{margin:0}
+.menuplayer[aria-current]{background:var(--mint)}
+
+/* knoppen met een pictogram of teken: precies in het midden van de cirkel */
+.menubtn, .qbtn, .iconbtn{padding:0; line-height:1; display:grid; place-items:center}
+.menubtn svg, .iconbtn svg{display:block}
+.tile .vlam{vertical-align:-2px; margin-right:3px}

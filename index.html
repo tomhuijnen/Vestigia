@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Karla:ital,wght@0,400;0,500;0,700;1,400&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/vestigia.css?v=202611081541">
+<link rel="stylesheet" href="css/vestigia.css?v=202611081658">
 </head>
 <body>
 <!-- openingsanimatie: staat meteen in beeld (geen witte flits), en is in dezelfde sessie al gezien → niet tonen -->
@@ -30,6 +30,7 @@
         <span class="series" id="fSeries">Dagcasus</span>
         <span class="mh-name">Vestigia</span>
       </button>
+      <button class="eikelbtn" id="eikelBtn" hidden><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path d="M8 2.6V1.2" stroke="#e6c27a" stroke-width="1.4" stroke-linecap="round"/><path d="M2.8 6.6C2.8 4.1 5.1 2.6 8 2.6s5.2 1.5 5.2 4Z" fill="#b98a4a"/><path d="M3.9 7.1h8.2c0 3.6-1.8 6.6-4.1 6.6S3.9 10.7 3.9 7.1Z" fill="#e6c27a"/></svg><span></span></button>
       <button class="menubtn" id="menuBtn" aria-label="Menu openen" aria-expanded="false" aria-controls="menu">
         <svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 5h14M3 10h14M3 15h14"/></svg>
       </button>
@@ -41,6 +42,7 @@
 <!-- smalle kop: verschijnt zodra de grote kop uit beeld is gescrold -->
 <div class="slimbar" id="slimbar" aria-hidden="true">
   <button class="mh-title" id="slimTitle" tabindex="-1"><span class="mh-name">Vestigia</span><span class="series" id="slimSeries"></span></button>
+  <button class="eikelbtn" id="slimEikel" tabindex="-1" hidden><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path d="M8 2.6V1.2" stroke="#e6c27a" stroke-width="1.4" stroke-linecap="round"/><path d="M2.8 6.6C2.8 4.1 5.1 2.6 8 2.6s5.2 1.5 5.2 4Z" fill="#b98a4a"/><path d="M3.9 7.1h8.2c0 3.6-1.8 6.6-4.1 6.6S3.9 10.7 3.9 7.1Z" fill="#e6c27a"/></svg><span></span></button>
   <button class="menubtn" id="slimMenu" tabindex="-1" aria-label="Menu openen" aria-controls="menu">
     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 5h14M3 10h14M3 15h14"/></svg>
   </button>
@@ -51,6 +53,10 @@
   <div class="welcome" id="welcome" hidden>
     <p id="welcomeText"><b>Speel mee met andere spelers.</b> Kies een spelersnaam en je dagscore komt in de ranglijst.</p>
     <div class="actions"><button class="btn" id="welcomeGo">Kies een spelersnaam</button><button class="linklike" id="welcomeLater">Later</button></div>
+  </div>
+  <div class="welcome" id="codeTip" hidden>
+    <p><b>Bewaar je spelerscode.</b> Daarmee speel je verder op een ander apparaat, of haal je je voortgang terug als je browsergegevens gewist zijn. Je vindt hem altijd in Mijn profiel.</p>
+    <div class="actions"><button class="btn" id="codeTipCopy">Kopieer spelerscode</button><button class="linklike" id="codeTipLater">Later</button><span class="msg" id="codeTipMsg"></span></div>
   </div>
   <div class="modebar">
     <div class="seg" role="group" aria-label="Spelmodus">
@@ -119,8 +125,8 @@
     <div id="playerBox" class="playerbox"></div>
     <div class="dexfilters scope" id="rankScope" hidden aria-label="Welke ranglijst"></div>
     <div class="dexfilters" id="rankTabs">
-      <button class="chipbtn" data-r="day" aria-pressed="true">Vandaag</button>
-      <button class="chipbtn" data-r="week" aria-pressed="false">Deze week</button>
+      <button class="chipbtn" data-r="day" aria-pressed="false">Vandaag</button>
+      <button class="chipbtn" data-r="week" aria-pressed="true">Deze week</button>
       <button class="chipbtn" data-r="all" aria-pressed="false">Altijd</button>
       <button class="chipbtn" data-r="dex" aria-pressed="false"><span data-naam="streeplijst">Streeplijst</span></button>
     </div>
@@ -135,6 +141,14 @@
     <div id="leagueBody"></div>
   </section>
 
+  <section id="profielView" hidden aria-labelledby="profielH">
+    <div class="dexhead">
+      <div><h2 id="profielH">Mijn profiel</h2><p>Je avatar, ondertitel, lijst en kleur zien andere spelers in de ranglijst en in je leagues. Je betaalt met eikels; die verdien je door te spelen.</p></div>
+      <div class="dexcount" id="pfSaldo">–<small>eikels</small></div>
+    </div>
+    <div id="profielBody"></div>
+  </section>
+
   <section id="dexView" hidden aria-labelledby="dexH">
     <div class="dexhead">
       <div><h2 id="dexH" data-naam="vestiarium">Vestiarium</h2><p>Elke soort die je determineert, krijgt een eigen plaat in je <span data-naam="vestiarium">Vestiarium</span>. Soorten die je zag maar niet goed had, worden als waargenomen genoteerd.</p></div>
@@ -146,10 +160,14 @@
       <div><h4>Titels</h4><div class="awardrow" id="titleRow"></div></div>
       <div><h4>Medailles voor de <span id="medalWord">vijf</span> lastigste soorten</h4><div class="medalrow" id="medalRow"></div></div>
     </section>
+    <section class="prestaties" id="dexPrest" hidden aria-labelledby="dexPrestH">
+      <h3 id="dexPrestH">Prestaties</h3>
+      <div class="prlist" id="dexPrestList"></div>
+    </section>
     <details class="carry">
-      <summary>Voortgang meenemen naar een ander apparaat</summary>
+      <summary>Op meer dan één apparaat spelen</summary>
       <div class="carry-in">
-        <p>Zonder spelersnaam staat je <span data-naam="vestiarium">Vestiarium</span> alleen in deze browser. Kopieer je voortgangscode en plak hem op je andere apparaat. Bestaande voortgang daar wordt samengevoegd, niet overschreven.</p>
+        <p id="carryTekst">Zonder spelersnaam staat je <span data-naam="vestiarium">Vestiarium</span> alleen in deze browser. Kopieer je voortgangscode en plak hem op je andere apparaat. Bestaande voortgang daar wordt samengevoegd, niet overschreven.</p>
         <div class="actions"><button class="btn line" id="codeCopy">Kopieer voortgangscode</button><span class="msg" id="codeMsg"></span></div>
         <textarea id="codeIn" class="copyout" rows="3" placeholder="Plak hier een voortgangscode"></textarea>
         <div class="actions"><button class="btn" id="codeLoad">Voortgang toevoegen</button></div>
@@ -232,7 +250,7 @@
       <p>Je opent zelf waarnemingen en hebt één determinatie. Hoe minder waarnemingen je nodig hebt, hoe meer punten.</p>
       <div class="bars" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><span>1 poging</span></div>
     </div>
-    <p class="fine">Je kunt elke dag allebei spelen. Voor de ranglijst telt je beste score van die dag.</p>
+    <p class="fine">Klassiek en expert hebben dezelfde casus. Voor de ranglijst telt alleen de modus die je die dag als eerste speelt.</p>
     <button class="btn" id="modeOk">Begrepen</button>
   </div>
 </div>
@@ -258,7 +276,7 @@
     <h3>Trofeeën</h3>
     <p>Heb je alle soorten van een diergroep gedetermineerd, dan verdien je de titel van die groep. Met alle <span data-tel="doelsoorten">100</span> soorten word je Veldheer van Vestigia. <span data-tel="medailles" data-hoofd="1">Vijf</span> extra lastige soorten leveren een medaille op; welke dat zijn, zie je pas als je ze hebt gevonden.</p>
     <h3>Ranglijst</h3>
-    <p>Met een spelersnaam doe je mee aan de ranglijst. Alleen je eerste poging aan de dagcasus telt: 5 punten in één poging, 1 punt bij de vijfde. In de expertmodus krijg je 6 punten als je na één waarneming goed zit. Speel je allebei, dan telt je beste score van die dag.</p>
+    <p>Met een spelersnaam doe je mee aan de ranglijst. Alleen je eerste poging aan de dagcasus telt: 5 punten in één poging, 1 punt bij de vijfde. In de expertmodus krijg je 6 punten als je na één waarneming goed zit. Klassiek en expert hebben dezelfde casus; daarom telt alleen de modus die je die dag als eerste speelt.</p>
     <h3>Installeren</h3>
     <ul>
       <li><b>iPhone:</b> open Vestigia in Safari, tik op Deel en kies ‘Zet op beginscherm’.</li>
@@ -275,19 +293,21 @@
 </div>
 
 <script src="config.js"></script>
-<script src="data/teksten.js?v=202611081541"></script>
-<script src="data/soorten.js?v=202611081541"></script>
-<script src="data/sporen.js?v=202611081541"></script>
-<script src="data/dagschema.js?v=202611081541"></script>
-<script src="js/kern.js?v=202611081541"></script>
-<script src="js/spel.js?v=202611081541"></script>
-<script src="js/veldboek.js?v=202611081541"></script>
-<script src="js/melden.js?v=202611081541"></script>
-<script src="js/kop.js?v=202611081541"></script>
-<script src="js/opening.js?v=202611081541"></script>
-<script src="js/uitleg.js?v=202611081541"></script>
-<script src="js/online.js?v=202611081541"></script>
-<script src="js/league.js?v=202611081541"></script>
-<script src="js/app.js?v=202611081541"></script>
+<script src="data/teksten.js?v=202611081658"></script>
+<script src="data/soorten.js?v=202611081658"></script>
+<script src="data/sporen.js?v=202611081658"></script>
+<script src="data/dagschema.js?v=202611081658"></script>
+<script src="js/kern.js?v=202611081658"></script>
+<script src="js/spel.js?v=202611081658"></script>
+<script src="js/veldboek.js?v=202611081658"></script>
+<script src="js/melden.js?v=202611081658"></script>
+<script src="js/kop.js?v=202611081658"></script>
+<script src="js/opening.js?v=202611081658"></script>
+<script src="js/uitleg.js?v=202611081658"></script>
+<script src="js/online.js?v=202611081658"></script>
+<script src="js/league.js?v=202611081658"></script>
+<script src="data/avatars.js?v=202611081658"></script>
+<script src="js/profiel.js?v=202611081658"></script>
+<script src="js/app.js?v=202611081658"></script>
 </body>
 </html>
