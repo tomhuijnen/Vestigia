@@ -166,6 +166,7 @@ const MENU_GO = {
   dex: () => showDex(),
   rank: () => showRank(),
   help: () => { closeMenu(true); openHelp(); },
+  uitleg: () => { closeMenu(true); Uitleg.start(); },
   install: () => { closeMenu(true); installApp(); },
   player: () => { showRank(); setTimeout(() => $("pName") && $("pName").focus(), 60); }
 };

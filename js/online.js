@@ -173,7 +173,8 @@ function showRank(mode){
 $("rankTabs").querySelectorAll(".chipbtn").forEach(b => b.addEventListener("click", () => online.setMode(b.dataset.r)));
 $("welcomeGo").addEventListener("click", () => { showRank(); setTimeout(() => $("pName") && $("pName").focus(), 50); });
 $("welcomeLater").addEventListener("click", () => { $("welcome").hidden = true; try { localStorage.setItem("vestigia:welcomeLater", "1"); } catch(e){} });
-if (online.enabled && !online.player() && !localStorage.getItem("vestigia:welcomeLater")) $("welcome").hidden = false;
+/* De vraag om een spelersnaam komt na de openingsanimatie en de uitleg (zie start() in js/app.js). */
+function toonWelkom(){ try { if (online.enabled && !online.player() && !localStorage.getItem("vestigia:welcomeLater")) $("welcome").hidden = false; } catch(e){} }
 if (!online.enabled) $("menuRank").parentElement.hidden = true;
 window.addEventListener("online", () => online.flush());
 online.flush().then(() => online.refreshWeek()).catch(() => {});
