@@ -132,10 +132,10 @@ const League = (() => {
   function openUitnodigen(){
     const box = $("leaguePop"), me = p();
     $("leaguePopBody").innerHTML = `
-      <div class="top"><h2 id="leaguePopH">Collega uitnodigen</h2><button class="iconbtn" id="lpX" aria-label="Sluiten"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l10 10M13 3L3 13"/></svg></button></div>
+      <div class="top"><h2 id="leaguePopH">Speler uitnodigen</h2><button class="iconbtn" id="lpX" aria-label="Sluiten"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l10 10M13 3L3 13"/></svg></button></div>
       ${me
-        ? `<p>Je collega krijgt een link met jouw naam erin. Kiest je collega een spelersnaam en speelt hij of zij op drie verschillende dagen de dagcasus, dan levert dat jou 20 eikels op (voor maximaal vijf collega’s).</p>`
-        : `<p>Je collega krijgt een link naar Vestigia. Kies eerst zelf een spelersnaam, dan staat jouw naam in de link en tellen de uitnodigingen voor jou.</p>`}
+        ? `<p>De speler die je uitnodigt, krijgt een link met jouw naam erin. Kiest die speler een spelersnaam en speelt hij of zij op drie verschillende dagen de dagcasus, dan levert dat jou 20 eikels op (voor maximaal vijf spelers).</p>`
+        : `<p>De speler die je uitnodigt, krijgt een link naar Vestigia. Kies eerst zelf een spelersnaam, dan staat jouw naam in de link en tellen de uitnodigingen voor jou.</p>`}
       ${cached().length ? `<p class="fine">Wil je iemand in een league? Deel dan de uitnodiging bij die league, onder Leagues in het menu.</p>` : ""}
       <div class="actions"><button class="btn" id="lpDeel">Deel uitnodiging</button>${me ? "" : `<button class="btn line" id="lpNaam">Kies een spelersnaam</button>`}<span class="msg" id="lpMsg"></span></div>`;
     box.hidden = false; $("lpDeel").focus();
@@ -173,7 +173,7 @@ const League = (() => {
     const body = $("leagueBody"), vol = ls.length >= 5;
     body.innerHTML = `
       ${melding ? `<p class="rankempty">${esc(melding)}</p>` : ""}
-      <div class="lglist">${ls.length ? ls.map(kaart).join("") : bezig ? `<p class="rankempty">Leagues laden…</p>` : `<p class="rankempty">Je zit nog niet in een league. Maak er een en nodig je collega’s uit, of doe mee met een code die je kreeg.</p>`}</div>
+      <div class="lglist">${ls.length ? ls.map(kaart).join("") : bezig ? `<p class="rankempty">Leagues laden…</p>` : `<p class="rankempty">Je zit nog niet in een league. Maak er een en nodig spelers uit, of doe mee met een code die je kreeg.</p>`}</div>
       <div class="lgforms">
         <form class="lgform" id="lgJoin"><label class="flab" for="lgCode">Meedoen met een code</label>
           <div class="row2"><input id="lgCode" maxlength="8" placeholder="Bijvoorbeeld DAS-7K2" autocomplete="off" autocapitalize="characters" value="${esc(pendingCode() || "")}"><button class="btn" ${vol ? "disabled" : ""}>Meedoen</button></div>
@@ -197,7 +197,7 @@ const League = (() => {
       try {
         const rows = await online.rpc("create_league", args({ p_name: naam })), l = rows[0];
         setLast(l.id); await bijwerken(); render();
-        toast(`League ${l.name} gemaakt. Deel de code ${l.code} met je collega’s.`);
+        toast(`League ${l.name} gemaakt. Deel de code ${l.code} met andere spelers.`);
       } catch(err){ msg.textContent = fout(err); }
     };
     for (const l of ls){
