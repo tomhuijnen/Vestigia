@@ -210,7 +210,7 @@ const League = (() => {
     }
   }
   function kaart(l){
-    const sinds = l.joined_day > 0 ? ` · lid sinds dagcasus nº ${l.joined_day + 1}` : "";
+    const sinds = l.joined_day > 0 ? ` · lid sinds dagcasus #${l.joined_day + 1}` : "";
     return `<article class="lgcard" id="lg-${esc(l.id)}">
       <div class="lg-top"><h3>${esc(l.name)}</h3><button class="lgcode lgCopy" title="Code kopiëren">${esc(l.code)}</button></div>
       <p class="fine">${l.members} ${+l.members === 1 ? "lid" : "leden"}${l.is_owner ? " · jij beheert deze league" : sinds}</p>

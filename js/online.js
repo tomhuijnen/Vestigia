@@ -78,7 +78,7 @@ const online = (() => {
   function afterGame(){
     if (!enabled || !player()) return;
     const klaar = [];
-    if (S.mode === "daily"){
+    if (S.mode === "daily" && eersteModus(store.get(), S.caseNo - 1) === !!S.expert){   /* alleen je eerste modus van de dag */
       const q = queue(); q.push({ p_day: S.caseNo - 1, p_expert: S.expert, p_won: S.status === "won", p_tries: Math.min(usedTries(), MAX), p_clues: S.revealed });
       setQueue(q); klaar.push(flush().then(() => refreshWeek()).catch(() => {}));
     } else klaar.push(uploadLog(player()));
@@ -90,6 +90,7 @@ const online = (() => {
   function queueRecentDaily(){
     const st = store.get(), today = todayIndex(), q = queue();
     for (const i of [today - 1, today]) for (const x of [false, true]){
+      if (eersteModus(st, i) !== x) continue;          /* alleen de modus die je die dag als eerste speelde */
       const g = (st.games || {})[dailyKey(i, x)];
       if (!g || g.status === "playing" || i < 0) continue;
       const twin = (BY_ID.get(g.target) || {}).twin, tries = g.guesses.filter(n => n !== twin).length;
@@ -99,7 +100,7 @@ const online = (() => {
     setQueue(q);
   }
   /* ranglijst: Iedereen of een van je leagues (scope), en Vandaag / Deze week / Altijd / Streeplijst */
-  let rankMode = "day", scope = null;
+  let rankMode = "week", scope = null;      /* week: vroeg op de dag staat er bij Vandaag nog weinig */
   function renderScope(){
     const box = $("rankScope"), ls = player() ? League.cached() : [];
     if (scope && !ls.some(l => l.id === scope)) scope = null;
@@ -159,7 +160,7 @@ const online = (() => {
         html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}" data-n="${esc(r.name)}"><span class="pos">${i + 1}</span>
           <span class="who"><b>${esc(r.name)}</b>${r.expert ? `<span class="xbadge">expert</span>` : ""}<span>${r.won ? (r.expert ? `gedetermineerd na ${r.clues} waarneming${r.clues > 1 ? "en" : ""}` : `gedetermineerd in ${r.tries} ${r.tries === 1 ? "poging" : "pogingen"}`) : "niet gevonden"}</span></span>
           <span class="pts">${r.points}<small>punten</small></span></li>`).join("");
-        if (!rows.length) html = `<p class="rankempty">Nog niemand heeft dagcasus nº ${today + 1} gespeeld. Ben jij de eerste?</p>`;
+        if (!rows.length) html = `<p class="rankempty">Nog niemand heeft dagcasus #${today + 1} gespeeld. Ben jij de eerste?</p>`;
       } else if (rankMode === "week" || rankMode === "all"){
         const from = rankMode === "week" ? weekStart(today) : 0;
         rows = await rpc("leaderboard_range", { p_from: from, p_to: today });
@@ -233,7 +234,19 @@ const online = (() => {
       toast(`Welkom terug, ${name}! Je ${NAAM.vestiarium} is bijgewerkt.${extra}`);
     } catch(e){ $("pMsg").textContent = "Deze spelerscode wordt niet herkend."; }
   }
-  return { enabled, rpc, player, afterGame, flush, syncSoon, renderRank, refreshWeek, renderScope, setScope,
+  /* Voortgang van je andere apparaten ophalen en samenvoegen (platen, trofeeën, statistieken, logboek).
+     Bij het openen en als de app weer op de voorgrond komt (hooguit eens per minuut); daarna gaat de
+     samengevoegde voortgang weer naar Supabase, zodat geen apparaat de platen van een ander overschrijft. */
+  let laatsteHaal = 0;
+  async function haalVoortgang(){
+    const p = player(); if (!enabled || !p || Date.now() - laatsteHaal < 60000) return;
+    laatsteHaal = Date.now();
+    try {
+      const prog = await rpc("get_progress", { p_id: p.id, p_key: p.key });
+      if (prog && (prog.dex || prog.dexId)){ mergeProgressData(prog); renderTiles(); renderMenu(); if (VIEW === "dex") renderDex(); syncSoon(); }
+    } catch(e){}
+  }
+  return { enabled, rpc, player, afterGame, haalVoortgang, flush, syncSoon, renderRank, refreshWeek, renderScope, setScope,
            setMode: (m, s) => { rankMode = m; if (s !== undefined) setScope(s); else renderRank(); } };
 })();
 
@@ -257,5 +270,6 @@ function toonWelkom(){
 }
 if (!online.enabled) ["menuRank", "menuLeague", "menuInvite"].forEach(id => $(id).parentElement.hidden = true);
 window.addEventListener("online", () => online.flush());
-online.flush().then(() => online.refreshWeek()).catch(() => {});
+online.haalVoortgang().then(() => online.flush()).then(() => online.refreshWeek()).catch(() => {});
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") online.haalVoortgang(); });
 

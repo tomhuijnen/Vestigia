@@ -159,7 +159,7 @@ function appLink(params){
 }
 function resultShare(extra){
   const t = BY_ID.get(S.target), won = S.status === "won";
-  const head = `Vestigia ${S.mode === "daily" ? "nº " + S.caseNo : "· oefencasus"}`;
+  const head = `Vestigia ${S.mode === "daily" ? "#" + S.caseNo : "· oefencasus"}`;
   const emo = { ok:"🟩", part:"🟨", no:"⬜" };
   let body;
   if (S.expert){
@@ -209,7 +209,9 @@ function renderResult(){
     <span class="verdict caps">${won ? "Goed gedetermineerd" : "Niet gedetermineerd · het was"}</span>
     <h3>${esc(t.n)}<i>${esc(t.s)}</i></h3>
     <p class="eikelline" id="eikelGain" hidden></p>
-    <p>${score}${S.mode === "daily" ? ` <span class="ptsline">${points() ? "+" + points() + " punt" + (points() > 1 ? "en" : "") : "0 punten"} voor de ranglijst</span>` : ""}</p>
+    <p>${score}${S.mode === "daily" ? ` <span class="ptsline">${eersteModus(store.get(), S.caseNo - 1) === !!S.expert
+      ? `${points() ? "+" + points() + " punt" + (points() > 1 ? "en" : "") : "0 punten"} voor de ranglijst`
+      : `telt niet voor de ranglijst: je speelde deze casus vandaag al in ${S.expert ? "klassiek" : "expert"}`}</span>` : ""}</p>
     <div class="status-line"><span class="caps">Status</span><p><b>${esc(LABELS.r[t.r])}.</b> ${esc(REGIME_INFO[t.r])}</p></div>
     <dl class="traits">${traits}</dl>
     <div class="confuse"><span class="caps">Verwar niet met</span><p><b>${esc(xs.n)}.</b> ${S.guesses.includes(t.x) ? "Die soort heb je in deze casus ook geprobeerd. " : ""}${esc(t.t)}</p></div>
@@ -244,6 +246,8 @@ function renderPips(){
     const left = n - real.length, twinNow = S.guesses.length && isTwin(S.guesses[S.guesses.length - 1]);
     if (twinNow) setMsg("Tweelingsoort! Je zit er heel dicht bij. Deze poging telt niet mee, en alle waarnemingen zijn nu open.", false);
     else setMsg(S.expert ? "Je hebt één determinatie. Open eerst zoveel waarnemingen als je nodig denkt te hebben." : `Nog ${left} ${left === 1 ? "poging" : "pogingen"}.`, false);
+    const st = store.get(), eerste = S.mode === "daily" ? eersteModus(st, S.caseNo - 1) : null;
+    if (eerste !== null && eerste !== !!S.expert) setMsg(`Deze casus speelde je vandaag al in ${eerste ? "expert" : "klassiek"}. Je score telt nu niet voor de ranglijst.`, false);
     $("leftLabel").textContent = S.expert ? "1 poging" : `poging ${real.length + 1} van ${MAX}`;
   } else { setMsg(S.status === "won" ? "Casus afgerond." : "Casus afgesloten.", false); $("leftLabel").textContent = "afgerond"; }
 }

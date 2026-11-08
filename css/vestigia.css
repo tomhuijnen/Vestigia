@@ -505,3 +505,8 @@ svg.avatar.groot{width:104px; height:104px; flex:0 0 104px}
 .prestaties{margin-top:22px; display:grid; gap:10px}
 .prestaties h3{margin:0}
 .menuplayer[aria-current]{background:var(--mint)}
+
+/* knoppen met een pictogram of teken: precies in het midden van de cirkel */
+.menubtn, .qbtn, .iconbtn{padding:0; line-height:1; display:grid; place-items:center}
+.menubtn svg, .iconbtn svg{display:block}
+.tile .vlam{vertical-align:-2px; margin-right:3px}
