@@ -64,10 +64,12 @@ let topoT; window.addEventListener("resize", () => { clearTimeout(topoT); topoT 
 document.fonts && document.fonts.ready.then(drawTopo);
 
 /* ---------- start ---------- */
-/* Eerst de opslag (eenmalig) naar het nieuwe formaat omzetten, dan de dagcasus van vandaag openen. */
+/* Opstartvolgorde: opslag (eenmalig) omzetten en de dagcasus klaarzetten, dan de openingsanimatie,
+   dan de uitleg (alleen nieuwe spelers), dan de vraag om een spelersnaam. Later komt hier de actie uit een link bij. */
 function start(){
   store.upgrade();
   startDaily();
+  Opening.run().then(() => Uitleg.automatisch()).then(toonWelkom);
 }
 /* ---------- melding in beeld ---------- */
 let toastT;

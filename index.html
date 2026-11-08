@@ -16,9 +16,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Karla:ital,wght@0,400;0,500;0,700;1,400&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/vestigia.css?v=202611080948">
+<link rel="stylesheet" href="css/vestigia.css?v=202611081019">
 </head>
 <body>
+<!-- openingsanimatie: staat meteen in beeld (geen witte flits), en is in dezelfde sessie al gezien → niet tonen -->
+<script>try { if (sessionStorage.getItem("vestigia:geopend")) document.documentElement.classList.add("geen-opening"); } catch(e){}</script>
+<div id="opening" aria-hidden="true"><div class="op-veld" id="opVeld"></div><span class="op-naam mh-name" id="opNaam">Vestigia</span></div>
 <header class="masthead" id="masthead">
   <canvas id="topo" aria-hidden="true"></canvas>
   <div class="mh-in">
@@ -195,6 +198,7 @@
     <hr>
     <ul class="menulist minor">
       <li><button data-go="help"><span>Spelregels</span></button></li>
+      <li><button data-go="uitleg"><span>Uitleg opnieuw bekijken</span></button></li>
       <li><button data-go="install" id="installBtn" hidden><span>Installeer als app</span></button></li>
     </ul>
     <button class="menuplayer" id="menuPlayer" data-go="player"></button>
@@ -257,15 +261,18 @@
 </div>
 
 <script src="config.js"></script>
-<script src="data/teksten.js?v=202611080948"></script>
-<script src="data/soorten.js?v=202611080948"></script>
-<script src="data/dagschema.js?v=202611080948"></script>
-<script src="js/kern.js?v=202611080948"></script>
-<script src="js/spel.js?v=202611080948"></script>
-<script src="js/veldboek.js?v=202611080948"></script>
-<script src="js/melden.js?v=202611080948"></script>
-<script src="js/kop.js?v=202611080948"></script>
-<script src="js/online.js?v=202611080948"></script>
-<script src="js/app.js?v=202611080948"></script>
+<script src="data/teksten.js?v=202611081019"></script>
+<script src="data/soorten.js?v=202611081019"></script>
+<script src="data/sporen.js?v=202611081019"></script>
+<script src="data/dagschema.js?v=202611081019"></script>
+<script src="js/kern.js?v=202611081019"></script>
+<script src="js/spel.js?v=202611081019"></script>
+<script src="js/veldboek.js?v=202611081019"></script>
+<script src="js/melden.js?v=202611081019"></script>
+<script src="js/kop.js?v=202611081019"></script>
+<script src="js/opening.js?v=202611081019"></script>
+<script src="js/uitleg.js?v=202611081019"></script>
+<script src="js/online.js?v=202611081019"></script>
+<script src="js/app.js?v=202611081019"></script>
 </body>
 </html>
