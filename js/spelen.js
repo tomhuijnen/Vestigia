@@ -52,10 +52,10 @@ const Spelen = (() => {
     $("kringBellen").innerHTML = BELLEN.map((b, k) => {
       const hoek = HOEK[k] * Math.PI / 180;
       const x = Math.round(R * Math.cos(hoek)), y = Math.round(-R * Math.sin(hoek));
-      const sub = b.later ? "binnenkort" : b.id === "dag" ? (gespeeld ? "gespeeld" : `#${i + 1}`) : "telt niet";
+      const sub = b.later ? "binnenkort" : b.id === "dag" ? (gespeeld ? "gespeeld" : `#${i + 1}`) : "";
       return `<button type="button" class="bel ${b.id}${b.later ? " later" : ""}" data-bel="${b.id}" style="left:${cx}px;top:${cy}px;--x:${x}px;--y:${y}px;--d:${Math.abs(k - 2) * 35}ms"${b.later ? ' aria-disabled="true"' : ""}>
         <span class="bol">${IC[b.id]}${b.id === "dag" && gespeeld ? `<span class="belvink" aria-hidden="true">✓</span>` : ""}</span>
-        <span class="bl">${esc(b.label)}</span><span class="bs">${esc(sub)}</span></button>`;
+        <span class="bl">${esc(b.label)}</span>${sub ? `<span class="bs">${esc(sub)}</span>` : ""}</button>`;
     }).join("");
     $("kringBellen").querySelectorAll(".bel").forEach(b => b.onclick = () => {
       const bel = BELLEN.find(x => x.id === b.dataset.bel);
