@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Karla:ital,wght@0,400;0,500;0,700;1,400&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/vestigia.css?v=202611081658">
+<link rel="stylesheet" href="css/vestigia.css?v=202611081934">
 </head>
 <body>
 <!-- openingsanimatie: staat meteen in beeld (geen witte flits), en is in dezelfde sessie al gezien → niet tonen -->
@@ -31,9 +31,7 @@
         <span class="mh-name">Vestigia</span>
       </button>
       <button class="eikelbtn" id="eikelBtn" hidden><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path d="M8 2.6V1.2" stroke="#e6c27a" stroke-width="1.4" stroke-linecap="round"/><path d="M2.8 6.6C2.8 4.1 5.1 2.6 8 2.6s5.2 1.5 5.2 4Z" fill="#b98a4a"/><path d="M3.9 7.1h8.2c0 3.6-1.8 6.6-4.1 6.6S3.9 10.7 3.9 7.1Z" fill="#e6c27a"/></svg><span></span></button>
-      <button class="menubtn" id="menuBtn" aria-label="Menu openen" aria-expanded="false" aria-controls="menu">
-        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 5h14M3 10h14M3 15h14"/></svg>
-      </button>
+      <button class="menubtn avbtn" id="menuBtn" aria-label="Menu en profiel openen" aria-expanded="false" aria-controls="menu"></button>
     </div>
     <div class="tiles" id="tiles" aria-label="Jouw stand"></div>
   </div>
@@ -43,9 +41,7 @@
 <div class="slimbar" id="slimbar" aria-hidden="true">
   <button class="mh-title" id="slimTitle" tabindex="-1"><span class="mh-name">Vestigia</span><span class="series" id="slimSeries"></span></button>
   <button class="eikelbtn" id="slimEikel" tabindex="-1" hidden><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path d="M8 2.6V1.2" stroke="#e6c27a" stroke-width="1.4" stroke-linecap="round"/><path d="M2.8 6.6C2.8 4.1 5.1 2.6 8 2.6s5.2 1.5 5.2 4Z" fill="#b98a4a"/><path d="M3.9 7.1h8.2c0 3.6-1.8 6.6-4.1 6.6S3.9 10.7 3.9 7.1Z" fill="#e6c27a"/></svg><span></span></button>
-  <button class="menubtn" id="slimMenu" tabindex="-1" aria-label="Menu openen" aria-controls="menu">
-    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 5h14M3 10h14M3 15h14"/></svg>
-  </button>
+  <button class="menubtn avbtn" id="slimMenu" tabindex="-1" aria-label="Menu en profiel openen" aria-controls="menu"></button>
 </div>
 
 <div class="wrap">
@@ -58,6 +54,7 @@
     <p><b>Bewaar je spelerscode.</b> Daarmee speel je verder op een ander apparaat, of haal je je voortgang terug als je browsergegevens gewist zijn. Je vindt hem altijd in Mijn profiel.</p>
     <div class="actions"><button class="btn" id="codeTipCopy">Kopieer spelerscode</button><button class="linklike" id="codeTipLater">Later</button><span class="msg" id="codeTipMsg"></span></div>
   </div>
+  <details class="oefenkader" id="oefenKader" hidden></details>
   <div class="modebar">
     <div class="seg" role="group" aria-label="Spelmodus">
       <button type="button" id="modeClassic" aria-pressed="true">Klassiek<span class="done" id="doneClassic" hidden><svg role="img" aria-label="vandaag gespeeld" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7.5l3 3 6-7"/></svg></span></button>
@@ -143,10 +140,18 @@
 
   <section id="profielView" hidden aria-labelledby="profielH">
     <div class="dexhead">
-      <div><h2 id="profielH">Mijn profiel</h2><p>Je avatar, ondertitel, lijst en kleur zien andere spelers in de ranglijst en in je leagues. Je betaalt met eikels; die verdien je door te spelen.</p></div>
+      <div><h2 id="profielH">Mijn profiel</h2><p>Je avatar, ondertitel, lijst en kleur zien andere spelers in de ranglijst en in je leagues. Nieuwe koop je in de shop.</p></div>
       <div class="dexcount" id="pfSaldo">–<small>eikels</small></div>
     </div>
     <div id="profielBody"></div>
+  </section>
+
+  <section id="shopView" hidden aria-labelledby="shopH">
+    <div class="dexhead">
+      <div><h2 id="shopH">Shop</h2><p>Koop met je eikels een avatar, ondertitel, lijst of kleur. Wat je koopt, kies je daarna in Mijn profiel. Eikels verdien je door te spelen, met reeksen, platen, prestaties en uitgenodigde spelers.</p></div>
+      <div class="dexcount" id="shopSaldo">–<small>eikels</small></div>
+    </div>
+    <div id="shopBody"></div>
   </section>
 
   <section id="dexView" hidden aria-labelledby="dexH">
@@ -215,21 +220,18 @@
       <span class="mh-name">Vestigia</span>
       <button class="iconbtn" id="menuClose" aria-label="Menu sluiten"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l10 10M13 3L3 13"/></svg></button>
     </div>
+    <button class="menuplayer" id="menuPlayer" data-go="player"></button>
     <ul class="menulist">
-      <li><button data-go="daily"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="16" height="15" rx="2"/><path d="M3 9h16M8 2v4M14 2v4"/></svg><span>Dagcasus</span></button></li>
-      <li><button data-go="free"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a7 7 0 1 1 2 5"/><path d="M4 17v-4h4"/></svg><span>Oefenen</span></button></li>
-      <li><button data-go="dex"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h6a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H4z"/><path d="M18 4h-6a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h6z"/></svg><span data-naam="vestiarium">Vestiarium</span><small id="menuDex"></small></button></li>
-      <li><button data-go="rank" id="menuRank"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V11M11 19V5M18 19v-6"/></svg><span>Ranglijst</span></button></li>
       <li><button data-go="league" id="menuLeague"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="15.5" cy="9.5" r="2.5"/><path d="M2.5 18c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5M13.5 13.6c.6-.3 1.3-.4 2-.4 2.2 0 3.8 1.5 4.3 4"/></svg><span>Leagues</span><small id="menuLeagueN"></small></button></li>
+      <li><button data-go="shop" id="menuShop"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h14l-1.2 10H5.2z"/><path d="M8 8V6.5a3 3 0 0 1 6 0V8"/></svg><span>Shop</span></button></li>
+      <li><button data-go="invite" id="menuInvite"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 18.5c.6-3.3 3-5.2 6-5.2s5.4 1.9 6 5.2M17 7v6M14 10h6"/></svg><span>Speler uitnodigen</span></button></li>
     </ul>
     <hr>
     <ul class="menulist minor">
       <li><button data-go="help"><span>Spelregels</span></button></li>
-      <li><button data-go="invite" id="menuInvite"><span>Speler uitnodigen</span></button></li>
       <li><button data-go="uitleg"><span>Uitleg opnieuw bekijken</span></button></li>
       <li><button data-go="install" id="installBtn" hidden><span>Installeer als app</span></button></li>
     </ul>
-    <button class="menuplayer" id="menuPlayer" data-go="player"></button>
   </nav>
 </div>
 
@@ -280,34 +282,56 @@
     <h3>Installeren</h3>
     <ul>
       <li><b>iPhone:</b> open Vestigia in Safari, tik op Deel en kies ‘Zet op beginscherm’.</li>
-      <li><b>Android:</b> kies ‘Installeer’ in het menu (☰), of kies in het menu van Chrome ‘App installeren’.</li>
+      <li><b>Android:</b> kies ‘Installeer als app’ in het menu (tik op je avatar rechtsboven), of kies in het menu van Chrome ‘App installeren’.</li>
       <li>Na installatie werkt Vestigia ook zonder internet. Je dagscore wordt verstuurd zodra je weer verbinding hebt.</li>
     </ul>
     <h3>Modi</h3>
     <ul>
       <li><b>Dagcasus:</b> elke dag één nieuwe casus, voor iedereen dezelfde, en passend bij het seizoen.</li>
-      <li><b>Oefenen:</b> onbeperkt willekeurige casussen. Oefenen telt niet mee voor de punten in de ranglijst, wel voor je platen.</li>
+      <li><b>Oefenen:</b> onbeperkt willekeurige casussen, eventueel uit één diergroep of alleen soorten die je nog niet hebt. Oefenen telt niet mee voor de punten in de ranglijst, wel voor je platen.</li>
       <li><b>Expert:</b> je opent zelf waarnemingen en hebt één determinatie. Je score is het aantal waarnemingen dat je nodig had.</li>
     </ul>
   </div>
 </div>
 
+<nav class="tabbar" id="tabbar" aria-label="Navigatie">
+  <button type="button" data-tab="rank"><span class="ic"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V11M11 19V5M18 19v-6"/></svg></span>Ranglijst</button>
+  <button type="button" data-tab="spelen" class="mid" aria-haspopup="dialog" aria-expanded="false" aria-controls="speelKring"><span class="ic"><svg class="kruis" aria-hidden="true" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg><svg class="poot" aria-hidden="true" width="26" height="26" viewBox="0 0 22 22" fill="currentColor"><ellipse cx="11" cy="14" rx="4.2" ry="3.6"/><ellipse cx="5.5" cy="8.6" rx="1.7" ry="2.2"/><ellipse cx="9" cy="5.6" rx="1.7" ry="2.3"/><ellipse cx="13" cy="5.6" rx="1.7" ry="2.3"/><ellipse cx="16.5" cy="8.6" rx="1.7" ry="2.2"/></svg></span>Spelen</button>
+  <button type="button" data-tab="dex"><span class="ic"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h6a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H4z"/><path d="M18 4h-6a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h6z"/></svg></span><span data-naam="vestiarium">Vestiarium</span></button>
+</nav>
+
+<div class="kring" id="speelKring" hidden role="dialog" aria-modal="true" aria-label="Wat wil je spelen?">
+  <div class="kringvlak" id="kringVlak"></div>
+  <div class="kringbellen" id="kringBellen"></div>
+</div>
+
+<div class="overlay bottom" id="tweelingPop" hidden role="dialog" aria-modal="true" aria-labelledby="tweelingH">
+  <div class="sheet modesheet">
+    <div class="top"><h2 id="tweelingH">Wat is een tweelingsoort?</h2><button class="iconbtn" id="tweelingClose" aria-label="Sluiten"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l10 10M13 3L3 13"/></svg></button></div>
+    <p id="tweelingNu" hidden></p>
+    <p>Sommige soorten lijken zo sterk op elkaar dat je ze in het veld bijna niet uit elkaar houdt, zoals de gewone en de grijze grootoorvleermuis. In Vestigia heten zulke paren tweelingsoorten.</p>
+    <p>Gok je de tweelingsoort van het antwoord, dan zit je er heel dicht bij. Die poging telt daarom niet mee, en alle waarnemingen gaan open. Kies daarna tussen de twee soorten.</p>
+    <button class="btn" id="tweelingOk">Begrepen</button>
+  </div>
+</div>
+
 <script src="config.js"></script>
-<script src="data/teksten.js?v=202611081658"></script>
-<script src="data/soorten.js?v=202611081658"></script>
-<script src="data/sporen.js?v=202611081658"></script>
-<script src="data/dagschema.js?v=202611081658"></script>
-<script src="js/kern.js?v=202611081658"></script>
-<script src="js/spel.js?v=202611081658"></script>
-<script src="js/veldboek.js?v=202611081658"></script>
-<script src="js/melden.js?v=202611081658"></script>
-<script src="js/kop.js?v=202611081658"></script>
-<script src="js/opening.js?v=202611081658"></script>
-<script src="js/uitleg.js?v=202611081658"></script>
-<script src="js/online.js?v=202611081658"></script>
-<script src="js/league.js?v=202611081658"></script>
-<script src="data/avatars.js?v=202611081658"></script>
-<script src="js/profiel.js?v=202611081658"></script>
-<script src="js/app.js?v=202611081658"></script>
+<script src="data/teksten.js?v=202611081934"></script>
+<script src="data/soorten.js?v=202611081934"></script>
+<script src="data/sporen.js?v=202611081934"></script>
+<script src="data/dagschema.js?v=202611081934"></script>
+<script src="js/kern.js?v=202611081934"></script>
+<script src="js/spel.js?v=202611081934"></script>
+<script src="js/veldboek.js?v=202611081934"></script>
+<script src="js/melden.js?v=202611081934"></script>
+<script src="js/kop.js?v=202611081934"></script>
+<script src="js/spelen.js?v=202611081934"></script>
+<script src="js/opening.js?v=202611081934"></script>
+<script src="js/uitleg.js?v=202611081934"></script>
+<script src="js/online.js?v=202611081934"></script>
+<script src="js/league.js?v=202611081934"></script>
+<script src="data/avatars.js?v=202611081934"></script>
+<script src="js/profiel.js?v=202611081934"></script>
+<script src="js/app.js?v=202611081934"></script>
 </body>
 </html>

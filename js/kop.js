@@ -3,11 +3,28 @@
 
 /* ---------- welk scherm staat open ---------- */
 let VIEW = "game";
+const VIEWS = { game: "gameView", dex: "dexView", rank: "rankView", league: "leagueView", profiel: "profielView", shop: "shopView" };
+/* Bij een schermwissel schuift het nieuwe scherm zacht in beeld (niet bij ‘minder beweging’). */
+function inBeeld(el){
+  if (!el || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  el.classList.remove("viewin"); void el.offsetWidth; el.classList.add("viewin");
+}
 function setView(v){
-  VIEW = v;
-  $("gameView").hidden = v !== "game"; $("dexView").hidden = v !== "dex"; $("rankView").hidden = v !== "rank"; $("leagueView").hidden = v !== "league"; $("profielView").hidden = v !== "profiel";
+  const vorig = VIEW; VIEW = v;
+  for (const [k, id] of Object.entries(VIEWS)) $(id).hidden = v !== k;
+  if (vorig !== v) inBeeld($(VIEWS[v]));
   closeMenu(true);
-  renderMenu();
+  renderMenu(); renderTabbar(); kleurKop();
+}
+/* Oefenen krijgt een bruine kop, zodat je altijd ziet dat het niet om de dagcasus gaat. */
+function kleurKop(){ document.body.classList.toggle("oefenen", VIEW === "game" && !!S && S.mode === "free"); }
+/* ---------- tabbalk onderin: Ranglijst · Spelen · Vestiarium ---------- */
+function renderTabbar(){
+  const cur = VIEW === "game" ? "spelen" : VIEW === "league" ? "rank" : VIEW;
+  $("tabbar").querySelectorAll("[data-tab]").forEach(b => {
+    b.classList.toggle("on", b.dataset.tab === cur);
+    b.dataset.tab === cur ? b.setAttribute("aria-current", "page") : b.removeAttribute("aria-current");
+  });
 }
 
 /* ---------- dagresultaten uit de opslag ---------- */
@@ -37,13 +54,6 @@ function playStreak(st){
   for (const d of [...days].sort((a, b) => a - b)){ run = days.has(d - 1) ? run + 1 : 1; best = Math.max(best, run); }
   return { cur, best };
 }
-function resultWord(g, expert){
-  if (!g) return "open";
-  if (g.status !== "won") return "✕";
-  if (expert) return `✓ na ${g.revealed}`;
-  const twin = BY_ID.get(g.target).twin;
-  return `✓ ${g.guesses.filter(n => n !== twin).length}/${MAX}`;
-}
 
 /* vlammetje bij de reeks */
 const VLAM = `<svg class="vlam" aria-hidden="true" viewBox="0 0 16 16" width="15" height="15"><path d="M8 1.2c.4 2.3 2.1 3.4 3.3 5 1 1.4 1.4 2.7 1.2 4.1-.4 2.6-2.6 4.5-5.1 4.5S3 13 2.9 10.4c-.1-1.6.6-3 1.6-4 .1 1 .6 1.8 1.4 2.2C5.5 6.2 6.6 3.5 8 1.2Z" fill="#e8743b"/><path d="M8.1 7.4c.3 1.2 1.3 1.8 1.7 2.8.5 1.4-.4 3-1.9 3s-2.4-1.3-2-2.6c.2-.7.7-1.1 1.2-1.4 0 .6.3 1 .7 1.2 0-1.2.1-2.1.3-3Z" fill="#f6c34a"/></svg>`;
@@ -55,7 +65,7 @@ const TILES = [
     const i = todayIndex(), c = finished(st, i, false), x = finished(st, i, true);
     if (!c && !x) return { label: `Dagcasus #${i + 1}`, value: "Nog te spelen", sub: "klassiek of expert" };
     const p = dayPoints(st, i);
-    return { label: `Dagcasus #${i + 1}`, value: `${p} ${p === 1 ? "punt" : "punten"}`, sub: `klassiek ${resultWord(c, false)} · expert ${resultWord(x, true)}` };
+    return { label: `Dagcasus #${i + 1}`, value: `${p} ${p === 1 ? "punt" : "punten"}`, sub: `klassiek${c ? " ✓" : ""} · expert${x ? " ✓" : ""}` };
   }},
   { id: "reeks", render(st){
     const s = playStreak(st);
@@ -96,12 +106,12 @@ function renderTiles(){
 
 /* ---------- regel boven de naam, schakelaar en vinkjes ---------- */
 function renderKop(){
-  let series;
-  if (S.mode === "daily"){
-    const d = new Date(START + (S.caseNo - 1) * DAY);
-    series = `Dagcasus #${S.caseNo} · ${d.toLocaleDateString("nl-NL", { weekday:"short", day:"numeric", month:"long", timeZone:"UTC" })}`;
-  } else series = "Oefencasus · telt niet voor de ranglijst";
-  $("fSeries").textContent = series; $("slimSeries").textContent = S.mode === "daily" ? `#${S.caseNo}` : "oefenen";
+  /* boven de naam staat alleen bij oefenen iets: welk nummer en welke dag het is, zie je al in de tegel */
+  $("fSeries").textContent = S.mode === "daily" ? "" : `Oefencasus${S.groep && GROUPS[S.groep] ? " · " + GROUPS[S.groep] : ""}`;
+  $("fSeries").hidden = S.mode === "daily";
+  $("slimSeries").textContent = S.mode === "daily" ? `#${S.caseNo}` : "oefenen";
+  kleurKop();
+  if (typeof Spelen !== "undefined") Spelen.oefenKader();
   $("modeClassic").setAttribute("aria-pressed", !S.expert);
   $("modeExpert").setAttribute("aria-pressed", !!S.expert);
   const st = store.get(), i = todayIndex(), daily = S.mode === "daily";
@@ -125,24 +135,30 @@ $("modeInfo").addEventListener("click", e => { if (e.target === $("modeInfo")) c
    Schuift van rechts in. Sluiten met de kruisknop, Esc, een tik naast het paneel of de terugknop van Android.
    Zolang het open is, is de rest van de pagina niet te bedienen (inert) en blijft de focus in het menu. */
 let menuOpen = false;
+/* zonder spelersnaam: een poppetje in plaats van een avatar */
+const POPPETJE = `<svg class="avatar kop" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="50" fill="#edfbe2"/><circle cx="50" cy="40" r="15" fill="#4b7a5e"/><path d="M22 84c4-16 15-24 28-24s24 8 28 24" fill="#4b7a5e"/></svg>`;
 function renderMenu(){
-  const st = store.get(), dex = st.dex || {};
-  $("menuDex").textContent = `${TARGETS.filter(t => dex[t.id] && dex[t.id].w > 0).length}/${TARGETS.length}`;
-  const cur = VIEW === "game" ? (S && S.mode === "free" ? "free" : "daily") : VIEW;
+  const cur = VIEW;
   const nl = online.enabled && online.player() ? League.cached().length : 0;
   $("menuLeagueN").textContent = nl ? String(nl) : "";
   $("menu").querySelectorAll(".menulist button").forEach(b => b.dataset.go === cur ? b.setAttribute("aria-current", "page") : b.removeAttribute("aria-current"));
   const p = online.enabled ? online.player() : null, mp = $("menuPlayer");
   mp.hidden = !online.enabled;
+  /* de knop rechtsboven is je avatar; hij opent het menu met je profiel */
+  const sleutel = p ? JSON.stringify(Profiel.mijn()) : "";
+  ["menuBtn", "slimMenu"].forEach(id => {
+    if ($(id).dataset.av === sleutel && $(id).firstChild) return;
+    $(id).innerHTML = p ? avatarSVG(Profiel.mijn(), "avatar kop") : POPPETJE; $(id).dataset.av = sleutel;
+  });
   const w = p && (() => { try { return JSON.parse(localStorage.getItem("vestigia:wallet")); } catch(e){ return null; } })();
   mp.toggleAttribute("aria-current", VIEW === "profiel");
   mp.innerHTML = p
-    ? `${avatarSVG(Profiel.mijn(), "avatar menu")}<span><b>${esc(p.name)}</b><small>Mijn profiel${w ? ` · ${w.saldo} eikels` : ""}</small></span>`
+    ? `${avatarSVG(Profiel.mijn(), "avatar inmenu")}<span><b>${esc(p.name)}</b><small>Mijn profiel${w ? ` · ${w.saldo} eikels` : ""}</small></span>`
     : `<span class="av" aria-hidden="true">?</span><span><b>Kies een spelersnaam</b><small>en speel mee in de ranglijst</small></span>`;
 }
 const setInert = on => {
-  document.querySelectorAll("#masthead, #slimbar, .wrap").forEach(el => { el.inert = on; });
-  document.querySelectorAll("#masthead, .wrap").forEach(el => on ? el.setAttribute("aria-hidden", "true") : el.removeAttribute("aria-hidden"));
+  document.querySelectorAll("#masthead, #slimbar, .wrap, #tabbar").forEach(el => { el.inert = on; });
+  document.querySelectorAll("#masthead, .wrap, #tabbar").forEach(el => on ? el.setAttribute("aria-hidden", "true") : el.removeAttribute("aria-hidden"));
 };
 function openMenu(){
   if (menuOpen) return;
@@ -152,7 +168,7 @@ function openMenu(){
   setInert(true);
   $("menuBtn").setAttribute("aria-expanded", "true");
   try { history.pushState({ vestigiaMenu: true }, ""); } catch(e){}
-  ($("menu").querySelector('[aria-current="page"]') || $("menu").querySelector(".menulist button")).focus({ preventScroll: true });
+  ($("menu").querySelector('[aria-current="page"]') || (!$("menuPlayer").hidden && $("menuPlayer")) || $("menu").querySelector(".menulist li:not([hidden]) button")).focus({ preventScroll: true });
 }
 /* quiet = sluiten zonder focus terug te zetten (bij een schermwissel); fromHistory = de terugknop deed het al */
 function closeMenu(quiet, fromHistory){
@@ -167,8 +183,8 @@ function closeMenu(quiet, fromHistory){
 }
 window.addEventListener("popstate", () => { if (menuOpen) closeMenu(false, true); });
 $("menuBtn").addEventListener("click", openMenu);
-$("eikelBtn").addEventListener("click", () => showProfiel());
-$("slimEikel").addEventListener("click", () => showProfiel());
+$("eikelBtn").addEventListener("click", () => showShop());
+$("slimEikel").addEventListener("click", () => showShop());
 $("slimMenu").addEventListener("click", openMenu);
 $("menuClose").addEventListener("click", () => closeMenu());
 $("menuBack").addEventListener("click", () => closeMenu());
@@ -192,7 +208,8 @@ const MENU_GO = {
   uitleg: () => { closeMenu(true); Uitleg.start(); },
   install: () => { closeMenu(true); installApp(); },
   player: () => { if (online.enabled && online.player()) return showProfiel(); showRank(); setTimeout(() => $("pName") && $("pName").focus(), 60); },
-  profiel: () => showProfiel()
+  profiel: () => showProfiel(),
+  shop: () => showShop()
 };
 $("menu").addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b && MENU_GO[b.dataset.go]) MENU_GO[b.dataset.go](); });
 

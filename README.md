@@ -20,13 +20,14 @@ Determinatiespel over beschermde fauna van Nederland: herken de soort aan habita
 | `js/spel.js` | het spel: casus spelen, tabel, invoer, modi |
 | `js/veldboek.js` | veldboek, trofeeën, voortgangscode |
 | `js/melden.js` | ‘Meld een fout’ |
-| `js/kop.js` | kop met tegels, schakelaar klassiek/expert, menu en de smalle balk bij scrollen |
-| `js/opening.js` | openingsanimatie (één keer per sessie, nooit het spoor van de dagcasus) |
+| `js/kop.js` | kop met tegels, schakelaar klassiek/expert, menu onder je avatar, schermwissels en de smalle balk bij scrollen |
+| `js/spelen.js` | tabbalk onderin (Ranglijst · Spelen · Vestiarium), speelkring met bolletjes boven Spelen, oefenkader per diergroep, uitleg over tweelingsoorten |
+| `js/opening.js` | openingsanimatie: drie wandelsporen en ‘Vestigia’ groot in beeld (één keer per sessie, nooit het spoor van de dagcasus) |
 | `js/uitleg.js` | uitleg bij de eerste keer, en via het menu |
 | `js/online.js` | ranglijst en synchronisatie met Supabase |
 | `js/league.js` | uitnodigen en leagues, en de links `?van=` en `?league=` |
 | `data/avatars.js` | de 24 avatartekeningen (prijzen staan in Supabase) |
-| `js/profiel.js` | eikels, Mijn profiel, winkel, prestaties en avatars in de ranglijst |
+| `js/profiel.js` | eikels, avatars, Mijn profiel (kiezen uit wat je hebt), shop (kopen, goedkoop naar duur) en prestaties met eikels |
 | `js/app.js` | spelregels, kop, installeren en opstarten |
 | `sw.js` | service worker (offline en updates) |
 

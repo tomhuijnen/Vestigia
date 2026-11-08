@@ -306,7 +306,7 @@ function toonWelkom(){
     if (link || !localStorage.getItem("vestigia:welcomeLater")) $("welcome").hidden = false;
   } catch(e){}
 }
-if (!online.enabled) ["menuRank", "menuLeague", "menuInvite"].forEach(id => $(id).parentElement.hidden = true);
+if (!online.enabled){ ["menuLeague", "menuInvite", "menuShop"].forEach(id => $(id).parentElement.hidden = true); document.querySelector('#tabbar [data-tab="rank"]').hidden = true; }
 window.addEventListener("online", () => online.flush());
 online.haalVoortgang().then(() => online.flush()).then(() => online.refreshWeek()).catch(() => {});
 document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") online.haalVoortgang(); });
