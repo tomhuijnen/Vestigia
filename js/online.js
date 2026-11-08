@@ -7,6 +7,12 @@ const online = (() => {
   const PKEY = "vestigia:player";
   const player = () => { try { return JSON.parse(localStorage.getItem(PKEY)); } catch(e){ return null; } };
   const setPlayer = p => { try { p ? localStorage.setItem(PKEY, JSON.stringify(p)) : localStorage.removeItem(PKEY); } catch(e){} };
+  /* Koppeling zonder naam: een verborgen account (niet in de ranglijst) waarmee je apparaten gelijk blijven.
+     account() = het account waarmee gesynchroniseerd wordt: je spelersnaam, anders de koppeling. */
+  const KKEY = "vestigia:sync";
+  const koppeling = () => { try { return JSON.parse(localStorage.getItem(KKEY)); } catch(e){ return null; } };
+  const setKoppeling = k => { try { k ? localStorage.setItem(KKEY, JSON.stringify(k)) : localStorage.removeItem(KKEY); } catch(e){} };
+  const account = () => player() || koppeling();
   async function rpc(fn, args){
     const r = await fetch(CFG.supabaseUrl.replace(/\/$/, "") + "/rest/v1/rpc/" + fn, {
       method: "POST",
@@ -22,7 +28,7 @@ const online = (() => {
   const queue = () => { try { return JSON.parse(localStorage.getItem("vestigia:queue")) || []; } catch(e){ return []; } };
   const setQueue = q => { try { localStorage.setItem("vestigia:queue", JSON.stringify(q)); } catch(e){} };
   async function flush(){
-    const p = player(); if (!enabled || !p) return;
+    const p = account(); if (!enabled || !p) return;
     const q = queue();
     if (q.length){
       const rest = [];
@@ -58,7 +64,7 @@ const online = (() => {
   }
   let syncT;
   async function syncNu(){
-    const p = player(); if (!enabled || !p) return;
+    const p = account(); if (!enabled || !p) return;
     clearTimeout(syncT);
     const st = store.get(), dex = st.dex || {};
     const found = TARGETS.filter(t => dex[t.id] && dex[t.id].w > 0).length;
@@ -69,19 +75,19 @@ const online = (() => {
     catch(e){}
   }
   function syncSoon(){
-    if (!enabled || !player()) return;
+    if (!enabled || !account()) return;
     clearTimeout(syncT);
     syncT = setTimeout(syncNu, 800);
   }
   /* Na een spel: resultaat, logboek en voortgang versturen, en pas als dat allemaal binnen is de eikels
      opnieuw ophalen, zodat de winst in de uitslag klopt (ook de 5 eikels voor een nieuwe plaat). */
   function afterGame(){
-    if (!enabled || !player()) return;
+    if (!enabled || !account()) return;
     const klaar = [];
     if (S.mode === "daily" && eersteModus(store.get(), S.caseNo - 1) === !!S.expert){   /* alleen je eerste modus van de dag */
       const q = queue(); q.push({ p_day: S.caseNo - 1, p_expert: S.expert, p_won: S.status === "won", p_tries: Math.min(usedTries(), MAX), p_clues: S.revealed });
       setQueue(q); klaar.push(flush().then(() => refreshWeek()).catch(() => {}));
-    } else klaar.push(uploadLog(player()));
+    } else klaar.push(uploadLog(account()));
     klaar.push(syncNu());
     Promise.all(klaar).then(() => Profiel.naSpel()).catch(() => {});
   }
@@ -197,7 +203,7 @@ const online = (() => {
       box.innerHTML = `<p><b>Doe mee aan de ranglijst.</b> Kies een spelersnaam. Je hebt geen account of e-mailadres nodig.</p>
         <div class="row2"><input id="pName" maxlength="20" placeholder="Bijvoorbeeld Tom of Dassenjager" autocomplete="nickname"><button class="btn" id="pJoin">Meedoen</button></div>
         <span class="msg" id="pMsg"></span>
-        <details><summary>Ik heb al een spelerscode</summary>
+        <details><summary>Ik heb al een spelers- of koppelcode</summary>
           <div class="row2" style="margin-top:8px"><input id="pCode" placeholder="VSP-…"><button class="btn line" id="pLogin">Verder spelen</button></div>
         </details>`;
       $("pJoin").onclick = join;
@@ -210,8 +216,10 @@ const online = (() => {
     if (name.length < 2){ $("pMsg").textContent = "Kies een naam van minstens 2 tekens."; return; }
     $("pJoin").disabled = true; $("pMsg").textContent = "Even geduld…";
     try {
-      const rows = await rpc("register_player", { p_name: name });
-      const r = Array.isArray(rows) ? rows[0] : rows;
+      let r;
+      const k = koppeling();
+      if (k){ await rpc("claim_name", { p_id: k.id, p_key: k.key, p_name: name }); r = k; setKoppeling(null); }
+      else { const rows = await rpc("register_player", { p_name: name }); r = Array.isArray(rows) ? rows[0] : rows; }
       setPlayer({ id: r.id, key: r.key, name });
       $("welcome").hidden = true;
       /* eerst een uitnodiging en league uit een link: de server neemt een uitnodiging alleen aan vóór je eerste resultaat */
@@ -221,32 +229,62 @@ const online = (() => {
     } catch(e){ $("pJoin").disabled = false; $("pMsg").textContent = e.status && e.status < 500 ? e.message : "Aanmelden lukte niet. Controleer je internetverbinding."; }
   }
   async function login(){
-    const m = $("pCode").value.trim().match(/^VSP-([0-9a-f-]{36})\.([0-9a-f]{64})$/i);
-    if (!m){ $("pMsg").textContent = "Deze spelerscode klopt niet. Kopieer hem opnieuw op je andere apparaat."; return; }
     try {
-      const name = await rpc("player_name", { p_id: m[1], p_key: m[2] });
-      setPlayer({ id: m[1], key: m[2], name });
-      const prog = await rpc("get_progress", { p_id: m[1], p_key: m[2] });
-      if (prog && (prog.dex || prog.dexId)) mergeProgressData(prog);
-      $("welcome").hidden = true; syncSoon(); renderRank(); flush(); renderTiles(); renderMenu();
-      const extra = await League.naNaam(false);
-      Profiel.naNaam();
-      toast(`Welkom terug, ${name}! Je ${NAAM.vestiarium} is bijgewerkt.${extra}`);
-    } catch(e){ $("pMsg").textContent = "Deze spelerscode wordt niet herkend."; }
+      const name = await koppel($("pCode").value);
+      if (name){ $("welcome").hidden = true; renderRank(); renderMenu(); const extra = await League.naNaam(false); Profiel.naNaam(); toast(`Welkom terug, ${name}! Je ${NAAM.vestiarium} is bijgewerkt.${extra}`); }
+      else { renderRank(); toast("Gekoppeld. Dit apparaat blijft nu gelijk met je andere apparaat."); }
+    } catch(e){ $("pMsg").textContent = e.message === "code" ? "Deze code klopt niet. Kopieer hem opnieuw op je andere apparaat." : "Deze code wordt niet herkend."; }
   }
+
   /* Voortgang van je andere apparaten ophalen en samenvoegen (platen, trofeeën, statistieken, logboek).
      Bij het openen en als de app weer op de voorgrond komt (hooguit eens per minuut); daarna gaat de
      samengevoegde voortgang weer naar Supabase, zodat geen apparaat de platen van een ander overschrijft. */
   let laatsteHaal = 0;
   async function haalVoortgang(){
-    const p = player(); if (!enabled || !p || Date.now() - laatsteHaal < 60000) return;
+    const p = account(); if (!enabled || !p || Date.now() - laatsteHaal < 60000) return;
     laatsteHaal = Date.now();
     try {
+      /* koos je op een ander apparaat een naam voor dit gekoppelde account, dan speel je hier nu ook onder die naam */
+      if (!player()){
+        const naam = await rpc("player_name", { p_id: p.id, p_key: p.key });
+        if (naam && !String(naam).startsWith("~")){ setPlayer({ id: p.id, key: p.key, name: naam }); setKoppeling(null); $("welcome").hidden = true; Profiel.naNaam(); toast(`Je speelt nu als ${naam}, net als op je andere apparaat.`); }
+      }
       const prog = await rpc("get_progress", { p_id: p.id, p_key: p.key });
-      if (prog && (prog.dex || prog.dexId)){ mergeProgressData(prog); renderTiles(); renderMenu(); if (VIEW === "dex") renderDex(); syncSoon(); }
+      if (prog && (prog.dex || prog.dexId)){ mergeProgressData(prog); naSamenvoegen(); syncSoon(); }
     } catch(e){}
   }
-  return { enabled, rpc, player, afterGame, haalVoortgang, flush, syncSoon, renderRank, refreshWeek, renderScope, setScope,
+  /* na samenvoegen: kop, menu en Vestiarium bijwerken; speelde je de dagcasus al op een ander apparaat,
+     dan staat hij hier ook als gespeeld (zolang je hier nog niets geprobeerd hebt) */
+  function naSamenvoegen(){
+    if (S && S.mode === "daily" && S.status === "playing" && !S.guesses.length && finished(store.get(), S.caseNo - 1, S.expert)) startDaily();
+    renderTiles(); renderMenu(); if (VIEW === "dex") renderDex();
+  }
+  /* code om een ander apparaat te koppelen: je spelerscode, of (zonder naam) de code van een verborgen account */
+  async function koppelcode(){
+    let a = account();
+    if (!a){
+      const rows = await rpc("register_hidden", {}), r = Array.isArray(rows) ? rows[0] : rows;
+      a = { id: r.id, key: r.key }; setKoppeling(a);
+      queueRecentDaily(); await syncNu(); flush();
+    }
+    return "VSP-" + a.id + "." + a.key;
+  }
+  /* een code van een ander apparaat gebruiken: spelerscode = verder spelen als die speler, koppelcode = koppelen */
+  async function koppel(code){
+    const m = String(code || "").trim().match(/^VSP-([0-9a-f-]{36})\.([0-9a-f]{64})$/i);
+    if (!m) throw new Error("code");
+    const name = await rpc("player_name", { p_id: m[1], p_key: m[2] });
+    if (String(name).startsWith("~")){
+      if (player()) throw new Error("naam");
+      setKoppeling({ id: m[1], key: m[2] });
+    } else { setPlayer({ id: m[1], key: m[2], name }); setKoppeling(null); }
+    const prog = await rpc("get_progress", { p_id: m[1], p_key: m[2] });
+    if (prog && (prog.dex || prog.dexId)) mergeProgressData(prog);
+    laatsteHaal = Date.now();
+    queueRecentDaily(); await syncNu(); flush(); naSamenvoegen();
+    return String(name).startsWith("~") ? null : name;
+  }
+  return { enabled, rpc, player, account, koppeling, koppelcode, koppel, afterGame, haalVoortgang, flush, syncSoon, renderRank, refreshWeek, renderScope, setScope,
            setMode: (m, s) => { rankMode = m; if (s !== undefined) setScope(s); else renderRank(); } };
 })();
 

@@ -58,7 +58,13 @@ function renderTrophies(st){
    nieuwe versies gebruiken dexId. Het logboek gaat alleen mee naar Supabase, niet in de code om over te typen. */
 function progressData(st, withLog){
   const out = { v: STORE_V, dex: dexToNames(st.dex), dexId: st.dex || {}, stats: st.stats || null, statsX: st.statsX || null, awards: st.awards || {} };
-  if (withLog) out.log = st.log || [];
+  if (withLog){
+    out.log = st.log || [];
+    /* de dagcasussen van gisteren en vandaag, zodat je andere apparaten weten dat je ze al speelde */
+    const i = todayIndex(), g = {};
+    for (const [k, v] of Object.entries(st.games || {})) if (v && v.status !== "playing" && +(k.match(/^d(\d+)/) || [, -9])[1] >= i - 1) g[k] = v;
+    out.games = g;
+  }
   return out;
 }
 function progressCode(){
@@ -81,6 +87,10 @@ function mergeProgressData(data){
     if (!st.awards[key] || (typeof d === "string" && d < st.awards[key])) st.awards[key] = d;
   }
   if (Array.isArray(data.log)) st.log = mergeLog(st.log, data.log);
+  if (data.games && typeof data.games === "object"){
+    st.games = st.games || {};
+    for (const [k, g] of Object.entries(data.games)) if (g && g.status && g.status !== "playing" && (!st.games[k] || st.games[k].status === "playing" && !(st.games[k].guesses || []).length)) st.games[k] = g;
+  }
   checkAwards(st, true);
   store.set(st);
 }
@@ -88,12 +98,42 @@ function mergeProgress(code){
   const raw = code.trim().replace(/^VESTIGIA-/, "");
   mergeProgressData(JSON.parse(decodeURIComponent(escape(atob(raw)))));
 }
-$("codeCopy").addEventListener("click", () => {
+/* Meerdere apparaten: met de online ranglijst een koppelcode (blijft gelijk), anders de oude voortgangscode (eenmalig). */
+function renderCarry(){
+  const p = online.enabled && online.player(), k = online.enabled && online.koppeling();
+  $("carryTekst").innerHTML = !online.enabled
+    ? `Zonder spelersnaam staat je ${NAAM.vestiarium} alleen in deze browser. Kopieer je voortgangscode en plak hem op je andere apparaat. Bestaande voortgang daar wordt samengevoegd, niet overschreven.`
+    : p ? `Je speelt als <b>${esc(p.name)}</b>. Gebruik op je andere apparaat je spelerscode (in Mijn profiel); daarna blijven je apparaten vanzelf gelijk, elke keer dat je de app opent.`
+    : k ? `Dit apparaat is gekoppeld. Kopieer de koppelcode voor nog een apparaat. Je voortgang blijft gelijk, elke keer dat je de app opent. In de ranglijst kom je pas als je een spelersnaam kiest.`
+    : `Speel je op meer dan één apparaat? Kopieer de koppelcode en plak hem op je andere apparaat. Daarna blijven ze vanzelf gelijk, elke keer dat je de app opent. Je hebt geen spelersnaam nodig; in de ranglijst kom je pas als je er een kiest.`;
+  $("codeCopy").textContent = online.enabled ? "Kopieer koppelcode" : "Kopieer voortgangscode";
+  $("codeCopy").hidden = !!p;
+  $("codeIn").placeholder = online.enabled ? "Plak hier de code van je andere apparaat" : "Plak hier een voortgangscode";
+  $("codeIn").hidden = $("codeLoad").hidden = !!p;
+}
+$("codeCopy").addEventListener("click", async () => {
+  if (online.enabled){
+    $("codeMsg").textContent = "Even geduld…";
+    try {
+      const code = await online.koppelcode(); renderCarry();
+      try { await navigator.clipboard.writeText(code); $("codeMsg").textContent = "Gekopieerd. Plak hem op je andere apparaat."; }
+      catch(e){ $("codeIn").value = code; $("codeIn").select(); $("codeMsg").textContent = "Selecteer en kopieer de code hieronder."; }
+    } catch(e){ $("codeMsg").textContent = "Koppelen lukt nu niet. Controleer je internetverbinding."; }
+    return;
+  }
   const code = progressCode();
   try { navigator.clipboard.writeText(code).then(() => { $("codeMsg").textContent = "Gekopieerd."; }, () => { $("codeIn").value = code; $("codeIn").select(); $("codeMsg").textContent = "Selecteer en kopieer de code hieronder."; }); }
   catch(e){ $("codeIn").value = code; $("codeIn").select(); }
 });
-$("codeLoad").addEventListener("click", () => {
+$("codeLoad").addEventListener("click", async () => {
+  if (online.enabled && /^\s*VSP-/i.test($("codeIn").value)){
+    try {
+      const naam = await online.koppel($("codeIn").value); $("codeIn").value = "";
+      $("codeMsg").textContent = naam ? `Je speelt nu als ${naam}.` : "Gekoppeld. Je voortgang van beide apparaten is samengevoegd en blijft gelijk.";
+      renderCarry(); renderDex(); renderMenu();
+    } catch(e){ $("codeMsg").textContent = e.message === "naam" ? "Je hebt hier al een spelersnaam. Gebruik op je andere apparaat jouw spelerscode." : "Deze code wordt niet herkend. Controleer of je hem volledig hebt geplakt."; }
+    return;
+  }
   try { mergeProgress($("codeIn").value); $("codeIn").value = ""; $("codeMsg").textContent = "Voortgang toegevoegd."; renderDex(); online.syncSoon(); }
   catch(e){ $("codeMsg").textContent = "Deze code wordt niet herkend. Controleer of je hem volledig hebt geplakt."; }
 });
@@ -139,7 +179,7 @@ function dexNo(id){ const t = BY_ID.get(id); return String(t && t.no || 0).padSt
 let dexFilter = "ALL", dexOnlyFound = false;
 function showDex(){
   setView("dex");
-  renderDex(); Profiel.inVestiarium(); window.scrollTo({ top:0, behavior:"auto" });
+  renderDex(); renderCarry(); Profiel.inVestiarium(); window.scrollTo({ top:0, behavior:"auto" });
 }
 function renderDex(){
   const st = store.get(), dex = st.dex || {};
