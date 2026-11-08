@@ -23,13 +23,38 @@ const online = (() => {
   const setQueue = q => { try { localStorage.setItem("vestigia:queue", JSON.stringify(q)); } catch(e){} };
   async function flush(){
     const p = player(); if (!enabled || !p) return;
-    const q = queue(); if (!q.length) return;
-    const rest = [];
-    for (const item of q){
-      try { await rpc("submit_result", Object.assign({ p_id: p.id, p_key: p.key }, item)); }
-      catch(e){ if (!e.status || e.status >= 500) rest.push(item); }
+    const q = queue();
+    if (q.length){
+      const rest = [];
+      for (const item of q){
+        try { await rpc("submit_result", Object.assign({ p_id: p.id, p_key: p.key }, item)); }
+        catch(e){ if (!e.status || e.status >= 500) rest.push(item); }
+      }
+      setQueue(rest);
     }
-    setQueue(rest);
+    await uploadLog(p);
+  }
+  /* Het logboek (elk gespeeld spel, sinds stap 1) gaat naar game_results in Supabase, voor prestaties en eikels.
+     Verstuurde spellen krijgen up: 1. Lukt het niet (geen verbinding, of de functie staat nog niet in Supabase),
+     dan gewoon de volgende keer opnieuw; de server negeert dubbele spellen. */
+  const GAME = { daily: "dagcasus", free: "oefenen", raadsel: "raadsel", soortenduel: "soortenduel", spelersduel: "spelersduel" };
+  let logBusy = false;
+  async function uploadLog(p){
+    if (logBusy || !p) return;
+    logBusy = true;
+    try {
+      for (let ronde = 0; ronde < 10; ronde++){
+        const open = (store.get().log || []).filter(e => !e.up && GAME[e.m]).slice(0, 200);
+        if (!open.length) break;
+        const games = open.map(e => { const t = BY_ID.get(e.s);
+          return { k: logKey(e), g: GAME[e.m], t: e.t, d: e.d, s: e.s, grp: t ? t.g : null, c: (e.k || 0) + 1,
+                   x: !!e.x, w: !!e.w, p: e.p, n: e.c, sc: e.sc, tw: e.tw || 0 }; });
+        await rpc("submit_games", { p_id: p.id, p_key: p.key, p_games: games });
+        const sent = new Set(open.map(logKey)), st = store.get();
+        st.log = (st.log || []).map(e => sent.has(logKey(e)) ? Object.assign({}, e, { up: 1 }) : e);
+        store.set(st);
+      }
+    } catch(e){} finally { logBusy = false; }
   }
   let syncT;
   function syncSoon(){
@@ -52,6 +77,20 @@ const online = (() => {
       setQueue(q); flush().then(() => refreshWeek()).catch(() => {});
     }
     syncSoon();
+    if (S.mode !== "daily") uploadLog(player());
+  }
+  /* Wie de dagcasus speelde vóór het kiezen van een naam, krijgt die score alsnog in de ranglijst:
+     de afgeronde dagcasussen van vandaag en gisteren (ouder neemt de server niet aan). */
+  function queueRecentDaily(){
+    const st = store.get(), today = todayIndex(), q = queue();
+    for (const i of [today - 1, today]) for (const x of [false, true]){
+      const g = (st.games || {})[dailyKey(i, x)];
+      if (!g || g.status === "playing" || i < 0) continue;
+      const twin = (BY_ID.get(g.target) || {}).twin, tries = g.guesses.filter(n => n !== twin).length;
+      if (!q.some(r => r.p_day === i && r.p_expert === x))
+        q.push({ p_day: i, p_expert: x, p_won: g.status === "won", p_tries: Math.min(tries, MAX), p_clues: g.revealed });
+    }
+    setQueue(q);
   }
   /* ranglijst */
   let rankMode = "day";
@@ -148,7 +187,7 @@ const online = (() => {
       const r = Array.isArray(rows) ? rows[0] : rows;
       setPlayer({ id: r.id, key: r.key, name });
       $("welcome").hidden = true;
-      syncSoon(); renderRank(); toast(`Welkom, ${name}! Je doet nu mee aan de ranglijst.`);
+      queueRecentDaily(); syncSoon(); flush().then(() => refreshWeek()).catch(() => {}); renderRank(); toast(`Welkom, ${name}! Je doet nu mee aan de ranglijst.`);
     } catch(e){ $("pJoin").disabled = false; $("pMsg").textContent = e.status && e.status < 500 ? e.message : "Aanmelden lukte niet. Controleer je internetverbinding."; }
   }
   async function login(){
@@ -159,7 +198,7 @@ const online = (() => {
       setPlayer({ id: m[1], key: m[2], name });
       const prog = await rpc("get_progress", { p_id: m[1], p_key: m[2] });
       if (prog && (prog.dex || prog.dexId)) mergeProgressData(prog);
-      $("welcome").hidden = true; syncSoon(); renderRank(); renderTiles(); toast(`Welkom terug, ${name}! Je ${NAAM.vestiarium} is bijgewerkt.`);
+      $("welcome").hidden = true; syncSoon(); renderRank(); flush(); renderTiles(); toast(`Welkom terug, ${name}! Je ${NAAM.vestiarium} is bijgewerkt.`);
     } catch(e){ $("pMsg").textContent = "Deze spelerscode wordt niet herkend."; }
   }
   return { enabled, rpc, player, afterGame, flush, syncSoon, renderRank, refreshWeek, setMode: m => { rankMode = m; renderRank(); } };
