@@ -112,6 +112,9 @@ function renderKop(){
   $("slimSeries").textContent = S.mode === "daily" ? `#${S.caseNo}` : "oefenen";
   kleurKop();
   if (typeof Spelen !== "undefined") Spelen.oefenKader();
+  const seg = document.querySelector(".modebar .seg");
+  seg.classList.toggle("expert", !!S.expert);
+  if (!seg.classList.contains("klaar")) requestAnimationFrame(() => requestAnimationFrame(() => seg.classList.add("klaar")));
   $("modeClassic").setAttribute("aria-pressed", !S.expert);
   $("modeExpert").setAttribute("aria-pressed", !!S.expert);
   const st = store.get(), i = todayIndex(), daily = S.mode === "daily";
