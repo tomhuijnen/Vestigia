@@ -147,13 +147,46 @@ function renderGrid(){
   freshRow = false;
 }
 
-function shareText(){
-  const t = BY_ID.get(S.target);
-  const head = `Vestigia ${S.mode === "daily" ? "#" + S.caseNo : "(oefenen)"}${S.expert ? " · expert" : ""}`;
+/* ---------- delen ----------
+   Eén deelfunctie voor alles wat later ook gedeeld wordt (uitnodiging, league, duel): tekst + link.
+   Via het deelmenu van de telefoon gaat de link apart mee, zodat WhatsApp en Teams er een voorbeeld van maken.
+   extra.params komt later achter de link, bijvoorbeeld { league: "DAS-7K2" }. */
+const APP_URL = new URL("./", location.href).href;
+function appLink(params){
+  const u = new URL(APP_URL);
+  for (const [k, v] of Object.entries(params || {})) if (v) u.searchParams.set(k, v);
+  return u.href;
+}
+function resultShare(extra){
+  const t = BY_ID.get(S.target), won = S.status === "won";
+  const head = `Vestigia ${S.mode === "daily" ? "nº " + S.caseNo : "· oefencasus"}`;
   const emo = { ok:"🟩", part:"🟨", no:"⬜" };
-  if (S.expert) return `${head}\n${S.status === "won" ? `Gedetermineerd na ${S.revealed} aanwijzing${S.revealed > 1 ? "en" : ""}` : "Niet gedetermineerd"} 🔎`;
-  const lines = S.guesses.map(n => { const c = compare(BY_ID.get(n), t); return COLS.map(k => emo[c[k].cls]).join("") + (isTwin(n) ? " ≈ tweeling" : ""); });
-  return `${head} · ${S.status === "won" ? usedTries() : "X"}/${MAX}\n${lines.join("\n")}`;
+  let body;
+  if (S.expert){
+    const clues = "🔎".repeat(S.revealed) + "▫️".repeat(MAX - S.revealed);
+    body = `${head} · expert\n${clues} – ${won ? `gedetermineerd na ${S.revealed} van ${MAX} waarnemingen` : "niet gedetermineerd"}`;
+  } else {
+    const rows = S.guesses.map(n => {
+      const c = compare(BY_ID.get(n), t);
+      return COLS.map(k => k === "l" && c.l.cls !== "ok" ? (c.l.arrow === "↑" ? "⬆️" : "⬇️") : emo[c[k].cls]).join("") + (isTwin(n) ? " ≈ tweeling" : "");
+    });
+    body = `${head} · ${won ? usedTries() : "X"}/${MAX}\n${rows.join("\n")}\nleefgebied · activiteit · voedsel · verblijf · winter · lengte · regime`;
+  }
+  return { text: body, url: appLink(extra && extra.params) };
+}
+/* Deelt via het deelmenu van de telefoon, anders kopiëren. msgEl krijgt de melding, boxParent een tekstvak als kopiëren niet lukt. */
+function shareOut({ text, url }, msgEl, boxParent){
+  const full = `${text}\nSpeel mee: ${url}`;
+  if (navigator.share && matchMedia("(pointer: coarse)").matches){
+    navigator.share({ text, url }).catch(() => {});
+    return;
+  }
+  const fallback = () => {
+    let ta = boxParent.querySelector("textarea.copyout");
+    if (!ta){ ta = document.createElement("textarea"); ta.className = "copyout"; ta.rows = 8; ta.readOnly = true; boxParent.appendChild(ta); }
+    ta.value = full; ta.select(); msgEl.textContent = "Kopiëren lukt hier niet automatisch: selecteer de tekst hieronder.";
+  };
+  try { navigator.clipboard.writeText(full).then(() => { msgEl.textContent = "Gekopieerd."; }, fallback); } catch(e){ fallback(); }
 }
 
 function renderResult(){
@@ -180,7 +213,7 @@ function renderResult(){
     <dl class="traits">${traits}</dl>
     <div class="confuse"><span class="caps">Verwar niet met</span><p><b>${esc(xs.n)}.</b> ${S.guesses.includes(t.x) ? "Die soort heb je in deze casus ook geprobeerd. " : ""}${esc(t.t)}</p></div>
     ${(S.newAwards || []).map(k => { const [kind, name] = awardLabel(k); return `<div class="awardnote"><span class="caps">Nieuwe ${kind.toLowerCase()}</span><b>${esc(name)}</b></div>`; }).join("")}
-    <p class="dexnote">${won ? `Plaat <b>nº ${dexNo(t.id)}</b> staat nu in je veldboek.` : `Genoteerd als waargenomen in je veldboek (nº ${dexNo(t.id)}).`} <button class="linklike" id="toDex">Open het veldboek</button></p>
+    <p class="dexnote">${won ? `Plaat <b>nº ${dexNo(t.id)}</b> staat nu in je ${NAAM.vestiarium}.` : `Genoteerd als waargenomen in je ${NAAM.vestiarium} (nº ${dexNo(t.id)}).`} <button class="linklike" id="toDex">Open het ${NAAM.vestiarium}</button></p>
     ${stats}
     <div class="actions">
       <button class="btn" id="copyBtn">Deel resultaat</button>
@@ -189,19 +222,7 @@ function renderResult(){
     </div>
     <button class="reportbtn" id="repFromResult">Klopt er iets niet in deze casus? Meld een fout</button>`;
   card.hidden = false;
-  $("copyBtn").onclick = () => {
-    const txt = shareText();
-    const done = () => { $("copyMsg").textContent = "Gekopieerd."; };
-    const fallback = () => {
-      if (!$("copyOut")){ const ta = document.createElement("textarea"); ta.id = "copyOut"; ta.className = "copyout"; ta.rows = 8; ta.readOnly = true; card.appendChild(ta); }
-      $("copyOut").value = txt; $("copyOut").select(); $("copyMsg").textContent = "Kopiëren lukt hier niet automatisch: selecteer de tekst hieronder.";
-    };
-    if (navigator.share && matchMedia("(pointer: coarse)").matches){
-      navigator.share({ text: txt }).catch(() => {});
-      return;
-    }
-    try { navigator.clipboard.writeText(txt).then(done, fallback); } catch(e){ fallback(); }
-  };
+  $("copyBtn").onclick = () => shareOut(resultShare(), $("copyMsg"), card);
   $("nextBtn").onclick = () => startFree();
   $("toDex").onclick = () => showDex();
   $("repFromResult").onclick = e => openReport(t.id, e.currentTarget, S.k);
@@ -224,12 +245,7 @@ function renderPips(){
 }
 
 function renderHead(){
-  $("fCase").textContent = S.mode === "daily" ? "nº " + S.caseNo : "oefencasus";
-  const d = S.mode === "daily" ? new Date(START + (S.caseNo - 1) * 864e5) : new Date();
-  $("fDate").textContent = d.toLocaleDateString("nl-NL", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
-  $("fMode").textContent = S.expert ? "expertmodus" : "";
-  setTabs(!$("dexView").hidden ? "dex" : !$("rankView").hidden ? "rank" : "game");
-  $("expert").checked = S.expert;
+  renderKop();
   const inp = $("gInput"); inp.disabled = S.status !== "playing";
   if (S.status !== "playing"){ inp.value = ""; closeOpts(); }
   $("gBtn").disabled = !matchExact(inp.value) || S.status !== "playing";
@@ -295,27 +311,28 @@ $("gInput").addEventListener("blur", () => setTimeout(closeOpts, 120));
 $("gBtn").addEventListener("click", commit);
 $("moreClue").addEventListener("click", moreClue);
 
-/* ---------- modi ---------- */
-function setTabs(v){
-  $("mDaily").setAttribute("aria-pressed", v === "game" && S.mode === "daily");
-  $("mFree").setAttribute("aria-pressed", v === "game" && S.mode === "free");
-  $("mDex").setAttribute("aria-pressed", v === "dex");
-  $("mRank").setAttribute("aria-pressed", v === "rank");
-}
-function showGame(){ $("gameView").hidden = false; $("dexView").hidden = true; $("rankView").hidden = true; render(); setTabs("game"); }
-function startDaily(){ S = loadDaily($("expert").checked); showGame(); }
+/* ---------- modi ----------
+   De gekozen modus (klassiek of expert) wordt onthouden. Schermwissels en het menu staan in js/kop.js. */
+const pref = {
+  get expert(){ try { return localStorage.getItem("vestigia:expert") === "1"; } catch(e){ return false; } },
+  set expert(v){ try { localStorage.setItem("vestigia:expert", v ? "1" : "0"); } catch(e){} }
+};
+function showGame(){ setView("game"); render(); }
+function startDaily(){ S = loadDaily(pref.expert); showGame(); }
 function startFree(){
-  const expert = $("expert").checked;
   const f = randomFree(S && S.target);
-  S = newGame("free", expert, f.id, f.k, 0);
+  S = newGame("free", pref.expert, f.id, f.k, 0);
   showGame(); window.scrollTo({ top:0, behavior:"auto" });
 }
-$("mDaily").addEventListener("click", () => { if (S.mode === "daily") showGame(); else startDaily(); });
-$("mFree").addEventListener("click", () => { if (S.mode !== "free" || S.status !== "playing") startFree(); else showGame(); });
-$("mDex").addEventListener("click", () => showDex());
-$("expert").addEventListener("change", () => {
+function goDaily(){ if (S.mode === "daily") showGame(); else startDaily(); }
+function goFree(){ if (S.mode !== "free" || S.status !== "playing") startFree(); else showGame(); }
+/* Wisselen tussen klassiek en expert. Een oefencasus waarin nog niets geprobeerd is, wisselt ter plekke. */
+function setMode(expert){
+  pref.expert = expert;
+  if (expert === S.expert) return;
   if (S.mode === "daily") startDaily();
-  else if (S.guesses.length === 0 && S.status === "playing"){ S.expert = $("expert").checked; S.revealed = 1; render(); }
+  else if (S.guesses.length === 0 && S.status === "playing"){ S.expert = expert; S.revealed = 1; render(); }
   else startFree();
-});
-
+}
+$("modeClassic").addEventListener("click", () => setMode(false));
+$("modeExpert").addEventListener("click", () => setMode(true));

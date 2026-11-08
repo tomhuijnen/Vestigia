@@ -39,7 +39,7 @@ function renderTrophies(st){
   });
   const fAll = TARGETS.filter(t => got(t.id)).length, onAll = have.includes("T:ALL");
   cells.push(`<div class="award${onAll ? " got" : " locked"}">${rosette("var(--ink)", onAll, TARGETS.length)}<span class="an">${TITLE_ALL}</span>
-    <span class="ac">${onAll ? "Het hele veldboek is compleet" : `${fAll} van ${TARGETS.length} soorten`}</span>
+    <span class="ac">${onAll ? `Je ${NAAM.vestiarium} is compleet` : `${fAll} van ${TARGETS.length} soorten`}</span>
     <span class="ap"><i style="width:${100*fAll/TARGETS.length}%; background:var(--ink)"></i></span></div>`);
   $("titleRow").innerHTML = cells.join("");
   const medals = medalSpecies(st);
@@ -108,10 +108,10 @@ function nextAward(){
   if (k.startsWith("M:")){
     const t = BY_ID.get(k.slice(2));
     badge = medal(true, dexNo(t.id)); kind = "Nieuwe medaille"; name = t.n;
-    text = `Je hebt de ${esc(t.n.toLowerCase())} (<i>${esc(t.s)}</i>) gedetermineerd, een van de ${telwoord(medalSpecies(store.get()).length)} lastigste soorten van Vestigia. De medaille hangt nu in je veldboek.`;
+    text = `Je hebt de ${esc(t.n.toLowerCase())} (<i>${esc(t.s)}</i>) gedetermineerd, een van de ${telwoord(medalSpecies(store.get()).length)} lastigste soorten van Vestigia. De medaille hangt nu in je ${NAAM.vestiarium}.`;
   } else if (k === "T:ALL"){
     badge = rosette("#2f3b40", true, TARGETS.length); kind = "Eindtitel"; name = TITLE_ALL;
-    text = `Alle ${TARGETS.length} soorten staan in je veldboek. Een groter compliment heeft Vestigia niet.`;
+    text = `Alle ${TARGETS.length} soorten staan in je ${NAAM.vestiarium}. Een groter compliment heeft Vestigia niet.`;
   } else {
     const g = k.slice(2), n = TARGETS.filter(t => t.g === g).length;
     badge = rosette(`var(--g-${g})`, true, n); kind = "Nieuwe titel"; name = TITLES[g];
@@ -122,7 +122,7 @@ function nextAward(){
   $("awardSheet").innerHTML = `<div class="confetti" aria-hidden="true">${conf}</div>
     <span class="kind">${kind}</span><div class="badge">${badge}</div>
     <h2 id="awardH">Gefeliciteerd!</h2><p class="nm">${esc(name)}</p><p>${text}</p>
-    <div class="actions"><button class="btn" id="awardNext">${awardQueue.length ? "Volgende" : "Verder spelen"}</button><button class="btn line" id="awardDex">Bekijk veldboek</button></div>
+    <div class="actions"><button class="btn" id="awardNext">${awardQueue.length ? "Volgende" : "Verder spelen"}</button><button class="btn line" id="awardDex">Bekijk ${NAAM.vestiarium}</button></div>
     ${awardQueue.length ? `<span class="queue">Nog ${awardQueue.length} andere trofee${awardQueue.length > 1 ? "ën" : ""}</span>` : ""}`;
   $("awardPop").hidden = false;
   $("awardNext").focus();
@@ -138,7 +138,7 @@ const DEX = TARGETS.slice().sort((a, b) => a.no - b.no);
 function dexNo(id){ const t = BY_ID.get(id); return String(t && t.no || 0).padStart(3, "0"); }
 let dexFilter = "ALL", dexOnlyFound = false;
 function showDex(){
-  $("gameView").hidden = true; $("rankView").hidden = true; $("dexView").hidden = false; setTabs("dex");
+  setView("dex");
   renderDex(); window.scrollTo({ top:0, behavior:"auto" });
 }
 function renderDex(){
@@ -164,7 +164,7 @@ function renderDex(){
     const best = won ? [e.b ? `beste ${e.b}${e.b <= MAX ? "/" + MAX : ""}` : "", e.bx ? `expert ${e.bx}` : ""].filter(Boolean).join(" · ") : "nog niet gedetermineerd";
     return `<button class="plate${won ? "" : " seen"}${won && medalIds.has(t.id) ? " rare" : ""}" data-n="${esc(t.id)}">${band}<div class="mid"><span class="nm">${esc(t.n)}</span><span class="sc">${esc(t.s)}</span></div>
       <span class="stamp">${won ? "gedetermineerd" : "waargenomen"}</span><div class="ft"><span>${best}</span><span>${won ? `<b>${e.w}×</b>` : ""}</span></div></button>`;
-  }).join("") : `<p class="dexempty">Nog geen platen in deze selectie. Speel een casus om je veldboek te vullen.</p>`;
+  }).join("") : `<p class="dexempty">Nog geen platen in deze selectie. Speel een casus om je ${NAAM.vestiarium} te vullen.</p>`;
   $("dexGrid").querySelectorAll("button.plate").forEach(b => b.onclick = () => openPlate(b.dataset.n, b));
 }
 let plateReturn = null;
