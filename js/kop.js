@@ -3,11 +3,28 @@
 
 /* ---------- welk scherm staat open ---------- */
 let VIEW = "game";
+const VIEWS = { game: "gameView", dex: "dexView", rank: "rankView", league: "leagueView", profiel: "profielView" };
+/* Bij een schermwissel schuift het nieuwe scherm zacht in beeld (niet bij ‘minder beweging’). */
+function inBeeld(el){
+  if (!el || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  el.classList.remove("viewin"); void el.offsetWidth; el.classList.add("viewin");
+}
 function setView(v){
-  VIEW = v;
-  $("gameView").hidden = v !== "game"; $("dexView").hidden = v !== "dex"; $("rankView").hidden = v !== "rank"; $("leagueView").hidden = v !== "league"; $("profielView").hidden = v !== "profiel";
+  const vorig = VIEW; VIEW = v;
+  for (const [k, id] of Object.entries(VIEWS)) $(id).hidden = v !== k;
+  if (vorig !== v) inBeeld($(VIEWS[v]));
   closeMenu(true);
-  renderMenu();
+  renderMenu(); renderTabbar(); kleurKop();
+}
+/* Oefenen krijgt een bruine kop, zodat je altijd ziet dat het niet om de dagcasus gaat. */
+function kleurKop(){ document.body.classList.toggle("oefenen", VIEW === "game" && !!S && S.mode === "free"); }
+/* ---------- tabbalk onderin: Ranglijst · Spelen · Vestiarium ---------- */
+function renderTabbar(){
+  const cur = VIEW === "game" ? "spelen" : VIEW === "league" ? "rank" : VIEW;
+  $("tabbar").querySelectorAll("[data-tab]").forEach(b => {
+    b.classList.toggle("on", b.dataset.tab === cur);
+    b.dataset.tab === cur ? b.setAttribute("aria-current", "page") : b.removeAttribute("aria-current");
+  });
 }
 
 /* ---------- dagresultaten uit de opslag ---------- */
@@ -96,12 +113,13 @@ function renderTiles(){
 
 /* ---------- regel boven de naam, schakelaar en vinkjes ---------- */
 function renderKop(){
-  let series;
   if (S.mode === "daily"){
     const d = new Date(START + (S.caseNo - 1) * DAY);
-    series = `Dagcasus #${S.caseNo} · ${d.toLocaleDateString("nl-NL", { weekday:"short", day:"numeric", month:"long", timeZone:"UTC" })}`;
-  } else series = "Oefencasus · telt niet voor de ranglijst";
-  $("fSeries").textContent = series; $("slimSeries").textContent = S.mode === "daily" ? `#${S.caseNo}` : "oefenen";
+    const series = `Dagcasus #${S.caseNo} · ${d.toLocaleDateString("nl-NL", { weekday:"short", day:"numeric", month:"long", timeZone:"UTC" })}`;
+    $("fSeries").textContent = series;
+  } else $("fSeries").innerHTML = `Oefencasus${S.groep && GROUPS[S.groep] ? " · " + esc(GROUPS[S.groep]) : ""}<span class="oefenpil">telt niet</span>`;
+  $("slimSeries").textContent = S.mode === "daily" ? `#${S.caseNo}` : "oefenen";
+  kleurKop();
   $("modeClassic").setAttribute("aria-pressed", !S.expert);
   $("modeExpert").setAttribute("aria-pressed", !!S.expert);
   const st = store.get(), i = todayIndex(), daily = S.mode === "daily";
@@ -125,24 +143,30 @@ $("modeInfo").addEventListener("click", e => { if (e.target === $("modeInfo")) c
    Schuift van rechts in. Sluiten met de kruisknop, Esc, een tik naast het paneel of de terugknop van Android.
    Zolang het open is, is de rest van de pagina niet te bedienen (inert) en blijft de focus in het menu. */
 let menuOpen = false;
+/* zonder spelersnaam: een poppetje in plaats van een avatar */
+const POPPETJE = `<svg class="avatar kop" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="50" fill="#edfbe2"/><circle cx="50" cy="40" r="15" fill="#4b7a5e"/><path d="M22 84c4-16 15-24 28-24s24 8 28 24" fill="#4b7a5e"/></svg>`;
 function renderMenu(){
-  const st = store.get(), dex = st.dex || {};
-  $("menuDex").textContent = `${TARGETS.filter(t => dex[t.id] && dex[t.id].w > 0).length}/${TARGETS.length}`;
-  const cur = VIEW === "game" ? (S && S.mode === "free" ? "free" : "daily") : VIEW;
+  const cur = VIEW;
   const nl = online.enabled && online.player() ? League.cached().length : 0;
   $("menuLeagueN").textContent = nl ? String(nl) : "";
   $("menu").querySelectorAll(".menulist button").forEach(b => b.dataset.go === cur ? b.setAttribute("aria-current", "page") : b.removeAttribute("aria-current"));
   const p = online.enabled ? online.player() : null, mp = $("menuPlayer");
   mp.hidden = !online.enabled;
+  /* de knop rechtsboven is je avatar; hij opent het menu met je profiel */
+  const sleutel = p ? JSON.stringify(Profiel.mijn()) : "";
+  ["menuBtn", "slimMenu"].forEach(id => {
+    if ($(id).dataset.av === sleutel && $(id).firstChild) return;
+    $(id).innerHTML = p ? avatarSVG(Profiel.mijn(), "avatar kop") : POPPETJE; $(id).dataset.av = sleutel;
+  });
   const w = p && (() => { try { return JSON.parse(localStorage.getItem("vestigia:wallet")); } catch(e){ return null; } })();
   mp.toggleAttribute("aria-current", VIEW === "profiel");
   mp.innerHTML = p
-    ? `${avatarSVG(Profiel.mijn(), "avatar menu")}<span><b>${esc(p.name)}</b><small>Mijn profiel${w ? ` · ${w.saldo} eikels` : ""}</small></span>`
+    ? `${avatarSVG(Profiel.mijn(), "avatar inmenu")}<span><b>${esc(p.name)}</b><small>Mijn profiel${w ? ` · ${w.saldo} eikels` : ""}</small></span>`
     : `<span class="av" aria-hidden="true">?</span><span><b>Kies een spelersnaam</b><small>en speel mee in de ranglijst</small></span>`;
 }
 const setInert = on => {
-  document.querySelectorAll("#masthead, #slimbar, .wrap").forEach(el => { el.inert = on; });
-  document.querySelectorAll("#masthead, .wrap").forEach(el => on ? el.setAttribute("aria-hidden", "true") : el.removeAttribute("aria-hidden"));
+  document.querySelectorAll("#masthead, #slimbar, .wrap, #tabbar").forEach(el => { el.inert = on; });
+  document.querySelectorAll("#masthead, .wrap, #tabbar").forEach(el => on ? el.setAttribute("aria-hidden", "true") : el.removeAttribute("aria-hidden"));
 };
 function openMenu(){
   if (menuOpen) return;
@@ -152,7 +176,7 @@ function openMenu(){
   setInert(true);
   $("menuBtn").setAttribute("aria-expanded", "true");
   try { history.pushState({ vestigiaMenu: true }, ""); } catch(e){}
-  ($("menu").querySelector('[aria-current="page"]') || $("menu").querySelector(".menulist button")).focus({ preventScroll: true });
+  ($("menu").querySelector('[aria-current="page"]') || (!$("menuPlayer").hidden && $("menuPlayer")) || $("menu").querySelector(".menulist li:not([hidden]) button")).focus({ preventScroll: true });
 }
 /* quiet = sluiten zonder focus terug te zetten (bij een schermwissel); fromHistory = de terugknop deed het al */
 function closeMenu(quiet, fromHistory){

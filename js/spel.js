@@ -2,7 +2,7 @@
 "use strict";
 /* ---------- toestand ---------- */
 let S = null;          // {mode, expert, target(id), k(casus), guesses[ids], revealed, status, caseNo(dagnummer + 1)}
-let freshClue = -1, freshRow = false;
+let freshClue = -1, freshRow = false, freshResult = false;
 
 const isTwin = id => BY_ID.get(S.target).twin === id;
 const usedTries = () => S.guesses.filter(id => !isTwin(id)).length;
@@ -59,19 +59,27 @@ function recordStats(){
   else s.streak = 0;
   s.last = i; st[key] = s; store.set(st);
 }
-/* Oefenen: een soort die niet net geweest is en niet binnenkort dagcasus wordt, met bij voorkeur een casus die je nog niet kent. */
-function randomFree(exclude){
-  const st = store.get(); const recent = st.recent || [];
+/* Oefenen: een soort die niet net geweest is en niet binnenkort dagcasus wordt, met bij voorkeur een casus die je nog niet kent.
+   f.g = alleen deze diergroep (GROUPS), f.nieuw = alleen soorten die nog niet in je Vestiarium staan.
+   Heb je in die keuze alles al, dan komt er toch een soort uit de groep, en meldt ‘alles’ dat. */
+function randomFree(exclude, f){
+  f = f || {};
+  const st = store.get(), recent = st.recent || [], dex = st.dex || {};
   const upcoming = new Set(Array.from({length:8}, (_, k) => daily(todayIndex() + k).id));
-  let pool = TARGETS.filter(t => t.id !== exclude && !recent.includes(t.id) && !upcoming.has(t.id));
-  if (!pool.length) pool = TARGETS.filter(t => t.id !== exclude && !upcoming.has(t.id));
-  if (!pool.length) pool = TARGETS.filter(t => t.id !== exclude);
+  const groep = TARGETS.filter(t => !f.g || t.g === f.g);
+  const open = groep.filter(t => !(dex[t.id] && dex[t.id].w > 0));
+  const vers = t => t.id !== exclude && !recent.includes(t.id) && !upcoming.has(t.id);
+  const nietBinnenkort = t => t.id !== exclude && !upcoming.has(t.id);
+  const stappen = (f.nieuw ? [[open, vers], [open, nietBinnenkort]] : [])
+    .concat([[groep, vers], [groep, nietBinnenkort], [groep, t => t.id !== exclude], [groep, () => true], [TARGETS, () => true]]);
+  let pool = [], stap = 0;
+  for (; stap < stappen.length; stap++){ pool = stappen[stap][0].filter(stappen[stap][1]); if (pool.length) break; }
   const t = pool[Math.floor(Math.random() * pool.length)];
-  st.recent = [t.id].concat(recent).slice(0, Math.min(20, TARGETS.length - 2)); store.set(st);
+  st.recent = [t.id].concat(recent.filter(x => x !== t.id)).slice(0, Math.min(20, TARGETS.length - 2)); store.set(st);
   const seen = new Set(((st.dex || {})[t.id] || {}).ks || []);
   const fresh = t.cs.map((c, k) => k).filter(k => !seen.has(k));
   const ks = fresh.length ? fresh : t.cs.map((c, k) => k);
-  return { id: t.id, k: ks[Math.floor(Math.random() * ks.length)] };
+  return { id: t.id, k: ks[Math.floor(Math.random() * ks.length)], alles: !!f.nieuw && stap >= 2 };
 }
 
 function points(){
@@ -88,11 +96,11 @@ function submitGuess(id){
   S.guesses.push(id);
   freshRow = true;
   if (id === S.target){ S.status = "won"; }
-  else if (isTwin(id)){ S.revealed = MAX; freshClue = MAX - 1; }
+  else if (isTwin(id)){ S.revealed = MAX; freshClue = MAX - 1; setTimeout(() => Spelen.tweelingEersteKeer(BY_ID.get(id)), 650); }
   else if (S.expert || usedTries() >= MAX){ S.status = "lost"; }
   else { S.revealed = Math.min(MAX, S.revealed + 1); freshClue = S.revealed - 1; }
   if (S.status !== "playing"){
-    recordStats(); recordDex(); recordLog();
+    recordStats(); recordDex(); recordLog(); freshResult = true;
     if (S.status === "won") try { navigator.vibrate && navigator.vibrate([30, 50, 70]); } catch(e){}
     online.afterGame();
   }
@@ -157,26 +165,25 @@ function appLink(params){
   for (const [k, v] of Object.entries(params || {})) if (v) u.searchParams.set(k, v);
   return u.href;
 }
+/* Het deelbericht is gewone tekst, zodat het in WhatsApp en Teams leest als een uitdaging in plaats van een rij blokjes. */
 function resultShare(extra){
-  const t = BY_ID.get(S.target), won = S.status === "won";
-  const head = `Vestigia ${S.mode === "daily" ? "#" + S.caseNo : "· oefencasus"}`;
-  const emo = { ok:"🟩", part:"🟨", no:"⬜" };
-  let body;
-  if (S.expert){
-    const clues = "🔎".repeat(S.revealed) + "▫️".repeat(MAX - S.revealed);
-    body = `${head} · expert\n${clues} – ${won ? `gedetermineerd na ${S.revealed} van ${MAX} waarnemingen` : "niet gedetermineerd"}`;
+  const won = S.status === "won", modus = S.expert ? "expert" : "klassiek";
+  const bij = S.expert ? S.revealed : usedTries();
+  let text;
+  if (S.mode === "daily"){
+    const telt = eersteModus(store.get(), S.caseNo - 1) === !!S.expert, p = points();
+    const tussen = telt && won ? `${modus}, ${p} ${p === 1 ? "punt" : "punten"}` : modus;
+    text = won ? `Ik had de Vestigia-dagcasus #${S.caseNo} bij waarneming ${bij} van ${MAX} (${tussen}) 🐾\nLukt het jou sneller?`
+               : `De Vestigia-dagcasus #${S.caseNo} kreeg ik niet gedetermineerd (${modus}) 🐾\nLukt het jou wel?`;
   } else {
-    const rows = S.guesses.map(n => {
-      const c = compare(BY_ID.get(n), t);
-      return COLS.map(k => k === "l" && c.l.cls !== "ok" ? (c.l.arrow === "↑" ? "⬆️" : "⬇️") : emo[c[k].cls]).join("") + (isTwin(n) ? " ≈ tweeling" : "");
-    });
-    body = `${head} · ${won ? usedTries() : "X"}/${MAX}\n${rows.join("\n")}\nleefgebied · activiteit · voedsel · verblijf · winter · lengte · regime`;
+    text = won ? `Ik determineerde een oefencasus in Vestigia bij waarneming ${bij} van ${MAX} (${modus}) 🐾\nLukt het jou ook?`
+               : `Deze oefencasus in Vestigia kreeg ik niet gedetermineerd (${modus}) 🐾\nLukt het jou wel?`;
   }
-  return { text: body, url: appLink(extra && extra.params) };
+  return { text, url: appLink(extra && extra.params), kaal: true };
 }
 /* Deelt via het deelmenu van de telefoon, anders kopiëren. msgEl krijgt de melding, boxParent een tekstvak als kopiëren niet lukt. */
-function shareOut({ text, url }, msgEl, boxParent){
-  const full = `${text}\nSpeel mee: ${url}`;
+function shareOut({ text, url, kaal }, msgEl, boxParent){
+  const full = kaal ? `${text}\n${url}` : `${text}\nSpeel mee: ${url}`;
   if (navigator.share && matchMedia("(pointer: coarse)").matches){
     navigator.share({ text, url }).catch(() => {});
     return;
@@ -204,7 +211,8 @@ function renderResult(){
     const s = store.get()[S.expert ? "statsX" : "stats"];
     if (s) stats = `<div class="stats"><div><b>${s.played}</b>gespeeld</div><div><b>${s.played ? Math.round(100*s.won/s.played) : 0}%</b>gedetermineerd</div><div><b>${s.streak}</b>huidige reeks</div><div><b>${s.best}</b>langste reeks</div></div>`;
   }
-  card.className = "account" + (won ? "" : " lost");
+  card.className = "account" + (won ? "" : " lost") + (freshResult && !matchMedia("(prefers-reduced-motion: reduce)").matches ? " resultin" : "");
+  freshResult = false;
   card.innerHTML = `
     <span class="verdict caps">${won ? "Goed gedetermineerd" : "Niet gedetermineerd · het was"}</span>
     <h3>${esc(t.n)}<i>${esc(t.s)}</i></h3>
@@ -212,12 +220,13 @@ function renderResult(){
     <p>${score}${S.mode === "daily" ? ` <span class="ptsline">${eersteModus(store.get(), S.caseNo - 1) === !!S.expert
       ? `${points() ? "+" + points() + " punt" + (points() > 1 ? "en" : "") : "0 punten"} voor de ranglijst`
       : `telt niet voor de ranglijst: je speelde deze casus vandaag al in ${S.expert ? "klassiek" : "expert"}`}</span>` : ""}</p>
-    <div class="status-line"><span class="caps">Status</span><p><b>${esc(LABELS.r[t.r])}.</b> ${esc(REGIME_INFO[t.r])}</p></div>
+    <details class="status-line"><summary><span class="caps">Status</span> <b>${esc(LABELS.r[t.r])}</b><span class="meer">uitleg</span></summary><p>${esc(REGIME_INFO[t.r])}</p></details>
     <dl class="traits">${traits}</dl>
     <div class="confuse"><span class="caps">Verwar niet met</span><p><b>${esc(xs.n)}.</b> ${S.guesses.includes(t.x) ? "Die soort heb je in deze casus ook geprobeerd. " : ""}${esc(t.t)}</p></div>
     ${(S.newAwards || []).map(k => { const [kind, name] = awardLabel(k); return `<div class="awardnote"><span class="caps">Nieuwe ${kind.toLowerCase()}</span><b>${esc(name)}</b></div>`; }).join("")}
     <p class="dexnote">${won ? `Plaat <b>nº ${dexNo(t.id)}</b> staat nu in je ${NAAM.vestiarium}.` : `Genoteerd als waargenomen in je ${NAAM.vestiarium} (nº ${dexNo(t.id)}).`} <button class="linklike" id="toDex">Open het ${NAAM.vestiarium}</button></p>
     ${stats}
+    ${S.mode === "free" ? `<p class="oefenkeuze">Je oefent met ${esc(Spelen.omschrijving({ g: S.groep, nieuw: S.nieuw }))}. <button class="linklike" id="oefenWijzig">Wijzig</button></p>` : ""}
     <div class="actions">
       <button class="btn" id="copyBtn">Deel resultaat</button>
       <button class="btn line" id="nextBtn">${S.mode === "daily" ? "Speel een oefencasus" : "Nieuwe casus"}</button>
@@ -228,6 +237,7 @@ function renderResult(){
   card.hidden = false;
   $("copyBtn").onclick = () => shareOut(resultShare(), $("copyMsg"), card);
   $("nextBtn").onclick = () => startFree();
+  if ($("oefenWijzig")) $("oefenWijzig").onclick = () => Spelen.open("oefenen");
   $("toDex").onclick = () => showDex();
   $("repFromResult").onclick = e => openReport(t.id, e.currentTarget, S.k);
   if ($("inviteFromResult")) $("inviteFromResult").onclick = () => League.openUitnodigen();
@@ -244,7 +254,7 @@ function renderPips(){
   $("pips").innerHTML = h;
   if (S.status === "playing"){
     const left = n - real.length, twinNow = S.guesses.length && isTwin(S.guesses[S.guesses.length - 1]);
-    if (twinNow) setMsg("Tweelingsoort! Je zit er heel dicht bij. Deze poging telt niet mee, en alle waarnemingen zijn nu open.", false);
+    if (twinNow){ setMsg("Tweelingsoort! Telt niet mee; alle waarnemingen zijn open.", false); $("msg").insertAdjacentHTML("beforeend", ` <button class="linklike" id="tweelingWat">Wat is een tweelingsoort?</button>`); $("tweelingWat").onclick = () => Spelen.tweeling(); }
     else setMsg(S.expert ? "Je hebt één determinatie. Open eerst zoveel waarnemingen als je nodig denkt te hebben." : `Nog ${left} ${left === 1 ? "poging" : "pogingen"}.`, false);
     const st = store.get(), eerste = S.mode === "daily" ? eersteModus(st, S.caseNo - 1) : null;
     if (eerste !== null && eerste !== !!S.expert) setMsg(`Deze casus speelde je vandaag al in ${eerste ? "expert" : "klassiek"}. Je score telt nu niet voor de ranglijst.`, false);
@@ -326,11 +336,14 @@ const pref = {
   set expert(v){ try { localStorage.setItem("vestigia:expert", v ? "1" : "0"); } catch(e){} }
 };
 function showGame(){ setView("game"); render(); }
-function startDaily(){ S = loadDaily(pref.expert); showGame(); }
-function startFree(){
-  const f = randomFree(S && S.target);
+function startDaily(){ const wissel = S && S.mode !== "daily"; S = loadDaily(pref.expert); showGame(); if (wissel) inBeeld($("gameView")); }
+function startFree(keuze){
+  keuze = keuze || Spelen.keuze();
+  const f = randomFree(S && S.target, keuze);
   S = newGame("free", pref.expert, f.id, f.k, 0);
-  showGame(); window.scrollTo({ top:0, behavior:"auto" });
+  S.groep = keuze.g || null; S.nieuw = !!keuze.nieuw;
+  showGame(); inBeeld($("gameView")); window.scrollTo({ top:0, behavior:"auto" });
+  if (f.alles) toast(`Je hebt alle ${keuze.g ? GROUPS[keuze.g].toLowerCase() : "soorten"} al in je ${NAAM.vestiarium}. Deze ken je dus al.`);
 }
 function goDaily(){ if (S.mode === "daily") showGame(); else startDaily(); }
 function goFree(){ if (S.mode !== "free" || S.status !== "playing") startFree(); else showGame(); }
@@ -340,7 +353,7 @@ function setMode(expert){
   if (expert === S.expert) return;
   if (S.mode === "daily") startDaily();
   else if (S.guesses.length === 0 && S.status === "playing"){ S.expert = expert; S.revealed = 1; render(); }
-  else startFree();
+  else startFree({ g: S.groep, nieuw: S.nieuw });
 }
 $("modeClassic").addEventListener("click", () => setMode(false));
 $("modeExpert").addEventListener("click", () => setMode(true));

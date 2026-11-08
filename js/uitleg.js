@@ -10,14 +10,15 @@ const Uitleg = (() => {
     { doel: () => document.querySelector("#clues li"), kop: "Waarnemingen",
       tekst: "Je begint met één waarneming: de locatie en het seizoen. Bij elke foute determinatie komt er een waarneming bij." },
     { doel: () => $("gInput").closest(".det-row"), kop: "Determinatie",
-      tekst: "Typ een Nederlandse of wetenschappelijke naam en kies de soort uit de lijst." },
+      tekst: "Typ een Nederlandse of wetenschappelijke naam en kies de soort uit de lijst. Je hebt vijf pogingen." },
     { doel: () => $("gridH").closest("section"), kop: "Vergelijkingstabel",
-      tekst: "Groen is gelijk, geel is overlap, grijs is anders. De pijl bij lengte wijst naar de gezochte soort." },
-    { doel: () => $("pips").closest(".det-status"), kop: "Pogingen",
-      tekst: "Je hebt vijf pogingen. Gok je de tweelingsoort van het antwoord, dan telt die poging niet mee." },
-    { doel: () => document.querySelector(".modebar"), kop: "Modus en menu",
-      tekst: "Hier wissel je tussen klassiek en expert. In het menu (☰) vind je oefenen, het Vestiarium en de ranglijst." }
+      tekst: "Na elke poging zie je hier hoe jouw soort zich verhoudt tot de gezochte soort. Groen: hetzelfde. Geel: deels hetzelfde. Grijs: anders. Bij lengte zegt de pijl of de gezochte soort groter (↑) of kleiner (↓) is." },
+    { doel: () => document.querySelector(".modebar"), kop: "Klassiek of expert",
+      tekst: "Klassiek: vijf pogingen, en na elke foute determinatie een waarneming erbij. Expert: je opent zelf waarnemingen en hebt één poging. Voor de ranglijst telt de modus die je die dag als eerste speelt." },
+    { doel: () => $("tabbar"), kop: "Onderin",
+      tekst: `Via Spelen kies je de dagcasus of een oefencasus. Daarnaast staan de ranglijst en je ${NAAM.vestiarium}. Je profiel en het menu zitten onder je avatar rechtsboven.` }
   ];
+  const NAV = "vestigia:nav-b";
   const gezien = () => { try { return !!localStorage.getItem(KEY); } catch(e){ return true; } };
   const markeer = () => { try { localStorage.setItem(KEY, "1"); } catch(e){} };
   /* nieuw = nog geen enkel spel, plaat of spelersnaam */
@@ -95,10 +96,14 @@ const Uitleg = (() => {
   }
   /* Na de openingsanimatie: nieuwe spelers krijgen de uitleg, anderen eenmalig een melding. */
   function automatisch(){
-    if (gezien()) return Promise.resolve();
+    const navGezien = (() => { try { const g = !!localStorage.getItem(NAV); localStorage.setItem(NAV, "1"); return g; } catch(e){ return true; } })();
+    if (gezien()){
+      if (!navGezien) toast(`Nieuw: onderin staan nu Ranglijst, Spelen en je ${NAAM.vestiarium}. Het menu zit onder je avatar rechtsboven.`);
+      return Promise.resolve();
+    }
     if (nieuweSpeler()) return start();
     markeer();
-    toast("Nieuw: een korte uitleg van het spel staat in het menu (☰).");
+    toast("Nieuw: een korte uitleg van het spel staat in het menu (tik op je avatar rechtsboven).");
     return Promise.resolve();
   }
   return { start, automatisch, STAPPEN };
