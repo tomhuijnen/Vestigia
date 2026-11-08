@@ -237,7 +237,7 @@ function renderResult(){
   card.hidden = false;
   $("copyBtn").onclick = () => shareOut(resultShare(), $("copyMsg"), card);
   $("nextBtn").onclick = () => startFree();
-  if ($("oefenWijzig")) $("oefenWijzig").onclick = () => Spelen.open("oefenen");
+  if ($("oefenWijzig")) $("oefenWijzig").onclick = () => Spelen.wijzig();
   $("toDex").onclick = () => showDex();
   $("repFromResult").onclick = e => openReport(t.id, e.currentTarget, S.k);
   if ($("inviteFromResult")) $("inviteFromResult").onclick = () => League.openUitnodigen();
@@ -337,8 +337,9 @@ const pref = {
 };
 function showGame(){ setView("game"); render(); }
 function startDaily(){ const wissel = S && S.mode !== "daily"; S = loadDaily(pref.expert); showGame(); if (wissel) inBeeld($("gameView")); }
+/* keuze = { g, nieuw }; zonder keuze: bij oefenen dezelfde keuze als nu, anders alle soorten */
 function startFree(keuze){
-  keuze = keuze || Spelen.keuze();
+  keuze = keuze || (S && S.mode === "free" ? { g: S.groep || null, nieuw: !!S.nieuw } : { g: null, nieuw: false });
   const f = randomFree(S && S.target, keuze);
   S = newGame("free", pref.expert, f.id, f.k, 0);
   S.groep = keuze.g || null; S.nieuw = !!keuze.nieuw;

@@ -556,32 +556,53 @@ body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
 .masthead, .slimbar{transition:background .35s ease}
 .oefenen .masthead{background:linear-gradient(160deg, #9a6a2c 0%, #6e4a1d 100%)}
 .oefenen .slimbar{background:#6e4a1d}
-.oefenpil{display:inline-block; vertical-align:1px; background:#f6e3c1; color:#6e4a1d; border-radius:999px; padding:1px 9px; font-weight:700; letter-spacing:.08em; margin-left:8px}
 .oefenen .series{color:#f6e3c1}
 .oefenen .tile .tl, .oefenen .tile .ts, .oefenen .tile .tv small{color:#f6e3c1}
 .oefenen .tile .tb{background:rgba(246,227,193,.25)}
 .oefenkeuze{font-size:.93rem; color:var(--ink-2)}
 
-/* venster Spelen */
-.spelensheet{gap:14px}
-.speelkaart{display:grid; gap:4px; text-align:left; border:1.5px solid var(--rule); border-radius:16px; padding:14px 16px; background:#fff; font:inherit; color:var(--ink)}
-button.speelkaart{cursor:pointer}
-button.speelkaart:hover{border-color:var(--green); background:var(--leaf)}
-.speelkaart b{font-family:var(--display); font-size:1.25rem; font-weight:600}
-.speelkaart small{color:var(--ink-2); font-size:.85rem}
-.speelkaart.dag{border-color:var(--green); background:linear-gradient(160deg, var(--green) 0%, var(--green-d) 100%); color:#fff}
-.speelkaart.dag .caps, .speelkaart.dag small{color:var(--mint)}
-.speelkaart.dag:hover{background:var(--green-d)}
-.speelkaart.oef{border-color:#d9b98a; background:#fbf4e8; gap:10px}
-.speelkaart.oef > .caps{color:#8a5e26}
+/* speelkring: bolletjes in een halve cirkel boven de Spelen-knop */
+.kring{position:fixed; inset:0; z-index:17}
+.kringvlak{position:absolute; inset:0; background:rgba(244,247,242,.72); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); opacity:0; transition:opacity .22s ease}
+.kring.open .kringvlak{opacity:1}
+.bel{all:unset; box-sizing:border-box; position:fixed; width:84px; margin-left:-42px; margin-top:-32px; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; text-align:center;
+  transform:translate(0, 0) scale(.3); opacity:0; transition:transform .32s cubic-bezier(.3,1.35,.5,1) var(--d), opacity .18s ease var(--d); -webkit-tap-highlight-color:transparent}
+.kring.open .bel{transform:translate(var(--x), var(--y)) scale(1); opacity:1}
+.bel .bol{position:relative; width:64px; height:64px; border-radius:50%; display:grid; place-items:center; background:#fff; color:var(--green); box-shadow:0 6px 18px rgba(28,51,38,.22); border:2px solid #fff; transition:transform .15s}
+.bel:active .bol{transform:scale(.94)}
+.bel:focus-visible .bol{outline:3px solid var(--green); outline-offset:2px}
+.bel.dag .bol{background:linear-gradient(160deg, var(--green) 0%, var(--green-d) 100%); color:#fff}
+.bel.oefen .bol{background:#8a5e26; color:#fff}
+.bel.later{cursor:default}
+.bel.later .bol{width:54px; height:54px; margin-top:5px; background:#eef0ec; color:#a2aba5; box-shadow:0 3px 10px rgba(28,51,38,.10); border-style:dashed; border-color:#cfd5d0}
+.bel .bl{font:700 .78rem var(--body); color:var(--ink); line-height:1.1}
+.bel.later .bl{color:#8b948e}
+.bel .bs{font-size:.68rem; color:var(--ink-2); letter-spacing:.04em}
+.bel.later .bs{font-style:italic}
+.belvink{position:absolute; right:-3px; top:-3px; width:22px; height:22px; border-radius:50%; background:var(--mint); color:#2c4a37; font:700 .75rem/22px var(--body); border:2px solid #fff}
+.tabbar .mid .kruis{display:none}
+.tabbar .mid.open .kruis{display:block}
+.tabbar .mid.open .poot{display:none}
+.tabbar .mid.open .ic{background:var(--ink)}
+@media (prefers-reduced-motion:reduce){ .bel, .kringvlak{transition:none} }
+
+/* oefenkader in het oefenscherm */
+.oefenkader{border:1.5px solid #d9b98a; background:#fbf4e8; border-radius:14px; padding:0 14px; margin:0 0 14px}
+.oefenkader summary{list-style:none; cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:10px; padding:11px 0; flex-wrap:wrap}
+.oefenkader summary::-webkit-details-marker{display:none}
+.oefenkader summary .caps{color:#8a5e26}
+.okeuze{font-weight:700; font-size:.9rem; color:#6e4a1d; display:inline-flex; align-items:center; gap:6px}
+.okeuze::after{content:""; width:7px; height:7px; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg) translateY(-2px); transition:transform .2s}
+.oefenkader[open] .okeuze::after{transform:rotate(-135deg) translateY(-1px)}
+.oefenkader[open]{padding-bottom:12px}
+.oefenkader .fine{margin:8px 0 0; font-size:.8rem}
+.oefenkader .spnieuw{margin-top:10px}
 .spgroepen{display:flex; flex-wrap:wrap; gap:6px}
 .spgroepen .chipbtn{background:#fff; font-size:.78rem; padding:5px 12px}
 .spgroepen .chipbtn[aria-pressed="true"]{background:#8a5e26; border-color:#8a5e26; color:#fff}
 .spgroepen .chipbtn small{color:inherit; font-size:inherit; opacity:.85; margin-left:3px; font-weight:500}
 .spnieuw{display:flex; gap:10px; align-items:flex-start; font-size:.95rem; cursor:pointer; line-height:1.35}
 .spnieuw input{width:20px; height:20px; margin:0; flex:0 0 20px; accent-color:#8a5e26}
-.speelkaart.oef .btn{background:#8a5e26}
-.speelkaart.oef .btn:hover{background:#6e4a1d}
 
 /* schermwissel: het nieuwe scherm schuift zacht in beeld */
 .viewin{animation:viewIn .28s cubic-bezier(.2,.7,.3,1)}
@@ -589,3 +610,10 @@ button.speelkaart:hover{border-color:var(--green); background:var(--leaf)}
 .overlay.bottom:not([hidden]) .sheet{animation:sheetIn .26s cubic-bezier(.2,.7,.3,1)}
 @keyframes sheetIn{from{transform:translateY(24px); opacity:.4} to{transform:none; opacity:1}}
 @media (prefers-reduced-motion:reduce){ .viewin, .overlay.bottom:not([hidden]) .sheet{animation:none} .masthead, .slimbar{transition:none} }
+/* profiel: knop naar de shop; prestaties met eikels */
+.pfopt.pfshop{border-style:dashed; color:var(--green)}
+.pfplus{width:64px; height:64px; border-radius:50%; display:grid; place-items:center; background:var(--leaf); font:600 2rem var(--display); color:var(--green)}
+.pftitels .pfplus{display:none}
+.preik{display:inline-flex; align-items:center; gap:3px; font-weight:700; color:#7d5330; white-space:nowrap}
+.preik .eikel{width:13px; height:13px}
+.dexcount .eikel{width:24px; height:24px; vertical-align:-1px; margin-right:2px}
