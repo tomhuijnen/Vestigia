@@ -223,3 +223,77 @@ function cmpReg(g, t){
 function compare(g, t){
   return { h:cmpSet(g,t,"h"), a:cmpSet(g,t,"a"), v:cmpSet(g,t,"v"), b:cmpSet(g,t,"b"), w:cmpSet(g,t,"w"), l:cmpLen(g,t), r:cmpReg(g,t) };
 }
+
+/* ---------- tips: na elke foute gok één ding over de gezochte soort ----------
+   Eerst een overeenkomst die nog niet genoemd is (gelijk, dan overlap), daarna een verschil (eerst de lengte).
+   Hetzelfde feit over de gezochte soort komt nooit twee keer. Alles volgt alleen uit de soort en de volgorde
+   van de gokken, dus wie dezelfde gokken doet, krijgt dezelfde tips. */
+const TIP = {
+  h: { BOS:"in bos", HALF:"in halfopen landschap", OPEN:"in open agrarisch gebied", HEI:"op heide en hoogveen", DUIN:"in duinen en op kaal zand",
+       MOER:"in moeras en riet", STIL:"in en bij stilstaand water", STROOM:"in en bij stromend water", ZEE:"aan zee en de kust", BEB:"in bebouwd gebied" },
+  a: { DAG:"overdag", SCHEMER:"in de schemering", NACHT:"'s nachts" },
+  v: { PLANT:"plantaardig voedsel", ONG:"ongewervelden", VIS:"vis", GEW:"gewervelde dieren" },
+  b: { HOL:"in een hol of burcht", BOOM:"in bomen of boomholtes", GEB:"in gebouwen of bouwwerken", VEG:"in de vegetatie",
+       GROND:"op of in de bodem en het strooisel", WATER:"in het water", STEEN:"in muren of rotsen" },
+  w: { ACT:"zijn in de winter actief", SLAAP:"houden een winterslaap of winterrust", TREK:"trekken in de winter weg" }
+};
+const TIP_W_EEN = { ACT:"is in de winter actief", SLAAP:"houdt een winterslaap of winterrust", TREK:"trekt in de winter weg" };
+const TIP_W_SOMS = { ACT:"De gezochte soort is in de winter soms actief.", SLAAP:"De gezochte soort houdt soms een winterslaap of winterrust.", TREK:"Een deel van de gezochte soort trekt in de winter weg." };
+const TIP_W_NIET = { ACT:"is in de winter niet actief", SLAAP:"houdt geen winterslaap of winterrust", TREK:"trekt in de winter niet weg" };
+const deSoort = g => "de " + g.n.toLowerCase();
+/* gelijk: beide hebben dezelfde hoofdwaarde */
+function tipGelijk(k, g, t){
+  const v = t[k][0];
+  if (k === "h") return { f: `h=${v}`, k, txt: `Beide leven vooral ${TIP.h[v]}.` };
+  if (k === "a") return { f: `a=${v}`, k, txt: `Beide zijn vooral ${TIP.a[v]} actief.` };
+  if (k === "v") return { f: `v=${v}`, k, txt: `Beide eten vooral ${TIP.v[v]}.` };
+  if (k === "b") return { f: `b=${v}`, k, txt: `Beide verblijven vooral ${TIP.b[v]}.` };
+  if (k === "w") return { f: `w=${v}`, k, txt: `Beide ${TIP.w[v]}.` };
+  if (k === "l") return { f: "l=", k, txt: `De gezochte soort is ongeveer even groot als ${deSoort(g)}.` };
+  if (k === "r") return { f: `r=${t.r}`, k, txt: `Beide hebben dezelfde beschermingsstatus: ${LABELS.r[t.r]}.` };
+}
+/* overlap: de hoofdwaarde van de ene soort komt ook voor bij de andere */
+function tipOverlap(k, g, t){
+  if (k === "r") return { f: "r~VR", k, txt: "Beide vallen onder de Vogelrichtlijn, maar niet in dezelfde categorie." };
+  const gv = g[k][0], tv = t[k][0];
+  if (t[k].includes(gv)){
+    const x = { h: `De gezochte soort komt ook ${TIP.h[gv]} voor.`, a: `De gezochte soort is soms ook ${TIP.a[gv]} actief.`,
+                v: `De gezochte soort eet ook ${TIP.v[gv]}.`, b: `De gezochte soort verblijft soms ook ${TIP.b[gv]}.`, w: TIP_W_SOMS[gv] }[k];
+    return { f: `${k}+${gv}`, k, txt: x };
+  }
+  const x = { h: `De gezochte soort leeft vooral ${TIP.h[tv]}; daar komt ${deSoort(g)} ook voor.`, a: `De gezochte soort is vooral ${TIP.a[tv]} actief; ${deSoort(g)} soms ook.`,
+              v: `De gezochte soort eet vooral ${TIP.v[tv]}; ${deSoort(g)} ook, maar minder.`, b: `De gezochte soort verblijft vooral ${TIP.b[tv]}; ${deSoort(g)} soms ook.`,
+              w: `De gezochte soort ${TIP_W_EEN[tv]}; ${deSoort(g)} soms ook.` }[k];
+  return { f: `${k}=${tv}`, k, txt: x };
+}
+/* verschil: wat de gezochte soort niet is */
+function tipVerschil(k, g, t){
+  if (k === "l") return { f: `l${t.l > g.l ? ">" : "<"}${g.l}`, k, txt: `De gezochte soort is ${t.l > g.l ? "groter" : "kleiner"} dan ${deSoort(g)}.` };
+  if (k === "r") return { f: `r!${g.r}`, k, txt: `De gezochte soort heeft een andere beschermingsstatus dan ${deSoort(g)}.` };
+  const gv = g[k][0];
+  const x = { h: `De gezochte soort leeft niet vooral ${TIP.h[gv]}.`, a: `De gezochte soort is niet vooral ${TIP.a[gv]} actief.`,
+              v: `De gezochte soort eet niet vooral ${TIP.v[gv]}.`, b: `De gezochte soort verblijft niet vooral ${TIP.b[gv]}.`, w: `De gezochte soort ${TIP_W_NIET[gv]}.` }[k];
+  return { f: `${k}!${gv}`, k, txt: x };
+}
+/* één regel per gok: { id, soort: "goed" | "tweeling" | "tip", tip } */
+function tipsVoor(targetId, guesses){
+  const t = BY_ID.get(targetId), bekend = new Set(), uit = [];
+  let fout = 0;
+  for (const id of guesses){
+    const g = BY_ID.get(id);
+    if (id === targetId){ uit.push({ id, soort: "goed" }); continue; }
+    if (t.twin === id){ uit.push({ id, soort: "tweeling" }); continue; }
+    const c = compare(g, t);
+    const volg = COLS.map((k, i) => COLS[(i + fout * 3) % COLS.length]);          // per gok een andere volgorde
+    const kand = [].concat(
+      volg.filter(k => c[k].cls === "ok").map(k => tipGelijk(k, g, t)),
+      volg.filter(k => c[k].cls === "part").map(k => tipOverlap(k, g, t)),
+      c.l.cls === "no" ? [tipVerschil("l", g, t)] : [],
+      volg.filter(k => k !== "l" && c[k].cls === "no").map(k => tipVerschil(k, g, t)));
+    const tip = kand.find(x => !bekend.has(x.f)) || { f: null, k: null, txt: `Geen nieuwe overeenkomst met ${deSoort(g)}.` };
+    if (tip.f) bekend.add(tip.f);
+    uit.push({ id, soort: "tip", tip });
+    fout++;
+  }
+  return uit;
+}

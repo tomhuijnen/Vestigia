@@ -627,3 +627,24 @@ body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
 .oefenen #gameView{--green:#8a5e26; --green-d:#6e4a1d; --mint:#f6e3c1; --leaf:#fbf4e8; --ochre:#8a5e26; --rule:#eadcc6}
 .oefenen #gameView .seg button[aria-pressed="false"]:hover{background:#f3e6d0}
 #gameView .seg, #gameView .btn{transition:background-color .35s ease, border-color .35s ease, color .2s ease}
+
+/* tips: één regel per gok */
+.tiplist{list-style:none; margin:10px 0 0; padding:0; display:grid; gap:8px}
+.tip{display:grid; grid-template-columns:30px 1fr; gap:10px; align-items:start; padding:10px 12px; border:1px solid var(--rule); border-radius:12px; background:#fff}
+.tip .tk{width:26px; height:26px; border-radius:50%; display:grid; place-items:center; font-weight:700; font-size:.85rem; background:var(--none); color:var(--ink-2); margin-top:1px}
+.tip b{font-family:var(--display); font-weight:600}
+.tip i{color:var(--ink-2); font-size:.9rem}
+.tip p{margin:2px 0 0; color:var(--ink)}
+.tip.goed{border-color:var(--moss); background:var(--mint)}
+.tip.goed .tk{background:var(--moss); color:#fff}
+.tip.tweeling{border-color:var(--ochre-soft); background:#fdf6e3}
+.tip.tweeling .tk{background:var(--ochre-soft); color:#4a3a10}
+.tip.enter{animation:kaartIn .4s cubic-bezier(.2,.7,.3,1) both}
+.tip.enter p{animation:stamp .45s ease-out both; animation-delay:.25s}
+@media (prefers-reduced-motion:reduce){ .tip.enter, .tip.enter p{animation:none} }
+.volledig{margin-top:14px; border-top:1px solid var(--rule); padding-top:10px}
+.volledig summary{cursor:pointer; font-weight:700; color:var(--green); list-style:none; display:inline-flex; align-items:center; gap:8px; padding:4px 0}
+.volledig summary::-webkit-details-marker{display:none}
+.volledig summary::after{content:""; width:7px; height:7px; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg) translateY(-2px); transition:transform .2s}
+.volledig[open] summary::after{transform:rotate(-135deg) translateY(-1px)}
+.volledig .fine{margin:6px 0 4px}
