@@ -7,16 +7,16 @@
 const Uitleg = (() => {
   const KEY = "vestigia:tutorial";
   const STAPPEN = [
-    { doel: () => document.querySelector("#clues li"), kop: "Waarnemingen",
-      tekst: "Je begint met één waarneming: de locatie en het seizoen. Bij elke foute determinatie komt er een waarneming bij." },
-    { doel: () => $("gInput").closest(".det-row"), kop: "Determinatie",
-      tekst: "Typ een Nederlandse of wetenschappelijke naam en kies de soort uit de lijst. Je hebt vijf pogingen." },
-    { doel: () => $("gridH").closest("section"), kop: "Tips",
-      tekst: "Na elke foute determinatie krijg je hier één tip: iets wat jouw soort en de gezochte soort gemeen hebben, of waarin ze verschillen. Na afloop kun je de volledige vergelijking bekijken." },
+    { doel: () => document.querySelector("#clues li"), kop: "Welk dier is dit?",
+      tekst: "Elke dag is er een nieuwe casus: een waarneming van een beschermde diersoort in Nederland. Jij raadt welke soort het is. Je begint met één waarneming: de locatie en het seizoen." },
+    { doel: () => $("gInput").closest(".det-row"), kop: "Determineer de soort",
+      tekst: "Denk je het te weten? Typ de Nederlandse of wetenschappelijke naam en kies de soort uit de lijst. Je hebt vijf pogingen. Na elke foute gok krijg je een extra waarneming en een tip." },
     { doel: () => document.querySelector(".modebar"), kop: "Klassiek of expert",
       tekst: "Klassiek: vijf pogingen, en na elke foute determinatie een waarneming erbij. Expert: je opent zelf waarnemingen en hebt één poging. Voor de ranglijst telt de modus die je die dag als eerste speelt." },
     { doel: () => $("tabbar"), kop: "Onderin",
-      tekst: `Via Spelen kies je de dagcasus of een oefencasus. Daarnaast staan de ranglijst en je ${NAAM.vestiarium}. Je profiel en het menu zitten onder je avatar rechtsboven.` }
+      tekst: `Via Spelen kies je de dagcasus of een oefencasus. Daarnaast staan de ranglijst en je ${NAAM.vestiarium}, waarin elke soort die je vindt een plaat krijgt.` },
+    { doel: () => $("menuBtn"), kop: "Jouw avatar en de shop",
+      tekst: "Onder je avatar rechtsboven zitten je profiel en het menu. Met een spelersnaam kies je daar een avatar. Door te spelen verdien je eikels, waarmee je in de shop nieuwe avatars, lijsten, kleuren en ondertitels koopt." }
   ];
   const NAV = "vestigia:nav-b";
   const gezien = () => { try { return !!localStorage.getItem(KEY); } catch(e){ return true; } };
