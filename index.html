@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Karla:ital,wght@0,400;0,500;0,700;1,400&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/vestigia.css?v=202611081952">
+<link rel="stylesheet" href="css/vestigia.css?v=202611082008">
 </head>
 <body>
 <!-- openingsanimatie: staat meteen in beeld (geen witte flits), en is in dezelfde sessie al gezien → niet tonen -->
@@ -92,18 +92,23 @@
       </section>
 
       <section aria-labelledby="gridH">
-        <div class="sechead"><h2 id="gridH">Vergelijkingstabel</h2><span class="caps">jouw soort tegenover de gezochte</span></div>
-        <div class="tablewrap">
-          <table id="grid">
-            <thead><tr>
-              <th scope="col">Soort</th><th scope="col">Leefgebied</th><th scope="col">Activiteit</th><th scope="col">Voedsel</th>
-              <th scope="col">Verblijfplaats</th><th scope="col">Winter</th><th scope="col">Lengte</th><th scope="col">Regime</th>
-            </tr></thead>
-            <tbody id="gridBody"></tbody>
-          </table>
-        </div>
-        <div id="gridCards" class="gridcards"></div>
-        <p class="empty" id="gridEmpty">Nog geen determinatie. Na elke poging vergelijk je hier jouw soort met de gezochte soort op zeven kenmerken: <span class="key ok"></span><em>gelijk</em>, <span class="key part"></span><em>overlap</em>, <span class="key no"></span><em>anders</em>. Bij lengte wijst de pijl naar de gezochte soort.</p>
+        <div class="sechead"><h2 id="gridH">Jouw determinaties</h2><span class="caps">één tip per foute gok</span></div>
+        <ol class="tiplist" id="tipList"></ol>
+        <p class="empty" id="gridEmpty">Nog geen determinatie. Na elke foute determinatie krijg je hier één tip: iets wat jouw soort en de gezochte soort gemeen hebben, of waarin ze verschillen.</p>
+        <details class="volledig" id="gridDetails" hidden>
+          <summary>Bekijk de volledige vergelijking</summary>
+          <p class="fine">Per kenmerk: <span class="key ok"></span><em>gelijk</em>, <span class="key part"></span><em>overlap</em>, <span class="key no"></span><em>anders</em>. Bij lengte wijst de pijl naar de gezochte soort.</p>
+          <div class="tablewrap">
+            <table id="grid">
+              <thead><tr>
+                <th scope="col">Soort</th><th scope="col">Leefgebied</th><th scope="col">Activiteit</th><th scope="col">Voedsel</th>
+                <th scope="col">Verblijfplaats</th><th scope="col">Winter</th><th scope="col">Lengte</th><th scope="col">Regime</th>
+              </tr></thead>
+              <tbody id="gridBody"></tbody>
+            </table>
+          </div>
+          <div id="gridCards" class="gridcards"></div>
+        </details>
       </section>
 
       <details class="register">
@@ -261,8 +266,10 @@
   <div class="sheet">
     <div class="top"><h2 id="helpH">Spelregels</h2><button class="closebtn" id="closeHelp">Sluiten</button></div>
     <p>Elke casus is een waarneming in het veld. Je begint met de locatie en het seizoen. Bij elke foute determinatie komt er een waarneming bij. De waarnemingen zijn kaal: je krijgt alleen wat je ziet of hoort, de interpretatie is aan jou. Je hebt vijf pogingen, en het kan best dat je de soort niet vindt.</p>
-    <h3>Vergelijkingstabel</h3>
-    <p>Na elke poging zie je per kenmerk hoe jouw soort zich verhoudt tot de gezochte soort. Elke soort heeft per kenmerk een hoofdwaarde (vet) en soms nevenwaarden.</p>
+    <h3>Tips</h3>
+    <p>Na elke foute determinatie krijg je één tip over de gezochte soort: eerst iets wat jouw soort en de gezochte soort gemeen hebben, en als dat er niet meer is, iets waarin ze verschillen. Een tip komt nooit twee keer. Wie dezelfde gokken doet, krijgt dezelfde tips.</p>
+    <h3>Volledige vergelijking</h3>
+    <p>Na afloop kun je per gok de hele vergelijking openklappen. Elke soort heeft per kenmerk een hoofdwaarde (vet) en soms nevenwaarden.</p>
     <ul>
       <li><span class="key ok"></span> <b>Gelijk:</b> dezelfde hoofdwaarde.</li>
       <li><span class="key part"></span> <b>Overlap:</b> de hoofdwaarde van de ene soort komt voor bij de andere.</li>
@@ -272,7 +279,7 @@
       <li><b>Tweelingsoorten</b>, zoals de gewone en grijze grootoorvleermuis: gok je de tweelingsoort van het antwoord, dan telt die poging niet mee en gaan alle waarnemingen open.</li>
     </ul>
     <h3>Wie kan het antwoord zijn?</h3>
-    <p>Alleen beschermde soorten met een uitgewerkte casus (met * in het register). Vind je dat er iets niet klopt, gebruik dan na afloop ‘Meld een fout’. Alle andere soorten kun je wel gokken om kenmerken te vergelijken; daar zitten bewust ook niet-beschermde soorten tussen.</p>
+    <p>Alleen beschermde soorten met een uitgewerkte casus (met * in het register). Vind je dat er iets niet klopt, gebruik dan na afloop ‘Meld een fout’. Alle andere soorten kun je wel gokken om een tip te krijgen; daar zitten bewust ook niet-beschermde soorten tussen.</p>
     <h3 data-naam="vestiarium">Vestiarium</h3>
     <p>Elke soort die je goed determineert (in welke modus dan ook) komt als genummerde plaat in je <span data-naam="vestiarium">Vestiarium</span>, met je beste score. Je voortgang wordt in deze browser bewaard, en met een spelersnaam ook online. De <span data-naam="streeplijst">Streeplijst</span> telt de platen van alle spelers, ook uit oefenen.</p>
     <h3>Trofeeën</h3>
@@ -316,22 +323,22 @@
 </div>
 
 <script src="config.js"></script>
-<script src="data/teksten.js?v=202611081952"></script>
-<script src="data/soorten.js?v=202611081952"></script>
-<script src="data/sporen.js?v=202611081952"></script>
-<script src="data/dagschema.js?v=202611081952"></script>
-<script src="js/kern.js?v=202611081952"></script>
-<script src="js/spel.js?v=202611081952"></script>
-<script src="js/veldboek.js?v=202611081952"></script>
-<script src="js/melden.js?v=202611081952"></script>
-<script src="js/kop.js?v=202611081952"></script>
-<script src="js/spelen.js?v=202611081952"></script>
-<script src="js/opening.js?v=202611081952"></script>
-<script src="js/uitleg.js?v=202611081952"></script>
-<script src="js/online.js?v=202611081952"></script>
-<script src="js/league.js?v=202611081952"></script>
-<script src="data/avatars.js?v=202611081952"></script>
-<script src="js/profiel.js?v=202611081952"></script>
-<script src="js/app.js?v=202611081952"></script>
+<script src="data/teksten.js?v=202611082008"></script>
+<script src="data/soorten.js?v=202611082008"></script>
+<script src="data/sporen.js?v=202611082008"></script>
+<script src="data/dagschema.js?v=202611082008"></script>
+<script src="js/kern.js?v=202611082008"></script>
+<script src="js/spel.js?v=202611082008"></script>
+<script src="js/veldboek.js?v=202611082008"></script>
+<script src="js/melden.js?v=202611082008"></script>
+<script src="js/kop.js?v=202611082008"></script>
+<script src="js/spelen.js?v=202611082008"></script>
+<script src="js/opening.js?v=202611082008"></script>
+<script src="js/uitleg.js?v=202611082008"></script>
+<script src="js/online.js?v=202611082008"></script>
+<script src="js/league.js?v=202611082008"></script>
+<script src="data/avatars.js?v=202611082008"></script>
+<script src="js/profiel.js?v=202611082008"></script>
+<script src="js/app.js?v=202611082008"></script>
 </body>
 </html>

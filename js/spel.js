@@ -135,18 +135,31 @@ function cell(k, c){
   if (k === "l") return `<td class="${c.cls} len"><span class="v">${esc(c.main)} <span class="sym">${c.arrow || sym}</span></span></td>`;
   return `<td class="${c.cls}"><span class="v">${esc(c.main)} <span class="sym" aria-hidden="true">${sym}</span></span>${c.sec ? `<span class="sec">+ ${esc(c.sec)}</span>` : ""}</td>`;
 }
+/* Tijdens het spel: per gok één tip. Na afloop klapt de volledige vergelijking open. */
+function renderTips(){
+  const rijen = tipsVoor(S.target, S.guesses), laatste = rijen.length - 1;
+  $("tipList").innerHTML = rijen.map((r, i) => {
+    const g = BY_ID.get(r.id), nieuw = i === laatste && freshRow ? " enter" : "";
+    if (r.soort === "goed") return `<li class="tip goed${nieuw}"><span class="tk" aria-label="goed">✓</span><div><b>${esc(g.n)}</b> <i>${esc(g.s)}</i><p>Goed gedetermineerd.</p></div></li>`;
+    if (r.soort === "tweeling") return `<li class="tip tweeling${nieuw}"><span class="tk" aria-label="tweelingsoort">≈</span><div><b>${esc(g.n)}</b> <i>${esc(g.s)}</i><p>Tweelingsoort van het antwoord: je zit er heel dicht bij. Deze gok telt niet mee. <button class="linklike tweelingWat">Wat is een tweelingsoort?</button></p></div></li>`;
+    return `<li class="tip${nieuw}"><span class="tk" aria-label="fout">✕</span><div><b>${esc(g.n)}</b> <i>${esc(g.s)}</i><p>${esc(r.tip.txt)}</p></div></li>`;
+  }).join("");
+  $("tipList").querySelectorAll(".tweelingWat").forEach(b => b.onclick = () => Spelen.tweeling());
+  $("gridDetails").hidden = !(S.status !== "playing" && S.guesses.length);
+}
 function renderGrid(){
+  renderTips();
   const t = BY_ID.get(S.target);
   const rows = S.guesses.slice().reverse().map((n, idx) => {
     const g = BY_ID.get(n), c = compare(g, t);
-    const cls = (n === S.target ? "win" : "") + (isTwin(n) ? " twin" : "") + (idx === 0 && freshRow ? " enter" : "");
+    const cls = (n === S.target ? "win" : "") + (isTwin(n) ? " twin" : "");
     return `<tr class="${cls.trim()}"><td class="name">${esc(g.n)}<i>${esc(g.s)}</i>${isTwin(n) ? `<span class="twintag">tweelingsoort · telt niet mee</span>` : ""}</td>${COLS.map(k => cell(k, c[k])).join("")}</tr>`;
   });
   $("gridBody").innerHTML = rows.join("");
   /* kaartweergave voor smalle schermen */
   $("gridCards").innerHTML = S.guesses.slice().reverse().map((n, idx) => {
     const g = BY_ID.get(n), c = compare(g, t);
-    const cls = (n === S.target ? " win" : "") + (isTwin(n) ? " twin" : "") + (idx === 0 && freshRow ? " enter" : "");
+    const cls = (n === S.target ? " win" : "") + (isTwin(n) ? " twin" : "");
     return `<div class="gcard${cls}"><div class="gname"><b>${esc(g.n)}</b> <i>${esc(g.s)}</i>${isTwin(n) ? `<span class="twintag">tweelingsoort · telt niet mee</span>` : ""}</div>
       <div class="gcells">${COLS.map(k => { const x = c[k], sym = x.cls === "ok" ? "✓" : x.cls === "part" ? "~" : "✕";
         return `<div class="gc ${x.cls}"><span class="gl">${COL_LABEL[k]}</span><span class="gv"><b>${esc(x.main)}</b> <span class="sym">${k === "l" ? (x.arrow || sym) : sym}</span></span></div>`; }).join("")}</div></div>`;
@@ -254,7 +267,7 @@ function renderPips(){
   $("pips").innerHTML = h;
   if (S.status === "playing"){
     const left = n - real.length, twinNow = S.guesses.length && isTwin(S.guesses[S.guesses.length - 1]);
-    if (twinNow){ setMsg("Tweelingsoort! Telt niet mee; alle waarnemingen zijn open.", false); $("msg").insertAdjacentHTML("beforeend", ` <button class="linklike" id="tweelingWat">Wat is een tweelingsoort?</button>`); $("tweelingWat").onclick = () => Spelen.tweeling(); }
+    if (twinNow) setMsg("Tweelingsoort! Telt niet mee; alle waarnemingen zijn open.", false);
     else setMsg(S.expert ? "Je hebt één determinatie. Open eerst zoveel waarnemingen als je nodig denkt te hebben." : `Nog ${left} ${left === 1 ? "poging" : "pogingen"}.`, false);
     const st = store.get(), eerste = S.mode === "daily" ? eersteModus(st, S.caseNo - 1) : null;
     if (eerste !== null && eerste !== !!S.expert) setMsg(`Deze casus speelde je vandaag al in ${eerste ? "expert" : "klassiek"}. Je score telt nu niet voor de ranglijst.`, false);
