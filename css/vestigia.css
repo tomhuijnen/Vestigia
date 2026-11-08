@@ -577,7 +577,7 @@ button.speelkaart:hover{border-color:var(--green); background:var(--leaf)}
 .spgroepen{display:flex; flex-wrap:wrap; gap:6px}
 .spgroepen .chipbtn{background:#fff; font-size:.78rem; padding:5px 12px}
 .spgroepen .chipbtn[aria-pressed="true"]{background:#8a5e26; border-color:#8a5e26; color:#fff}
-.spgroepen .chipbtn small{opacity:.85; margin-left:3px; font-weight:500}
+.spgroepen .chipbtn small{color:inherit; font-size:inherit; opacity:.85; margin-left:3px; font-weight:500}
 .spnieuw{display:flex; gap:10px; align-items:flex-start; font-size:.95rem; cursor:pointer; line-height:1.35}
 .spnieuw input{width:20px; height:20px; margin:0; flex:0 0 20px; accent-color:#8a5e26}
 .speelkaart.oef .btn{background:#8a5e26}
