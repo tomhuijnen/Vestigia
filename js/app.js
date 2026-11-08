@@ -65,11 +65,12 @@ document.fonts && document.fonts.ready.then(drawTopo);
 
 /* ---------- start ---------- */
 /* Opstartvolgorde: opslag (eenmalig) omzetten en de dagcasus klaarzetten, dan de openingsanimatie,
-   dan de uitleg (alleen nieuwe spelers), dan de vraag om een spelersnaam. Later komt hier de actie uit een link bij. */
+   dan de uitleg (alleen nieuwe spelers), dan de vraag om een spelersnaam, en pas daarna de actie uit een link
+   (meedoen met een league; zie js/league.js). */
 function start(){
   store.upgrade();
   startDaily();
-  Opening.run().then(() => Uitleg.automatisch()).then(toonWelkom);
+  Opening.run().then(() => Uitleg.automatisch()).then(toonWelkom).then(() => League.verwerk());
 }
 /* ---------- melding in beeld ---------- */
 let toastT;
