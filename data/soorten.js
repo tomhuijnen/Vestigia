@@ -1536,10 +1536,10 @@ const SPECIES = [
       "Sikkelvormige vleugels."
     ] },
     { bron:"Vogelbescherming, vogelgids gierzwaluw", sl:{ i:4, t:"Vier tenen naar voren: deze vogel kan niet lopen of vanaf de grond opstijgen, alleen hangen en vliegen." }, wn:[
-      "Utrecht, begin augustus. Een warme dag.",
+      "Utrecht, eind juli. Een warme dag.",
       "Een nieuwbouwwijk met speciale neststenen in de gevels.",
       "Kleine invliegopeningen vlak onder de dakrand.",
-      "Een volgroeid jong ligt op de stoep en komt niet van de grond; een week later is de hele groep vertrokken naar Afrika.",
+      "Een volgroeid jong ligt op de stoep en komt niet van de grond; kort daarna vertrekt de hele kolonie naar Afrika.",
       "Donker, met korte pootjes waarvan alle vier de tenen naar voren wijzen."
     ] }
   ] },
@@ -1675,11 +1675,11 @@ const SPECIES = [
       "Tientallen grijze braakballen met veldmuizen; overdag meerdere vogels in één boom.",
       "Lange oorpluimen en oranje ogen."
     ] },
-    { bron:"Vogelbescherming, vogelgids ransuil", sl:{ i:3, t:"Het piepen van een ongesmeerde schommel: de bedelroep van jonge uilen van deze soort." }, wn:[
+    { bron:"Vogelbescherming, vogelgids ransuil", sl:{ i:3, t:"Een hoog 'pieiep' als van een piepende deur: de bedelroep van de jongen van deze uil." }, wn:[
       "Drenthe, juni. Een warme nacht.",
       "Een akkerlandschap met sparrenbosjes.",
       "Een oud kraaiennest in een spar.",
-      "'s Nachts klinkt een hoog, klagend piepen, als een schommel die nodig gesmeerd moet worden: jongen die om voedsel bedelen.",
+      "'s Nachts klinkt uit het bosje steeds een hoog, langgerekt 'pieiep', zoals een piepende deur: jongen die om voedsel bedelen.",
       "Middelgroot, bruin gestreept, met lange oorpluimen."
     ] }
   ] },
