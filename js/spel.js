@@ -125,7 +125,7 @@ function renderClues(){
     const open = i < S.revealed || showAll;
     const fresh = i === freshClue ? " fresh" : "";
     const sleutel = showAll && c.sl && c.sl.i === i ? " sleutel" : "";
-    return `<li class="clue${open ? "" : " locked"}${fresh}${sleutel}"><span class="num">${i+1}</span><div><span class="lab caps">${CLUE_TYPES[i]}${sleutel ? ` <span class="sltag">doorslaggevend</span>` : ""}</span><p>${open ? esc(txt) : "nog niet waargenomen"}</p></div></li>`;
+    return `<li class="clue${open ? "" : " locked"}${fresh}${sleutel}"><span class="num">${i+1}</span><div><span class="lab caps">${CLUE_TYPES[i]}${sleutel ? ` <span class="sltag">typisch</span>` : ""}</span><p>${open ? esc(txt) : "nog niet waargenomen"}</p></div></li>`;
   }).join("") + (showAll && c.bron ? `<li class="bronregel"><span class="caps">Bron</span> ${c.url ? `<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.bron)}</a>` : esc(c.bron)}</li>` : "");
   $("clueCount").textContent = (showAll ? MAX : S.revealed) + " van " + MAX;
   $("notesFoot").hidden = !(S.expert && S.status === "playing");
@@ -251,7 +251,7 @@ function renderResult(){
       : `telt niet voor de ranglijst: je speelde deze casus vandaag al in ${S.expert ? "klassiek" : "expert"}`}</span>` : ""}</p>
     <details class="status-line"><summary><span class="caps">Status</span> <b>${esc(LABELS.r[t.r])}</b><span class="meer">uitleg</span></summary><p>${esc(REGIME_INFO[t.r])}</p></details>
     <dl class="traits">${traits}</dl>
-    ${curCase().sl ? `<div class="sleutelbox"><span class="caps">Wat verraadde hem</span><p><b>Waarneming ${curCase().sl.i + 1}.</b> ${esc(curCase().sl.t)}</p></div>` : ""}
+    ${curCase().sl ? `<div class="sleutelbox"><span class="caps">Typisch ${esc(/^Europese/.test(t.n) ? t.n : t.n.toLowerCase())}</span><p>${esc(curCase().sl.t)}</p></div>` : ""}
     <div class="confuse"><span class="caps">Verwar niet met</span><p><b>${esc(xs.n)}.</b> ${S.guesses.includes(t.x) ? "Die soort heb je in deze casus ook geprobeerd. " : ""}${esc(t.t)}</p></div>
     ${(S.newAwards || []).map(k => { const [kind, name] = awardLabel(k); return `<div class="awardnote"><span class="caps">Nieuwe ${kind.toLowerCase()}</span><b>${esc(name)}</b></div>`; }).join("")}
     ${ontdek ? ontdekPlaat(t) : `<p class="dexnote">${won ? `Plaat <b>nº ${dexNo(t.id)}</b> staat nu in je ${NAAM.vestiarium}.` : `Genoteerd als waargenomen in je ${NAAM.vestiarium} (nº ${dexNo(t.id)}).`} <button class="linklike" id="toDex">Open het ${NAAM.vestiarium}</button></p>`}

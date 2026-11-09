@@ -670,7 +670,7 @@ body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
 .volledig .fine{margin:6px 0 4px}
 
 /* ── update 2: leren na afloop en ontdekkingsmoment ── */
-.clue.sleutel{background:#fbf3dc; border-radius:8px; box-shadow:0 0 0 1.5px #d9b45a inset}
+.clue.sleutel{background:#fbf3dc; border-radius:8px; box-shadow:0 0 0 1.5px #d9b45a inset; padding-left:10px; padding-right:10px}
 .sltag{display:inline-block; margin-left:6px; padding:0 6px; border-radius:3px; background:#d9b45a; color:#3b2c08; font-size:.66rem; letter-spacing:.06em}
 .bronregel{list-style:none; padding:8px 4px 0; font-size:.82rem; color:var(--ink-2)}
 .bronregel .caps{margin-right:6px}
