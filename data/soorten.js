@@ -1868,5 +1868,18 @@ const SPECIES = [
       "Een krassend liedje dat klinkt alsof er grind wordt geschud; een staart die steeds trilt.",
       "Roetgrijs tot zwart, met een roestrode staart en (bij de man) een witte vleugelvlek."
     ] }
+  ] },
+{ id:"goudjakhals", no:139, g:"Z", n:"Goudjakhals", s:"Canis aureus", r:"BAL", l:100, zz:"Z", twin:null,
+  h:["MOER","OPEN","HALF"], a:["NACHT","SCHEMER"], v:["GEW","ONG","PLANT"], b:["HOL"], w:["ACT"],
+  x:"wolf",
+  t:"De wolf is veel groter (schouderhoogte 70–80 cm), grijzer, met een zware kop en prenten van zo'n 10 cm. Deze soort is nauwelijks groter dan een vos, goudbruin, met een kortere staart en prenten van rond de 6 cm.",
+  cs:[
+    { bron:"BIJ12, goudjakhals; Zodion, soortpagina goudjakhals", wn:[
+      "Noord-Friesland, februari. Een grauwe, winderige dag.",
+      "Een buitendijkse kwelder met slenken, grenzend aan akkers en weiland.",
+      "Een dichte rietkraag en ruigte aan de voet van de zeedijk.",
+      "Op een wildcamera 's nachts een slank, hoogpotig dier langs de dijk; bij een doodgebeten schaap is DNA verzameld.",
+      "Goudgrijs met rossige poten en oren, een spitse snuit en een vrij korte staart met een donkere punt."
+    ] }
   ] }
 ];
