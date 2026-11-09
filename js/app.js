@@ -81,7 +81,7 @@ function toast(msg, action){
   t.hidden = false;
   if (action) $("toastBtn").onclick = action.run;
   clearTimeout(toastT);
-  if (!action) toastT = setTimeout(() => { t.hidden = true; }, 3500);
+  if (!action || action.duur) toastT = setTimeout(() => { t.hidden = true; }, action ? action.duur : 3500);   // duur: ook een melding met knop verdwijnt dan vanzelf
 }
 
 /* ---------- installeren en updates ---------- */

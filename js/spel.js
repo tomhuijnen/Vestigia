@@ -45,7 +45,8 @@ function recordLog(){
   const st = store.get();
   const tw = S.guesses.filter(isTwin).length;
   st.log = (st.log || []).concat({ t: Date.now(), m: S.mode, d: S.mode === "daily" ? S.caseNo - 1 : null, s: S.target, k: S.k,
-    x: !!S.expert, w: S.status === "won", p: Math.min(usedTries(), MAX), c: S.revealed, tw });
+    x: !!S.expert, w: S.status === "won", p: Math.min(usedTries(), MAX), c: S.revealed, tw,
+    f: S.guesses.filter(id => id !== S.target) });     // f: de foute gokken, voor ‘eigen fouten terugzien’ (update 2)
   store.set(st);
 }
 function recordStats(){
@@ -284,7 +285,42 @@ function renderHead(){
 
 function render(){ renderHead(); renderClues(); renderGrid(); renderPips(); renderResult(); }
 
-/* ---------- autocomplete ---------- */
+/* ---------- autocomplete ----------
+   Zoeken op Nederlandse én wetenschappelijke naam, met losse woordstukjes ("pleco aus", "gr bonte") en met
+   tikfouten: één fout mag vanaf 4 letters, twee vanaf 8 ("kowlmees", "plecotus austriakus"). */
+/* Damerau-Levenshtein (met verwisseling van twee buurletters), met vroeg stoppen boven max */
+function afstand(a, b, max){
+  if (Math.abs(a.length - b.length) > max) return max + 1;
+  let p2 = null, p = Array.from({ length: b.length + 1 }, (_, j) => j);
+  for (let i = 1; i <= a.length; i++){
+    const c = [i]; let rijMin = i;
+    for (let j = 1; j <= b.length; j++){
+      c[j] = Math.min(p[j] + 1, c[j - 1] + 1, p[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      if (p2 && i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) c[j] = Math.min(c[j], p2[j - 2] + 1);
+      rijMin = Math.min(rijMin, c[j]);
+    }
+    if (rijMin > max) return max + 1;
+    p2 = p; p = c;
+  }
+  return p[b.length];
+}
+const fouten = len => len >= 8 ? 2 : len >= 4 ? 1 : 0;
+/* lager is beter; -1 = past niet */
+function zoekScore(q, x){
+  const a = norm(x.n), b = norm(x.s), wa = a.split(" "), wb = b.split(" "), alle = wa.concat(wb), qw = q.split(" ");
+  if (a.startsWith(q)) return 0;
+  if (wa.some(w => w.startsWith(q))) return 1;
+  if (b.startsWith(q) || wb.some(w => w.startsWith(q))) return 2;
+  if (qw.length > 1 && qw.every(t => alle.some(w => w.startsWith(t)))) return 2.5;   // "pleco aus", "kl bonte sp"
+  if (a.includes(q) || b.includes(q)) return 3;
+  /* tikfouten: vergelijk met het begin van de naam (even lang als wat je typte), of per woord */
+  const k = fouten(q.replace(/ /g, "").length);
+  if (!k) return -1;
+  const begin = s2 => afstand(q, s2.slice(0, q.length), k) <= k || afstand(q, s2.slice(0, q.length + 1), k) <= k;
+  if (begin(a) || begin(b)) return 4;
+  if (qw.every(t => { const kt = fouten(t.length); return alle.some(w => w.startsWith(t) || (kt && (afstand(t, w.slice(0, t.length), kt) <= kt || afstand(t, w, kt) <= kt))); })) return 5;
+  return -1;
+}
 let optList = [], optIdx = -1;
 function matchExact(v){
   const q = norm(v); if (!q) return null;
@@ -296,13 +332,8 @@ function openOpts(){
   const q = norm($("gInput").value);
   if (!q){ closeOpts(); return; }
   const used = new Set(S.guesses);
-  optList = SPECIES.filter(x => !used.has(x.id)).map(x => {
-    const a = norm(x.n), b = norm(x.s);
-    let score = -1;
-    if (a.startsWith(q)) score = 0; else if (a.split(" ").some(w => w.startsWith(q))) score = 1;
-    else if (b.startsWith(q) || b.split(" ").some(w => w.startsWith(q))) score = 2; else if (a.includes(q)) score = 3;
-    return { x, score };
-  }).filter(o => o.score >= 0).sort((p, q2) => p.score - q2.score || p.x.n.localeCompare(q2.x.n, "nl")).slice(0, 8).map(o => o.x);
+  optList = SPECIES.filter(x => !used.has(x.id)).map(x => ({ x, score: zoekScore(q, x) }))
+    .filter(o => o.score >= 0).sort((p, q2) => p.score - q2.score || p.x.n.localeCompare(q2.x.n, "nl")).slice(0, 8).map(o => o.x);
   const ul = $("gOpts");
   if (!optList.length){ ul.innerHTML = `<li aria-disabled="true"><span>Geen soort gevonden</span></li>`; ul.hidden = false; optIdx = -1; return; }
   optIdx = 0;
@@ -349,7 +380,11 @@ const pref = {
   set expert(v){ try { localStorage.setItem("vestigia:expert", v ? "1" : "0"); } catch(e){} }
 };
 function showGame(){ setView("game"); render(); }
-function startDaily(){ const wissel = S && S.mode !== "daily"; S = loadDaily(pref.expert); showGame(); if (wissel) inBeeld($("gameView")); }
+/* De dagcasus opent in de modus die je vandaag al speelde (de andere zit op slot), anders in je voorkeur. */
+function startDaily(){
+  const wissel = S && S.mode !== "daily", eerst = eersteModus(store.get(), todayIndex());
+  S = loadDaily(eerst === null ? pref.expert : eerst); showGame(); if (wissel) inBeeld($("gameView"));
+}
 /* keuze = { g, nieuw }; zonder keuze: bij oefenen dezelfde keuze als nu, anders alle soorten */
 function startFree(keuze){
   keuze = keuze || (S && S.mode === "free" ? { g: S.groep || null, nieuw: !!S.nieuw } : { g: null, nieuw: false });
@@ -363,6 +398,14 @@ function goDaily(){ if (S.mode === "daily") showGame(); else startDaily(); }
 function goFree(){ if (S.mode !== "free" || S.status !== "playing") startFree(); else showGame(); }
 /* Wisselen tussen klassiek en expert. Een oefencasus waarin nog niets geprobeerd is, wisselt ter plekke. */
 function setMode(expert){
+  if (S.mode === "daily"){
+    const eerst = eersteModus(store.get(), todayIndex());
+    if (eerst !== null && eerst !== expert){
+      toast(`Vandaag speelde je de dagcasus al in ${eerst ? "expert" : "klassiek"}. ${expert ? "Expert" : "Klassiek"} is dezelfde casus, dus die zit tot morgen op slot.`,
+        { label: "Oefenen", duur: 7000, run: () => { $("toast").hidden = true; pref.expert = expert; startFree(); } });
+      return;
+    }
+  }
   pref.expert = expert;
   if (expert === S.expert) return;
   if (S.mode === "daily") startDaily();
