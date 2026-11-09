@@ -44,11 +44,31 @@ for (const e of (typeof DAGSCHEMA !== "undefined" ? DAGSCHEMA : [])){
   DAILY.push({ id, k: ki });
 }
 const DAILY_FIXED = DAILY.length;
+/* Veldweek: de eerste volledige week (ma–zo) van elke maand, vanaf VELDWEEK_VANAF. Geeft null buiten een veldweek. */
+function veldweek(d){
+  if (typeof VELDTHEMAS === "undefined" || d < 0) return null;
+  const dt = new Date(START + d * DAY), y = dt.getUTCFullYear(), m = dt.getUTCMonth();
+  const eerste = Date.UTC(y, m, 1), maandag = eerste + ((8 - new Date(eerste).getUTCDay()) % 7) * DAY;
+  const start = Math.round((maandag - START) / DAY);
+  if (start < VELDWEEK_VANAF || d < start || d > start + 6) return null;
+  const id = VELDWEEK_PLAN[m];
+  return Object.assign({ start, dag: d - start, id }, VELDTHEMAS[id]);
+}
+/* begint er over 1 of 2 dagen een veldweek? Dan de startdag, anders null */
+function veldweekOpkomst(d){ for (const n of [1, 2]){ const v = veldweek(d + n); if (v && v.start === d + n) return v.start; } return null; }
 function pickDaily(d, history){
   const m = new Date(START + d * DAY).getUTCMonth();
   const recent = new Set(history.slice(Math.max(0, d - 21), d).map(x => x.id));
-  const cand = TARGETS.flatMap(t => t.cs.map((c, k) => ({ id: t.id, k, m: caseMonth(c) })));
+  const vw = veldweek(d);
+  const cand = TARGETS.filter(t => !vw || vw.f(t)).flatMap(t => t.cs.map((c, k) => ({ id: t.id, k, m: caseMonth(c) })));
   const near = cand.filter(c => c.m >= 0 && Math.min((c.m - m + 12) % 12, (m - c.m + 12) % 12) <= 1);
+  if (vw){
+    /* binnen een veldweek: nooit twee keer dezelfde soort, liefst passend bij het seizoen en niet net geweest */
+    const week = new Set(history.slice(vw.start, d).map(x => x.id));
+    const pools = [near.filter(c => !week.has(c.id) && !recent.has(c.id)), near.filter(c => !week.has(c.id)), cand.filter(c => !week.has(c.id))];
+    const pool = pools.find(p => p.length);
+    if (pool){ const c = pool[Math.floor(rng(20261106 + d * 7919)() * pool.length)]; return { id: c.id, k: c.k }; }
+  }
   let pool = near.filter(c => !recent.has(c.id));
   if (!pool.length) pool = cand.filter(c => !recent.has(c.id));
   if (!pool.length) pool = cand;

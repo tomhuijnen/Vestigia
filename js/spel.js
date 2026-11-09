@@ -256,7 +256,10 @@ function renderResult(){
     ${(S.newAwards || []).map(k => { const [kind, name] = awardLabel(k); return `<div class="awardnote"><span class="caps">Nieuwe ${kind.toLowerCase()}</span><b>${esc(name)}</b></div>`; }).join("")}
     ${ontdek ? ontdekPlaat(t) : `<p class="dexnote">${won ? `Plaat <b>nº ${dexNo(t.id)}</b> staat nu in je ${NAAM.vestiarium}.` : `Genoteerd als waargenomen in je ${NAAM.vestiarium} (nº ${dexNo(t.id)}).`} <button class="linklike" id="toDex">Open het ${NAAM.vestiarium}</button></p>`}
     <button class="reportbtn" id="repFromResult">Klopt er iets niet in deze casus? Meld een fout</button>`;
+  const vw = S.mode === "daily" ? veldweek(S.caseNo - 1) : null;
+  const vwKaart = vw ? stempelkaart(store.get(), vw) : null;
   card2.innerHTML = `
+    ${vw ? `<div class="vwresult"><span class="caps">Veldweek · ${esc(vw.titel)}</span>${vwKaart.html}<p class="fine">${vwKaart.n === 7 ? "Alle zeven dagen gespeeld: +25 eikels." : `${vwKaart.n} van 7 dagen gespeeld${vwKaart.n >= 5 ? " (+10 eikels; met alle zeven +25)" : ""}.`}</p></div>` : ""}
     ${stats}
     ${S.mode === "free" ? `<p class="oefenkeuze">Je oefent met ${esc(Spelen.omschrijving({ g: S.groep, nieuw: S.nieuw, ids: S.ids }))}. <button class="linklike" id="oefenWijzig">Wijzig</button></p>` : ""}
     <div class="actions">
