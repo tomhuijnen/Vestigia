@@ -53,6 +53,11 @@ for (const t of SPECIES){
     if (c.sl !== undefined && (!Number.isInteger(c.sl.i) || c.sl.i < 0 || c.sl.i > 4 || !c.sl.t || String(c.sl.t).length < 20)) FOUT(`${cn}: sl moet { i: 0–4, t: uitleg van minstens 20 tekens } zijn`);
     if (c.url !== undefined && !/^https:\/\/[\w.-]+\.[a-z]{2,}\//.test(c.url)) FOUT(`${cn}: url moet met https:// beginnen`);
     if (c.wn.some(w => new RegExp("\\b" + t.n.toLowerCase().split(" ").pop() + "\\b", "i").test(w))) LETOP(`${cn}: de soortnaam staat in een waarneming`);
+    /* waarneming 1–4 mag de eigen diergroep niet noemen ("een vogel", "een vis"): dat geeft de soortgroep cadeau.
+       Nesten, rupsen en sporen mogen wel: dat zijn echte veldsporen. Prooien en andere soorten in de tekst tellen niet mee. */
+    const GROEPWOORD = { Z:/\b(vleermuis\w*|myotis|knaagdier\w*|roofdier\w*|zoogdier\w*)\b/i, B:/\b(vogel\w*|roofvogel\w*|zangertje)\b/i,
+      F:/\b(vis|vissen|visje\w*|bodemvis|trekvis)\b/i, V:/\b(vlinder\w*|insect\w*)\b/i, A:/\b(kikker\w*|salamander\w*|amfibie\w*)\b/i, R:/\b(slang\w*|hagedis\w*|reptiel\w*)\b/i };
+    c.wn.slice(0, 4).forEach((w, i) => { const m = GROEPWOORD[t.g] && w.match(GROEPWOORD[t.g]); if (m) FOUT(`${cn}: waarneming ${i + 1} noemt de diergroep ("${m[0]}")`); });
   });
 }
 for (const [oud, id] of Object.entries(ALIASES)){

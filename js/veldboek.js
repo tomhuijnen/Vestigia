@@ -148,7 +148,7 @@ function nextAward(){
   if (k.startsWith("M:")){
     const t = BY_ID.get(k.slice(2));
     badge = medal(true, dexNo(t.id)); kind = "Nieuwe medaille"; name = t.n;
-    text = `Je hebt de ${esc(t.n.toLowerCase())} (<i>${esc(t.s)}</i>) gedetermineerd, een van de ${telwoord(medalSpecies(store.get()).length)} lastigste soorten van Vestigia. De medaille hangt nu in je ${NAAM.vestiarium}.`;
+    text = `Je hebt de ${esc(t.n.toLowerCase())} (<i>${esc(t.s)}</i>) gedetermineerd, een van de ${telwoord(medalSpecies(store.get()).length)} meest zeldzame soorten van Vestigia. De medaille hangt nu in je ${NAAM.vestiarium}.`;
     /* bij elke medaillesoort hoort een avatar die je alleen zo kunt krijgen (niet te koop) */
     if (typeof AVATARS !== "undefined" && AVATARS[t.id]){
       const metNaam = online.enabled && online.player();

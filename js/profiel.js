@@ -263,7 +263,7 @@ const Profiel = (() => {
     if (shopTab === "avatar"){
       const medailles = (winkel || []).filter(i => i.kind === "avatar" && !i.for_sale && !own.has(i.item));
       html += medailles.map(i => knop(waardeVan(i), `<span class="pfgeheim">?</span>`, "Medaille-avatar", "dicht", i)).join("")
-            + `<p class="fine pfnoot">Medaille-avatars koop je niet: je krijgt ze als je een van de ${telwoord(MEDALS.length)} lastigste soorten determineert.</p>`;
+            + `<p class="fine pfnoot">Medaille-avatars koop je niet: je krijgt ze als je een van de ${telwoord(MEDALS.length)} meest zeldzame soorten determineert.</p>`;
     }
     if (shopTab === "titel"){
       const heb = [...own].filter(x => x.startsWith("titel:")).map(x => x.slice(6)), pr = lees(K.prest) || [];

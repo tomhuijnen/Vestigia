@@ -139,7 +139,7 @@ const SPECIES = [
       "Zuid-Limburg, juli. In het Vijlenerbos.",
       "Een bosrand met een brede mantel van braam, kamperfoelie en jonge hazelaar.",
       "Een nestbuis aan een tak, en in de struiken een bolnest van geweven gras en gestripte kamperfoeliebast.",
-      "Overdag een bolletje zonder ingang in de struiken; 's nachts klimt een klein knaagdier behendig door de takken.",
+      "Overdag een bolletje zonder ingang in de struiken; 's nachts klimt iets kleins met grote zwarte ogen behendig door de takken.",
       "Goudbruin, met grote zwarte ogen en een dichtbehaarde, wat pluimige staart."
     ] }
   ] },
@@ -299,7 +299,7 @@ const SPECIES = [
       "Flevoland, juli. Langs een akker met graszoom.",
       "Graslanden en dijken vol muizenholletjes en hier en daar een takkenhoop.",
       "Een steenstort aan de voet van een dijk.",
-      "Een slank roofdiertje dat rechtop gaat zitten om rond te kijken en dan met grote sprongen verdwijnt; het sleept een woelrat mee.",
+      "Een slank, bruin diertje gaat rechtop zitten om rond te kijken en verdwijnt dan met grote sprongen; het sleept een woelrat mee.",
       "Groter dan een wezel, bruin met een scherpe grens naar de roomwitte buik, en een staartpunt die zwart is."
     ] }
   ] },
@@ -391,7 +391,7 @@ const SPECIES = [
     { sl:{ i:4, t:"Een lange staart met een zwarte streep." }, bron:null, wn:[
       "Duinen bij Amsterdam, oktober.",
       "Duinbos, struweel en open duingrasland.",
-      "Een gebied zonder grote roofdieren, met een hoge graasdruk.",
+      "Een gebied zonder wolven of andere grote jagers, met een hoge graasdruk.",
       "Keutels groter dan die van een ree; een kort, rochelend geluid bij een uitgekrabde kuil.",
       "Een lange staart met een zwarte streep."
     ] },
@@ -519,7 +519,7 @@ const SPECIES = [
       "Overijssel, maart. Een zachte, natte avond waarin kikkers en salamanders naar de poel trekken.",
       "Een boerenerf naast een moerasje met poelen.",
       "Een kruipruimte onder een stal met een opening van een paar centimeter.",
-      "Een donker roofdier met een witte snuit en witte oorranden loopt langs de poel; het pakt een kikker. In de stal ruikt het naar musk.",
+      "Iets donkers met een witte snuit en witte oorranden sluipt langs de poel en pakt een kikker. In de stal ruikt het naar musk.",
       "Donkerbruin met een gelige ondervacht die erdoorheen schemert, en een donkere band over de ogen."
     ] }
   ] },
@@ -599,7 +599,7 @@ const SPECIES = [
       "Friesland, augustus. Langs een vaart.",
       "Een brede rietkraag met lisdodde.",
       "Op een meter boven de grond een bolletje tussen riethalmen.",
-      "Een heel klein muisje dat met zijn staart om een halm geklemd zit en zaadjes eet.",
+      "Een piepklein, oranjebruin diertje zit met zijn staart om een halm geklemd en eet zaadjes.",
       "Heel klein, oranjebruin met een witte buik, en een staart waarmee het kan grijpen."
     ] }
   ] },
@@ -659,7 +659,7 @@ const SPECIES = [
       "Achterhoek, november. Een vochtige, grijze dag.",
       "Een houtwal met oude eiken, hulst en lijsterbes langs een weiland.",
       "Een gangetje onder een boomwortel, met een hoopje knaagsel ervoor.",
-      "Overdag een klein knaagdier dat behendig in een struik klimt en bessen van de lijsterbes eet; afgeknaagde bast aan jonge twijgjes.",
+      "Overdag klimt iets kleins en roodbruins behendig in een struik en eet bessen van de lijsterbes; afgeknaagde bast aan jonge twijgjes.",
       "Een knaagdiertje met een roodbruine rug, grijze flanken, kleine oren en een staart van zo'n halve lichaamslengte."
     ] }
   ] },
@@ -719,7 +719,7 @@ const SPECIES = [
       "Utrecht, eind augustus. Kort na zonsondergang.",
       "Een straat met laanbomen, achtertuinen en een vijver in een plantsoen.",
       "Een rijtjeshuis met een kier achter een houten boeideel.",
-      "Een klein vleermuisje dat rondjes jaagt rond een lantaarnpaal; uit een spleet komen schelle sociale roepen; detector: piek rond 45 kHz.",
+      "In de schemering jaagt iets heel kleins rondjes rond een lantaarnpaal; uit een spleet komen schelle sociale roepen; detector: piek rond 45 kHz.",
       "Een heel klein, donkerbruin vleermuisje met korte, ronde oren."
     ] }
   ] },
@@ -738,7 +738,7 @@ const SPECIES = [
     { bron:"Zodion, soortpagina ruige dwergvleermuis", sl:{ i:3, t:"Trek langs de kust in april met een piek rond 38 tot 40 kHz: deze soort trekt elk jaar honderden kilometers." }, wn:[
       "Noord-Holland, april. Langs de kust bij Petten.",
       "Een duinbos achter de zeereep, met een paar vijvers.",
-      "Een vleermuiskast aan een den, waar alleen in het voor- en najaar dieren zitten.",
+      "Een platte houten kast aan een den, waar alleen in het voor- en najaar dieren in zitten.",
       "Dieren die in het voorjaar in rechte lijn langs de kust naar het noordoosten trekken; detector: piek rond 38 tot 40 kHz.",
       "Iets groter dan het gewone dwergje, met een ruige, lange vacht en een behaarde staartvlieghuid."
     ] }
@@ -798,8 +798,8 @@ const SPECIES = [
     { bron:"Zodion, soortpagina franjestaart", sl:{ i:3, t:"Langzaam fladderen en spinnen van de bladeren plukken: deze vleermuis gebruikt de franje van de staartvlieghuid om prooi op te scheppen." }, wn:[
       "Gelderland, juli. Een oud loofbos op een landgoed.",
       "Een eikenbos met een dichte struiklaag van hulst en hazelaar.",
-      "Een vleermuiskast aan een eik langs een oude laan.",
-      "Een vleermuis die langzaam en wendbaar tussen de struiken fladdert en spinnen van de bladeren plukt; detector: zachte, korte pulsen.",
+      "Een platte houten kast met een smalle spleet aan de onderkant, aan een eik langs een oude laan.",
+      "Iets fladdert langzaam en wendbaar tussen de struiken en plukt spinnen van de bladeren; detector: zachte, korte pulsen.",
       "Een middelgrote Myotis met lange oren, een lichte buik en een rand van stijve haartjes langs de staartvlieghuid."
     ] }
   ] },
@@ -839,7 +839,7 @@ const SPECIES = [
       "Rotterdam, december. Een koude week.",
       "Een woonwijk met hoge flats aan de rivier.",
       "Een kier achter de betonplaten hoog aan een flat.",
-      "Een verdwaald diertje in een trappenhuis van een flat; bewoners brengen hem naar de vleermuisopvang.",
+      "Een verdwaald diertje in een trappenhuis van een flat; bewoners brengen het naar de opvang.",
       "Middelgroot, met brede, korte oren, een witte buik en een donkere rug met zilvergrijze haarpunten."
     ] }
   ] },
@@ -859,7 +859,7 @@ const SPECIES = [
       "Zuid-Limburg, januari. In een mergelgroeve aan de rand van het plateau.",
       "Een groeve tussen akkers en boomgaarden, ver van groot bos.",
       "Een koude, droge gang vlak bij de ingang.",
-      "Een vleermuis in winterslaap met de lange oren onder de vleugels gevouwen; alleen het puntige oorklepje steekt uit.",
+      "Een dier in winterslaap aan het plafond; de lange oren zijn weggevouwen en alleen een puntig oorklepje steekt uit.",
       "Een grijze vacht, een donker gezicht en een duim korter dan 6 mm."
     ] }
   ] },
@@ -879,7 +879,7 @@ const SPECIES = [
       "Gelderland, januari. Een strenge vorstperiode.",
       "Een landgoed met oud loofbos en vijvers.",
       "Een ijskelder van baksteen, half onder de grond.",
-      "Een vleermuis in winterslaap in een kier, met de lange oren onder de vleugels gevouwen; alleen het puntige oorklepje steekt uit.",
+      "Een dier in winterslaap in een kier; de lange oren zijn weggevouwen en alleen een puntig oorklepje steekt uit.",
       "Een bruine vacht, een licht gezicht en een duim langer dan 6 mm."
     ] }
   ] },
@@ -899,7 +899,7 @@ const SPECIES = [
       "Friesland, november. Een periode met hoog water.",
       "Een groot rietland langs een meer in het laagveen.",
       "Hogere pollen van zegge en riet in een overstroomd rietland.",
-      "Knaagdiertjes die zwemmend van pol naar pol gaan en zich op drijvend riet verschuilen; in de pollen nesten van fijn gras.",
+      "Kleine, donkere diertjes zwemmen van pol naar pol en verschuilen zich op drijvend riet; in de pollen nesten van fijn gras.",
       "Donkerbruin, groter dan een veldmuis, met een vrij lange staart."
     ] }
   ] },
@@ -951,7 +951,7 @@ const SPECIES = [
     { sl:{ i:3, t:"Een vervellingshuid met gladde schubben: de adder heeft gekielde schubben." }, bron:null, wn:[
       "Veluwe, september.",
       "Heide met struikhei en pijpenstrootje.",
-      "Een structuurrijke overgang van heide naar bos, met veel hagedissen.",
+      "Een structuurrijke overgang van heide naar bos, met veel zandhagedissen en hazelwormen.",
       "Een vervellingshuid met gladde, niet gekielde schubben.",
       "Ronde pupil en een donkere streep door het oog."
     ] },
@@ -972,7 +972,7 @@ const SPECIES = [
       "Dwingelderveld, maart.",
       "Natte en droge heide met pijpenstrootje en dennenopslag.",
       "Een beschutte zuidrand die vroeg in het jaar al warm wordt.",
-      "Meerdere slangen dicht bij elkaar in de zon; in april duwen twee slangen tegen elkaar.",
+      "Meerdere exemplaren liggen dicht bij elkaar in de zon; in april duwen twee mannetjes tegen elkaar op.",
       "Verticale spleetpupil en een zigzagband."
     ] },
     { bron:"RAVON, soortpagina adder", sl:{ i:4, t:"Een rode iris met spleetpupil en een zigzagband: onze enige gifslang." }, wn:[
@@ -992,14 +992,14 @@ const SPECIES = [
       "Vechtplassen, juli.",
       "Moerasbos, rietlanden en open water met veel kikkers.",
       "Bij een boerderij een grote mesthoop en composthopen.",
-      "Lege, leerachtige eischalen in de composthoop; een slang zwemt met de kop boven water.",
+      "Lege, leerachtige eischalen in de composthoop; iets lang en slanks zwemt met de kop boven water.",
       "Lichte halvemaanvlekken achter de kop."
     ] },
     { bron:"RAVON, soortpagina ringslang", sl:{ i:3, t:"Een stinkende vloeistof en schijndood: zo verdedigt deze slang zich, want bijten doet hij vrijwel nooit." }, wn:[
       "De Weerribben, april. Een zonnige, nog frisse ochtend.",
       "Rietland en moerasbos rond petgaten.",
       "Een droge rietbult aan de rand van een legakker.",
-      "Een paar slangen zonnen opgerold; opgepakt verspreidt er één een stinkende vloeistof en doet daarna alsof hij dood is.",
+      "Een paar exemplaren liggen opgerold te zonnen; opgepakt verspreidt er één een stinkende vloeistof en doet daarna alsof hij dood is.",
       "Grijsgroen, met kleine zwarte vlekjes langs de flanken, een ronde pupil en twee gele vlekken achter de kop."
     ] }
   ] },
@@ -1039,7 +1039,7 @@ const SPECIES = [
       "Brabantse Kempen, juli. Een zonnige ochtend na regen.",
       "Vochtige heide langs een ven, met dopheide en veenmos.",
       "Pollen pijpenstrootje vlak langs de waterkant.",
-      "Een paar kleine, bruine reptielen zonnen op een pol; bij verstoring vluchten ze het water in en zwemmen weg.",
+      "Een paar kleine, bruine diertjes zonnen op een pol; bij verstoring vluchten ze het water in en zwemmen weg.",
       "Klein en slank, bruin, met een smalle kop en een dunne donkere rugstreep."
     ] }
   ] },
@@ -1052,7 +1052,7 @@ const SPECIES = [
       "Zuid-Limburg, mei. Een oude binnenstad.",
       "Vestingmuren van natuursteen.",
       "Muren op het zuiden met veel voegen en kieren.",
-      "Hagedissen schieten de voegen in en rennen verticaal omhoog.",
+      "Kleine, snelle diertjes schieten de voegen in en rennen verticaal omhoog.",
       "Een netvormige tekening en een platte kop."
     ] },
     { bron:"RAVON, soortpagina muurhagedis", sl:{ i:2, t:"Oude vestingmuren in Maastricht: de enige plek in Nederland waar deze soort van nature leeft." }, wn:[
@@ -1079,7 +1079,7 @@ const SPECIES = [
       "Betuwe, juni. Een warme nacht.",
       "Een uiterwaard met kleiputten, meidoornhagen en grasland.",
       "Een oude kleiput met veel ondergedoken waterplanten, zonder vis.",
-      "Met een zaklamp zie je grote salamanders met een hoge, getande rugkam die bij de staartwortel onderbroken is, en een zilverwitte band over de staart.",
+      "Met een zaklamp zie je grote, donkere dieren met een hoge, getande rugkam die bij de staartwortel onderbroken is, en een zilverwitte band over de staart.",
       "Groot, tot 16 cm, zwartbruin met witte stippels op de flanken."
     ] }
   ] },
@@ -1099,7 +1099,7 @@ const SPECIES = [
       "Zeeuws-Vlaanderen, augustus. Een warme, zonnige middag.",
       "Een kreek met braamstruweel en wilgen langs de oever.",
       "Grote bramenbladeren in de volle zon, op anderhalve meter hoogte.",
-      "Kleine, fel groene kikkertjes zitten met ingetrokken poten te zonnen op de bladeren.",
+      "Kleine, fel groene diertjes zitten met ingetrokken poten te zonnen op de bladeren.",
       "Glad en fel groen, met een donkere streep van de neus tot de achterpoot en schijfjes aan de tenen."
     ] }
   ] },
@@ -1199,7 +1199,7 @@ const SPECIES = [
       "Engbertsdijksvenen, juni. Een warme dag.",
       "Hoogveen met dopheide, veenmos en berkenopslag.",
       "Een vochtige plek tussen de dopheide, een eind van het water.",
-      "Een kikker springt weg tussen de dopheide; hij is roodbruin met een brede, lichte streep over de rug.",
+      "Iets springt weg tussen de dopheide; het is roodbruin met een brede, lichte streep over de rug.",
       "Slank, met een spitse snuit en een donkere vlek achter het oog."
     ] }
   ] },
@@ -1219,7 +1219,7 @@ const SPECIES = [
       "Zuid-Limburg, april. Een regenachtige nacht.",
       "Een bronbos met hellingen vol varens en mos.",
       "Een bospad langs een bronbeek, nat van de regen.",
-      "Dikke, glanzend zwarte amfibieën kruipen traag over het pad; een vrouwtje loopt naar het water.",
+      "Dikke, glanzend zwarte dieren kruipen traag over het pad; een vrouwtje loopt naar het water.",
       "Groot, tot 20 cm, met opvallende gifklieren achter de ogen en grote gele vlekken."
     ] }
   ] },
@@ -1259,7 +1259,7 @@ const SPECIES = [
       "Salland, september. Een vochtige ochtend.",
       "Een hooiland met sloten en houtwallen.",
       "Hoog gras langs de slootkant, nat van de dauw.",
-      "Overal springen jonge amfibieën van dit jaar door het gras weg, ver van het water.",
+      "Overal springen jonge diertjes van dit jaar door het gras weg, ver van het water.",
       "Bruin, met een stompe snuit en een donkere vlek achter het oog."
     ] }
   ] },
@@ -1339,7 +1339,7 @@ const SPECIES = [
       "Drenthe, november. Een koude dag.",
       "Een bosrand naast een hoogveenrestant.",
       "Onder een rottende boomstronk, honderden meters van het water.",
-      "Een kleine groene kikker in winterrust, ver van het water.",
+      "Een klein, groen dier in winterrust, ver van het water.",
       "Klein en groen, met korte achterpoten en een grote, harde hielknobbel."
     ] }
   ] },
@@ -1359,7 +1359,7 @@ const SPECIES = [
       "Rivierengebied, augustus. Een hete middag.",
       "Een uiterwaard met grote plassen en rietkragen.",
       "Een brede oever met veel kroos.",
-      "Grote kikkers zonnen op de oever en eten ook andere, kleinere kikkers.",
+      "Grote, groene dieren zonnen op de oever en eten ook kleinere soortgenoten.",
       "Groot, olijfgroen tot bruin, met een kleine hielknobbel en lange achterpoten."
     ] }
   ] },
@@ -1372,14 +1372,14 @@ const SPECIES = [
       "Zuid-Holland, juni. Een veenpolder.",
       "Kleine slootjes met krabbescheer en veel waterplanten.",
       "Een dikke laag organische modder en ’s zomers bijna geen zuurstof.",
-      "Een positief eDNA-monster; diep in de modder kronkelt een langgerekte vis.",
+      "Een positief eDNA-monster; diep in de modder kronkelt iets langgerekts.",
       "Tien baarddraden."
     ] },
     { bron:"RAVON, soortpagina grote modderkruiper", sl:{ i:3, t:"Lucht happen en piepen: deze vis ademt ook via zijn darm en overleeft zo zuurstofloze bagger." }, wn:[
       "Noordwest-Overijssel, september. Het jaarlijkse slootschonen.",
       "Een veenweidepolder met smalle, verlandende sloten.",
       "Een hoop bagger die net met de maaikorf op de kant is gelegd.",
-      "In de bagger spartelt een langgerekte vis die een zacht piepend geluid maakt; hij hapt lucht als hij weer in het water ligt.",
+      "In de bagger spartelt iets langgerekts dat een zacht piepend geluid maakt; het hapt lucht als het weer in het water ligt.",
       "Tot 30 cm, geelbruin met donkere lengtestrepen."
     ] }
   ] },
@@ -1419,7 +1419,7 @@ const SPECIES = [
       "Drentsche Aa, april. Een zonnige dag na een natte winter.",
       "Een beekdal met hooilanden die in de winter onderlopen.",
       "Ondiep, met gras begroeid water dat langzaam wegzakt.",
-      "Tussen het ondergelopen gras zwemmen piepkleine, donkere visjes.",
+      "Tussen het ondergelopen gras zwemmen piepkleine, donkere jongen.",
       "Een langgerekte vis met een lange tweede rugvin en één baarddraad aan de kin."
     ] }
   ] },
@@ -1432,14 +1432,14 @@ const SPECIES = [
       "Zuid-Limburg, mei.",
       "Een ondiepe, schaduwrijke beek.",
       "Helder, zuurstofrijk water over grind.",
-      "Scholen kleine visjes; mannetjes met een rode buik.",
+      "Scholen kleine, slanke dieren; de mannetjes hebben een rode buik.",
       "Zeer fijne schubben en een donkere lengteband."
     ] },
     { bron:"RAVON, soortpagina elrits", sl:{ i:4, t:"Een rij donkere vlekken langs de flank met een gouden streep erboven, en zeer fijne schubben." }, wn:[
       "Achterhoek, augustus. Een warme dag met laag water.",
       "Een beek met snelstromende stukken en zandige kommen.",
       "Een ondiep grindbed vlak onder een stuw.",
-      "Een school van tientallen kleine visjes staat bij de kant tegen de stroom in; bij verstoring schieten ze allemaal tegelijk weg.",
+      "Tientallen kleine, slanke dieren staan bij de kant tegen de stroom in; bij verstoring schieten ze allemaal tegelijk weg.",
       "Klein, tot 10 cm, met een rij donkere vlekken langs de flank en een goudkleurige streep erboven."
     ] }
   ] },
@@ -1452,14 +1452,14 @@ const SPECIES = [
       "Zuid-Limburg, maart.",
       "Een snelstromende beek in het heuvelland.",
       "Een stenige bodem, stroomopwaarts van een stuw.",
-      "Oranje eitjes onder een platte steen; de vis hipt over de bodem.",
+      "Oranje eitjes onder een platte steen; iets hipt over de bodem.",
       "Een brede, platte kop en waaiervormige borstvinnen."
     ] },
     { bron:"RAVON, soortpagina beekdonderpad", sl:{ i:1, t:"Een koude, kleine bovenloop: deze soort leeft niet in de grote rivieren." }, wn:[
       "Veluwe, augustus. Een warme nacht.",
       "Een koude sprengenbeek in een loofbos.",
       "Een stenige bodem met takken en wortels in de stroming.",
-      "Met een zaklamp zie je een vis die roerloos op de bodem ligt en perfect opgaat in de stenen; hij zwemt in korte sprongetjes weg.",
+      "Met een zaklamp zie je iets dat roerloos op de bodem ligt en perfect opgaat in de stenen; het schiet in korte sprongetjes weg.",
       "Een plompe bodemvis zonder schubben, met een brede kop en grote, uitgespreide vinnen aan de zijkant."
     ] }
   ] },
@@ -1472,7 +1472,7 @@ const SPECIES = [
       "Zuid-Limburg, juni.",
       "Een snelstromende beek.",
       "Grindbanken afgewisseld met diepere kuilen.",
-      "Een school zilverachtige visjes van ±10 cm boven grind.",
+      "Een school zilverachtige dieren van ±10 cm boven grind.",
       "Een dubbele rij stippen langs de zijlijn."
     ] },
     { bron:"RAVON, soortpagina gestippelde alver", sl:{ i:4, t:"Een zijlijn met aan beide kanten een rij donkere puntjes." }, wn:[
@@ -1492,14 +1492,14 @@ const SPECIES = [
       "Afsluitdijk, november.",
       "De overgang van zout Waddenwater naar het zoete IJsselmeer.",
       "De spuisluizen, waar zoet water naar zee stroomt.",
-      "Zilverachtige vissen verzamelen zich om naar zoet water te trekken.",
+      "Zilverachtige dieren verzamelen zich om naar zoet water te trekken.",
       "Een kleine vetvin en een spitse, overhangende snuit."
     ] },
     { bron:"RAVON, soortpagina noordzeehouting", sl:{ i:4, t:"Een vetvin bij een zilverige trekvis met een overhangende snuit." }, wn:[
       "Haringvliet, april. Een heldere voorjaarsdag.",
       "Een groot zoetwaterbekken achter sluizen die op een kier staan.",
       "De sluisopening, waar zoet en zout water mengen.",
-      "Jonge, zilverige vissen van een paar centimeter trekken met het spuiwater mee naar zee.",
+      "Jonge, zilverige dieren van een paar centimeter trekken met het spuiwater mee naar zee.",
       "Een zalmachtige met een vetvin en een stompe neus die over de bek steekt."
     ] }
   ] },
@@ -1519,7 +1519,7 @@ const SPECIES = [
       "Noord-Brabant, juni. Een zachte avond.",
       "Een boerenerf met schuren en een weide met paarden.",
       "Een lange nestbuis in een oude perenboom.",
-      "Jonge uiltjes zitten bij de ingang; de ouders lopen over het gras en vangen regenwormen. Bij onraad maken ze knikbewegingen.",
+      "Jongen zitten bij de ingang; de ouders lopen over het gras en vangen regenwormen. Bij onraad maken ze knikbewegingen.",
       "Klein en gedrongen, bruin met witte vlekjes en gele ogen."
     ] }
   ] },
@@ -1559,7 +1559,7 @@ const SPECIES = [
       "Overijssel, februari. Een week met sneeuw.",
       "Een polder met lange, ruige wegbermen.",
       "Een paaltje langs een stille weg.",
-      "Overdag jaagt een lichte uil laag boven de berm; 's nachts klinkt een schorre schreeuw in plaats van een hoe-hoe.",
+      "Overdag jaagt iets lichts laag boven de berm; 's nachts klinkt een schorre schreeuw in plaats van een hoe-hoe.",
       "Witte onderkant, goudbruine bovenkant met grijze waas, lange poten en een witte, hartvormige sluier."
     ] }
   ] },
@@ -1579,7 +1579,7 @@ const SPECIES = [
       "Gelderse Vallei, eind augustus. Een warme middag.",
       "Akkers en graslanden waar net is gemaaid.",
       "Een vers gemaaid grasland.",
-      "Tientallen grote witte vogels lopen achter de maaier en vangen muizen; daarna cirkelen ze omhoog en trekken naar het zuiden.",
+      "Tientallen grote, witte dieren lopen achter de maaier en vangen muizen; daarna cirkelen ze omhoog en trekken naar het zuiden.",
       "Wit met zwarte slagpennen; vliegt met gestrekte hals."
     ] }
   ] },
@@ -1599,7 +1599,7 @@ const SPECIES = [
       "Noord-Brabant, juni. Een zonnige ochtend.",
       "Een visvijver op een landgoed.",
       "Een dode tak die laag boven het water hangt.",
-      "Een kleine vogel stort zich loodrecht in het water, komt met een visje boven en slaat het tegen de tak.",
+      "Iets kleins en fels stort zich loodrecht in het water, komt met een visje boven en slaat het tegen de tak.",
       "Fel blauw van boven en oranje van onder, met een lange snavel."
     ] }
   ] },
@@ -1619,7 +1619,7 @@ const SPECIES = [
       "Groningen, november. Een grauwe dag.",
       "Een uitgestrekt akkerland.",
       "Een pas gescheurd grasland.",
-      "Een groep van honderd zwarte vogels prikt diep in de grond naar larven; 's avonds vliegen ze met kauwen naar een slaapbos.",
+      "Een groep van honderd zwarte dieren prikt diep in de grond naar larven; 's avonds vliegen ze met kauwen naar een slaapbos.",
       "Zwart met paarse glans, een puntige snavel met een kale, lichte basis en een 'broek' van losse veren."
     ] }
   ] },
@@ -1632,14 +1632,14 @@ const SPECIES = [
       "Noord-Limburg, mei.",
       "Een zandwinning met een grote plas.",
       "Een steile, kale zandwand die door afgraving steeds verschuift.",
-      "Tientallen gaten vlak onder de rand; kleine vogels jagen laag boven het water.",
+      "Tientallen gaten vlak onder de rand; kleine, snelle vliegers jagen laag boven het water.",
       "Een bruine borstband op een witte buik."
     ] },
     { bron:"Sovon, soortpagina oeverzwaluw", sl:{ i:4, t:"Een bruine borstband op een witte buik: de kleinste zwaluw van Nederland." }, wn:[
       "Lauwersmeer, augustus. Een windstille avond.",
       "Een groot rietland langs een meer.",
       "Dichte rietvelden ver van de oever.",
-      "Duizenden kleine, bruine zwaluwen vallen bij zonsondergang in het riet in om te slapen.",
+      "Duizenden kleine, bruine vliegers vallen bij zonsondergang in het riet in om te slapen.",
       "Klein, bruin van boven, wit van onder met een bruine borstband."
     ] }
   ] },
@@ -1659,7 +1659,7 @@ const SPECIES = [
       "Nijmegen, oktober. Een heldere dag.",
       "Een stad aan de rivier.",
       "Een nestbak hoog in een kerktoren.",
-      "Een vogel stort zich vanaf grote hoogte op een duif; op de toren roept een paar luid naar elkaar.",
+      "Iets stort zich vanaf grote hoogte op een duif; op de toren roept een paar luid naar elkaar.",
       "Blauwgrijze rug, dwarsgestreepte buik en een brede, zwarte baardstreep."
     ] }
   ] },
@@ -1672,7 +1672,7 @@ const SPECIES = [
       "Groningen, januari.",
       "Een woonwijk aan de rand van open akkers.",
       "Een plantsoen met dichte coniferen naast een begraafplaats.",
-      "Tientallen grijze braakballen met veldmuizen; overdag meerdere vogels in één boom.",
+      "Tientallen grijze braakballen met veldmuizen; overdag zitten er meerdere exemplaren in één boom.",
       "Lange oorpluimen en oranje ogen."
     ] },
     { bron:"Vogelbescherming, vogelgids ransuil", sl:{ i:3, t:"Een hoog 'pieiep' als van een piepende deur: de bedelroep van de jongen van deze uil." }, wn:[
@@ -1699,7 +1699,7 @@ const SPECIES = [
       "Zeeland, september. Een zonnige middag.",
       "Een boerenerf met schuren en een kippenren.",
       "Een kippenren waar graan wordt gestrooid.",
-      "Een luidruchtige groep kleine bruine vogels eet mee met de kippen; ze broeden in kolonie onder de dakpannen.",
+      "Een luidruchtige groep kleine, bruine dieren eet mee met de kippen; ze broeden in kolonie onder de dakpannen.",
       "Mannetje met een grijze kruin, kastanjebruine nek en zwarte bef."
     ] }
   ] },
@@ -1739,7 +1739,7 @@ const SPECIES = [
       "Friesland, januari. Een koude, heldere dag.",
       "Een open weidegebied.",
       "Paaltjes langs een weg.",
-      "Een grote roofvogel zit op een paaltje; een ander loopt over het weiland en eet regenwormen.",
+      "Een grote, bruine jager zit op een paaltje; een ander loopt over het weiland en eet regenwormen.",
       "Gedrongen, met brede vleugels, een korte staart en een lichte band over de borst."
     ] }
   ] },
@@ -1759,7 +1759,7 @@ const SPECIES = [
       "Amsterdam, april. Een zonnige ochtend.",
       "Een stadspark met oude populieren en esdoorns.",
       "Een groot nest hoog in een populier, met wit dons aan de rand.",
-      "Een grote roofvogel vliegt met trage slagen en opgezette witte onderstaartveren in een baltsvlucht; duiven verdwijnen.",
+      "Een grote jager vliegt met trage slagen en opgezette witte onderstaartveren in een baltsvlucht; duiven verdwijnen.",
       "Groot, met een witte wenkbrauwstreep en een fijn gestreepte borst."
     ] }
   ] },
@@ -1772,7 +1772,7 @@ const SPECIES = [
       "Amersfoort, januari.",
       "Een woonwijk met veel groen.",
       "Tuinen met voederplekken en een plantsoen met naaldbomen.",
-      "Een plukplaats met mezenveertjes; een vogel schiet laag over een schutting.",
+      "Een plukplaats met mezenveertjes; iets schiet laag over een schutting.",
       "Korte, ronde vleugels en lange, dunne poten."
     ] },
     { bron:"Vogelbescherming, vogelgids sperwer", sl:{ i:4, t:"Klein met oranje wangen bij het mannetje: veel kleiner dan een havik." }, wn:[
@@ -1799,7 +1799,7 @@ const SPECIES = [
       "Noord-Brabant, mei. Een warme dag.",
       "Een groot bos- en heidegebied.",
       "Een bosrand met zonnige bermen.",
-      "Een roofvogel die hoog boven het bos baltst door de vleugels boven zijn rug tegen elkaar te klappen; hij is net terug uit Afrika.",
+      "Hoog boven het bos baltst een grote jager door de vleugels boven zijn rug tegen elkaar te klappen; hij is net terug uit Afrika.",
       "Een lange staart met twee donkere banden bij de basis en één bij de punt."
     ] }
   ] },
@@ -1819,7 +1819,7 @@ const SPECIES = [
       "Veluwe, juni. Een warme avond.",
       "Heide met vliegdennen.",
       "Een oud kraaiennest hoog in een vliegden.",
-      "Een snelle valk vangt een zwaluw in de vlucht.",
+      "Iets snels en sierlijks vangt een zwaluw in de vlucht.",
       "Lange, spitse vleugels, een zwarte baardstreep en een gestreepte borst."
     ] }
   ] },
@@ -1839,7 +1839,7 @@ const SPECIES = [
       "Maastricht, januari. Een koude dag.",
       "De Jeker in de stad.",
       "Een stenen kademuur bij een kleine waterval.",
-      "Een sierlijke vogel wipt voortdurend met zijn staart en pikt insecten van de natte stenen.",
+      "Iets sierlijks wipt voortdurend met zijn staart en pikt insecten van de natte stenen.",
       "Grijze rug, gele onderstaart en een zeer lange staart."
     ] }
   ] },
@@ -1872,14 +1872,14 @@ const SPECIES = [
       "Noord-Holland, mei.",
       "Open polder met weilanden.",
       "Wegbermen, slootkanten en een schuur met een kast.",
-      "Braakballen met veldmuizen; een vogel hangt stil in de lucht.",
+      "Braakballen met veldmuizen; iets hangt stil in de lucht.",
       "Een roodbruine rug met zwarte vlekjes."
     ] },
     { bron:"Vogelbescherming, vogelgids torenvalk", sl:{ i:4, t:"Een grijze kop met roodbruine rug: het mannetje van deze kleine valk." }, wn:[
       "Flevoland, december. Een heldere dag.",
       "Een akkerlandschap.",
       "Een lantaarnpaal langs een snelweg.",
-      "Een vogel hangt stil boven de berm, slaat een muis en eet die op een paaltje op.",
+      "Iets hangt stil boven de berm, slaat een muis en eet die op een paaltje op.",
       "Een mannetje met grijze kop, roodbruine rug en grijze staart met zwarte eindband."
     ] }
   ] },
@@ -1892,14 +1892,14 @@ const SPECIES = [
       "Friesland, juni.",
       "Graslanden en sloten bij een melkveebedrijf.",
       "Een open koeienstal met balken.",
-      "Open modderkommetjes op de balken; vogels scheren laag over het gras.",
+      "Open modderkommetjes op de balken; snelle vliegers scheren laag over het gras.",
       "Lange staartpennen."
     ] },
     { bron:"Vogelbescherming, vogelgids boerenzwaluw", sl:{ i:4, t:"Een roodbruine keel en een diep gevorkte staart." }, wn:[
       "Zeeland, september. Een frisse ochtend.",
       "Een dorp aan de dijk.",
       "Elektriciteitsdraden langs de dijk.",
-      "Tientallen zwaluwen zitten op een rij op de draden, vlak voor hun vertrek.",
+      "Tientallen exemplaren zitten op een rij op de draden, vlak voor hun vertrek.",
       "Een roodbruine keel, blauwzwarte rug en een diep gevorkte staart met lange punten."
     ] }
   ] },
@@ -1912,7 +1912,7 @@ const SPECIES = [
       "Overijssel, juni.",
       "Een dorp met een plas in de buurt.",
       "Woningen met overstekende dakgoten.",
-      "Gesloten modderkommetjes onder de goot; vogels rapen modder bij de plas.",
+      "Gesloten modderkommetjes onder de goot; de bewoners rapen modder bij de plas.",
       "Een witte stuit."
     ] },
     { bron:"Vogelbescherming, vogelgids huiszwaluw", sl:{ i:4, t:"Een witte stuit: geen andere zwaluw heeft die." }, wn:[
@@ -1939,7 +1939,7 @@ const SPECIES = [
       "Amsterdam, januari. Een koude dag.",
       "Een gracht in de binnenstad.",
       "Een woonboot met een man die vist.",
-      "Een grote grijze vogel staat roerloos aan de waterkant en vliegt weg met ingetrokken hals.",
+      "Iets groots en grijs staat roerloos aan de waterkant en vliegt weg met ingetrokken hals.",
       "Grijs, met een witte kop, een zwarte streep boven het oog en een dolkvormige snavel."
     ] }
   ] },
@@ -1959,7 +1959,7 @@ const SPECIES = [
       "Drenthe, juni. Een warme dag.",
       "Een boswachterij met grove dennen.",
       "Een stronk met grote, rechthoekige hakgaten.",
-      "Een hard, rollend geroffel ver hoorbaar; een vogel ter grootte van een kraai.",
+      "Een hard, rollend geroffel, ver hoorbaar; de maker is zo groot als een kraai.",
       "Zwart met een lichte snavel en een rode kruin."
     ] }
   ] },
@@ -1992,14 +1992,14 @@ const SPECIES = [
       "Een Waddeneiland, mei.",
       "Grijze duinen met korte, mosrijke vegetatie.",
       "Veel konijnenholen in open zand.",
-      "Een vogel duikt een konijnenhol in; buiginkjes op een paaltje.",
+      "Iets duikt een konijnenhol in; buiginkjes op een paaltje.",
       "Een witte stuit met een zwarte ‘T’ op de staart."
     ] },
     { bron:"Vogelbescherming, vogelgids tapuit", sl:{ i:4, t:"Een witte stuit met een zwarte 'T' op de staart." }, wn:[
       "Groningen, september. Een heldere dag.",
       "Een geploegde akker.",
       "Kluiten en een prikkeldraad langs de akker.",
-      "Vogels huppen over de kale akker en laten bij vertrek een witte stuit zien; ze zijn op trek naar Afrika.",
+      "Kleine, zandkleurige dieren huppen over de kale akker en laten bij vertrek een witte stuit zien; ze zijn op trek naar Afrika.",
       "Zandkleurig, met een witte stuit en een zwarte 'T' op de staart."
     ] }
   ] },
@@ -2019,7 +2019,7 @@ const SPECIES = [
       "Utrecht, november. Een grauwe dag.",
       "Grote weilanden.",
       "Een plas-drasplek.",
-      "Honderden zwart-witte vogels vliegen met trage, ronde vleugelslagen; een luid 'kie-wiet'.",
+      "Honderden zwart-witte dieren vliegen met trage, ronde vleugelslagen; een luid 'kie-wiet'.",
       "Een groenglanzende rug, witte buik en kuif."
     ] }
   ] },
@@ -2039,7 +2039,7 @@ const SPECIES = [
       "Zuid-Holland, juni. Een zonnige dag.",
       "Een kort gemaaid weiland.",
       "Een koeienweide.",
-      "Groepen grijsbruine jongen en glanzende ouders lopen snel over het gras en prikken; ze imiteren andere vogels.",
+      "Groepen grijsbruine jongen en glanzende ouders lopen snel over het gras en prikken; ze imiteren andere geluiden.",
       "Een spitse, gele snavel en lichte stippen."
     ] }
   ] },
@@ -2089,7 +2089,7 @@ const SPECIES = [
       "Zuid-Limburg, februari. In een kalksteengroeve.",
       "Een groeve in een hellingbos aan de rand van een dorp.",
       "Een koude gang met een vochtige wand vol kleine spleetjes.",
-      "Een klein vleermuisje dat vrij aan de wand hangt in winterslaap; de vacht zit vol dauwdruppels.",
+      "Iets kleins hangt vrij aan de wand in winterslaap; de vacht zit vol dauwdruppels.",
       "Klein, met een donker gezicht en donkere oren, een spits oorklepje en een 'baardje' van haren rond de mond."
     ] }
   ] },
@@ -2106,14 +2106,14 @@ const SPECIES = [
       "Biesbosch, augustus. Op een kade staan medewerkers met tanks op een aanhanger.",
       "Een zoetwatergetijdengebied met kreken en een brede rivierarm.",
       "Een zandige plaat in de stroming, waar het water bij eb snel uitloopt.",
-      "Jonge vissen met een zendertje gaan één voor één het water in; ze zwemmen dicht over de bodem weg.",
+      "Jonge dieren met een zendertje gaan één voor één het water in; ze zwemmen dicht over de bodem weg.",
       "Een spitse snuit met vier baarddraden ervoor, vijf rijen benige platen op het lijf en een ongelijke staartvin."
     ] },
     { bron:"RAVON, soortpagina Europese steur", sl:{ i:4, t:"Rijen benige schilden en een haaiachtige staartvin: een oervis die al miljoenen jaren zo uitziet." }, wn:[
       "Voordelta bij Zeeland, oktober. Een rustige dag op zee.",
       "Ondiepe kustzee met zandbanken.",
       "Het net van een garnalenkotter, vlak over de bodem gesleept.",
-      "Tussen de garnalen een vis met een zendermerkje; de visser fotografeert hem en zet hem direct terug.",
+      "Tussen de garnalen een dier met een zendermerkje; de visser fotografeert het en zet het direct terug.",
       "Torpedovormig, zo'n halve meter, met een staart met een lange bovenpunt, als bij een haai, en rijen benige schilden op rug en flanken."
     ] }
   ] },
@@ -2141,7 +2141,7 @@ const SPECIES = [
       "Den Haag, oktober. Een zonnige ochtend.",
       "Een park met oude eiken.",
       "Een voederplank met zonnebloempitten.",
-      "Een vogel pakt een zonnebloempit, vliegt weg en hakt hem in een spleet in de schors open.",
+      "Iets pakt een zonnebloempit, vliegt weg en hakt hem in een spleet in de schors open.",
       "Blauwgrijs met een zwarte oogstreep en een korte staart."
     ] }
   ] },
@@ -2154,7 +2154,7 @@ const SPECIES = [
       "Deventer, december. Rond de schemering boven de binnenstad.",
       "Een oude stadskern met kerktorens en hoge daken.",
       "Schoorstenen en galmgaten van een toren, vol takjes.",
-      "Honderden vogels die met een hoog, kort ‘kja’ naar een gezamenlijke slaapplaats vliegen.",
+      "Honderden zwarte dieren vliegen met een hoog, kort ‘kja’ naar een gezamenlijke slaapplaats.",
       "Klein en zwart, met een zilvergrijze achterhals en opvallend lichte ogen."
     ] },
     { bron:"Vogelbescherming, vogelgids kauw", sl:{ i:4, t:"Lichte ogen en een grijze nek." }, wn:[
@@ -2181,7 +2181,7 @@ const SPECIES = [
       "Den Bosch, april. Een zonnige ochtend.",
       "Een woonwijk met plantsoenen en grasvelden.",
       "Een nest hoog in een plataan.",
-      "Een grote zwarte vogel rooft een ei uit een merelnest terwijl kleine vogels alarm slaan; het paar blijft het hele jaar in zijn territorium.",
+      "Iets groots en zwarts rooft een ei uit een merelnest terwijl kleine zangers alarm slaan; het paar blijft het hele jaar in zijn territorium.",
       "Geheel zwart, met een bevederde snavelbasis en een recht afgesneden staart."
     ] }
   ] },
@@ -2194,14 +2194,14 @@ const SPECIES = [
       "Zuid-Holland, december. Een grijze, windstille dag.",
       "Graslanden en oogstakkers langs een groot rietmoeras.",
       "Een ondergelopen perceel met plassen en afgegraasde graszode.",
-      "Honderden grazende vogels; overal lange, groene keutels en een luid, rauw ‘ga-ga-ga’.",
+      "Honderden grazende dieren; overal lange, groene keutels en een luid, rauw ‘ga-ga-ga’.",
       "Grijsbruin, groot, met een oranje snavel en vleeskleurige poten."
     ] },
     { bron:"Vogelbescherming, vogelgids grauwe gans", sl:{ i:4, t:"Een oranje snavel en roze poten: de enige inheemse broedgans met die combinatie." }, wn:[
       "Oostvaardersplassen, juni. Een warme dag.",
       "Een groot moeras met plassen en rietland.",
       "Ondiep water langs een rietkraag.",
-      "Honderden grote grijze vogels kunnen tijdelijk niet vliegen omdat ze hun slagpennen vervangen; ouderparen zwemmen met gele kuikens.",
+      "Honderden grote, grijze dieren kunnen tijdelijk niet vliegen omdat ze hun slagpennen vervangen; ouderparen zwemmen met gele kuikens.",
       "Grijsbruin, met een oranje snavel en roze poten."
     ] }
   ] },
@@ -2245,7 +2245,7 @@ const SPECIES = [
       "Utrecht, augustus. Een warme dag.",
       "Een veenweidepolder met smalle sloten.",
       "Een slootkant met kroos en waterlelies.",
-      "Groene kikkers op de oever die met een plons het water in springen.",
+      "Groene diertjes op de oever springen met een plons het water in.",
       "Groen met donkere vlekken, en kenmerken die precies tussen die van de poel- en meerkikker in liggen."
     ] }
   ] },
@@ -2264,14 +2264,14 @@ const SPECIES = [
       "Westland, oktober. Aan het eind van de middag.",
       "Een kassengebied met erven, parkeerterreinen en sloten.",
       "Een kasdak en de verlichte overkapping van een tankstation.",
-      "Tientallen vogels die met een scherp ‘tsli-wiet’ binnenkomen en samen gaan slapen.",
+      "Tientallen kleine dieren komen met een scherp ‘tsli-wiet’ binnen en gaan samen slapen.",
       "Slank, grijs-wit-zwart, met een lange staart die voortdurend op en neer wipt."
     ] },
     { bron:"Vogelbescherming, vogelgids witte kwikstaart", sl:{ i:4, t:"Grijs-zwart-wit met een zwarte bef: de grote gele heeft een gele onderkant." }, wn:[
       "Drenthe, april. Een zonnige ochtend.",
       "Een boerenerf naast een weiland.",
       "Een nis in een houtstapel bij de schuur.",
-      "Een slanke vogel trippelt snel over het erf, rent achter vliegjes aan en wipt met de staart.",
+      "Iets slanks trippelt snel over het erf, rent achter vliegjes aan en wipt met de staart.",
       "Grijs, zwart en wit, met een zwarte bef en een wit gezicht."
     ] }
   ] },
@@ -2303,7 +2303,7 @@ const SPECIES = [
     { sl:{ i:4, t:"Een lange rechte snavel en in de vlucht een brede witte vleugelstreep." }, bron:"Vogelbescherming en Sovon, soortpagina grutto", wn:[
       "Friesland, juli. Het broedseizoen is net voorbij.",
       "Een ondiep plasdras-perceel naast kruidenrijk, laat gemaaid grasland.",
-      "Een slikkige rand met ondiep water, waar honderden vogels samen staan.",
+      "Een slikkige rand met ondiep water, waar er honderden samen staan.",
       "Een verzamelplaats voor de trek naar het zuiden; een luid ‘grut-to, grut-to’.",
       "Lange poten, een lange rechte snavel en in de vlucht een brede witte vleugelstreep."
     ] },
@@ -2311,7 +2311,7 @@ const SPECIES = [
       "Zuidwest-Friesland, april. Een winderige dag.",
       "Bloemrijk grasland met een hoog waterpeil.",
       "Een paaltje bij een greppel.",
-      "Een vogel zit luid roepend op een paaltje en valt een kraai aan die over het weiland vliegt.",
+      "Iets zit luid roepend op een paaltje en valt een kraai aan die over het weiland vliegt.",
       "Oranjebruine hals en borst, een lange rechte snavel en lange poten."
     ] }
   ] },
@@ -2331,7 +2331,7 @@ const SPECIES = [
       "Utrecht, maart. Vroeg in de ochtend.",
       "Een woonwijk met gazons en heggen.",
       "Klimop tegen een schutting.",
-      "Vanaf de nok van een dak klinkt een melodieus, fluitend lied; op het gazon staat een vogel met scheve kop te luisteren en trekt een worm uit de grond.",
+      "Vanaf de nok van een dak klinkt een melodieus, fluitend lied; op het gazon staat er één met scheve kop te luisteren en trekt een worm uit de grond.",
       "Het mannetje is zwart met een gele snavel; het vrouwtje donkerbruin."
     ] }
   ] },
@@ -2404,14 +2404,14 @@ const SPECIES = [
       "Noord-Limburg, mei. Vlak bij de grensmaas.",
       "Een rivierdal met uiterwaarden, grindplassen en populierenbosjes.",
       "Een oud nest in een populier aan de bosrand, aangekleed met plastic en lappen.",
-      "Een roofvogel die laag boven het water dode vis oppikt; een hoog, trillend ‘pie-ie-ie’.",
+      "Een jager pikt laag boven het water dode vis op; een hoog, trillend ‘pie-ie-ie’.",
       "Donkerbruin, met lange vleugels en een ondiep gevorkte staart die hij steeds bijdraait."
     ] },
     { bron:"Vogelbescherming, vogelgids zwarte wouw", sl:{ i:4, t:"Een licht gevorkte staart: bij de rode wouw is de staart diep gevorkt." }, wn:[
       "Gelderse Poort, juni. Een warme dag.",
       "Uiterwaarden langs de Rijn.",
       "Een oude populier aan een strang.",
-      "Een roofvogel cirkelt boven een weiland dat gemaaid wordt en draait voortdurend zijn staart.",
+      "Een jager cirkelt boven een weiland dat gemaaid wordt en draait voortdurend zijn staart.",
       "Donkerbruin, met een lichtere kop en een licht gevorkte staart."
     ] }
   ] },
@@ -2424,14 +2424,14 @@ const SPECIES = [
       "Veluwe, mei. Een zonnige ochtend in het voorjaar.",
       "Een oud eikenbos met weinig ondergroei.",
       "Een nestkast met een rond invlieggat aan een eik.",
-      "Een hoog, ritmisch liedje ‘wie-tie-wie-tie’ en een vogel die vanaf een tak insecten in de lucht vangt.",
+      "Een hoog, ritmisch liedje ‘wie-tie-wie-tie’; vanaf een tak worden insecten in de lucht gevangen.",
       "Klein; de man zwart-wit met een witte vleugelvlek en een wit vlekje op het voorhoofd."
     ] },
     { bron:"Vogelbescherming, vogelgids bonte vliegenvanger", sl:{ i:4, t:"Een witte vleugelvlek: de grauwe soort heeft die niet." }, wn:[
       "Kust bij Castricum, augustus. Na een nacht met oostenwind.",
       "Een duinbos met berken en struweel.",
       "Struiken aan de rand van het duinbos.",
-      "Een grijsbruine vogel op trek trekt steeds met de vleugels en vangt insecten.",
+      "Iets grijsbruins op trek trekt steeds met de vleugels en vangt insecten.",
       "Bruingrijs van boven, wit van onder, met een witte vleugelvlek."
     ] }
   ] },
@@ -2444,14 +2444,14 @@ const SPECIES = [
       "Gelderland, februari. In een stadspark.",
       "Een park met oude eiken en platanen.",
       "Een losse schorsflap waarachter takjes en veertjes zitten.",
-      "Een hoog, ijl liedje ‘tie-tie-tietere-tiet’; een vogel die als een muisje omhoog langs de stam schuift.",
+      "Een hoog, ijl liedje ‘tie-tie-tietere-tiet’; iets schuift als een muisje omhoog langs de stam.",
       "Bruin gestreept van boven, vuilwit van onder, met een dunne, gebogen snavel en stijve staartveren."
     ] },
     { bron:"Vogelbescherming, vogelgids boomkruiper", sl:{ i:4, t:"Vuilwitte, bruinige flanken en een lange snavel: de kortsnavelsoort is zuiverder wit." }, wn:[
       "Zeeland, november. Een koude dag.",
       "Een park met oude populieren.",
       "Stammen met ruwe schors.",
-      "Een vogeltje klimt spiraalsgewijs omhoog langs een stam en vliegt dan naar de voet van de volgende boom.",
+      "Iets kleins klimt spiraalsgewijs omhoog langs een stam en vliegt dan naar de voet van de volgende boom.",
       "Bruin gestreept, met een dunne gebogen snavel en vuilwitte, iets bruinige flanken."
     ] }
   ] },
@@ -2471,7 +2471,7 @@ const SPECIES = [
       "Zuid-Limburg, mei. Een koele ochtend.",
       "Een hellingbos met fijnsparren en beuken.",
       "Een spleet achter de schors van een dode beuk.",
-      "Een vogeltje schuift omhoog langs een sparrenstam en zingt een snel, dalend liedje met een triller op het eind.",
+      "Iets kleins schuift omhoog langs een sparrenstam en zingt een snel, dalend liedje met een triller op het eind.",
       "Zuiver wit van onder, met een witte wenkbrauwstreep."
     ] }
   ] },
@@ -2483,7 +2483,7 @@ const SPECIES = [
     { sl:{ i:4, t:"Een ronde witte vlek tussen snavel en oog." }, bron:"Vogelbescherming en Sovon, soortpagina brilduiker", wn:[
       "IJsselmeer, januari. Het is ijzig koud.",
       "Een groot zoet meer met dijken en luwe havens.",
-      "Een kom achter een strekdam, waar groepjes eenden telkens wegduiken.",
+      "Een kom achter een strekdam, waar groepjes telkens wegduiken.",
       "Een man die zijn kop ver naar achteren gooit bij de balts; zingende vleugels bij het opvliegen.",
       "Een zwarte, driehoekige kop met een ronde witte vlek tussen snavel en geel oog."
     ] },
@@ -2491,7 +2491,7 @@ const SPECIES = [
       "Veerse Meer, februari. Een koude dag.",
       "Een groot zout meer met luwe oevers.",
       "Een kom bij een havenhoofd.",
-      "Een groepje eenden duikt steeds weer; de vrouwtjes hebben een bruine kop.",
+      "Een groepje duikt steeds weer onder; de vrouwtjes hebben een bruine kop.",
       "Vrouwtje met chocoladebruine kop, witte halsband, grijs lijf en een gele snavelpunt."
     ] }
   ] },
@@ -2504,14 +2504,14 @@ const SPECIES = [
       "Veluwe, mei. Een warme, windstille dag.",
       "Een heideterrein met stuifzand, verspreide oude eiken en dennen.",
       "Een oud spechtenhol in een dode berk aan de rand van een open vlakte.",
-      "Een klaaglijk, herhaald ‘kjie-kjie-kjie’; een vogel die op de grond mieren uit een mierenhoop likt.",
+      "Een klaaglijk, herhaald ‘kjie-kjie-kjie’; op de grond likt iets mieren uit een mierenhoop.",
       "Grijsbruin gevlekt als schors, met een donkere streep over kruin en rug; draait bij gevaar zijn kop als een slang."
     ] },
     { bron:"Vogelbescherming, vogelgids draaihals", sl:{ i:4, t:"Gevlekt als schors: deze kleine specht heeft geen bonte kleuren en hakt geen eigen hol." }, wn:[
       "Texel, september. Na een paar dagen oostenwind.",
       "Een duinvallei met duindoorn.",
       "Een kale zandplek tussen struiken.",
-      "Een vogel zit stil op de grond en likt mieren op; hij valt nauwelijks op.",
+      "Iets zit stil op de grond en likt mieren op; het valt nauwelijks op.",
       "Grijsbruin gevlekt als schors, met een donkere streep over kruin en rug."
     ] }
   ] },
@@ -2524,7 +2524,7 @@ const SPECIES = [
       "Waddenzee bij Vlieland, december.",
       "Getijdengeulen en wadplaten achter een eiland.",
       "Een mosselbank die bij laagwater droogvalt.",
-      "Grote groepen duikende eenden en een zacht, verbaasd ‘ahoo’ van de mannetjes.",
+      "Grote, duikende groepen en een zacht, verbaasd ‘ahoo’ van de mannetjes.",
       "Een zware eend met een wigvormige kop; de man wit en zwart met een groene nekvlek."
     ] },
     { bron:"Vogelbescherming, vogelgids eidereend", sl:{ i:3, t:"Vrouwtjes die hun kuikens samen in een 'crèche' grootbrengen." }, wn:[
@@ -2544,14 +2544,14 @@ const SPECIES = [
       "Noord-Brabant, februari. Langs een provinciale weg.",
       "Een dorpsrand met erven, weilanden en meidoornhagen.",
       "Een groot, bolvormig takkennest met een dak, hoog in een meidoorn.",
-      "Een ratelend ‘tsjak-tsjak-tsjak’ en een vogel die verkeersslachtoffers afloopt.",
+      "Een ratelend ‘tsjak-tsjak-tsjak’; er loopt er één de verkeersslachtoffers af.",
       "Zwart-wit, met een lange staart die in het licht groen en paars glanst."
     ] },
     { bron:"Vogelbescherming, vogelgids ekster", sl:{ i:4, t:"Zwart-wit met een lange, glanzende staart." }, wn:[
       "Amsterdam, september. Een zonnige dag.",
       "Een woonwijk.",
       "Een gazon.",
-      "Een groep van tien vogels achtervolgt luid ratelend een kat; een vogel verstopt een stukje brood onder het gras.",
+      "Een groep van tien achtervolgt luid ratelend een kat; één verstopt een stukje brood onder het gras.",
       "Zwart-wit, met een lange, glanzende staart."
     ] }
   ] },
@@ -2571,7 +2571,7 @@ const SPECIES = [
       "Kennemerduinen, september. Een zachte ochtend.",
       "Een duinbos met berken.",
       "Een lage tak boven een zandpad.",
-      "Een vogel duikt steeds naar de grond voor een insect en keert terug; de staart trilt.",
+      "Iets duikt steeds naar de grond voor een insect en keert terug; de staart trilt.",
       "Een man met grijze rug, zwarte keel, oranje borst en een witte voorhoofdsband."
     ] }
   ] },
@@ -2584,7 +2584,7 @@ const SPECIES = [
       "Zuid-Limburg, december. Een vochtig hellingbos.",
       "Een oud loofbos met eiken, beuken en hazelaar.",
       "Een kleine, bestaande holte laag in een rotte stam.",
-      "Een explosief ‘pitsjoe’; een vogel die zaadjes één voor één verstopt in schorsspleten.",
+      "Een explosief ‘pitsjoe’; zaadjes worden één voor één verstopt in schorsspleten.",
       "Grijsbruin, met een glanzend zwart kapje en een klein zwart befje."
     ] },
     { bron:"Vogelbescherming, vogelgids glanskop", sl:{ i:4, t:"Een glanzend kapje zonder lichte vleugelvlek: de matkop heeft een dof kapje." }, wn:[
@@ -2604,7 +2604,7 @@ const SPECIES = [
       "Achterhoek, juni. Rond de middag.",
       "Een oude boerderijtuin met hoge bomen bij een landgoed.",
       "Een nis in klimop tegen een schuurmuur, of een half-open nestkast.",
-      "Een vogel die steeds vanaf dezelfde tak een insect in de lucht vangt en terugkeert; een zacht ‘tsiet’.",
+      "Steeds vanaf dezelfde tak wordt een insect in de lucht gevangen, waarna hij terugkeert; een zacht ‘tsiet’.",
       "Grijsbruin, slank, met een fijn gestreepte kruin en borst en een rechtop zittende houding."
     ] },
     { bron:"Vogelbescherming, vogelgids grauwe vliegenvanger", sl:{ i:4, t:"Een gestreepte kruin en geen witte vleugelvlek." }, wn:[
@@ -2623,7 +2623,7 @@ const SPECIES = [
     { sl:{ i:3, t:"Een spechtensmidse vol dennenkegels." }, bron:"Vogelbescherming, soortpagina grote bonte specht", wn:[
       "Het Gooi, februari. Een windstille, koude ochtend.",
       "Een gemengd bos met grove dennen en eiken.",
-      "Een ‘spechtensmidse’: een spleet in een stam vol uitgepikte dennenkegels, met lege kegels eronder.",
+      "Een ‘smidse’: een spleet in een stam vol uitgepikte dennenkegels, met lege kegels eronder.",
       "Een kort, snel roffel dat ver draagt, en een scherp ‘kik’.",
       "Zwart-wit, met grote witte schoudervlekken en een rode onderstaart."
     ] },
@@ -2631,7 +2631,7 @@ const SPECIES = [
       "Twente, juni. Een warme dag.",
       "Een bosrand met berken.",
       "Een nestkast waarvan het invlieggat is uitgehakt.",
-      "Uit een gat in een berk klinkt de hele dag luid gebedel; een volwassen vogel hakt een nestkast open.",
+      "Uit een gat in een berk klinkt de hele dag luid gebedel; een volwassen dier hakt een nestkast open.",
       "Zwart-wit, met grote witte schoudervlekken en een rode onderstaart."
     ] }
   ] },
@@ -2643,7 +2643,7 @@ const SPECIES = [
     { sl:{ i:4, t:"Oranjeroze met zwart-witte vleugels en een waaierkuif." }, bron:"Sovon, zeldzame broedvogels; Vogelbescherming, soortpagina hop", wn:[
       "Veluwe, april. Een warme dag na de eerste zuidenwind.",
       "Een open heide met stuifzand en kort begraasde graslandjes.",
-      "Een kale, zonnige zandplek waar de vogel met zijn snavel in de grond prikt.",
+      "Een kale, zonnige zandplek vol kleine prikgaatjes.",
       "Een dof, ver dragend ‘oep-oep-oep’; een vlucht als van een grote, onregelmatig fladderende vlinder.",
       "Oranjeroze, met zwart-wit gestreepte vleugels, een lange gebogen snavel en een kuif die hij als een waaier opzet."
     ] },
@@ -2651,7 +2651,7 @@ const SPECIES = [
       "Kust bij Den Helder, april. Een warme dag met zuidoostenwind.",
       "Grijze duinen met kort gras.",
       "Een begraasd stuk duin met konijnenholen.",
-      "Een opvallende vogel fladdert met een golvende, vlinderachtige vlucht weg en landt weer, prikkend in de grond.",
+      "Iets opvallends fladdert met een golvende, vlinderachtige vlucht weg en landt weer, prikkend in de grond.",
       "Roze-oranje, met zwart-witte vleugels en een kuif."
     ] }
   ] },
@@ -2671,7 +2671,7 @@ const SPECIES = [
       "Betuwe, april. Een zonnige dag.",
       "Een hoogstamboomgaard.",
       "Een dode tak in een oude appelboom.",
-      "Een vogeltje klimt in de dunste takken en roffelt zacht.",
+      "Iets kleins klimt in de dunste takken en roffelt zacht.",
       "Een zwart-wit geladderde rug en geen witte schoudervlekken."
     ] }
   ] },
@@ -2684,7 +2684,7 @@ const SPECIES = [
       "Vlieland, september. Na een paar dagen oostenwind.",
       "Een duinvallei met een klein bosje van berk en populier.",
       "Het lage struikgewas in de luwte van het bosje.",
-      "Een droog, ratelend ‘zrrrt’; een vogel die zijn staart steeds even opwipt en spreidt.",
+      "Een droog, ratelend ‘zrrrt’; iets kleins wipt zijn staart steeds even op en spreidt hem.",
       "Klein en grijsbruin met een opvallende oogring; witte vlekken aan de zijkanten van een zwarte staart."
     ] },
     { bron:"Vogelbescherming, vogelgids kleine vliegenvanger", sl:{ i:4, t:"Een oranjerode keel en een zwart-witte staart." }, wn:[
@@ -2704,7 +2704,7 @@ const SPECIES = [
       "Rotterdam, november. In een volkstuin.",
       "Een stadspark met tuinen en voederplekken.",
       "Een nestkast met een gat van 32 mm, nog vol oud mos van vorig voorjaar.",
-      "Een luid ‘tie-tuu, tie-tuu’, ook al in de winter; een vogel die aan een vetbol hangt.",
+      "Een luid ‘tie-tuu, tie-tuu’, ook al in de winter; iets hangt aan een vetbol.",
       "Geel met een zwarte kop, witte wangen en een zwarte streep over borst en buik."
     ] },
     { bron:"Vogelbescherming, vogelgids koolmees", sl:{ i:4, t:"Een zwarte streep over de buik." }, wn:[
@@ -2724,14 +2724,14 @@ const SPECIES = [
       "Utrecht, januari. Een rietkraag langs een singel.",
       "Een stadsrand met tuinen, singels en een rietkraag.",
       "Rietpluimen en lisdoddes waarvan de stengels zijn opengepikt.",
-      "Een kleine vogel die ondersteboven aan een rietstengel hangt; een fijn ‘tsie-tsie-tsurrr’.",
+      "Iets kleins hangt ondersteboven aan een rietstengel; een fijn ‘tsie-tsie-tsurrr’.",
       "Klein, geel van onder, met een blauw petje en blauwe vleugels."
     ] },
     { bron:"Vogelbescherming, vogelgids pimpelmees", sl:{ i:4, t:"Een blauw petje: de koolmees heeft een zwarte kop." }, wn:[
       "Amsterdam, april. Een zonnige dag.",
       "Een achtertuin.",
       "Een nestkast met een gat van 28 mm.",
-      "Een klein vogeltje hangt met de buik naar boven aan een wilgenkatje.",
+      "Iets kleins hangt met de buik naar boven aan een wilgenkatje.",
       "Een blauw petje en een gele buik."
     ] }
   ] },
@@ -2744,14 +2744,14 @@ const SPECIES = [
       "Drenthe, februari. Boven een uitgestrekt heideveld.",
       "Een groot bos- en heidegebied met verspreide oude grove dennen.",
       "Een groot, stevig takkennest in de kruin van een oude den, bekleed met wol en haar.",
-      "Een diep, galmend ‘krok-krok’; twee vogels die samen duikelen en op de rug draaien in de lucht.",
+      "Een diep, galmend ‘krok-krok’; twee grote, zwarte dieren duikelen samen en draaien op de rug in de lucht.",
       "Geheel zwart, groot als een buizerd, met een zware snavel, ruige keel en wigvormige staart."
     ] },
     { bron:"Vogelbescherming, vogelgids raaf", sl:{ i:4, t:"Zo groot als een buizerd met een wigvormige staart: de zwarte kraai is een stuk kleiner en heeft een recht afgesneden staart." }, wn:[
       "Veluwe, september. Een koele dag.",
       "Een groot bos.",
       "Een kadaver van een edelhert.",
-      "Een groep grote zwarte vogels eet; een diep 'krok' ver hoorbaar.",
+      "Een groep grote, zwarte dieren eet; een diep 'krok' ver hoorbaar.",
       "Zo groot als een buizerd, zwart, met een zware snavel en een wigvormige staart."
     ] }
   ] },
@@ -2784,14 +2784,14 @@ const SPECIES = [
       "Lauwersmeer, december. Een heldere winterdag.",
       "Een groot meer met rietlanden, plassen en verspreide bosjes.",
       "Een reusachtig takkennest in een oude populier aan de rand van een moerasbos.",
-      "Duizenden ganzen die tegelijk opvliegen als er een grote roofvogel overkomt.",
+      "Duizenden ganzen vliegen tegelijk op als er iets enorms overkomt.",
       "Enorm, met brede ‘plankvleugels’, een zware gele snavel en een korte witte staart."
     ] },
     { bron:"Vogelbescherming, vogelgids zeearend", sl:{ i:4, t:"Een witte staart en een lichte kop: de grootste roofvogel van Nederland." }, wn:[
       "Biesbosch, april. Een heldere dag.",
       "Een zoetwatergetijdengebied.",
       "Een nest in een wilg.",
-      "Een enorme roofvogel vist een karper uit het water.",
+      "Iets enorms vist een karper uit het water.",
       "Bruin, met een lichte kop en witte staart."
     ] }
   ] },
@@ -2804,14 +2804,14 @@ const SPECIES = [
       "Veluwe, oktober. Een rustige najaarsdag.",
       "Een uitgestrekt naaldbos met fijnsparren en douglas.",
       "Een holte tussen boomwortels, laag bij de grond.",
-      "Een snel, hoog ‘tsie-tsuu tsie-tsuu’ uit de kruin; kleine vogels die tussen de naalden hangen.",
+      "Een snel, hoog ‘tsie-tsuu tsie-tsuu’ uit de kruin; kleine diertjes hangen tussen de naalden.",
       "Heel klein, met een zwarte kop, witte wangen, een witte nekvlek en twee witte vleugelstreepjes."
     ] },
     { bron:"Vogelbescherming, vogelgids zwarte mees", sl:{ i:4, t:"Een witte nekvlek: dat heeft geen ander klein vogeltje." }, wn:[
       "Zuid-Limburg, januari. Een koude dag.",
       "Een fijnsparrenbos.",
       "Sparrenkegels.",
-      "Kleine vogeltjes eten zaad uit de kegels, samen met goudhaantjes.",
+      "Kleine diertjes eten zaad uit de kegels, samen met goudhaantjes.",
       "Heel klein, met een zwarte kop en een witte nekvlek."
     ] }
   ] },
@@ -2864,14 +2864,14 @@ const SPECIES = [
       "Moerputten bij 's-Hertogenbosch, juli. Een warme, zonnige middag.",
       "Een vochtig, schraal hooiland met blauwgrasland-soorten, laat in het jaar gemaaid.",
       "Hoge, donkerrode bloemhoofdjes op lange stelen, ruim boven het gras uit.",
-      "Een klein blauw vlindertje dat eitjes legt in de bloemknoppen; later in de zomer slepen mieren een rupsje hun nest in.",
+      "Een klein, blauw diertje legt eitjes in de bloemknoppen; later in de zomer slepen mieren een rupsje hun nest in.",
       "Spanwijdte zo'n 3,5 cm; bovenkant blauw met donkere vlekjes, onderkant lichtbruin met twee rijen zwarte stippen."
     ] },
     { bron:"De Vlinderstichting, soortpagina pimpernelblauwtje", sl:{ i:4, t:"Een lichte onderkant met twee rijen stippen: bij de donkere tweelingsoort is de onderkant chocoladebruin." }, wn:[
       "Noord-Brabant, begin augustus. Vroeg in de ochtend na een koele nacht.",
       "Een hooiland dat in fasen wordt gemaaid: een deel is al kort, een deel staat nog.",
       "Hoge, roodbruine bloemknopjes van de waardplant in het ongemaaide deel.",
-      "Kleine blauwe vlindertjes met dauw op de vleugels zitten met de vleugels dicht op die knopjes.",
+      "Kleine, blauwe diertjes met dauw op de vleugels zitten met de vleugels dicht op die knopjes.",
       "Onderkant licht grijsbruin met twee rijen zwarte stippen."
     ] }
   ] },
@@ -2891,7 +2891,7 @@ const SPECIES = [
       "Maasvallei bij Roermond, juni. Een warme avond.",
       "Een grindgat met ruige, zandige oevers.",
       "Een braakliggend stuk met kaardebollen, kattenstaart en ruigte.",
-      "In de schemering zweeft een klein, snel insect als een kolibrie voor de bloemen en schiet dan schichtig weg.",
+      "In de schemering zweeft iets kleins en snels als een kolibrie voor de bloemen en schiet dan schichtig weg.",
       "Klein, met groene vleugels met een getande rand en oranjegele achtervleugels."
     ] }
   ] },
@@ -2903,15 +2903,15 @@ const SPECIES = [
     { sl:{ i:3, t:"Een spinsel vol zwarte rupsen hoog in een iep." }, bron:"De Vlinderstichting, De dagvlinders van Nederland (grote vos)", wn:[
       "Noord-Brabant, maart. De eerste warme dag van het jaar.",
       "Een oude bosrand met vrijstaande iepen en wilgen langs een zonnig pad.",
-      "Een holle boom en een houtstapel waarin een vlinder heeft overwinterd.",
-      "Een grote oranje vlinder die zich zonnig op een stam laat opwarmen; later in het voorjaar een spinsel vol zwarte rupsen hoog in een iep.",
+      "Een holle boom en een houtstapel waarin iets heeft overwinterd.",
+      "Iets groots en oranjes laat zich opwarmen op een zonnige stam; later in het voorjaar een spinsel vol zwarte rupsen hoog in een iep.",
       "Spanwijdte zo'n 6 cm; oranjebruin met zwarte vlekken en een smalle rand van blauwe vlekjes langs de achtervleugels."
     ] },
     { bron:"De Vlinderstichting, soortpagina grote vos", sl:{ i:4, t:"Geen witte vlek bij de vleugelpunt en groter: het verschil met de kleine vos." }, wn:[
       "Zuid-Limburg, juli. Een warme dag.",
       "Een oude hoogstamboomgaard naast een bosrand.",
       "Een eik met uitvloeiend sap en rottend fruit onder de bomen.",
-      "Verse, grote oranje vlinders zuigen aan het sap; na een paar weken zijn ze verdwenen tot het volgende voorjaar.",
+      "Verse, grote, oranje exemplaren zuigen aan het sap; na een paar weken zijn ze verdwenen tot het volgende voorjaar.",
       "Spanwijdte zo'n 6 cm; oranjebruin met zwarte vlekken en zonder witte vlek bij de vleugelpunt."
     ] }
   ] },
@@ -2930,7 +2930,7 @@ const SPECIES = [
       "Veluwezoom, juli. Een warme, windstille ochtend.",
       "Een oud loofbos met open plekken, brede lanen en veel boswilg langs de randen.",
       "De bovenste takken van een vrijstaande eik waar mannetjes elkaar achternazitten, en een boswilg aan een beschaduwde bosrand.",
-      "Een grote vlinder die op het pad zit te likken aan een uitwerpsel en een plasje; een stinkend stukje kaas lokt hem naar beneden.",
+      "Iets groots zit op het pad te likken aan een uitwerpsel en een plasje; een stinkend stukje kaas lokt hem naar beneden.",
       "Spanwijdte zo'n 6,5 cm; bruinzwart met een witte band, in het licht paars glanzend, met een oogvlek op de achtervleugel."
     ] },
     { bron:"De Vlinderstichting, soortpagina grote weerschijnvlinder", sl:{ i:3, t:"Een groene rups met twee hoorntjes op boswilg: de waardplant en de rups van deze soort." }, wn:[
@@ -2950,14 +2950,14 @@ const SPECIES = [
       "Twente, juni. Een zonnige middag na een regenbui.",
       "Een vochtig, half beschaduwd bos met eiken en berken en brede, open paden.",
       "Wilde kamperfoelie die in slingers over de struiken langs de bosrand hangt.",
-      "Een zwarte vlinder die afwisselend klappert en lang zweeft, steeds rond dezelfde zonnige plek; in de winter een opgerold blaadje met een rupsje op een kamperfoelietakje.",
+      "Iets zwarts klappert afwisselend en zweeft lang, steeds rond dezelfde zonnige plek; in de winter een opgerold blaadje met een rupsje op een kamperfoelietakje.",
       "Spanwijdte zo'n 5,5 cm; bovenkant zwart met een witte vlekkenband, onderkant oranjebruin met wit en zwarte stippen."
     ] },
     { bron:"De Vlinderstichting, soortpagina kleine ijsvogelvlinder", sl:{ i:4, t:"Geen paarse glans: het verschil met de grote weerschijnvlinder, die er van boven op lijkt." }, wn:[
       "Achterhoek, juli. Een warme, zonnige middag.",
       "Een vochtig loofbos met oude eiken.",
       "Een braamstruweel in de halfschaduw langs een bospad.",
-      "Een zwarte vlinder met een witte band zweeft met een paar vleugelslagen tussen de bomen en landt op braambloesem.",
+      "Iets zwarts met een witte band zweeft met een paar vleugelslagen tussen de bomen en landt op braambloesem.",
       "Onderkant oranjebruin met een witte band; geen paarse glans aan de bovenkant."
     ] }
   ] }
