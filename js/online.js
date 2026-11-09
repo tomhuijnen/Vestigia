@@ -13,6 +13,10 @@ const online = (() => {
   const koppeling = () => { try { return JSON.parse(localStorage.getItem(KKEY)); } catch(e){ return null; } };
   const setKoppeling = k => { try { k ? localStorage.setItem(KKEY, JSON.stringify(k)) : localStorage.removeItem(KKEY); } catch(e){} };
   const account = () => player() || koppeling();
+  /* iPhone/iPad: de app op het beginscherm heeft een eigen geheugen, los van Safari. Wie eerst in Safari een naam koos,
+     moet hier zijn spelerscode plakken in plaats van opnieuw een naam te kiezen (anders: 'naam bezet' of een tweede account). */
+  const appApart = () => /iPhone|iPad|iPod/.test(navigator.userAgent) && (navigator.standalone === true ||
+    (window.matchMedia && matchMedia("(display-mode: standalone)").matches));
   async function rpc(fn, args){
     if (navigator.onLine === false){ Veld.zet(true); throw Object.assign(new Error("Geen internet"), { status: 0, offline: true }); }
     /* in het veld is het netwerk vaak traag of half: na 10 seconden geven we het op in plaats van te blijven hangen */
@@ -207,7 +211,8 @@ const online = (() => {
       box.innerHTML = `<p><b>Doe mee aan de ranglijst.</b> Kies een spelersnaam. Je hebt geen account of e-mailadres nodig.</p>
         <div class="row2"><input id="pName" maxlength="20" placeholder="Bijvoorbeeld Tom of Dassenjager" autocomplete="nickname"><button class="btn" id="pJoin">Meedoen</button></div>
         <span class="msg" id="pMsg"></span>
-        <details><summary>Ik heb al een spelers- of koppelcode</summary>
+        <details id="pCodeBox"${appApart() ? " open" : ""}><summary>Ik heb al een spelers- of koppelcode</summary>
+          <p style="margin:8px 0 0;font-size:.9em;opacity:.85">${appApart() ? "Speelde je eerder in Safari? De app op je beginscherm heeft een eigen geheugen. Open Vestigia in Safari, ga naar Mijn profiel, kopieer je spelerscode en plak hem hier. Kies dus geen nieuwe naam." : "Je spelerscode staat in Mijn profiel op je andere apparaat."}</p>
           <div class="row2" style="margin-top:8px"><input id="pCode" placeholder="VSP-…"><button class="btn line" id="pLogin">Verder spelen</button></div>
         </details>`;
       $("pJoin").onclick = join;
@@ -230,7 +235,13 @@ const online = (() => {
       const extra = await League.naNaam(true);
       Profiel.naNaam();
       queueRecentDaily(); syncSoon(); flush().then(() => refreshWeek()).catch(() => {}); renderRank(); renderMenu(); toast(`Welkom, ${name}! Je doet nu mee aan de ranglijst.${extra}`);
-    } catch(e){ $("pJoin").disabled = false; $("pMsg").textContent = e.status && e.status < 500 ? e.message : "Aanmelden lukte niet. Controleer je internetverbinding."; }
+    } catch(e){
+      $("pJoin").disabled = false;
+      const bezet = e.status && e.status < 500 && /bezet/i.test(e.message || "");
+      $("pMsg").textContent = bezet ? "Deze naam is al bezet. Is het jouw naam van een ander apparaat of uit Safari? Plak dan hieronder je spelerscode (te vinden in Mijn profiel op dat apparaat)."
+        : e.status && e.status < 500 ? e.message : "Aanmelden lukte niet. Controleer je internetverbinding.";
+      if (bezet && $("pCodeBox")){ $("pCodeBox").open = true; $("pCode").focus(); }
+    }
   }
   async function login(){
     try {
@@ -298,7 +309,7 @@ const online = (() => {
     setPlayer(Object.assign({}, p, { name: naam })); renderRank(); renderMenu();
     return rest;
   }
-  return { enabled, rpc, player, hernoem, account, koppeling, koppelcode, koppel, afterGame, haalVoortgang, flush, syncSoon, renderRank, refreshWeek, renderScope, setScope,
+  return { enabled, rpc, player, appApart, hernoem, account, koppeling, koppelcode, koppel, afterGame, haalVoortgang, flush, syncSoon, renderRank, refreshWeek, renderScope, setScope,
            setMode: (m, s) => { rankMode = m; if (s !== undefined) setScope(s); else renderRank(); } };
 })();
 
@@ -319,8 +330,14 @@ function showRank(mode, scopeId){
   window.scrollTo({ top:0, behavior:"auto" });
 }
 $("rankTabs").querySelectorAll(".chipbtn").forEach(b => b.addEventListener("click", () => online.setMode(b.dataset.r)));
-$("welcomeGo").addEventListener("click", () => { showRank(); setTimeout(() => $("pName") && $("pName").focus(), 50); });
-$("welcomeLater").addEventListener("click", () => { $("welcome").hidden = true; try { localStorage.setItem("vestigia:welcomeLater", "1"); } catch(e){} });
+$("welcomeGo").addEventListener("click", () => {
+  showRank();
+  setTimeout(() => {
+    if ($("welcomeGo").dataset.code && $("pCodeBox")){ $("pCodeBox").open = true; $("pCode").focus(); }
+    else if ($("pName")) $("pName").focus();
+  }, 50);
+});
+$("welcomeLater").addEventListener("click", () => { $("welcome").hidden = true; try { localStorage.setItem("vestigia:welcomeLater", "1"); localStorage.setItem("vestigia:welcomeLater:app", "1"); } catch(e){} });
 /* De vraag om een spelersnaam komt na de openingsanimatie en de uitleg (zie start() in js/app.js).
    Wie via een uitnodigings- of leaguelink binnenkomt, krijgt hem altijd, met van wie de uitnodiging is. */
 function toonWelkom(){
@@ -328,6 +345,12 @@ function toonWelkom(){
     if (!online.enabled || online.player()) return;
     const link = League.welkomTekst();
     if (link) $("welcomeText").innerHTML = link;
+    else if (online.appApart()){
+      $("welcomeText").innerHTML = `<b>Speelde je al in Safari?</b> De app op je beginscherm heeft een eigen geheugen. Kies dan geen nieuwe naam, maar plak je spelerscode uit Safari (Mijn profiel → Kopieer spelerscode). Dan houd je je naam en voortgang.`;
+      $("welcomeGo").textContent = "Spelerscode plakken";
+      $("welcomeGo").dataset.code = "1";
+      if (!localStorage.getItem("vestigia:welcomeLater:app")) $("welcome").hidden = false;
+    }
     if (link || !localStorage.getItem("vestigia:welcomeLater")) $("welcome").hidden = false;
   } catch(e){}
 }
