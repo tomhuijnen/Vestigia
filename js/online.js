@@ -14,11 +14,20 @@ const online = (() => {
   const setKoppeling = k => { try { k ? localStorage.setItem(KKEY, JSON.stringify(k)) : localStorage.removeItem(KKEY); } catch(e){} };
   const account = () => player() || koppeling();
   async function rpc(fn, args){
-    const r = await fetch(CFG.supabaseUrl.replace(/\/$/, "") + "/rest/v1/rpc/" + fn, {
-      method: "POST",
-      headers: Object.assign({ apikey: CFG.supabaseKey, "Content-Type": "application/json" }, /^eyJ/.test(CFG.supabaseKey) ? { Authorization: "Bearer " + CFG.supabaseKey } : {}),
-      body: JSON.stringify(args || {})
-    });
+    if (navigator.onLine === false){ Veld.zet(true); throw Object.assign(new Error("Geen internet"), { status: 0, offline: true }); }
+    /* in het veld is het netwerk vaak traag of half: na 10 seconden geven we het op in plaats van te blijven hangen */
+    const ctl = typeof AbortController !== "undefined" ? new AbortController() : null;
+    const tijd = ctl ? setTimeout(() => ctl.abort(), 10000) : null;
+    let r;
+    try {
+      r = await fetch(CFG.supabaseUrl.replace(/\/$/, "") + "/rest/v1/rpc/" + fn, {
+        method: "POST", signal: ctl ? ctl.signal : undefined,
+        headers: Object.assign({ apikey: CFG.supabaseKey, "Content-Type": "application/json" }, /^eyJ/.test(CFG.supabaseKey) ? { Authorization: "Bearer " + CFG.supabaseKey } : {}),
+        body: JSON.stringify(args || {})
+      });
+    } catch(e){ Veld.zet(true); throw Object.assign(new Error("Geen verbinding"), { status: 0, offline: true }); }
+    finally { if (tijd) clearTimeout(tijd); }
+    Veld.zet(false);
     const txt = await r.text(); let data = null;
     try { data = txt ? JSON.parse(txt) : null; } catch(e){}
     if (!r.ok) throw Object.assign(new Error((data && data.message) || r.statusText), { status: r.status });
@@ -182,7 +191,7 @@ const online = (() => {
         $("rankMe").innerHTML = `${wk ? wk.pts : 0}<small>jouw punten deze week</small>`;
       }
     } catch(e){
-      list.innerHTML = `<p class="rankempty">De ranglijst is nu niet bereikbaar. Controleer je internetverbinding en probeer het later opnieuw.</p>`;
+      list.innerHTML = Veld.aan() ? `<p class="rankempty"><b>Veldmodus.</b> Zonder internet kan de ranglijst niet laden. Je speelt gewoon verder; je dagscore wordt verstuurd zodra je weer verbinding hebt.</p>` : `<p class="rankempty">De ranglijst is nu niet bereikbaar. Controleer je internetverbinding en probeer het later opnieuw.</p>`;
     }
   }
   function renderPlayerBox(){
@@ -311,7 +320,27 @@ function toonWelkom(){
   } catch(e){}
 }
 if (!online.enabled){ ["menuLeague", "menuInvite", "menuShop"].forEach(id => $(id).parentElement.hidden = true); document.querySelector('#tabbar [data-tab="rank"]').hidden = true; }
-window.addEventListener("online", () => online.flush());
+/* Veldmodus: gaat vanzelf aan zonder internet (of als Supabase niet te bereiken is) en weer uit zodra het lukt.
+   Spelen werkt gewoon; wat online moet (ranglijst, eikels, shop) wacht, en dagscores gaan in de wachtrij. */
+const Veld = (() => {
+  let aan = false, gemeld = false;
+  function toon(){
+    for (const id of ["veldPill", "veldPillSlim"]){ const b = $(id); if (b) b.hidden = !aan; }
+    document.documentElement.classList.toggle("veldmodus", aan);
+  }
+  function zet(v){
+    if (v === aan) return;
+    aan = v; toon();
+    if (aan && !gemeld){ gemeld = true; toast("Geen verbinding: veldmodus staat aan. Je speelt gewoon verder; je dagscore wordt verstuurd zodra je weer verbinding hebt.", { duur: 7000 }); }
+    if (!aan && gemeld){ gemeld = false; online.flush().then(() => toast("Weer online. Je scores zijn verstuurd.", { duur: 4000 })).catch(() => {}); }
+  }
+  const uitleg = () => toast("Veldmodus: er is nu geen verbinding met internet of met de server van Vestigia. De dagcasus en oefenen werken gewoon. De ranglijst, eikels en de shop komen terug zodra je weer online bent; je scores worden dan vanzelf verstuurd.", { duur: 8000 });
+  for (const id of ["veldPill", "veldPillSlim"]){ const b = $(id); if (b) b.onclick = uitleg; }
+  return { zet, aan: () => aan, toon };
+})();
+window.addEventListener("online", () => { Veld.zet(false); online.flush(); });
+window.addEventListener("offline", () => Veld.zet(true));
+if (navigator.onLine === false) setTimeout(() => Veld.zet(true), 0);   // na het laden van app.js (toast)
 online.haalVoortgang().then(() => online.flush()).then(() => online.refreshWeek()).catch(() => {});
 document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") online.haalVoortgang(); });
 

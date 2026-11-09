@@ -717,3 +717,9 @@ body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
 .vwlijst > li{display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px 16px; padding:10px 12px; border:1px solid var(--rule); border-radius:10px; background:#fff}
 .vwlijst > li > div{display:grid; gap:2px}
 .vwlijst > li.compleet{border-color:var(--moss); background:var(--leaf)}
+
+/* veldmodus (offline) */
+.veldpill{display:inline-flex; align-items:center; gap:5px; height:30px; padding:0 10px; border-radius:15px; border:1px solid rgba(255,255,255,.45); background:rgba(0,0,0,.18); color:#fff; font:600 .78rem/1 var(--caps); letter-spacing:.04em; text-transform:uppercase; cursor:pointer; margin-left:auto}
+.veldpill[hidden]{display:none}
+.slimbar .veldpill{height:26px}
+.veldpill + .eikelbtn{margin-left:8px}

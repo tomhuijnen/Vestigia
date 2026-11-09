@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Karla:ital,wght@0,400;0,500;0,700;1,400&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/vestigia.css?v=202611091504">
+<link rel="stylesheet" href="css/vestigia.css?v=202611091513">
 </head>
 <body>
 <!-- openingsanimatie: staat meteen in beeld (geen witte flits), en is in dezelfde sessie al gezien → niet tonen -->
@@ -30,6 +30,7 @@
         <span class="series" id="fSeries">Dagcasus</span>
         <span class="mh-name">Vestigia</span>
       </button>
+      <button class="veldpill" id="veldPill" type="button" hidden aria-label="Veldmodus: geen internet. Uitleg"><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 6.5a9 9 0 0 1 12 0M4.3 9a5.5 5.5 0 0 1 7.4 0M8 12.2h0M2.5 2.5l11 11"/></svg><span>Veldmodus</span></button>
       <button class="eikelbtn" id="eikelBtn" hidden><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path d="M8 2.6V1.2" stroke="#e6c27a" stroke-width="1.4" stroke-linecap="round"/><path d="M2.8 6.6C2.8 4.1 5.1 2.6 8 2.6s5.2 1.5 5.2 4Z" fill="#b98a4a"/><path d="M3.9 7.1h8.2c0 3.6-1.8 6.6-4.1 6.6S3.9 10.7 3.9 7.1Z" fill="#e6c27a"/></svg><span></span></button>
       <button class="menubtn avbtn" id="menuBtn" aria-label="Menu en profiel openen" aria-expanded="false" aria-controls="menu"></button>
     </div>
@@ -40,6 +41,7 @@
 <!-- smalle kop: verschijnt zodra de grote kop uit beeld is gescrold -->
 <div class="slimbar" id="slimbar" aria-hidden="true">
   <button class="mh-title" id="slimTitle" tabindex="-1"><span class="mh-name">Vestigia</span><span class="series" id="slimSeries"></span></button>
+  <button class="veldpill" id="veldPillSlim" type="button" hidden aria-label="Veldmodus: geen internet. Uitleg"><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 6.5a9 9 0 0 1 12 0M4.3 9a5.5 5.5 0 0 1 7.4 0M8 12.2h0M2.5 2.5l11 11"/></svg><span>Veldmodus</span></button>
   <button class="eikelbtn" id="slimEikel" tabindex="-1" hidden><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path d="M8 2.6V1.2" stroke="#e6c27a" stroke-width="1.4" stroke-linecap="round"/><path d="M2.8 6.6C2.8 4.1 5.1 2.6 8 2.6s5.2 1.5 5.2 4Z" fill="#b98a4a"/><path d="M3.9 7.1h8.2c0 3.6-1.8 6.6-4.1 6.6S3.9 10.7 3.9 7.1Z" fill="#e6c27a"/></svg><span></span></button>
   <button class="menubtn avbtn" id="slimMenu" tabindex="-1" aria-label="Menu en profiel openen" aria-controls="menu"></button>
 </div>
@@ -304,7 +306,7 @@
     <ul>
       <li><b>iPhone:</b> open Vestigia in Safari, tik op Deel en kies ‘Zet op beginscherm’.</li>
       <li><b>Android:</b> kies ‘Installeer als app’ in het menu (tik op je avatar rechtsboven), of kies in het menu van Chrome ‘App installeren’.</li>
-      <li>Na installatie werkt Vestigia ook zonder internet. Je dagscore wordt verstuurd zodra je weer verbinding hebt.</li>
+      <li>Na installatie werkt Vestigia ook zonder internet. Heb je geen verbinding, dan gaat vanzelf de <b>veldmodus</b> aan (rechtsboven zie je dat): je speelt gewoon verder, en je dagscore wordt verstuurd zodra je weer verbinding hebt. De ranglijst, eikels en de shop komen dan ook terug.</li>
     </ul>
     <h3>Modi</h3>
     <ul>
@@ -337,23 +339,23 @@
 </div>
 
 <script src="config.js"></script>
-<script src="data/teksten.js?v=202611091504"></script>
-<script src="data/soorten.js?v=202611091504"></script>
-<script src="data/sporen.js?v=202611091504"></script>
-<script src="data/dagschema.js?v=202611091504"></script>
-<script src="data/veldweken.js?v=202611091504"></script>
-<script src="js/kern.js?v=202611091504"></script>
-<script src="js/spel.js?v=202611091504"></script>
-<script src="js/veldboek.js?v=202611091504"></script>
-<script src="js/melden.js?v=202611091504"></script>
-<script src="js/kop.js?v=202611091504"></script>
-<script src="js/spelen.js?v=202611091504"></script>
-<script src="js/opening.js?v=202611091504"></script>
-<script src="js/uitleg.js?v=202611091504"></script>
-<script src="js/online.js?v=202611091504"></script>
-<script src="js/league.js?v=202611091504"></script>
-<script src="data/avatars.js?v=202611091504"></script>
-<script src="js/profiel.js?v=202611091504"></script>
-<script src="js/app.js?v=202611091504"></script>
+<script src="data/teksten.js?v=202611091513"></script>
+<script src="data/soorten.js?v=202611091513"></script>
+<script src="data/sporen.js?v=202611091513"></script>
+<script src="data/dagschema.js?v=202611091513"></script>
+<script src="data/veldweken.js?v=202611091513"></script>
+<script src="js/kern.js?v=202611091513"></script>
+<script src="js/spel.js?v=202611091513"></script>
+<script src="js/veldboek.js?v=202611091513"></script>
+<script src="js/melden.js?v=202611091513"></script>
+<script src="js/kop.js?v=202611091513"></script>
+<script src="js/spelen.js?v=202611091513"></script>
+<script src="js/opening.js?v=202611091513"></script>
+<script src="js/uitleg.js?v=202611091513"></script>
+<script src="js/online.js?v=202611091513"></script>
+<script src="js/league.js?v=202611091513"></script>
+<script src="data/avatars.js?v=202611091513"></script>
+<script src="js/profiel.js?v=202611091513"></script>
+<script src="js/app.js?v=202611091513"></script>
 </body>
 </html>
