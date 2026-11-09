@@ -147,9 +147,9 @@ if (refs.some(r => r[2] !== stamp)) FOUT(`Versienummer achter de bestanden in in
 const refSet = new Set(refs.map(r => r[1]));
 if (assets.length !== refSet.size || assets.some(a => !refSet.has(a))) FOUT(`ASSETS in sw.js (${assets.join(", ")}) komt niet overeen met de bestanden in index.html (${[...refSet].join(", ")})`);
 for (const f of refSet) if (!fs.existsSync(path.join(ROOT, f))) FOUT(`index.html verwijst naar ${f}, maar dat bestand bestaat niet`);
-if (TARGETS.length > 100) FOUT(`Er zijn ${TARGETS.length} soorten met casus, maar save_progress kapt het aantal platen af op 100. Verhoog die grens eerst in Supabase (zie het plan, knelpunt 4)`);
+if (TARGETS.length > 500) FOUT(`Er zijn ${TARGETS.length} soorten met casus, maar save_progress kapt het aantal platen af op 500 (supabase-002). Verhoog die grens eerst in Supabase`);
 const trofeeen = Object.keys(V.TITLES).length + 1 + V.MEDALS.length;
-if (trofeeen > 11) FOUT(`Er zijn ${trofeeen} titels en medailles, maar save_progress kapt het aantal trofeeën af op 11. Verhoog die grens eerst in Supabase`);
+if (trofeeen > 100) FOUT(`Er zijn ${trofeeen} titels en medailles, maar save_progress kapt het aantal trofeeën af op 100 (supabase-002). Verhoog die grens eerst in Supabase`);
 
 /* ---------- uitkomst ---------- */
 const blok = (kop, lijst) => { if (lijst.length){ console.log(`\n${kop} (${lijst.length})`); for (const m of lijst) console.log("  · " + m); } };

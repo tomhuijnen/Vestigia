@@ -1,6 +1,6 @@
 /* Vestigia – avatars: tekeningen in een vak van 100 × 100, bedoeld voor een ronde achtergrond.
    currentColor = de lichte tint, var(--av-bg) = de achtergrondkleur (voor uitsparingen), #1f3428 = donker.
-   De vijf medaille-avatars zijn in kleur. Prijs, te koop en gratis staan in Supabase (shop_items), niet hier. */
+   De medaille-avatars (één per medaillesoort) zijn in kleur. Prijs, te koop en gratis staan in Supabase (shop_items), niet hier. */
 "use strict";
 const AVATARS = {
   "das": `<path fill="currentColor" fill-opacity=".55" d="M2 104C6 82 22 70 38 68H62C78 70 94 82 98 104Z"/>
@@ -219,5 +219,61 @@ const AVATARS = {
 <path fill="#eef2f3" d="M12 52C22 58 38 61 54 60C66 59 76 56 86 53C76 60 64 63 54 63C36 64 20 60 12 52Z"/>
 <g fill="#262626"><circle cx="32" cy="46.2" r="1.15"/><circle cx="32" cy="50.800000000000004" r="1.15"/><circle cx="38" cy="45.6" r="1.15"/><circle cx="38" cy="50.2" r="1.15"/><circle cx="44" cy="45.2" r="1.15"/><circle cx="44" cy="49.800000000000004" r="1.15"/><circle cx="50" cy="45" r="1.15"/><circle cx="50" cy="49.6" r="1.15"/><circle cx="56" cy="45.1" r="1.15"/><circle cx="56" cy="49.7" r="1.15"/><circle cx="62" cy="45.5" r="1.15"/><circle cx="62" cy="50.1" r="1.15"/><circle cx="68" cy="46.2" r="1.15"/><circle cx="68" cy="50.800000000000004" r="1.15"/><circle cx="74" cy="47.2" r="1.15"/><circle cx="74" cy="51.800000000000004" r="1.15"/></g>
 <circle cx="20" cy="47" r="2.6" fill="#1b1b1b"/><circle cx="20.6" cy="46.4" r=".8" fill="#fff"/>
-<path d="M10 50L15 51.5" fill="none" stroke="#555" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />`
+<path d="M10 50L15 51.5" fill="none" stroke="#555" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />`,
+  "europese-steur": `<path fill="#5e6b62" d="M92 40C88 44 86 48 86 52L97 60C92 54 92 46 92 40Z"/>
+<path fill="#7d8a7f" d="M6 52C10 46 20 43 34 42C52 41 70 43 86 49V55C70 60 52 62 34 61C20 60 10 57 6 52Z"/>
+<path fill="#4f5b52" d="M6 52C10 46 20 43 34 42C52 41 70 43 86 49C70 46 52 45 34 46C22 47 12 49 6 52Z"/>
+<path fill="#dfe3dc" d="M14 56C24 60 40 62 56 61C68 60 78 58 86 55C76 61 62 64 48 64C32 64 20 61 14 56Z"/>
+<path fill="#5e6b62" d="M40 61L36 69L46 62ZM62 59L66 66L70 58ZM56 44L62 37L66 45Z"/>
+<g fill="#eef0e8" stroke="#3b443d" stroke-width=".6"><path d="M26 44.5L29 42.5L32 44.5L29 46.5Z"/><path d="M36 43.6L39 41.6L42 43.6L39 45.6Z"/><path d="M46 43.3L49 41.3L52 43.3L49 45.3Z"/><path d="M56 43.6L59 41.6L62 43.6L59 45.6Z"/><path d="M66 44.6L69 42.6L72 44.6L69 46.6Z"/><path d="M76 46.4L79 44.4L82 46.4L79 48.4Z"/>
+<path d="M30 53L33 51.5L36 53L33 54.5Z"/><path d="M42 53L45 51.5L48 53L45 54.5Z"/><path d="M54 53L57 51.5L60 53L57 54.5Z"/><path d="M66 53L69 51.5L72 53L69 54.5Z"/></g>
+<circle cx="15" cy="49" r="1.9" fill="#151515"/><circle cx="15.5" cy="48.5" r=".6" fill="#fff"/>
+<path d="M10 56L9 61M12 57L12 62M14 57.5L15 62M16 57.5L18 61.5" fill="none" stroke="#c9b48a" stroke-width="1" stroke-linecap="round"/>`,
+  "zwarte-wouw": `<path fill="#4a3426" d="M50 40C40 36 26 34 6 40C14 42 22 46 28 50C36 50 44 50 50 52Z"/>
+<path fill="#4a3426" d="M50 40C60 36 74 34 94 40C86 42 78 46 72 50C64 50 56 50 50 52Z"/>
+<path fill="#7a5a40" d="M18 41C24 40 32 41 38 44C32 44 26 44 20 45ZM82 41C76 40 68 41 62 44C68 44 74 44 80 45Z"/>
+<path d="M8 40L4 46M11 41L8 47M14 42L12 48M92 40L96 46M89 41L92 47M86 42L88 48" fill="none" stroke="#2e2018" stroke-width="2.2" stroke-linecap="round"/>
+<path fill="#5c4130" d="M44 40C44 34 47 31 50 31C53 31 56 34 56 40L57 58C57 62 54 64 50 64C46 64 43 62 43 58Z"/>
+<path fill="#5c4130" d="M44 62L40 80L48 75L50 78L52 75L60 80L56 62Z"/>
+<path fill="#a98563" d="M46 34C47 32 53 32 54 34C54 37 52 38 50 38C48 38 46 37 46 34Z"/>
+<path fill="#e7b93c" d="M48.6 31.5H51.4L51 34H49Z"/><path fill="#1c1410" d="M49.3 34L50 36.5L50.7 34Z"/>
+<path d="M45 44C47 46 53 46 55 44M45 49C47 51 53 51 55 49M45 54C47 56 53 56 55 54" fill="none" stroke="#3a281d" stroke-width="1" stroke-linecap="round"/>`,
+  "hop": `<path d="M58 92L58 76M66 92L64 78" fill="none" stroke="#6b5a4d" stroke-width="2.2" stroke-linecap="round"/>
+<path fill="#d9a27a" d="M40 52C46 44 60 44 70 50C78 56 80 66 76 74C70 80 58 80 50 76C42 72 36 62 40 52Z"/>
+<path fill="#1d1d1d" d="M62 52C70 54 80 60 90 74C82 76 72 74 64 70Z"/>
+<g fill="#f3eee6"><path d="M66 58L74 60L72 62L65 60Z"/><path d="M68 63L78 66L76 68L67 65Z"/><path d="M70 68L82 71L80 73L69 70Z"/></g>
+<path fill="#1d1d1d" d="M84 70L98 76L96 82L84 76Z"/><path fill="#f3eee6" d="M88 72.5L93 74.5L92.4 76.4L87.4 74.4Z"/>
+<path fill="#e3ab83" d="M30 42C30 34 36 30 42 31C48 32 50 38 48 44C46 50 40 52 36 50C32 48 30 46 30 42Z"/>
+<g fill="#e8955a"><path d="M33 34C30 24 30 16 34 10C38 16 39 26 38 33Z"/><path d="M38 32C38 22 41 14 46 10C48 18 45 26 42 33Z"/><path d="M42 33C45 25 50 19 56 17C55 24 50 30 45 35Z"/><path d="M45 36C50 31 56 28 62 29C59 34 53 37 47 39Z"/></g>
+<g fill="#1d1d1d"><path d="M34 10C33 13 33 15 33.6 17L35.4 16.6C35.4 14 35 12 34 10Z"/><path d="M46 10C44 13 43 15 42.6 17.4L44.4 17.8C45 15.4 45.8 13 46 10Z"/><path d="M56 17C53 18.4 51 20 49.6 22L51 23.2C52.8 21.4 54.4 19.4 56 17Z"/><path d="M62 29C59 29 56.8 29.6 55 30.6L55.8 32.2C58 31.4 60 30.4 62 29Z"/></g>
+<g fill="#fff"><path d="M33.4 18L35.8 17.4L36 19.6L33.8 20Z"/><path d="M42.4 18.4L44.6 18.8L44 21L42 20.4Z"/><path d="M49 22.6L50.6 24L49 25.6L47.6 24.2Z"/><path d="M54.6 31.2L55.6 33L53.4 33.8L52.8 32Z"/></g>
+<path d="M31 42C24 44 16 48 8 54" fill="none" stroke="#2a2420" stroke-width="2.2" stroke-linecap="round"/>
+<circle cx="35.5" cy="40" r="2" fill="#151515"/><circle cx="36" cy="39.5" r=".6" fill="#fff"/>`,
+  "kleine-vliegenvanger": `<path d="M8 76C30 72 60 74 96 66" fill="none" stroke="#6d5442" stroke-width="3.6" stroke-linecap="round"/>
+<path d="M70 70L82 60" fill="none" stroke="#6d5442" stroke-width="2.2" stroke-linecap="round"/><path fill="#8fae6a" d="M82 60C86 54 92 54 94 56C90 60 86 62 82 60Z"/>
+<path fill="#1f1f1f" d="M58 58L80 50L86 56L66 66Z"/>
+<path fill="#f4f4ef" d="M62 59L76 53.6L77.6 55.4L64 61.4ZM68 63.2L82 57.6L83.4 59.6L70 64.8Z"/>
+<path fill="#9a8a7a" d="M34 50C34 40 42 34 50 34C58 34 64 40 64 50C64 60 58 68 50 70C42 70 34 62 34 50Z"/>
+<path fill="#e9e3d6" d="M38 56C40 64 46 70 52 70C58 68 62 62 62 56C56 60 44 60 38 56Z"/>
+<path fill="#e3743a" d="M36 46C38 50 42 54 48 54C44 58 38 58 35 54C34 52 34 49 36 46Z"/>
+<path fill="#7d6e60" d="M44 50C50 46 60 48 66 56C60 60 52 60 46 58Z"/>
+<path fill="#9a8a7a" d="M30 34C30 26 36 22 42 22C48 22 52 27 52 34C52 40 48 44 42 44C36 44 30 41 30 34Z"/>
+<path fill="#e3743a" d="M30 36C32 42 36 45 42 45C38 48 33 47 31 44C30 42 30 39 30 36Z"/>
+<path fill="#2a2420" d="M30 31L23 33L30 34.4Z"/>
+<circle cx="37" cy="31" r="3.2" fill="#f2efe6"/><circle cx="37" cy="31" r="2.1" fill="#151515"/><circle cx="37.6" cy="30.4" r=".6" fill="#fff"/>
+<path d="M50 70L50 76M54 70L55 75" fill="none" stroke="#3a302a" stroke-width="1.4" stroke-linecap="round"/>`,
+  "ruigpootuil": `<path fill="#5b4632" d="M18 100C18 80 30 66 50 66C70 66 82 80 82 100Z"/>
+<g fill="#efe6d6"><circle cx="30" cy="80" r="1.6"/><circle cx="38" cy="74" r="1.4"/><circle cx="62" cy="74" r="1.4"/><circle cx="70" cy="80" r="1.6"/><circle cx="26" cy="90" r="1.5"/><circle cx="74" cy="90" r="1.5"/><circle cx="34" cy="92" r="1.2"/><circle cx="66" cy="92" r="1.2"/></g>
+<path fill="#e8dcc6" d="M38 80C42 74 58 74 62 80C64 88 62 96 60 100H40C38 96 36 88 38 80Z"/>
+<path d="M44 82V88M50 80V87M56 82V88M46 92V98M54 92V98" fill="none" stroke="#9b8466" stroke-width="1.6" stroke-linecap="round"/>
+<path fill="#5b4632" d="M16 46C16 26 31 14 50 14C69 14 84 26 84 46C84 64 70 74 50 74C30 74 16 64 16 46Z"/>
+<g fill="#efe6d6"><circle cx="36" cy="22" r="1.3"/><circle cx="44" cy="19" r="1.2"/><circle cx="56" cy="19" r="1.2"/><circle cx="64" cy="22" r="1.3"/><circle cx="50" cy="20" r="1.1"/><circle cx="40" cy="25" r="1"/><circle cx="60" cy="25" r="1"/></g>
+<path fill="#2c2119" d="M22 48C22 34 32 28 50 30C68 28 78 34 78 48C78 62 66 70 50 70C34 70 22 62 22 48Z"/>
+<path fill="#f3eee4" d="M25 48C25 37 33 32 50 34C67 32 75 37 75 48C75 60 64 67 50 67C36 67 25 60 25 48Z"/>
+<path fill="#f3eee4" d="M30 36C36 29 46 30 50 36C54 30 64 29 70 36C64 34 56 36 50 41C44 36 36 34 30 36Z"/>
+<circle cx="38" cy="47" r="8" fill="#2c2119" fill-opacity=".12"/><circle cx="62" cy="47" r="8" fill="#2c2119" fill-opacity=".12"/>
+<circle cx="38" cy="46" r="6" fill="#f2c12e"/><circle cx="62" cy="46" r="6" fill="#f2c12e"/>
+<circle cx="38" cy="46" r="3.2" fill="#121212"/><circle cx="62" cy="46" r="3.2" fill="#121212"/>
+<circle cx="39" cy="45" r="1" fill="#fff"/><circle cx="63" cy="45" r="1" fill="#fff"/>
+<path fill="#d8c38f" d="M47.6 50H52.4L50 57Z"/>`
 };
