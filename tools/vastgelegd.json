@@ -794,8 +794,8 @@
   },
   "donker-pimpernelblauwtje": {
    "n": "Donker pimpernelblauwtje",
-   "no": null,
-   "casussen": 0
+   "no": 145,
+   "casussen": 2
   },
   "kleine-vos": {
    "n": "Kleine vos",
@@ -1027,8 +1027,8 @@
   "gewone-zeehond#1",
   "boomkikker#1",
   "rugstreeppad#2",
-  "wespendief#1",
-  "pimpernelblauwtje#1",
+  "wespendief#2",
+  "teunisbloempijlstaart#1",
   "hazelworm#1",
   "gierzwaluw#2",
   "grauwe-gans#2",
@@ -1040,21 +1040,21 @@
   "kortsnavelboomkruiper#2",
   "vinpootsalamander#2",
   "grauwe-vliegenvanger#1",
-  "teunisbloempijlstaart#2",
-  "gestippelde-alver#1",
+  "grote-vos#2",
+  "gestippelde-alver#2",
   "noordse-woelmuis#1",
   "ingekorven-vleermuis#1",
-  "zwarte-wouw#2",
+  "bonte-vliegenvanger#1",
   "hamster#2",
   "hazelmuis#2",
   "gekraagde-roodstaart#1",
-  "wilde-kat#2",
+  "woelrat#2",
   "ree#1",
-  "laatvlieger#1",
-  "meerkikker#1",
-  "eidereend#2",
+  "waterspitsmuis#1",
   "grote-modderkruiper#1",
-  "ransuil#2",
-  "boomvalk#2"
+  "ruigpootuil#2",
+  "elrits#1",
+  "sperwer#2",
+  "torenvalk#1"
  ]
 }

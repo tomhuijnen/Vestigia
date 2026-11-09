@@ -345,7 +345,7 @@ function zoekScore(q, x){
 let optList = [], optIdx = -1;
 function matchExact(v){
   const q = norm(v); if (!q) return null;
-  const s = SPECIES.find(x => norm(x.n) === q || norm(x.s) === q);
+  const s = KIESBAAR.find(x => norm(x.n) === q || norm(x.s) === q);
   return s ? s.id : null;
 }
 function closeOpts(){ $("gOpts").hidden = true; $("gInput").setAttribute("aria-expanded","false"); $("gInput").removeAttribute("aria-activedescendant"); optIdx = -1; }
@@ -353,7 +353,7 @@ function openOpts(){
   const q = norm($("gInput").value);
   if (!q){ closeOpts(); return; }
   const used = new Set(S.guesses);
-  optList = SPECIES.filter(x => !used.has(x.id)).map(x => ({ x, score: zoekScore(q, x) }))
+  optList = KIESBAAR.filter(x => !used.has(x.id)).map(x => ({ x, score: zoekScore(q, x) }))
     .filter(o => o.score >= 0).sort((p, q2) => p.score - q2.score || p.x.n.localeCompare(q2.x.n, "nl")).slice(0, 8).map(o => o.x);
   const ul = $("gOpts");
   if (!optList.length){ ul.innerHTML = `<li aria-disabled="true"><span>Geen soort gevonden</span></li>`; ul.hidden = false; optIdx = -1; return; }

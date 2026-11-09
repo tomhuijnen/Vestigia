@@ -2,6 +2,9 @@
    Dit bestand gebruikt geen pagina-elementen bij het laden, zodat tools/controle.mjs en tools/dagschema.mjs het ook kunnen draaien. */
 "use strict";
 const TARGETS = SPECIES.filter(s => s.cs && s.cs.length);       // alleen soorten met een casus kunnen het antwoord zijn
+/* kiesbaar bij het determineren: alleen beschermde soorten. Niet-beschermde look-alikes (r = NB) blijven in de data,
+   omdat ze in ‘Verwar niet met’ genoemd worden en in oude logboeken kunnen staan. */
+const KIESBAAR = SPECIES.filter(s => s.r !== "NB");
 const BY_ID = new Map(SPECIES.map(s => [s.id, s]));
 const BY_NAME = new Map(SPECIES.map(s => [s.n, s]));
 const MAX = 5;
