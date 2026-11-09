@@ -185,6 +185,7 @@ const online = (() => {
         if (!rows.length) html = `<p class="rankempty">${rankMode === "week" ? "Deze week" : "Tot nu toe"} zijn er nog geen dagcasussen gespeeld.</p>`;
       }
       list.innerHTML = html; list.classList.remove("met-av");
+      podium(list);
       Profiel.versier(list);
       if (me){
         const wk = await refreshWeek();
@@ -301,6 +302,17 @@ const online = (() => {
            setMode: (m, s) => { rankMode = m; if (s !== undefined) setScope(s); else renderRank(); } };
 })();
 
+/* Top 3 in de ranglijst: dun randje in goud, zilver of brons, en een kroontje bij nummer 1 (alleen met punten) */
+const KROON = `<svg class="kroon" viewBox="0 0 24 16" aria-hidden="true"><path d="M2 14L1 4l6 4 5-7 5 7 6-4-1 10Z" fill="#e2b84e" stroke="#a8731b" stroke-width="1.2" stroke-linejoin="round"/><circle cx="12" cy="9.5" r="1.6" fill="#a3341f"/></svg>`;
+function podium(list){
+  const rij = [...list.querySelectorAll(":scope > li")];
+  rij.slice(0, 3).forEach((li, i) => {
+    const pts = parseInt((li.querySelector(".pts") || {}).textContent, 10);
+    if (!(pts > 0)) return;
+    li.classList.add("podium", "p" + (i + 1));
+    if (i === 0){ const pos = li.querySelector(".pos"); if (pos && !pos.querySelector(".kroon")) pos.insertAdjacentHTML("afterbegin", KROON); }
+  });
+}
 function showRank(mode, scopeId){
   setView("rank");
   if (mode) online.setMode(mode, scopeId); else online.renderRank();

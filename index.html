@@ -16,7 +16,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Karla:ital,wght@0,400;0,500;0,700;1,400&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/vestigia.css?v=202611091513">
+<!-- thema: eigen keuze (licht/donker) of anders de instelling van het toestel; vóór de opmaak, dus geen witte flits -->
+<script>(function(){var t=null;try{t=localStorage.getItem("vestigia:thema")}catch(e){}var d=t?t==="donker":!!(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches);if(d)document.documentElement.classList.add("donker")})()</script>
+<link rel="stylesheet" href="css/vestigia.css?v=202611091710">
 </head>
 <body>
 <!-- openingsanimatie: staat meteen in beeld (geen witte flits), en is in dezelfde sessie al gezien → niet tonen -->
@@ -246,6 +248,8 @@
     </ul>
     <hr>
     <ul class="menulist minor">
+      <li><button id="themaBtn" type="button" role="switch" aria-checked="false"><span>Donkere modus</span><i class="schakel" aria-hidden="true"><b></b></i></button></li>
+      <li id="themaAutoRij" hidden><button class="themaauto" id="themaAuto" type="button">Weer de instelling van je toestel volgen</button></li>
       <li><button data-go="help"><span>Spelregels</span></button></li>
       <li><button data-go="uitleg"><span>Uitleg opnieuw bekijken</span></button></li>
       <li><button data-go="install" id="installBtn" hidden><span>Installeer als app</span></button></li>
@@ -339,23 +343,23 @@
 </div>
 
 <script src="config.js"></script>
-<script src="data/teksten.js?v=202611091513"></script>
-<script src="data/soorten.js?v=202611091513"></script>
-<script src="data/sporen.js?v=202611091513"></script>
-<script src="data/dagschema.js?v=202611091513"></script>
-<script src="data/veldweken.js?v=202611091513"></script>
-<script src="js/kern.js?v=202611091513"></script>
-<script src="js/spel.js?v=202611091513"></script>
-<script src="js/veldboek.js?v=202611091513"></script>
-<script src="js/melden.js?v=202611091513"></script>
-<script src="js/kop.js?v=202611091513"></script>
-<script src="js/spelen.js?v=202611091513"></script>
-<script src="js/opening.js?v=202611091513"></script>
-<script src="js/uitleg.js?v=202611091513"></script>
-<script src="js/online.js?v=202611091513"></script>
-<script src="js/league.js?v=202611091513"></script>
-<script src="data/avatars.js?v=202611091513"></script>
-<script src="js/profiel.js?v=202611091513"></script>
-<script src="js/app.js?v=202611091513"></script>
+<script src="data/teksten.js?v=202611091710"></script>
+<script src="data/soorten.js?v=202611091710"></script>
+<script src="data/sporen.js?v=202611091710"></script>
+<script src="data/dagschema.js?v=202611091710"></script>
+<script src="data/veldweken.js?v=202611091710"></script>
+<script src="js/kern.js?v=202611091710"></script>
+<script src="js/spel.js?v=202611091710"></script>
+<script src="js/veldboek.js?v=202611091710"></script>
+<script src="js/melden.js?v=202611091710"></script>
+<script src="js/kop.js?v=202611091710"></script>
+<script src="js/spelen.js?v=202611091710"></script>
+<script src="js/opening.js?v=202611091710"></script>
+<script src="js/uitleg.js?v=202611091710"></script>
+<script src="js/online.js?v=202611091710"></script>
+<script src="js/league.js?v=202611091710"></script>
+<script src="data/avatars.js?v=202611091710"></script>
+<script src="js/profiel.js?v=202611091710"></script>
+<script src="js/app.js?v=202611091710"></script>
 </body>
 </html>
