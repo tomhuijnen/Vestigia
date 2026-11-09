@@ -534,7 +534,10 @@ svg.avatar.groot{width:104px; height:104px; flex:0 0 104px}
 .pfopbouw{display:grid; grid-template-columns:1fr auto; gap:4px 16px; margin:0; max-width:420px}
 .pfopbouw dt{color:var(--ink-2)} .pfopbouw dd{margin:0; text-align:right; font-variant-numeric:tabular-nums; font-weight:700}
 .pfopbouw .tot{border-top:1px solid var(--rule); padding-top:4px; color:var(--ink); font-weight:700}
-.prlist{display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:8px}
+.prlist{display:grid; gap:18px}
+.prcat{display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:8px}
+.prcat h4{grid-column:1/-1; margin:0; display:flex; justify-content:space-between; align-items:baseline; font-family:var(--caps); text-transform:uppercase; letter-spacing:.08em; font-size:.72rem; color:var(--green-d)}
+.prcat h4 span{font-family:var(--body); text-transform:none; letter-spacing:0; font-weight:400; font-size:.78rem; color:var(--ink-2)}
 .pr{display:flex; gap:10px; align-items:center; background:#fff; border:1px solid var(--rule); border-radius:8px; padding:10px 12px}
 .prniv{flex:0 0 30px; height:30px; border-radius:15px; display:grid; place-items:center; font-family:var(--display); font-weight:700; color:#fff; background:#d5dbd6}
 .pr.n1 .prniv{background:#a8693c} .pr.n2 .prniv{background:#8d99a0} .pr.n3 .prniv{background:#c79a2e}
@@ -795,3 +798,52 @@ html.donker .chipbtn[aria-pressed="true"]{color:#0f1712}
 html.donker .ranklist li.p1{background:#262414}
 .ontdekplaat .band{font-size:.62rem; padding:6px 8px; letter-spacing:.06em}
 .ontdekplaat .band b{font-size:.92rem}
+/* prestige-lijsten (update 5) */
+@keyframes ljdraai{to{transform:rotate(360deg)}}
+@keyframes ljterug{to{transform:rotate(-360deg)}}
+@keyframes ljzweef{0%,100%{transform:translateY(0)} 30%{transform:translateY(1.6px)} 65%{transform:translateY(-1.2px)}}
+@keyframes ljhalo{0%,100%{opacity:.25; transform:scale(.7)} 50%{opacity:.95; transform:scale(1.2)}}
+@keyframes ljster{0%,100%{opacity:0} 45%,55%{opacity:1}}
+@keyframes ljadem{0%,100%{opacity:.15} 50%{opacity:.65}}
+@keyframes ljglans{0%{transform:rotate(-40deg); opacity:0} 8%{opacity:1} 52%{opacity:1} 62%{transform:rotate(320deg); opacity:0} 100%{transform:rotate(320deg); opacity:0}}
+@keyframes ljfonkel{0%,50%{transform:scale(0) rotate(0); opacity:0} 58%{transform:scale(1) rotate(45deg); opacity:1} 70%{transform:scale(0) rotate(90deg); opacity:0} 100%{opacity:0}}
+svg .lj-draai, svg .lj-glans{transform-origin:50px 50px; will-change:transform}
+svg .lj-draai{animation:ljdraai 18s linear infinite}
+svg .lj-traag{animation-duration:40s}
+svg .lj-n1{animation-duration:22s}
+svg .lj-n3{animation-duration:31s}
+svg .lj-terug{animation:ljterug 13s linear infinite}
+svg .lj-zweef{animation:ljzweef 5.2s cubic-bezier(.45,0,.55,1) infinite; animation-delay:var(--d,0s)}
+svg .lj-halo{transform-box:fill-box; transform-origin:center; animation:ljhalo 3.4s cubic-bezier(.45,0,.55,1) infinite; animation-delay:var(--d,0s)}
+svg .lj-ster{animation:ljster 2.8s ease-in-out infinite; animation-delay:var(--d,0s)}
+svg .lj-adem{animation:ljadem 4.5s cubic-bezier(.45,0,.55,1) infinite}
+svg .lj-adem2{animation-duration:6.5s; animation-delay:-2s}
+svg .lj-glans{animation:ljglans 3.6s cubic-bezier(.65,0,.35,1) infinite}
+svg .lj-fonkel{transform-box:fill-box; transform-origin:center; animation:ljfonkel 3.6s cubic-bezier(.65,0,.35,1) infinite}
+@media (prefers-reduced-motion:reduce){ svg .lj-draai, svg .lj-zweef, svg .lj-halo, svg .lj-ster, svg .lj-adem, svg .lj-glans, svg .lj-fonkel{animation:none} svg .lj-glans, svg .lj-fonkel{opacity:0} svg .lj-ster{opacity:.6} }
+.pfopt.prestige{box-shadow:0 0 0 1.5px #d4a72c inset; background:linear-gradient(160deg,#fffaf0,#fdf1d3)}
+.pfopt.prestige .ps{color:#8a6416; font-weight:700}
+.pfopt.prestige{padding-top:22px}
+.pfopt.prestige::before{content:"prestige"; position:absolute; top:6px; left:50%; transform:translateX(-50%); font:600 .58rem/1 var(--caps); letter-spacing:.08em; text-transform:uppercase; color:#a8731b}
+html.donker .pfopt.prestige{background:linear-gradient(160deg,#2a2614,#1d2a22)}
+html.donker .pfopt.prestige .ps{color:#e2b84e}
+.pfopt{position:relative}
+
+/* mijlpalen (update 5): eenmalig, als lintje */
+.mpsec h3 small, #dexMijlList h3 small{font-family:var(--body); font-weight:400; font-size:.85rem; color:var(--ink-2); margin-left:6px}
+#dexMijlList .mpsec{margin-top:22px}
+.mplist{display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:8px}
+.mp{display:flex; gap:10px; align-items:center; background:#fff; border:1px dashed var(--rule); border-radius:8px; padding:10px 12px}
+.mp.on{border:1.5px solid #a3341f; background:#fff8f4}
+.mplint{flex:0 0 28px; width:28px; height:35px}
+.mptxt{flex:1; min-width:0; display:grid; gap:2px}
+.mptxt b{font-size:.9rem; line-height:1.25}
+.mptxt > span{font-size:.78rem; color:var(--ink-2); line-height:1.3}
+.mptxt .mpst{color:var(--ink); font-weight:700}
+.mp.on .mpst{color:#a3341f}
+.mptxt .tb{display:block; height:5px; border-radius:3px; background:#e3e8e3; overflow:hidden}
+.mptxt .tb i{display:block; height:5px; background:#a3341f}
+html.donker .mp{background:#1d2a22}
+html.donker .mp.on{background:#2a1a16; border-color:#c4553e}
+html.donker .mp.on .mpst{color:#e48a74}
+html.donker .mptxt .tb{background:#2c3b32}

@@ -18,7 +18,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Karla:ital,wght@0,400;0,500;0,700;1,400&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
 <!-- thema: eigen keuze (licht/donker) of anders de instelling van het toestel; vóór de opmaak, dus geen witte flits -->
 <script>(function(){var t=null;try{t=localStorage.getItem("vestigia:thema")}catch(e){}var d=t?t==="donker":!!(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches);if(d)document.documentElement.classList.add("donker")})()</script>
-<link rel="stylesheet" href="css/vestigia.css?v=202611091710">
+<link rel="stylesheet" href="css/vestigia.css?v=202611091851">
 </head>
 <body>
 <!-- openingsanimatie: staat meteen in beeld (geen witte flits), en is in dezelfde sessie al gezien → niet tonen -->
@@ -160,7 +160,7 @@
 
   <section id="shopView" hidden aria-labelledby="shopH">
     <div class="dexhead">
-      <div><h2 id="shopH">Shop</h2><p>Koop met je eikels een avatar, ondertitel, lijst of kleur. Wat je koopt, kies je daarna in Mijn profiel. Eikels verdien je door te spelen, met reeksen, platen, prestaties en uitgenodigde spelers.</p></div>
+      <div><h2 id="shopH">Shop</h2><p>Koop met je eikels een avatar, ondertitel, lijst of kleur. Wat je koopt, kies je daarna in Mijn profiel. Eikels verdien je door te spelen, met reeksen, veldweken, platen, prestaties, mijlpalen en uitgenodigde spelers. Kaarten met een gouden rand zijn prestige-items: iets om lang voor te sparen.</p></div>
       <div class="dexcount" id="shopSaldo">–<small>eikels</small></div>
     </div>
     <div id="shopBody"></div>
@@ -180,6 +180,7 @@
     <section class="prestaties" id="dexPrest" hidden aria-labelledby="dexPrestH">
       <h3 id="dexPrestH">Prestaties</h3>
       <div class="prlist" id="dexPrestList"></div>
+      <div id="dexMijlList"></div>
     </section>
     <section class="veldweken" id="dexVeldweken" hidden aria-labelledby="dexVwH">
       <h3 id="dexVwH">Veldweken</h3>
@@ -306,6 +307,8 @@
     <p>Eén keer per maand, in de eerste volledige week (maandag tot en met zondag), hebben alle dagcasussen één thema, zoals ‘Nachtdieren’ of ‘Langs de waterkant’. Twee dagen vooraf zie je dat er een veldweek aankomt; het thema zie je pas op maandag. Elke gespeelde dagcasus levert een stempel op. Alle zeven: +25 eikels, vijf of zes: +10. De puntentelling voor de ranglijst verandert niet.</p>
     <h3>Ranglijst</h3>
     <p>Met een spelersnaam doe je mee aan de ranglijst. Alleen je eerste poging aan de dagcasus telt: 5 punten in één poging, 1 punt bij de vijfde. In de expertmodus krijg je 6 punten als je na één waarneming goed zit. Klassiek en expert hebben dezelfde casus; daarom telt alleen de modus die je die dag als eerste speelt.</p>
+    <h3>Prestaties en mijlpalen</h3>
+    <p>Prestaties hebben drie niveaus (brons, zilver en goud) en staan per categorie, zoals Determineren, Specialist en Volharding. Goud levert een ondertitel op. Mijlpalen haal je maar één keer: bijvoorbeeld een week in de top 3 of als nummer 1 van de weekranglijst. Een week telt zodra hij voorbij is. Elke mijlpaal levert eenmalig eikels op, de grootste ook een ondertitel. Wat je eenmaal behaald hebt, raak je nooit meer kwijt.</p>
     <h3>Installeren</h3>
     <ul>
       <li><b>iPhone:</b> open Vestigia in Safari, tik op Deel en kies ‘Zet op beginscherm’.</li>
@@ -343,23 +346,23 @@
 </div>
 
 <script src="config.js"></script>
-<script src="data/teksten.js?v=202611091710"></script>
-<script src="data/soorten.js?v=202611091710"></script>
-<script src="data/sporen.js?v=202611091710"></script>
-<script src="data/dagschema.js?v=202611091710"></script>
-<script src="data/veldweken.js?v=202611091710"></script>
-<script src="js/kern.js?v=202611091710"></script>
-<script src="js/spel.js?v=202611091710"></script>
-<script src="js/veldboek.js?v=202611091710"></script>
-<script src="js/melden.js?v=202611091710"></script>
-<script src="js/kop.js?v=202611091710"></script>
-<script src="js/spelen.js?v=202611091710"></script>
-<script src="js/opening.js?v=202611091710"></script>
-<script src="js/uitleg.js?v=202611091710"></script>
-<script src="js/online.js?v=202611091710"></script>
-<script src="js/league.js?v=202611091710"></script>
-<script src="data/avatars.js?v=202611091710"></script>
-<script src="js/profiel.js?v=202611091710"></script>
-<script src="js/app.js?v=202611091710"></script>
+<script src="data/teksten.js?v=202611091851"></script>
+<script src="data/soorten.js?v=202611091851"></script>
+<script src="data/sporen.js?v=202611091851"></script>
+<script src="data/dagschema.js?v=202611091851"></script>
+<script src="data/veldweken.js?v=202611091851"></script>
+<script src="js/kern.js?v=202611091851"></script>
+<script src="js/spel.js?v=202611091851"></script>
+<script src="js/veldboek.js?v=202611091851"></script>
+<script src="js/melden.js?v=202611091851"></script>
+<script src="js/kop.js?v=202611091851"></script>
+<script src="js/spelen.js?v=202611091851"></script>
+<script src="js/opening.js?v=202611091851"></script>
+<script src="js/uitleg.js?v=202611091851"></script>
+<script src="js/online.js?v=202611091851"></script>
+<script src="js/league.js?v=202611091851"></script>
+<script src="data/avatars.js?v=202611091851"></script>
+<script src="js/profiel.js?v=202611091851"></script>
+<script src="js/app.js?v=202611091851"></script>
 </body>
 </html>
