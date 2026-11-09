@@ -49,6 +49,9 @@ for (const t of SPECIES){
     c.wn.forEach((w, i) => { if (typeof w !== "string" || w.trim().length < 10) FOUT(`${cn}: waarneming ${i + 1} is leeg of erg kort`); });
     if (V.caseMonth(c) < 0) FOUT(`${cn}: waarneming 1 noemt geen maand, dus deze casus kan nooit dagcasus worden`);
     if (k > 0 && !(c.bron && String(c.bron).trim())) FOUT(`${cn}: bron ontbreekt (verplicht voor nieuwe casussen)`);
+    /* sl = doorslaggevende waarneming { i: 0–4, t: uitleg }, url = link naar de soortpagina van de bron (beide optioneel) */
+    if (c.sl !== undefined && (!Number.isInteger(c.sl.i) || c.sl.i < 0 || c.sl.i > 4 || !c.sl.t || String(c.sl.t).length < 20)) FOUT(`${cn}: sl moet { i: 0–4, t: uitleg van minstens 20 tekens } zijn`);
+    if (c.url !== undefined && !/^https:\/\/[\w.-]+\.[a-z]{2,}\//.test(c.url)) FOUT(`${cn}: url moet met https:// beginnen`);
     if (c.wn.some(w => new RegExp("\\b" + t.n.toLowerCase().split(" ").pop() + "\\b", "i").test(w))) LETOP(`${cn}: de soortnaam staat in een waarneming`);
   });
 }

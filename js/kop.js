@@ -113,7 +113,7 @@ function renderTiles(){
 const SLOTJE = `<svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6.2" width="9" height="6.3" rx="1.4"/><path d="M4.6 6.2V4.6a2.4 2.4 0 0 1 4.8 0v1.6"/></svg>`;
 function renderKop(){
   /* boven de naam staat alleen bij oefenen iets: welk nummer en welke dag het is, zie je al in de tegel */
-  $("fSeries").textContent = S.mode === "daily" ? "" : `Oefencasus${S.groep && GROUPS[S.groep] ? " · " + GROUPS[S.groep] : ""}`;
+  $("fSeries").textContent = S.mode === "daily" ? "" : `Oefencasus${S.ids ? " · je verwarde soorten" : S.groep && GROUPS[S.groep] ? " · " + GROUPS[S.groep] : ""}`;
   $("fSeries").hidden = S.mode === "daily";
   $("slimSeries").textContent = S.mode === "daily" ? `#${S.caseNo}` : "oefenen";
   kleurKop();
