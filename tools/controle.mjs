@@ -58,6 +58,10 @@ for (const t of SPECIES){
     const GROEPWOORD = { Z:/\b(vleermuis\w*|myotis|knaagdier\w*|roofdier\w*|zoogdier\w*)\b/i, B:/\b(vogel\w*|roofvogel\w*|zangertje)\b/i,
       F:/\b(vis|vissen|visje\w*|bodemvis|trekvis)\b/i, V:/\b(vlinder\w*|insect\w*)\b/i, A:/\b(kikker\w*|salamander\w*|amfibie\w*)\b/i, R:/\b(slang\w*|hagedis\w*|reptiel\w*)\b/i };
     c.wn.slice(0, 4).forEach((w, i) => { const m = GROEPWOORD[t.g] && w.match(GROEPWOORD[t.g]); if (m) FOUT(`${cn}: waarneming ${i + 1} noemt de diergroep ("${m[0]}")`); });
+    /* onbekende gebiedsnamen en vakjargon: omschrijf liever (update 6). Bekend genoeg: Veluwe, Oostvaardersplassen, Biesbosch,
+       Utrechtse Heuvelrug, Waddenzee, Oosterschelde, de grote regio's en steden. */
+    const JARGON = /\b(petgat\w*|legakker\w*|graften|strang(en)?|kribvak\w*|boezemwater\w*|sprengen?\w*|kwel\b|blauwgrasland\w*|slenk(en)?|weerribben|wieden|dwingelderveld|fochtelo\w*|engbertsdijksvenen|drentsche aa|gelderse poort|meijendel|meinweg|millingerwaard|moerputten|veluwezoom|kennemerduinen|lauwersmeer|bargerveen|kampina|groote peel|deelerwoud|alde feanen)\b/i;
+    c.wn.forEach((w, i) => { const m = w.match(JARGON); if (m) FOUT(`${cn}: waarneming ${i + 1} gebruikt een onbekende gebiedsnaam of vakterm ("${m[0]}"); omschrijf hem`); });
   });
 }
 for (const [oud, id] of Object.entries(ALIASES)){
@@ -127,6 +131,16 @@ for (let i = 0; i < SPECIES.length; i++) for (let j = i + 1; j < SPECIES.length;
 }
 if (kand.length) LETOP(`Mogelijke tweelingsoorten (zelfde hoofdkenmerken en lengte, nog niet als tweeling ingesteld): ${kand.join("; ")}`);
 if (gelijk.length) INFO(`Identiek kenmerkenprofiel, ook met nevenwaarden (telt in het kenmerken-raadsel allebei als goed): ${gelijk.join("; ")}`);
+
+/* ---------- 4b. toelichting per casus (data/toelichting.js) ---------- */
+{
+  const tf = path.join(ROOT, "data/toelichting.js");
+  if (fs.existsSync(tf)){
+    const TL = new Function(fs.readFileSync(tf, "utf8") + "; return TOELICHTING;")();
+    for (const t of TARGETS) t.cs.forEach((c, i) => { if (!TL[`${t.id}:${i}`]) LETOP(`${t.n}, casus ${i + 1}: nog geen toelichting`); });
+    for (const k of Object.keys(TL)){ const [id, i] = k.split(":"); if (!BY_ID.has(id) || !(BY_ID.get(id).cs || [])[+i]) FOUT(`toelichting "${k}" hoort bij geen bestaande casus`); }
+  }
+}
 
 /* ---------- 5. verraderwoorden ---------- */
 const STOP = new Set(("aan alle als bij dan dat die dit door een eens elke en er een geen het hier hij hun in is je kan langs maar met na naar niet nog of om onder op over tegen tot tussen uit van veel voor waar wat wel zijn ze zich zo zonder ook meer twee drie vier vijf eerste vooral").split(" "));

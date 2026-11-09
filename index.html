@@ -18,7 +18,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Karla:ital,wght@0,400;0,500;0,700;1,400&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
 <!-- thema: eigen keuze (licht/donker) of anders de instelling van het toestel; vóór de opmaak, dus geen witte flits -->
 <script>(function(){var t=null;try{t=localStorage.getItem("vestigia:thema")}catch(e){}var d=t?t==="donker":!!(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches);if(d)document.documentElement.classList.add("donker")})()</script>
-<link rel="stylesheet" href="css/vestigia.css?v=202611091944">
+<link rel="stylesheet" href="css/vestigia.css?v=202611092039">
 </head>
 <body>
 <!-- openingsanimatie: staat meteen in beeld (geen witte flits), en is in dezelfde sessie al gezien → niet tonen -->
@@ -104,7 +104,8 @@
         <ol class="tiplist" id="tipList"></ol>
         <p class="empty" id="gridEmpty">Nog geen determinatie. Na elke foute determinatie krijg je hier één tip: iets wat jouw soort en de gezochte soort gemeen hebben, of waarin ze verschillen.</p>
         <details class="volledig" id="gridDetails" hidden>
-          <summary>Bekijk de volledige vergelijking</summary>
+          <summary id="gridSum">Bekijk de volledige vergelijking</summary>
+          <p class="fine" id="gridUitleg" hidden>Je ziet per soort alleen wat de tip verteld heeft. Na afloop zie je de hele vergelijking.</p>
           <p class="fine">Per kenmerk: <span class="key ok"></span><em>gelijk</em>, <span class="key part"></span><em>overlap</em>, <span class="key no"></span><em>anders</em>. Bij lengte wijst de pijl naar de gezochte soort.</p>
           <div class="tablewrap">
             <table id="grid">
@@ -346,23 +347,24 @@
 </div>
 
 <script src="config.js"></script>
-<script src="data/teksten.js?v=202611091944"></script>
-<script src="data/soorten.js?v=202611091944"></script>
-<script src="data/sporen.js?v=202611091944"></script>
-<script src="data/dagschema.js?v=202611091944"></script>
-<script src="data/veldweken.js?v=202611091944"></script>
-<script src="js/kern.js?v=202611091944"></script>
-<script src="js/spel.js?v=202611091944"></script>
-<script src="js/veldboek.js?v=202611091944"></script>
-<script src="js/melden.js?v=202611091944"></script>
-<script src="js/kop.js?v=202611091944"></script>
-<script src="js/spelen.js?v=202611091944"></script>
-<script src="js/opening.js?v=202611091944"></script>
-<script src="js/uitleg.js?v=202611091944"></script>
-<script src="js/online.js?v=202611091944"></script>
-<script src="js/league.js?v=202611091944"></script>
-<script src="data/avatars.js?v=202611091944"></script>
-<script src="js/profiel.js?v=202611091944"></script>
-<script src="js/app.js?v=202611091944"></script>
+<script src="data/teksten.js?v=202611092039"></script>
+<script src="data/soorten.js?v=202611092039"></script>
+<script src="data/sporen.js?v=202611092039"></script>
+<script src="data/dagschema.js?v=202611092039"></script>
+<script src="data/veldweken.js?v=202611092039"></script>
+<script src="data/toelichting.js?v=202611092039"></script>
+<script src="js/kern.js?v=202611092039"></script>
+<script src="js/spel.js?v=202611092039"></script>
+<script src="js/veldboek.js?v=202611092039"></script>
+<script src="js/melden.js?v=202611092039"></script>
+<script src="js/kop.js?v=202611092039"></script>
+<script src="js/spelen.js?v=202611092039"></script>
+<script src="js/opening.js?v=202611092039"></script>
+<script src="js/uitleg.js?v=202611092039"></script>
+<script src="js/online.js?v=202611092039"></script>
+<script src="js/league.js?v=202611092039"></script>
+<script src="data/avatars.js?v=202611092039"></script>
+<script src="js/profiel.js?v=202611092039"></script>
+<script src="js/app.js?v=202611092039"></script>
 </body>
 </html>
