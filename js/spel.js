@@ -7,6 +7,8 @@ let freshClue = -1, freshRow = false, freshResult = false;
 const isTwin = id => BY_ID.get(S.target).twin === id;
 const usedTries = () => S.guesses.filter(id => !isTwin(id)).length;
 const curCase = () => caseOf(S.target, S.k);
+/* toelichting bij de huidige casus (data/toelichting.js), of "" als die er niet is */
+const toelichting = () => (typeof TOELICHTING !== "undefined" && TOELICHTING[`${S.target}:${S.k || 0}`]) || "";
 
 function newGame(mode, expert, targetId, k, caseNo){
   return { mode, expert, target: targetId, k: k || 0, guesses: [], revealed: 1, status: "playing", caseNo };
@@ -149,15 +151,23 @@ function renderTips(){
     return `<li class="tip${nieuw}"><span class="tk" aria-label="fout">✕</span><div><b>${esc(g.n)}</b> <i>${esc(g.s)}</i><p>${esc(r.tip.txt)}</p></div></li>`;
   }).join("");
   $("tipList").querySelectorAll(".tweelingWat").forEach(b => b.onclick = () => Spelen.tweeling());
-  $("gridDetails").hidden = !(S.status !== "playing" && S.guesses.length);
+  /* de vergelijking staat er al vanaf de eerste gok, ingeklapt; tijdens het spel alleen wat de tips verteld hebben */
+  const bezig = S.status === "playing";
+  $("gridDetails").hidden = !S.guesses.length;
+  $("gridSum").textContent = bezig ? "Bekijk de vergelijking tot nu toe" : "Bekijk de volledige vergelijking";
+  $("gridUitleg").hidden = !bezig;
 }
 function renderGrid(){
   renderTips();
-  const t = BY_ID.get(S.target);
+  const t = BY_ID.get(S.target), bezig = S.status === "playing";
+  /* per gok de kolom die de tip prijsgaf; de rest blijft tijdens het spel verborgen */
+  const getipt = new Map(tipsVoor(S.target, S.guesses).filter(r => r.soort === "tip" && r.tip.k).map(r => [r.id, r.tip.k]));
+  const zicht = (n, k) => !bezig || getipt.get(n) === k;
+  const leeg = `<td class="onb"><span class="v" aria-label="nog onbekend">·</span></td>`;
   const rows = S.guesses.slice().reverse().map((n, idx) => {
     const g = BY_ID.get(n), c = compare(g, t);
     const cls = (n === S.target ? "win" : "") + (isTwin(n) ? " twin" : "");
-    return `<tr class="${cls.trim()}"><td class="name">${esc(g.n)}<i>${esc(g.s)}</i>${isTwin(n) ? `<span class="twintag">tweelingsoort · telt niet mee</span>` : ""}</td>${COLS.map(k => cell(k, c[k])).join("")}</tr>`;
+    return `<tr class="${cls.trim()}"><td class="name">${esc(g.n)}<i>${esc(g.s)}</i>${isTwin(n) ? `<span class="twintag">tweelingsoort · telt niet mee</span>` : ""}</td>${COLS.map(k => zicht(n, k) ? cell(k, c[k]) : leeg).join("")}</tr>`;
   });
   $("gridBody").innerHTML = rows.join("");
   /* kaartweergave voor smalle schermen */
@@ -165,7 +175,8 @@ function renderGrid(){
     const g = BY_ID.get(n), c = compare(g, t);
     const cls = (n === S.target ? " win" : "") + (isTwin(n) ? " twin" : "");
     return `<div class="gcard${cls}"><div class="gname"><b>${esc(g.n)}</b> <i>${esc(g.s)}</i>${isTwin(n) ? `<span class="twintag">tweelingsoort · telt niet mee</span>` : ""}</div>
-      <div class="gcells">${COLS.map(k => { const x = c[k], sym = x.cls === "ok" ? "✓" : x.cls === "part" ? "~" : "✕";
+      <div class="gcells">${COLS.map(k => { if (!zicht(n, k)) return `<div class="gc onb"><span class="gl">${COL_LABEL[k]}</span><span class="gv">·</span></div>`;
+        const x = c[k], sym = x.cls === "ok" ? "✓" : x.cls === "part" ? "~" : "✕";
         return `<div class="gc ${x.cls}"><span class="gl">${COL_LABEL[k]}</span><span class="gv"><b>${esc(x.main)}</b> <span class="sym">${k === "l" ? (x.arrow || sym) : sym}</span></span></div>`; }).join("")}</div></div>`;
   }).join("");
   $("gridEmpty").hidden = S.guesses.length > 0;
@@ -249,6 +260,8 @@ function renderResult(){
     <p>${score}${S.mode === "daily" ? ` <span class="ptsline">${eersteModus(store.get(), S.caseNo - 1) === !!S.expert
       ? `${points() ? "+" + points() + " punt" + (points() > 1 ? "en" : "") : "0 punten"} voor de ranglijst`
       : `telt niet voor de ranglijst: je speelde deze casus vandaag al in ${S.expert ? "klassiek" : "expert"}`}</span>` : ""}</p>
+    ${toelichting() ? `<div class="toelrij"><button class="toelbtn" id="toelBtn" aria-expanded="false" aria-controls="toelBox"><svg aria-hidden="true" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="8" cy="8" r="6.4"/><path d="M8 7.3v4M8 4.9v.1"/></svg><span>Toelichting</span><i class="pijl" aria-hidden="true"></i></button></div>
+    <div class="toelbox" id="toelBox" hidden><span class="caps">Waarom ${esc(/^Europese/.test(t.n) ? t.n : t.n.toLowerCase())}?</span><p>${esc(toelichting())}</p></div>` : ""}
     <details class="status-line"><summary><span class="caps">Status</span> <b>${esc(LABELS.r[t.r])}</b><span class="meer">uitleg</span></summary><p>${esc(REGIME_INFO[t.r])}</p></details>
     <dl class="traits">${traits}</dl>
     ${curCase().sl ? `<div class="sleutelbox"><span class="caps">Typisch ${esc(/^Europese/.test(t.n) ? t.n : t.n.toLowerCase())}</span><p>${esc(curCase().sl.t)}</p></div>` : ""}
@@ -275,6 +288,11 @@ function renderResult(){
   if ($("oefenWijzig")) $("oefenWijzig").onclick = () => Spelen.wijzig();
   $("toDex").onclick = () => showDex(ontdek ? t.id : undefined);
   $("repFromResult").onclick = e => openReport(t.id, e.currentTarget, S.k);
+  if ($("toelBtn")) $("toelBtn").onclick = () => {
+    const box = $("toelBox"), open = box.hidden;
+    box.hidden = !open; $("toelBtn").setAttribute("aria-expanded", String(open));
+    if (open) box.classList.remove("toelin"), void box.offsetWidth, box.classList.add("toelin");
+  };
   if ($("inviteFromResult")) $("inviteFromResult").onclick = () => League.openUitnodigen();
   Profiel.toonWinst();
 }

@@ -847,3 +847,24 @@ html.donker .mp{background:#1d2a22}
 html.donker .mp.on{background:#2a1a16; border-color:#c4553e}
 html.donker .mp.on .mpst{color:#e48a74}
 html.donker .mptxt .tb{background:#2c3b32}
+
+/* vergelijking tijdens het spel: wat de tips nog niet vertelden */
+#grid td.onb{background:transparent; color:var(--ink-2); text-align:center}
+.gc.onb{display:none}
+#grid td.onb{vertical-align:middle; opacity:.6}
+
+/* toelichting na afloop (update 6): knop in de stijl van klassiek/expert, binnen het soortvlak */
+.toelrij{margin:4px 0 10px}
+.toelbtn{display:inline-flex; align-items:center; gap:7px; height:36px; padding:0 14px 0 12px; border:1px solid var(--rule); border-radius:10px; background:var(--leaf); color:var(--green-d); font-family:var(--display); font-size:.92rem; font-weight:500; cursor:pointer; transition:background .2s ease, color .2s ease}
+.toelbtn:hover{background:#e6eee7}
+.toelbtn[aria-expanded="true"]{background:var(--green); color:#fff; border-color:var(--green)}
+.toelbtn .pijl{width:6px; height:6px; border-right:1.6px solid currentColor; border-bottom:1.6px solid currentColor; transform:rotate(45deg) translateY(-2px); transition:transform .2s; margin-left:2px}
+.toelbtn[aria-expanded="true"] .pijl{transform:rotate(-135deg) translate(-1px,-1px)}
+.toelbox{background:var(--mint); border-left:3px solid var(--moss); border-radius:0 6px 6px 0; padding:9px 12px; margin:0 0 12px}
+.toelbox p{margin:3px 0 0}
+.toelbox.toelin{animation:toelin .28s ease both}
+@keyframes toelin{from{opacity:0; transform:translateY(-4px)} to{opacity:1; transform:none}}
+@media (prefers-reduced-motion:reduce){ .toelbox.toelin{animation:none} }
+html.donker .toelbtn{background:#1d2a22}
+html.donker .toelbtn[aria-expanded="true"]{background:var(--green); color:#0f1712}
+html.donker .toelbox{background:var(--mint)}
