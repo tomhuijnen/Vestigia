@@ -48,12 +48,19 @@ const SPECIES = [
   x:"vos",
   t:"Een vossenburcht heeft minder en kleinere pijpen, zonder beddingmateriaal ervoor, en ruikt scherp. Vossenuitwerpselen liggen los op opvallende plekken, niet in latrinekuiltjes.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Latrines: kuiltjes met uitwerpselen langs vaste wissels. Geen ander Nederlands roofdier maakt echte latrines." }, bron:null, wn:[
       "Oost-Brabant, maart. Kleinschalig landschap met houtwallen, een beekdal en maïsakkers.",
       "Een steile, zandige rand langs het beekdal, begroeid met eiken en braam.",
       "Grasland tegen de houtwal, waar de zode op veel plekken is opengewoeld.",
       "Langs de akkerrand een kuiltje met uitwerpselen; aan het prikkeldraad hangen grove haren.",
       "Prent met vijf tenen naast elkaar en lange nagelafdrukken."
+    ] },
+    { bron:"Zodion, soortpagina das", sl:{ i:2, t:"Een burcht met grote zandhopen én vers beddingmateriaal (bladeren en gras) bij de pijpen: dat sleept alleen de das naar binnen." }, wn:[
+      "Zuid-Limburg, oktober. Een droge, zachte avond.",
+      "Een holle weg in het heuvelland, met graften, akkers en boomgaarden.",
+      "Een helling vol grote gaten met hopen uitgegraven grond, en ervoor verse bladeren en gras.",
+      "Diepe, brede wissels door de ondergroei die naar een maïs- en een fruitperceel lopen; afgeknabbelde maïskolven.",
+      "Een zware, laag op de poten staande loper met een witte kop met twee zwarte strepen."
     ] }
   ] },
 { id:"otter", no:2, g:"Z", n:"Otter", s:"Lutra lutra", r:"HR", l:110, zz:null, twin:null,
@@ -61,12 +68,19 @@ const SPECIES = [
   x:"bever",
   t:"Bevers laten geen visresten achter maar knaagsporen en ontschorste takken. Hun uitwerpselen vind je zelden, omdat ze in het water poepen.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Spraints: kleine, zoetig ruikende uitwerpselen met visgraten op een opvallend punt aan het water." }, bron:null, wn:[
       "Noordwest-Overijssel, januari. Laagveenmoeras met petgaten.",
       "Schoon, visrijk water met brede rietkragen en wat elzenbroek.",
       "Oevers die ’s winters door kwel deels ijsvrij blijven, met rustige, onbegaanbare delen.",
       "Op een paaltje aan het water kleine hoopjes zoetig ruikende uitwerpselen met visgraten.",
       "Ronde prent met vijf tenen, ±6 cm, en het sleepspoor van een dikke staart."
+    ] },
+    { bron:"Zodion, soortpagina otter", sl:{ i:3, t:"Een uitwerpsel vol schubben en kreeftenresten op een vaste markeerplek bij het water." }, wn:[
+      "Noordoost-Friesland, juli. Vroeg in de ochtend.",
+      "Een beekdal met kronkelende waterlopen, vispassages en rietoevers.",
+      "Een faunapassage onder een weg: een looprichel langs het water in een duiker.",
+      "Op de richel een vers, slijmerig hoopje met schubben en kreeftenresten; in het slib een rij brede prenten met zwemvliezen.",
+      "Een lange, slanke en bruine waterbewoner met een dikke, taps toelopende staart."
     ] }
   ] },
 { id:"bever", no:3, g:"Z", n:"Bever", s:"Castor fiber", r:"HR", l:120, zz:null, twin:null,
@@ -74,12 +88,19 @@ const SPECIES = [
   x:"muskusrat",
   t:"De muskusrat is veel kleiner, heeft een zijdelings afgeplatte staart en knaagt geen bomen om; zijn vraatsporen zijn biezen, riet en lisdodde.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"De zandlopervormige knaagplek en schuin afgesneden takken met grote tandsporen." }, bron:null, wn:[
       "Zoetwatergetijdengebied, februari. Kreken en eilanden met een wisselende waterstand.",
       "Wilgenvloedbos met veel schietwilg en populier langs het water.",
       "Steile oevers en luwe kreekjes waar het water nooit helemaal droogvalt.",
       "Schuin afgesneden takken en een schietwilg met een zandlopervormige knaagplek.",
       "Een platte, geschubde staart."
+    ] },
+    { bron:"Zodion, soortpagina bever", sl:{ i:2, t:"Een dam van takken en modder die het water opstuwt: dat bouwt alleen de bever." }, wn:[
+      "Maasvallei bij Roermond, september. Een warme nazomeravond.",
+      "Een grindplas en een zijgeul met wilgenstruweel en populieren.",
+      "Een dam van takken en modder over een sloot, met daarachter een opgestuwde, hogere plas.",
+      "Een grote hoop takken tegen de oever met een ingang onder water; in de schemering een harde klap op het water.",
+      "Groot, tot 30 kilo, met een brede, platte en kale staart."
     ] }
   ] },
 { id:"hamster", no:4, g:"Z", n:"Hamster", s:"Cricetus cricetus", r:"HR", l:28, zz:null, twin:null,
@@ -87,12 +108,19 @@ const SPECIES = [
   x:"bruine-rat",
   t:"Een rattenhol heeft meerdere ingangen met uitgegraven grond en duidelijke looppaden ertussen, meestal bij water of erven. Loodrechte valpijpen zonder grondhoop ontbreken.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Een rond gat dat loodrecht naar beneden gaat, zonder grondhoop: de valpijp van een hamsterburcht." }, bron:null, wn:[
       "Zuid-Limburg, augustus. Het lössplateau, net na de oogst.",
       "Grote akkers met wintertarwe en luzerne op diepe, droge lössgrond.",
       "Langs de percelen blijven bewust stroken graan staan; het grondwater zit diep.",
       "In de stoppels ronde gaten die recht naar beneden gaan, zonder grondhoop.",
       "Een knaagdier met een zwarte buik en witte vlekken op de flanken."
+    ] },
+    { bron:"Zodion, soortpagina hamster; BIJ12", sl:{ i:4, t:"Een zwarte buik met witte vlekken op de flanken: geen ander Nederlands knaagdier is van onderen donkerder dan van boven." }, wn:[
+      "Zuid-Limburg, mei. Op het Plateau van Margraten.",
+      "Een akkerbouwgebied op diepe löss, met gerst en strokenteelt.",
+      "Een perceel dat niet diep wordt geploegd en waar de gerst laat wordt gemaaid.",
+      "In de jonge tarwe een paar gaten van zo'n 8 cm; bij de ingang afgebeten graanhalmen. 's Nachts staat een dier rechtop met dikke wangen.",
+      "Zo groot als een cavia, met een roodbruine rug, witte flankvlekken en een zwarte buik."
     ] }
   ] },
 { id:"hazelmuis", no:5, g:"Z", n:"Hazelmuis", s:"Muscardinus avellanarius", r:"HR", l:14, zz:null, twin:null,
@@ -100,12 +128,19 @@ const SPECIES = [
   x:"bosmuis",
   t:"De bosmuis knaagt ook een rond gat in hazelnoten, maar laat tandsporen achter op het buitenoppervlak rond het gat.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Hazelnoten met een gladde, ronde opening en schuine tandsporen aan de binnenkant van het gat." }, bron:null, wn:[
       "Zuid-Limburg, september. Hellingbossen en houtwallen in het heuvelland.",
       "Een gevarieerde, aaneengesloten struiklaag van hazelaar, braam, kamperfoelie en meidoorn.",
       "De struiken zijn via de kronen met elkaar verbonden; er zit geen open gat in de houtwal.",
       "Lege hazelnoten met een rond gat; de rand is glad, met schuine tandsporen aan de binnenkant.",
       "Oranjebruin, met grote zwarte ogen en een behaarde staart."
+    ] },
+    { bron:"Zodion, soortpagina hazelmuis", sl:{ i:2, t:"Een bolnest van gestripte kamperfoeliebast hoog in de struiken, zonder duidelijke ingang." }, wn:[
+      "Zuid-Limburg, juli. In het Vijlenerbos.",
+      "Een bosrand met een brede mantel van braam, kamperfoelie en jonge hazelaar.",
+      "Een nestbuis aan een tak, en in de struiken een bolnest van geweven gras en gestripte kamperfoeliebast.",
+      "Overdag een bolletje zonder ingang in de struiken; 's nachts klimt een klein knaagdier behendig door de takken.",
+      "Goudbruin, met grote zwarte ogen en een dichtbehaarde, wat pluimige staart."
     ] }
   ] },
 { id:"eikelmuis", no:6, g:"Z", n:"Eikelmuis", s:"Eliomys quercinus", r:"BAL", l:25, zz:null, twin:null,
@@ -113,12 +148,19 @@ const SPECIES = [
   x:"hazelmuis",
   t:"De hazelmuis heeft geen zwart masker, is kleiner en oranjebruin, en leeft in de struiklaag in plaats van in muren en gebouwen.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Een zwart masker rond de ogen en een staart met een witte eindpluim." }, bron:null, wn:[
       "Zuid-Limburg, juni. Een droog dal met hellingbos en kalkgrasland.",
       "Een oude mergelgroeve en een carréboerderij met hoogstamfruit.",
       "Mergelmuren vol kieren en een hooizolder die nauwelijks nog wordt gebruikt.",
       "Op de zolder keutels van ±1 cm, een rommelig nest en lege slakkenhuisjes.",
       "Zwart rond de ogen en een staart met een witte pluim."
+    ] },
+    { bron:"Zodion, soortpagina eikelmuis", sl:{ i:4, t:"Het zwarte masker dat tot achter het oor doorloopt, typisch voor deze slaapmuis." }, wn:[
+      "Zuid-Limburg, eind augustus. Een warme, droge nacht.",
+      "Een hellingbos op kalk met mergelgroeves en oude muren.",
+      "Kieren in een mergelwand, vlak bij een vervallen schuur met een stenen fundering.",
+      "Uit de kieren komt 's nachts gefluit en gesnurk van jongen; onder de muur liggen opengebroken huisjes van wijngaardslakken en keverresten.",
+      "Grijsbruin met een witte buik, grote oren en een zwart masker dat doorloopt tot achter het oor."
     ] }
   ] },
 { id:"boommarter", no:7, g:"Z", n:"Boommarter", s:"Martes martes", r:"BAL", l:70, zz:null, twin:null,
@@ -126,12 +168,19 @@ const SPECIES = [
   x:"steenmarter",
   t:"De steenmarter heeft een witte, vaak gevorkte keelvlek die doorloopt over de voorpoten en een lichte neus, en rust bij voorkeur in gebouwen.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Een gelige, ongevorkte keelvlek. Bij de steenmarter is die wit en gevorkt." }, bron:null, wn:[
       "Veluwe, april. Een groot, aaneengesloten boscomplex.",
       "Oud gemengd bos met grove den, beuk en eik en veel staand dood hout.",
       "Grote, ovale holen hoog in de beuken; weinig paden en weinig verstoring.",
       "Gedraaide uitwerpselen met haren en bessenpitten op een omgevallen stam; krabsporen op de bast.",
       "Een gelige keelvlek zonder vork."
+    ] },
+    { bron:"Zodion, soortpagina boommarter", sl:{ i:3, t:"Het spoor stopt bij een stam en gaat in een andere boom verder: een marter die door de boomkronen jaagt." }, wn:[
+      "Drenthe, februari. Vers poedersneeuw na een heldere nacht.",
+      "Een boswachterij met oude grove dennen en een paar beuken.",
+      "Een groot nest van een eekhoorn of een havik hoog in een den, en een spechtenhol in een beuk.",
+      "In de sneeuw een spoor van paarsgewijze prenten dat bij een stam eindigt en in een andere boom weer begint; verderop een opengebroken eekhoornnest.",
+      "Een donkerbruine marter met lange poten, grote oren en een gele keelvlek."
     ] }
   ] },
 { id:"steenmarter", no:8, g:"Z", n:"Steenmarter", s:"Martes foina", r:"BAL", l:70, zz:null, twin:null,
@@ -139,12 +188,19 @@ const SPECIES = [
   x:"boommarter",
   t:"De boommarter heeft een romige tot oranjegele keelvlek die niet gevorkt is, behaarde voetzolen en grotere oren, en rust in boomholtes.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"De witte, gevorkte keelvlek die over de voorpoten doorloopt." }, bron:null, wn:[
       "De Betuwe, mei. Een dorpskern tussen boomgaarden.",
       "Oude boerderijen met rieten kappen, schuren en houtstapels.",
       "Een zolder met losse isolatie, bereikbaar via een kier onder de dakgoot.",
       "Gedraaide uitwerpselen vol kersenpitten; ’s nachts gestommel, en de buren hebben een kapotte bougiekabel.",
       "Een witte, gevorkte keelvlek die doorloopt over de voorpoten."
+    ] },
+    { bron:"Zodion, soortpagina steenmarter", sl:{ i:3, t:"Beschadigde koelslangen en isolatieschuim in een auto, het bekende werk van deze marter." }, wn:[
+      "Utrecht-stad, januari. Een vochtige, zachte nacht.",
+      "Een oude woonwijk met binnentuinen, schuurtjes en volle containers.",
+      "Een motorruimte van een geparkeerde auto en een kruipruimte onder een schuur.",
+      "Doorgebeten koelslangen en isolatieschuim onder de motor; op de schuur gedraaide uitwerpselen vol haren en veertjes.",
+      "Grijsbruin, slank, met een lange pluimstaart en een witte, in tweeën gesplitste keelvlek."
     ] }
   ] },
 { id:"eekhoorn", no:9, g:"Z", n:"Eekhoorn", s:"Sciurus vulgaris", r:"BAL", l:40, zz:null, twin:null,
@@ -152,12 +208,19 @@ const SPECIES = [
   x:"bosmuis",
   t:"Muizen laten een kort en glad afgeknaagde kegelspil achter zonder rafelig topje, en hazelnoten krijgen een rond gaatje in plaats van in tweeën te worden gekraakt.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Kegelspillen met een rafelig topje en in tweeën gekraakte hazelnoten." }, bron:null, wn:[
       "Landgoed bij Hilversum, oktober.",
       "Gemengd bos met beuk, fijnspar, grove den en een paar oude walnoten.",
       "Hoge, met elkaar verbonden boomkronen en weinig open plekken.",
       "Kegelspillen met een rafelig topje; hazelnoten in twee helften gekraakt.",
       "Een pluimstaart en, in de winter, oorpluimpjes."
+    ] },
+    { bron:"Zodion, soortpagina eekhoorn", sl:{ i:3, t:"Achtervolgingen in spiralen om de stam: de paringsjacht van dit knaagdier in het vroege voorjaar." }, wn:[
+      "Gelderse Vallei, maart. Een zonnige ochtend.",
+      "Een gemengd bos met grove den, lariks en een paar oude eiken.",
+      "Een kogelvormig nest van takjes en mos, tegen de stam hoog in een spar.",
+      "Twee dieren die elkaar in spiralen rond een stam achternazitten; onder de bomen liggen afgeknaagde dennenappels.",
+      "Roodbruin tot donkerbruin, met een lange pluimstaart en oorpluimen."
     ] }
   ] },
 { id:"watervleermuis", no:10, g:"Z", n:"Watervleermuis", s:"Myotis daubentonii", r:"HR", l:9, zz:null, twin:null,
@@ -165,12 +228,19 @@ const SPECIES = [
   x:"meervleermuis",
   t:"De meervleermuis is groter (spanwijdte ±30 cm), jaagt boven bredere wateren en heeft zijn meeste energie rond 35 kHz in plaats van rond 45 kHz.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Een regelmatig tikkend signaal rond 45 kHz, laag en in rechte banen boven glad water." }, bron:null, wn:[
       "Landgoed in Utrecht, augustus.",
       "Een gracht en vijvers met een gladde, beschutte waterspiegel.",
       "Oude beuken met spechtenholen langs het water, en een ijskelder.",
       "Detector: droge, regelmatige tikken met een piek rond 45 kHz, laag boven het water.",
       "Grote voeten met borstelharen."
+    ] },
+    { bron:"Zodion, soortpagina watervleermuis", sl:{ i:3, t:"Jagen vlak boven het wateroppervlak, waarbij de grote voeten insecten van het water scheppen." }, wn:[
+      "Groningen, augustus. Een windstille avond.",
+      "Een brede vaart met bomenrijen langs een boerenerf.",
+      "Een oude eik met een spechtenhol en een kier achter een houten brug.",
+      "Dieren die als hovercraftjes vlak boven het wateroppervlak in rechte lijnen jagen; soms raken ze het water.",
+      "Een middelgrote Myotis met grote voeten en een roze-bruin gezicht."
     ] }
   ] },
 { id:"laatvlieger", no:11, g:"Z", n:"Laatvlieger", s:"Eptesicus serotinus", r:"HR", l:12, zz:null, twin:null,
@@ -178,12 +248,19 @@ const SPECIES = [
   x:"rosse-vleermuis",
   t:"De rosse vleermuis vliegt hoger en sneller met smalle vleugels, roept met afwisselende ‘plip-plop’-signalen rond 20 kHz en woont in boomholtes.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Luide, langzame signalen rond 25 tot 30 kHz en keutels onder de nok van een woning." }, bron:null, wn:[
       "Zuid-Holland, juni. Een woonwijk aan de rand van het veenweidegebied.",
       "Weilanden met vee direct achter de tuinen; laanbomen en bosjes.",
       "Woningen uit de jaren dertig met spouwmuren en pannendaken.",
       "Onder de nok keutels van ±1 cm; detector: luide, langzame signalen rond 25–30 kHz.",
       "Groot en donker; de laatste staartwervels steken buiten de vlieghuid uit."
+    ] },
+    { bron:"Zodion, soortpagina laatvlieger", sl:{ i:3, t:"Brede vleugels en harde, lage roepen bij lantaarns en vee: typisch voor deze grote huisbewoner." }, wn:[
+      "Gelderland, september. Al vroeg in de schemering.",
+      "Een dorpsrand met bomenlanen en een weiland met koeien.",
+      "Een oud kerkje met een spleet onder de dakrand.",
+      "Een grote, brede vleugelslag rond lantaarnpalen en rond het vee; harde, lage klikken op de detector.",
+      "Groot en donkerbruin, met brede vleugels; de punt van de staart steekt een stukje voorbij het vel tussen de achterpoten."
     ] }
   ] },
 { id:"waterspitsmuis", no:12, g:"Z", n:"Waterspitsmuis", s:"Neomys fodiens", r:"BAL", l:15, zz:null, twin:null,
@@ -191,12 +268,19 @@ const SPECIES = [
   x:"gewone-bosspitsmuis",
   t:"De bosspitsmuis is driekleurig (donkere rug, bruine flank, lichte buik), mist de haarkiel onder de staart en jaagt niet onder water.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Uitwerpselen met resten van waterinsecten en vlokreeftjes op een steen aan het water." }, bron:null, wn:[
       "Veenweidegebied, mei.",
       "Een sloot met helder, schoon water vol ongewervelden.",
       "Een onbeschoeide, begroeide oever met stenen en wortels op de waterlijn.",
       "Op een steen kleine uitwerpselen met resten van kokerjuffers en vlokreeftjes.",
       "Zwart met een witte buik en een kiel van stijve haren onder de staart."
+    ] },
+    { bron:"Zodion, soortpagina waterspitsmuis", sl:{ i:3, t:"Een spitsmuis die onder water over de bodem loopt en zilverig glanst door de luchtlaag in de vacht." }, wn:[
+      "Twente, februari. Een heldere, koude dag.",
+      "Een snelstromende beek met grindbedden en ondiepe stukken.",
+      "Een holle oever onder een els, net boven de waterlijn.",
+      "Een klein, zwart dier dat onder water over de bodem loopt en dan zilverig glanst door de lucht in de vacht.",
+      "Zwart van boven en wit van onder, met een rij stijve haren onder de staart."
     ] }
   ] },
 { id:"hermelijn", no:13, g:"Z", n:"Hermelijn", s:"Mustela erminea", r:"BAL", l:35, zz:null, twin:null,
@@ -204,12 +288,19 @@ const SPECIES = [
   x:"wezel",
   t:"De wezel is kleiner, heeft een korte staart zonder zwarte punt, en de grens tussen bruin en wit is grillig in plaats van recht.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"In de sneeuw steeds twee prenten schuin naast elkaar en dunne, gedraaide uitwerpselen." }, bron:null, wn:[
       "Kop van Noord-Holland, januari. De overgang van duin naar polder.",
       "Een duinvallei en vochtige graslanden met veel woelmuizen.",
       "Takkenrillen, steenhopen en houtwallen als dekking.",
       "Dunne, gedraaide uitwerpselen; in de sneeuw steeds twee prenten schuin naast elkaar.",
       "Een staartpunt die altijd zwart is."
+    ] },
+    { bron:"Zodion, soortpagina hermelijn", sl:{ i:4, t:"De staartpunt die altijd zwart is, ook in de witte wintervacht." }, wn:[
+      "Flevoland, juli. Langs een akker met graszoom.",
+      "Graslanden en dijken vol muizenholletjes en hier en daar een takkenhoop.",
+      "Een steenstort aan de voet van een dijk.",
+      "Een slank roofdiertje dat rechtop gaat zitten om rond te kijken en dan met grote sprongen verdwijnt; het sleept een woelrat mee.",
+      "Groter dan een wezel, bruin met een scherpe grens naar de roomwitte buik, en een staartpunt die zwart is."
     ] }
   ] },
 { id:"bruinvis", no:14, g:"Z", n:"Bruinvis", s:"Phocoena phocoena", r:"HR", l:155, zz:null, twin:null,
@@ -217,12 +308,19 @@ const SPECIES = [
   x:"tuimelaar",
   t:"De tuimelaar is twee keer zo groot (±3 m), heeft een duidelijke snavel en een hoge, sikkelvormige rugvin, en springt vaak boven water uit.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Geen snavel en schopvormige tanden: de kleinste walvisachtige van de Noordzee." }, bron:null, wn:[
       "Noordzeekust bij Egmond, maart.",
       "Ondiepe kustzee met veel haring en zandspiering.",
       "Je kijkt vanaf de duinrand over zee, met een telescoop.",
       "Akoestische monitoring vangt zeer hoge klikken op; een kleine, driehoekige vin rolt boven water.",
       "Geen snavel, en schopvormige tanden."
+    ] },
+    { bron:"Zodion, soortpagina bruinvis", sl:{ i:4, t:"Een stompe kop zonder snavel en een kleine driehoekige rugvin." }, wn:[
+      "Oosterschelde, april. Een windstille dag met vlak water.",
+      "Een getijdengebied achter een stormvloedkering met zeegras en mosselpercelen.",
+      "Een geul langs de dijk waar het water bij het keren van het tij rustig wordt.",
+      "Een kleine rugvin die een paar keer rustig boven water rolt; een korte, zachte pf bij het ademen.",
+      "Tot anderhalve meter, donkergrijs met een lichte buik, zonder snavel en met een kleine driehoekige rugvin."
     ] }
   ] },
 { id:"vos", no:15, g:"Z", n:"Vos", s:"Vulpes vulpes", r:"BAL", l:105, zz:null, twin:null,
@@ -230,12 +328,19 @@ const SPECIES = [
   x:"das",
   t:"Een dassenburcht heeft grote zandhopen met beddingmateriaal ervoor en in de buurt een latrine met kuiltjes. De dassenprent heeft vijf tenen naast elkaar met lange nagels, geen ovale prent met vier tenen.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Een ovale prent met vier tenen, waarbij tussen de buitenste tenen en de bal een kruis past." }, bron:null, wn:[
       "Duinen bij Castricum, februari.",
       "Open duingrasland met struweel van duindoorn en meidoorn.",
       "Zandige hellingen met konijnen en een rustige, begroeide duinvallei.",
       "Een uitwerpsel met een gedraaide punt boven op een graspol; ’s nachts een hees gekrijs.",
       "Ovale prent met vier tenen; tussen de buitenste tenen en de bal past een kruis."
+    ] },
+    { bron:"Zodion, soortpagina vos", sl:{ i:4, t:"Een rossige vacht met een pluimstaart met witte punt." }, wn:[
+      "Amsterdam, april. Een volkstuincomplex aan de rand van de stad.",
+      "Tuinen met schuurtjes, composthopen en een begroeide spoordijk.",
+      "Een gat onder een schuurtje met een paar kleinere pijpen ernaast en een sterke, muskusachtige geur.",
+      "Jongen spelen overdag bij het hol; botjes, veren en een kippenpoot liggen verspreid rond de ingang.",
+      "Rossig, met witte keel, zwarte achterkant van de oren en een lange pluimstaart met witte punt."
     ] }
   ] },
 { id:"ree", no:16, g:"Z", n:"Ree", s:"Capreolus capreolus", r:"BAL", l:115, zz:null, twin:null,
@@ -243,12 +348,19 @@ const SPECIES = [
   x:"damhert",
   t:"Het damhert is groter, heeft een lange staart met een zwarte streep, vaak een gevlekte vacht en een schopvormig gewei. Het bronst in oktober, niet in de zomer.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Laag kapotgeschuurde boompjes, glanzend zwarte keutels en een blaffend geluid in de schemering." }, bron:null, wn:[
       "Achterhoek, eind juli.",
       "Kleinschalig landschap van bosjes, maïs en grasland.",
       "Bosranden met jonge opslag en ruigte als dekking.",
       "Laag kapotgeschuurde boompjes en glanzend zwarte keutels; in de schemering een blaffend geluid.",
       "Smalle hoefprent van ±4–5 cm."
+    ] },
+    { bron:"Zodion, soortpagina ree", sl:{ i:4, t:"Een witte spiegel zonder zichtbare staart: het verschil met het damhert." }, wn:[
+      "Salland, januari. Een rijpige ochtend.",
+      "Akkers met wintergraan tussen kleine bosjes.",
+      "Een groep van zes dieren midden op een akker; in de rijp ligt een rond, kaal plekje.",
+      "Smalle hoefprenten en kleine, glanzende keutels; bij onraad laten de dieren een witte achterkant zien.",
+      "Een klein hert met een witte spiegel, maar zonder staart en zonder zwarte staartstreep."
     ] }
   ] },
 { id:"edelhert", no:17, g:"Z", n:"Edelhert", s:"Cervus elaphus", r:"BAL", l:220, zz:null, twin:null,
@@ -256,12 +368,19 @@ const SPECIES = [
   x:"damhert",
   t:"Het damhert is kleiner en heeft een schopvormig gewei en een lange staart met zwarte streep. Een bronstig damhert boert kort en rochelend; het edelhert brult langgerekt.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Een grote hoefprent van 8 tot 9 cm: het grootste hert van Nederland." }, bron:null, wn:[
       "Veluwe, eind september.",
       "Uitgestrekt bos, afgewisseld met heidevelden en zandverstuivingen.",
       "Grote, rustige open plekken met een paar modderige poelen.",
       "Bast op borsthoogte in brede stroken geschild; in de schemering een diep, langgerekt geluid.",
       "Grote hoefprent van ±8–9 cm."
+    ] },
+    { bron:"Zodion, soortpagina edelhert", sl:{ i:3, t:"Grote afgeworpen geweien en mannetjes zonder gewei: in maart werpen deze herten hun gewei af." }, wn:[
+      "Oostvaardersplassen, maart. Een koude, heldere dag.",
+      "Een groot, open grasland met plassen, rietland en vlierstruweel.",
+      "Een kale wilg waarvan de bast tot ver boven heuphoogte is afgeschild.",
+      "Een roedel van tientallen dieren; mannetjes zonder gewei of met één kant, en overal grote, afgeworpen geweistangen.",
+      "Groot en roodbruin in de zomer, grijsbruin in de winter, met een lichte spiegel en een korte staart."
     ] }
   ] },
 { id:"damhert", no:18, g:"Z", n:"Damhert", s:"Dama dama", r:"BAL", l:150, zz:null, twin:null,
@@ -269,12 +388,19 @@ const SPECIES = [
   x:"ree",
   t:"Het ree is kleiner, heeft vrijwel geen zichtbare staart, een effen vacht en een klein, rechtopstaand gewei. Het bronst in de zomer, niet in oktober.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Een lange staart met een zwarte streep." }, bron:null, wn:[
       "Duinen bij Amsterdam, oktober.",
       "Duinbos, struweel en open duingrasland.",
       "Een gebied zonder grote roofdieren, met een hoge graasdruk.",
       "Keutels groter dan die van een ree; een kort, rochelend geluid bij een uitgekrabde kuil.",
       "Een lange staart met een zwarte streep."
+    ] },
+    { bron:"Zodion, soortpagina damhert", sl:{ i:4, t:"Een witte spiegel met zwarte rand en een lange, beweeglijke staart." }, wn:[
+      "Meijendel bij Wassenaar, juni. Een stil duinbos.",
+      "Duinbos met open valleien en hoog, ongemaaid gras.",
+      "Een rustig stuk bos met een dichte struiklaag en hoog gras.",
+      "Een groep hindes met gevlekte jongen; bij schrik springen ze met vier poten tegelijk weg.",
+      "Bruin met witte vlekken in de zomer en een spiegel met zwarte rand en een lange staart."
     ] }
   ] },
 { id:"wild-zwijn", no:19, g:"Z", n:"Wild zwijn", s:"Sus scrofa", r:"BAL", l:160, zz:null, twin:null,
@@ -282,12 +408,19 @@ const SPECIES = [
   x:"edelhert",
   t:"Een hertenprent heeft smallere hoeven. Als de bijhoeven al zichtbaar zijn, staan die recht achter de hoeven en niet breed uitstaand.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Grote stukken omgewoelde bodem en modder op kniehoogte tegen de bomen (schuurbomen)." }, bron:null, wn:[
       "Veluwe, november.",
       "Gemengd bos met veel eik en beuk, in een mastjaar.",
       "Vochtige laagten met modderpoelen.",
       "Grote stukken omgewoelde bodem; bomen met modder op kniehoogte.",
       "Prent met twee hoeven en breed uitstaande bijhoeven."
+    ] },
+    { bron:"Zodion, soortpagina wild zwijn", sl:{ i:3, t:"Gestreepte jongen achter hun moeder aan: frislingen zijn het eerste half jaar gestreept." }, wn:[
+      "Meinweg bij Roermond, april. Een droge ochtend.",
+      "Een gemengd bos naast een maïsakker en een natuurgebied met heide.",
+      "Een kuil van ruim een meter, bekleed met afgebroken takken en gras, in een dichte struik.",
+      "Gestreepte, kleine jongen die achter hun moeder aan lopen; in de berm is de grasmat in brede stroken omgeploegd.",
+      "Grijsbruin en ruig, met een lange snuit; de jongen hebben lichte lengtestrepen."
     ] }
   ] },
 { id:"haas", no:20, g:"Z", n:"Haas", s:"Lepus europaeus", r:"BAL", l:60, zz:null, twin:null,
@@ -295,12 +428,19 @@ const SPECIES = [
   x:"konijn",
   t:"Het konijn is kleiner, graaft burchten met veel pijpen en heeft kortere oren zonder zwarte punten. Zijn jongen worden naakt en blind geboren.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Lange oren met zwarte punten." }, bron:null, wn:[
       "Groningen, maart.",
       "Grootschalige kleiakkers en graslanden.",
       "Weinig dekking: geen houtwallen, alleen sloten en een paar bermen.",
       "Een ondiepe kuil in de akker en platte, ronde keutels met grove vezels.",
       "Lange oren met zwarte punten."
+    ] },
+    { bron:"Zodion, soortpagina haas", sl:{ i:2, t:"Een leger: een ondiepe kuil in het open veld. Dit dier graaft geen holen." }, wn:[
+      "Noord-Brabant, september. Een stoppelveld na de maïsoogst.",
+      "Een open akkerlandschap met sloten en een paar knotwilgen.",
+      "Een ondiepe kuil, de leger, in de rand van het veld.",
+      "Een dier dat pas op het laatste moment opspringt en zigzaggend wegrent; in de modder lange achterpoten voor de korte voorpoten.",
+      "Groot en goudbruin, met lange oren met zwarte punten en lange achterpoten."
     ] }
   ] },
 { id:"konijn", no:21, g:"Z", n:"Konijn", s:"Oryctolagus cuniculus", r:"BAL", l:45, zz:null, twin:null,
@@ -308,12 +448,19 @@ const SPECIES = [
   x:"haas",
   t:"De haas is groter, graaft niet maar ligt in een ondiepe kuil, en heeft lange oren met zwarte punten. Zijn keutels zijn platter en groter.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Een hoop keutels op een vast punt en veel krabkuiltjes in kort begraasd gras." }, bron:null, wn:[
       "Zeeuwse duinen, mei.",
       "Kort begraasd duingrasland met struweel.",
       "Zandige hellingen waar je makkelijk kunt graven.",
       "Een hoop ronde keutels op een duintopje en veel kleine krabkuiltjes.",
       "Korte oren zonder zwarte punten."
+    ] },
+    { bron:"Zodion, soortpagina konijn", sl:{ i:3, t:"Met de achterpoten trommelen en dan in een hol schieten: deze soort graaft zelf gangenstelsels." }, wn:[
+      "Texel, oktober. Een zonnige middag.",
+      "Duingrasland met mos en lage struiken.",
+      "Een helling vol holen met zand voor de ingangen en paadjes ertussen.",
+      "Dieren die bij gevaar met de staart omhoog naar een hol rennen en met de achterpoten op de grond trommelen.",
+      "Klein en grijsbruin, met korte oren zonder zwarte punten en een witte staartonderkant."
     ] }
   ] },
 { id:"egel", no:22, g:"Z", n:"Egel", s:"Erinaceus europaeus", r:"BAL", l:25, zz:null, twin:null,
@@ -321,12 +468,19 @@ const SPECIES = [
   x:"bruine-rat",
   t:"Rattenuitwerpselen zijn kleiner (±1–2 cm), hebben stompe uiteinden en bevatten geen keverresten. Ratten lopen vaste paden met holen erlangs.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Glanzend zwarte uitwerpselen vol keverresten en luid gesnuif in de nacht." }, bron:null, wn:[
       "Een vinexwijk, juni.",
       "Tuinen met gazons, borders en heggen.",
       "Ruige hoeken met bladhopen en schuttingen met hier en daar een gat.",
       "Glanzende, zwarte uitwerpselen vol keverresten; ’s nachts luid gesnuif.",
       "Prent met vijf tenen, ±3 cm."
+    ] },
+    { bron:"Zodion, soortpagina egel", sl:{ i:4, t:"Een lijf vol stekels." }, wn:[
+      "Leiden, november. Na de eerste nachtvorst.",
+      "Een volkstuin met heggen, hopen blad en composthopen.",
+      "Een grote, droge hoop blad onder een conifeer, met een opening aan de onderkant.",
+      "In de bladhoop een bol van bladeren en gras; er ligt een opgerold dier in dat nauwelijks ademt.",
+      "Bedekt met stekels, met een spitse snuit en kleine pootjes."
     ] }
   ] },
 { id:"wezel", no:23, g:"Z", n:"Wezel", s:"Mustela nivalis", r:"BAL", l:22, zz:null, twin:null,
@@ -334,12 +488,19 @@ const SPECIES = [
   x:"hermelijn",
   t:"De hermelijn is groter, heeft een langere staart met altijd een zwarte punt, en de grens tussen bruin en wit loopt recht.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Een korte staart zonder zwarte punt." }, bron:null, wn:[
       "Hoeksche Waard, juli.",
       "Akkers met brede grasbermen en slootkanten.",
       "Een jaar met heel veel veldmuizen.",
       "Heel dunne, gedraaide uitwerpselen van ±2–3 mm; een muizenhol met een nest van muizenhaar.",
       "Een korte staart zonder zwarte punt."
+    ] },
+    { bron:"Zodion, soortpagina wezel", sl:{ i:3, t:"Heel kleine prenten die in muizengangen verdwijnen: dit is het kleinste roofdier ter wereld." }, wn:[
+      "Drenthe, februari. Dunne sneeuw.",
+      "Een akker met houtwallen en ruige bermen.",
+      "Een gangetje van een veldmuis aan de rand van een takkenhoop.",
+      "In de sneeuw heel kleine prenten die steeds in muizengangen verdwijnen; het dier past in een gangetje van 2 cm.",
+      "Heel klein en bruin met een witte buik, met een korte staart zonder zwarte punt."
     ] }
   ] },
 { id:"bunzing", no:24, g:"Z", n:"Bunzing", s:"Mustela putorius", r:"BAL", l:50, zz:null, twin:null,
@@ -347,12 +508,19 @@ const SPECIES = [
   x:"steenmarter",
   t:"De steenmarter is groter, heeft een witte keelvlek en geen gezichtsmasker, klimt veel en woont vooral op zolders.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Een voorraad verlamde padden met een beet in de kop en een sterke, onaangename geur." }, bron:null, wn:[
       "Utrecht, december. Veenweidegebied.",
       "Sloten met veel kikkers, en knotwilgen.",
       "Een boerenerf met houtstapels en een schuur met een kruipruimte.",
       "Een voorraad padden met een beet in de kop; een sterke, onaangename geur.",
       "Een licht gezichtsmasker op een donkere kop."
+    ] },
+    { bron:"Zodion, soortpagina bunzing", sl:{ i:4, t:"Een donkere band over de ogen tussen witte vlekken: het bandietenmasker van dit marterachtige." }, wn:[
+      "Overijssel, maart. Een zachte, natte avond waarin kikkers en salamanders naar de poel trekken.",
+      "Een boerenerf naast een moerasje met poelen.",
+      "Een kruipruimte onder een stal met een opening van een paar centimeter.",
+      "Een donker roofdier met een witte snuit en witte oorranden loopt langs de poel; het pakt een kikker. In de stal ruikt het naar musk.",
+      "Donkerbruin met een gelige ondervacht die erdoorheen schemert, en een donkere band over de ogen."
     ] }
   ] },
 { id:"gewone-zeehond", no:25, g:"Z", n:"Gewone zeehond", s:"Phoca vitulina", r:"BAL", l:160, zz:null, twin:null,
@@ -360,12 +528,19 @@ const SPECIES = [
   x:"grijze-zeehond",
   t:"De grijze zeehond is groter, heeft een langgerekte kop met een ‘Romeins’ profiel en parallelle neusgaten, en jongt rond de jaarwisseling.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"V-vormige neusgaten." }, bron:null, wn:[
       "Waddenzee, juni.",
       "Zandplaten die bij laagwater droogvallen.",
       "Rustige platen langs geulen, waar dieren snel het water in kunnen.",
       "Tientallen dieren bij elkaar; jongen gaan binnen enkele uren te water.",
       "V-vormige neusgaten."
+    ] },
+    { bron:"Zodion, soortpagina gewone zeehond; Ecomare", sl:{ i:3, t:"In de 'banaanhouding' liggen: kop en achterflippers omhoog." }, wn:[
+      "Waddenzee bij Pieterburen, augustus. Een warme dag.",
+      "Een rustige zandplaat aan een geul.",
+      "Een plaat waar bij laagwater tientallen dieren in de zon liggen.",
+      "Dieren die hun kop en achterflippers tegelijk omhoog houden, als een banaan; ze verharen.",
+      "Een ronde, hondachtige kop met een korte snuit, grote ogen en V-vormige neusgaten."
     ] }
   ] },
 { id:"wilde-kat", no:26, g:"Z", n:"Wilde kat", s:"Felis silvestris", r:"HR", l:90, zz:null, twin:null,
@@ -373,12 +548,19 @@ const SPECIES = [
   x:"huiskat",
   t:"Een verwilderde huiskat heeft een dunnere, spits toelopende staart, en de rugstreep loopt vaak door over de staart. Alleen DNA geeft zekerheid.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Een dikke, stompe staart met zwarte ringen." }, bron:null, wn:[
       "Zuid-Limburg, januari.",
       "Groot hellingbos met open plekken en ruige bosranden.",
       "Ver van bebouwing, en aansluitend op grote bossen over de grens.",
       "Uitwerpselen, niet begraven, op een stronk; haren op een lokstok met valeriaan.",
       "Een dikke, stompe staart met zwarte ringen."
+    ] },
+    { bron:"Zodion, soortpagina wilde kat", sl:{ i:4, t:"Een dikke staart met scherpe zwarte ringen en een stompe punt." }, wn:[
+      "Zuid-Limburg, juni. In de grensbossen bij Vaals.",
+      "Een hellingbos met open plekken en een beek in het dal.",
+      "Een gat in een omgevallen boom en een ruige rand met braam.",
+      "Op een cameraval een forse, gestreepte poes zonder halsband die een muis vangt; DNA uit haren aan een paal bevestigt de soort.",
+      "Grijsbruin met vage strepen, een zwarte rugstreep tot aan de staart, en een dikke staart met zwarte ringen."
     ] }
   ] },
 { id:"bosmuis", no:27, g:"Z", n:"Bosmuis", s:"Apodemus sylvaticus", r:"BAL", l:18, zz:null, twin:null,
@@ -386,12 +568,19 @@ const SPECIES = [
   x:"hazelmuis",
   t:"De hazelmuis laat een gladde rand achter met schuine tandsporen langs de binnenkant en vrijwel geen sporen op het oppervlak. Ze heeft een pluizige staart.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Lege hazelnoten met tandsporen op de buitenkant rond het gat." }, bron:null, wn:[
       "Utrechtse Heuvelrug, oktober.",
       "Gemengd bos met beuk en hazelaar.",
       "Een dikke strooisellaag met veel beukennootjes.",
       "Lege hazelnoten met tandsporen op de buitenkant rond het gat.",
       "Grote oren, grote ogen en een lange staart."
+    ] },
+    { bron:"Zodion, soortpagina bosmuis", sl:{ i:4, t:"Grote oren, grote ogen en lange sprongen: een echte muis, geen woelmuis." }, wn:[
+      "Gelderland, januari. In een schuurtje.",
+      "Een tuin naast een bos.",
+      "Een stapel brandhout en een kist met zaden in een schuur.",
+      "Een voorraad zaden in een laars; dieren die met grote sprongen wegschieten.",
+      "Een roodbruin muisje met grote oren, grote ogen en een lange staart."
     ] }
   ] },
 { id:"dwergmuis", no:28, g:"Z", n:"Dwergmuis", s:"Micromys minutus", r:"BAL", l:12, zz:null, twin:null,
@@ -399,12 +588,19 @@ const SPECIES = [
   x:"hazelmuis",
   t:"Het hazelmuisnest is gemaakt van gestripte kamperfoeliebast en zit in struiken, niet in riet. De hazelmuis heeft een pluizige staart en grote zwarte ogen.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Een balletje van gespleten bladeren dat nog aan de stengels vastzit." }, bron:null, wn:[
       "Langs de Vecht, september.",
       "Hoge rietkragen en ruigte met zegge.",
       "Vegetatie die ook in de winter blijft staan.",
       "Op een meter hoogte een balletje van gespleten bladeren die nog vastzitten.",
       "Oranjebruin, ±6 gram, met een grijpstaart."
+    ] },
+    { bron:"Zodion, soortpagina dwergmuis", sl:{ i:4, t:"Een grijpstaart: de staart wordt als extra poot om halmen gewikkeld." }, wn:[
+      "Friesland, augustus. Langs een vaart.",
+      "Een brede rietkraag met lisdodde.",
+      "Op een meter boven de grond een bolletje tussen riethalmen.",
+      "Een heel klein muisje dat met zijn staart om een halm geklemd zit en zaadjes eet.",
+      "Heel klein, oranjebruin met een witte buik, en een staart waarmee het kan grijpen."
     ] }
   ] },
 { id:"woelrat", no:29, g:"Z", n:"Woelrat", s:"Arvicola amphibius", r:"BAL", l:30, zz:null, twin:null,
@@ -412,12 +608,19 @@ const SPECIES = [
   x:"bruine-rat",
   t:"De bruine rat heeft een spitse snuit, grotere oren en een lange, kale, geschubde staart. Zijn keutels zijn groter, met stompe uiteinden.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Hoopjes schuin afgeknipt riet en keutels op vaste plekken langs de oever." }, bron:null, wn:[
       "Noord-Holland, april. Veenweidegebied.",
       "Sloten met een ruige, begroeide oever.",
       "Flauwe, onbeschoeide oevers met weinig onderhoud.",
       "Hoopjes schuin afgeknipt riet en keutels van ±1 cm op vaste plekken.",
       "Een stompe snuit en een behaarde staart."
+    ] },
+    { bron:"Zodion, soortpagina woelrat", sl:{ i:4, t:"Een stompe snuit en kleine oren: dit is een woelmuis, geen rat." }, wn:[
+      "Drenthe, juli. Een veenkoloniaal kanaal.",
+      "Een sloot met dichte begroeiing van gras en riet.",
+      "Een hol in de oever met een ingang boven de waterlijn.",
+      "Een dier dat met een plons het water in gaat en zwemt met alleen de kop boven water.",
+      "Groot, donkerbruin, met een stompe snuit, kleine oren en een behaarde staart."
     ] }
   ] },
 { id:"aardmuis", no:30, g:"Z", n:"Aardmuis", s:"Microtus agrestis", r:"BAL", l:15, zz:null, twin:null,
@@ -425,12 +628,19 @@ const SPECIES = [
   x:"veldmuis",
   t:"De veldmuis heeft een kortere, gladdere, meer geelbruine vacht en leeft in kort grasland, met veel open holletjes in plaats van paadjes door hoog gras.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Paadjes met afgeknipte halmen en groene keutels in hoog, vochtig gras." }, bron:null, wn:[
       "Biesbosch, juni.",
       "Ruig, ongemaaid grasland.",
       "Hoog, dicht gras op een vochtige ondergrond.",
       "Paadjes met afgeknipte halmen en groene keutels van ±5 mm.",
       "Een ruige, grijsbruine vacht en een korte staart."
+    ] },
+    { bron:"Zodion, soortpagina aardmuis", sl:{ i:4, t:"De opvallend ruige, lange en donkere vacht, waarin deze woelmuis zich van de gladdere veldmuis onderscheidt." }, wn:[
+      "Twente, maart. Een kapvlakte in een boswachterij, na de sneeuw.",
+      "Een open plek vol pijpenstrootje en braam, met hier en daar een berk.",
+      "Onder een dikke, platgedrukte laag oud gras dat net uit de sneeuw komt.",
+      "Een netwerk van ondiepe gangetjes en paadjes over de grond, met kleine hoopjes afgeknipte halmen; een bosuil jaagt er elke avond.",
+      "Een woelmuis met een lange, ruige en donkere vacht en een korte, tweekleurige staart."
     ] }
   ] },
 { id:"rosse-woelmuis", no:31, g:"Z", n:"Rosse woelmuis", s:"Clethrionomys glareolus", r:"BAL", l:15, zz:null, twin:null,
@@ -438,12 +648,19 @@ const SPECIES = [
   x:"bosmuis",
   t:"De bosmuis heeft grote oren en ogen, een lange staart en springt. Bij hazelnoten laat ze tandsporen achter op het buitenoppervlak rond het gat.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Geschilde braamscheuten en hazelnoten met een ruw gat zonder sporen op de buitenkant." }, bron:null, wn:[
       "Veluwe, mei.",
       "Een bosrand met een rijke ondergroei van braam.",
       "Een dikke strooisellaag en veel dood hout.",
       "Braamscheuten zonder bast; hazelnoten met een ruw gat, zonder sporen op de buitenkant.",
       "Een roodbruine rug."
+    ] },
+    { bron:"Zodion, soortpagina rosse woelmuis", sl:{ i:4, t:"Een roodbruine rug met grijze flanken: deze soort klimt ook in struiken." }, wn:[
+      "Achterhoek, november. Een vochtige, grijze dag.",
+      "Een houtwal met oude eiken, hulst en lijsterbes langs een weiland.",
+      "Een gangetje onder een boomwortel, met een hoopje knaagsel ervoor.",
+      "Overdag een klein knaagdier dat behendig in een struik klimt en bessen van de lijsterbes eet; afgeknaagde bast aan jonge twijgjes.",
+      "Een knaagdiertje met een roodbruine rug, grijze flanken, kleine oren en een staart van zo'n halve lichaamslengte."
     ] }
   ] },
 { id:"gewone-bosspitsmuis", no:32, g:"Z", n:"Gewone bosspitsmuis", s:"Sorex araneus", r:"BAL", l:12, zz:null, twin:null,
@@ -451,12 +668,19 @@ const SPECIES = [
   x:"huisspitsmuis",
   t:"De huisspitsmuis heeft witte tandpunten, grote, opvallende oren en lange, losse haren op de staart.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Rode tandpunten en een driekleurige vacht." }, bron:null, wn:[
       "Twente, augustus.",
       "Heggen, houtwallen en bosranden.",
       "Een vochtige, dikke strooisellaag.",
       "Schelle piepjes uit het strooisel; een dood diertje dat door katten is laten liggen.",
       "Rode tandpunten en een driekleurige vacht."
+    ] },
+    { bron:"Zodion, soortpagina gewone bosspitsmuis", sl:{ i:3, t:"Schedeltjes met rode tandpunten: alleen roodtandspitsmuizen hebben die, en dit is de algemeenste." }, wn:[
+      "Drenthe, februari. Een kerkuilkast in een schuur.",
+      "Een akkerlandschap met houtwallen, slootkanten en ruige bermen.",
+      "Op de bodem van de kast ligt een stapel glanzend zwarte braakballen.",
+      "Uit de braakballen pluis je kleine schedeltjes met spitse snuiten en rood gekleurde tandpunten.",
+      "Een donkerbruine rug, lichtere flanken en een grijswitte buik: drie kleuren."
     ] }
   ] },
 { id:"huisspitsmuis", no:33, g:"Z", n:"Huisspitsmuis", s:"Crocidura russula", r:"BAL", l:11, zz:null, twin:null,
@@ -464,12 +688,19 @@ const SPECIES = [
   x:"gewone-bosspitsmuis",
   t:"De bosspitsmuis heeft rode tandpunten, kleine oren die in de vacht wegvallen, en een driekleurige vacht.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Jongen die in een treintje achter elkaar lopen en schedeltjes met witte tanden in braakballen." }, bron:null, wn:[
       "Achterhoek, oktober.",
       "Een boerenerf met moestuin en schuren.",
       "Warme composthopen en stapels hout.",
       "Jongen lopen in een treintje; in kerkuilbraakballen zitten schedeltjes met witte tanden.",
       "Grote oren en losse haren op de staart."
+    ] },
+    { bron:"Zodion, soortpagina huisspitsmuis", sl:{ i:4, t:"Witte tandpunten met losse, lange haren op de staart: een witandspitsmuis." }, wn:[
+      "Zeeland, juli. Een warme avond op een oud boerenerf.",
+      "Een groentetuin met composthopen, stenen muurtjes en een kas.",
+      "Een warme, dampende composthoop naast een schuur.",
+      "Een grijsbruin diertje dat in de compost naar pissebedden en wormen zoekt en luid tjirpt; de kat brengt er één binnen, maar eet het niet op.",
+      "Witte tanden, opvallend grote oren en losse, lange haren op de staart."
     ] }
   ] },
 { id:"gewone-dwergvleermuis", no:34, g:"Z", n:"Gewone dwergvleermuis", s:"Pipistrellus pipistrellus", r:"HR", l:7, zz:null, twin:"ruige-dwergvleermuis",
@@ -477,12 +708,19 @@ const SPECIES = [
   x:"ruige-dwergvleermuis",
   t:"De ruige dwergvleermuis is iets groter, roept rond 38–40 kHz, en is vooral in de trektijd en bij water te vinden.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Smakkende signalen met een piek rond 45 kHz en keutels onder een stootvoeg." }, bron:null, wn:[
       "Brabant, juni.",
       "Een nieuwbouwwijk met een stadspark en een vijver.",
       "Woningen met spouwmuren en open stootvoegen.",
       "Kleine, droge keutels onder een stootvoeg; detector: smakkende signalen, piek rond 45 kHz.",
       "Een heel kleine, donkere vleermuis."
+    ] },
+    { bron:"Zodion, soortpagina gewone dwergvleermuis", sl:{ i:3, t:"Een piek rond 45 kHz rond een lantaarnpaal in een woonwijk: hét vleermuisje van de bebouwde kom." }, wn:[
+      "Utrecht, eind augustus. Kort na zonsondergang.",
+      "Een straat met laanbomen, achtertuinen en een vijver in een plantsoen.",
+      "Een rijtjeshuis met een kier achter een houten boeideel.",
+      "Een klein vleermuisje dat rondjes jaagt rond een lantaarnpaal; uit een spleet komen schelle sociale roepen; detector: piek rond 45 kHz.",
+      "Een heel klein, donkerbruin vleermuisje met korte, ronde oren."
     ] }
   ] },
 { id:"ruige-dwergvleermuis", no:35, g:"Z", n:"Ruige dwergvleermuis", s:"Pipistrellus nathusii", r:"HR", l:8, zz:null, twin:"gewone-dwergvleermuis",
@@ -490,12 +728,19 @@ const SPECIES = [
   x:"gewone-dwergvleermuis",
   t:"De gewone dwergvleermuis is kleiner, roept rond 45 kHz, trekt niet en heeft grote kraamkolonies in woningen.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Sociale roepen uit een kast en een piek rond 38 tot 40 kHz." }, bron:null, wn:[
       "Een veenplas, september.",
       "Moerasbos met els en wilg langs open water.",
       "Kasten en holtes in bomen langs de oever.",
       "Sociale roepen uit een kast; detector: piek rond 38–40 kHz.",
       "Een behaarde staartvlieghuid."
+    ] },
+    { bron:"Zodion, soortpagina ruige dwergvleermuis", sl:{ i:3, t:"Trek langs de kust in april met een piek rond 38 tot 40 kHz: deze soort trekt elk jaar honderden kilometers." }, wn:[
+      "Noord-Holland, april. Langs de kust bij Petten.",
+      "Een duinbos achter de zeereep, met een paar vijvers.",
+      "Een vleermuiskast aan een den, waar alleen in het voor- en najaar dieren zitten.",
+      "Dieren die in het voorjaar in rechte lijn langs de kust naar het noordoosten trekken; detector: piek rond 38 tot 40 kHz.",
+      "Iets groter dan het gewone dwergje, met een ruige, lange vacht en een behaarde staartvlieghuid."
     ] }
   ] },
 { id:"rosse-vleermuis", no:36, g:"Z", n:"Rosse vleermuis", s:"Nyctalus noctula", r:"HR", l:13, zz:null, twin:null,
@@ -503,12 +748,19 @@ const SPECIES = [
   x:"laatvlieger",
   t:"De laatvlieger heeft brede vleugels, fladdert langzamer langs boomranden, roept rond 25–30 kHz en woont in gebouwen.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Overdag gekwetter uit een spechtenhol en een 'plip-plop'-roep rond 20 kHz." }, bron:null, wn:[
       "Den Haag, mei.",
       "Een oud parkbos met grote beuken bij een vijver.",
       "Hoge spechtenholen in dikke stammen.",
       "Overdag gekwetter uit een hol; detector: ‘plip-plop’ rond 20 kHz.",
       "Smalle, puntige vleugels en een roodbruine vacht."
+    ] },
+    { bron:"Zodion, soortpagina rosse vleermuis", sl:{ i:3, t:"Snelle duikvluchten hoog boven water, al vóór het donker, met een plip-plop rond 20 kHz." }, wn:[
+      "Friesland, augustus. Al vroeg in de avond, als het nog licht is.",
+      "Een groot meer met een loofbos aan de oever.",
+      "Een oude beuk met een paar spechtenholen hoog in de stam.",
+      "Hoog boven het meer vliegen grote vleermuizen met snelle duikvluchten tussen de gierzwaluwen; detector: plip-plop rond 20 kHz.",
+      "Groot, met smalle, puntige vleugels en een glanzend roodbruine vacht."
     ] }
   ] },
 { id:"meervleermuis", no:37, g:"Z", n:"Meervleermuis", s:"Myotis dasycneme", r:"HR", l:11, zz:null, twin:null,
@@ -516,12 +768,19 @@ const SPECIES = [
   x:"watervleermuis",
   t:"De watervleermuis is kleiner, jaagt boven vijvers en smallere wateren, roept rond 45 kHz en heeft kraamkolonies in bomen.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Een grote kolonie in een spouw en jagen laag boven brede vaarten met een piek rond 35 kHz." }, bron:null, wn:[
       "Friesland, juli.",
       "Open veenweide met brede vaarten en meren.",
       "Een dorp met oude woningen met spouwmuren, vlak bij het water.",
       "Een grote kolonie in een spouw; detector: piek rond 35 kHz, laag boven een vaart.",
       "Een grote Myotis met lange voeten."
+    ] },
+    { bron:"Zodion, soortpagina meervleermuis", sl:{ i:3, t:"Laag boven brede vaarten met een piek rond 35 kHz: groter en lager dan de watervleermuis." }, wn:[
+      "Noord-Holland, juni. Een windstille, warme avond.",
+      "Een groot meer met brede kanalen en rietoevers.",
+      "Een oude kerk vlak bij het water, met honderden dieren op zolder.",
+      "Grote vleermuizen die in lange, rechte banen laag boven het water jagen; detector: piek rond 35 kHz.",
+      "Een grote Myotis met lange voeten en een vacht die van boven bruin en van onder grijswit is."
     ] }
   ] },
 { id:"franjestaart", no:38, g:"Z", n:"Franjestaart", s:"Myotis nattereri", r:"HR", l:8, zz:null, twin:null,
@@ -529,12 +788,19 @@ const SPECIES = [
   x:"watervleermuis",
   t:"De watervleermuis heeft geen haarrand langs de staartvlieghuid, maar grote voeten, en jaagt laag boven het water.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Een rand van stijve haartjes langs de staartvlieghuid." }, bron:null, wn:[
       "Fort van de Waterlinie, januari.",
       "Grachten, bomen en bos rond het fort.",
       "Koele, vochtige ruimtes met kieren in de muren.",
       "Vleermuizen in winterslaap diep in kieren; in de zomer zitten ze in boomholtes.",
       "Een rand van stijve haartjes langs de staartvlieghuid."
+    ] },
+    { bron:"Zodion, soortpagina franjestaart", sl:{ i:3, t:"Langzaam fladderen en spinnen van de bladeren plukken: deze vleermuis gebruikt de franje van de staartvlieghuid om prooi op te scheppen." }, wn:[
+      "Gelderland, juli. Een oud loofbos op een landgoed.",
+      "Een eikenbos met een dichte struiklaag van hulst en hazelaar.",
+      "Een vleermuiskast aan een eik langs een oude laan.",
+      "Een vleermuis die langzaam en wendbaar tussen de struiken fladdert en spinnen van de bladeren plukt; detector: zachte, korte pulsen.",
+      "Een middelgrote Myotis met lange oren, een lichte buik en een rand van stijve haartjes langs de staartvlieghuid."
     ] }
   ] },
 { id:"ingekorven-vleermuis", no:39, g:"Z", n:"Ingekorven vleermuis", s:"Myotis emarginatus", r:"HR", l:9, zz:null, twin:null,
@@ -542,12 +808,19 @@ const SPECIES = [
   x:"franjestaart",
   t:"De franjestaart heeft geen inkeping in het oor, maar een haarrand langs de staartvlieghuid. Zijn kolonies zitten verborgen in kieren, niet open aan de nok.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Een inkeping in de buitenrand van het oor." }, bron:null, wn:[
       "Zuid-Limburg, juli.",
       "Een dorp tussen hoogstamboomgaarden, weilanden en hellingbos.",
       "Een warme kerkzolder, en koeienstallen vol vliegen.",
       "Een dichte tros open aan de nok, met resten van spinnen eronder.",
       "Een inkeping in de buitenrand van het oor."
+    ] },
+    { bron:"Zodion, soortpagina ingekorven vleermuis", sl:{ i:4, t:"De inkeping in de buitenrand van het oor, met een wollige, rossige vacht." }, wn:[
+      "Zuid-Limburg, januari. In een mergelgroeve.",
+      "Een groeve in een hellingbos, met een gangenstelsel van vele kilometers.",
+      "Een koude, vochtige gang diep in de groeve, ver van de ingang.",
+      "Dieren die open aan het plafond hangen in winterslaap, vaak bedekt met dauwdruppels; tellers zien er elk jaar meer.",
+      "Een middelgrote Myotis met een wollige, rossige vacht en een inkeping in de buitenrand van het oor."
     ] }
   ] },
 { id:"tweekleurige-vleermuis", no:40, g:"Z", n:"Tweekleurige vleermuis", s:"Vespertilio murinus", r:"HR", l:11, zz:"ZZ", twin:null,
@@ -555,12 +828,19 @@ const SPECIES = [
   x:"laatvlieger",
   t:"De laatvlieger is groter, egaal donkerbruin zonder zilverige haarpunten, en heeft geen hoorbare baltszang.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Zilvergrijze haarpunten op een donkere rug." }, bron:null, wn:[
       "Oost-Nederland, november.",
       "Een stadswijk met hoogbouw naast een grote plas.",
       "Hoge gebouwen met gevelbekleding en kieren.",
       "Een hoorbaar, hoog getsjirp rond de flat; detector: piek rond 25 kHz.",
       "Zilvergrijze haarpunten op een donkere rug."
+    ] },
+    { bron:"Zodion, soortpagina tweekleurige vleermuis", sl:{ i:4, t:"Een donkere rug met zilvergrijze haarpunten: die 'berijpte' vacht is uniek voor deze soort." }, wn:[
+      "Rotterdam, december. Een koude week.",
+      "Een woonwijk met hoge flats aan de rivier.",
+      "Een kier achter de betonplaten hoog aan een flat.",
+      "Een verdwaald diertje in een trappenhuis van een flat; bewoners brengen hem naar de vleermuisopvang.",
+      "Middelgroot, met brede, korte oren, een witte buik en een donkere rug met zilvergrijze haarpunten."
     ] }
   ] },
 { id:"grijze-grootoorvleermuis", no:41, g:"Z", n:"Grijze grootoorvleermuis", s:"Plecotus austriacus", r:"HR", l:9, zz:"ZZ", twin:"gewone-grootoorvleermuis",
@@ -568,12 +848,19 @@ const SPECIES = [
   x:"gewone-grootoorvleermuis",
   t:"De gewone grootoor is bruiner, heeft een lichter gezicht en een duim van meer dan 6 mm, en komt in heel Nederland voor, vooral bij bos.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Zeer lange oren, een donker gezicht en een duim korter dan 6 mm." }, bron:null, wn:[
       "Zuid-Limburg, juli.",
       "Open, agrarisch landschap met akkers en boomgaarden.",
       "Een dorpskerk met een rustige zolder.",
       "Losse vlindervleugels onder een balk; op de detector vrijwel niets.",
       "Zeer lange oren, een donker gezicht en een duim korter dan 6 mm."
+    ] },
+    { bron:"Zodion, soortpagina grijze grootoorvleermuis", sl:{ i:4, t:"Een donker gezicht en een duim korter dan 6 mm: het verschil met de gewone grootoorvleermuis." }, wn:[
+      "Zuid-Limburg, januari. In een mergelgroeve aan de rand van het plateau.",
+      "Een groeve tussen akkers en boomgaarden, ver van groot bos.",
+      "Een koude, droge gang vlak bij de ingang.",
+      "Een vleermuis in winterslaap met de lange oren onder de vleugels gevouwen; alleen het puntige oorklepje steekt uit.",
+      "Een grijze vacht, een donker gezicht en een duim korter dan 6 mm."
     ] }
   ] },
 { id:"gewone-grootoorvleermuis", no:42, g:"Z", n:"Gewone grootoorvleermuis", s:"Plecotus auritus", r:"HR", l:9, zz:null, twin:"grijze-grootoorvleermuis",
@@ -581,12 +868,19 @@ const SPECIES = [
   x:"grijze-grootoorvleermuis",
   t:"De grijze grootoor heeft een grijzere vacht, een donker gezichtsmasker en een duim korter dan 6 mm, en komt vooral in het zuiden voor.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Zeer lange oren en een duim langer dan 6 mm." }, bron:null, wn:[
       "Drenthe, juli. Een esdorp aan de rand van een boswachterij.",
       "Een erf met oude eiken en lindes, dat overgaat in loofbos met een dichte struiklaag.",
       "Een rustige kerkzolder met houten balken en een kleine opening onder de dakrand.",
       "Onder één balk losse vlindervleugels; op de detector is bijna niets te horen.",
       "Zeer lange oren en een duim langer dan 6 mm."
+    ] },
+    { bron:"Zodion, soortpagina gewone grootoorvleermuis", sl:{ i:4, t:"Een licht gezicht en een duim langer dan 6 mm: het verschil met de grijze grootoorvleermuis." }, wn:[
+      "Gelderland, januari. Een strenge vorstperiode.",
+      "Een landgoed met oud loofbos en vijvers.",
+      "Een ijskelder van baksteen, half onder de grond.",
+      "Een vleermuis in winterslaap in een kier, met de lange oren onder de vleugels gevouwen; alleen het puntige oorklepje steekt uit.",
+      "Een bruine vacht, een licht gezicht en een duim langer dan 6 mm."
     ] }
   ] },
 { id:"noordse-woelmuis", no:43, g:"Z", n:"Noordse woelmuis", s:"Microtus oeconomus", r:"HR", l:18, zz:"ZZ", twin:"aardmuis",
@@ -594,12 +888,19 @@ const SPECIES = [
   x:"aardmuis",
   t:"De aardmuis is iets kleiner, heeft een kortere staart en een ruigere, meer grijsbruine vacht. Hij leeft in vrijwel dezelfde habitat en verdringt de noordse woelmuis.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Een donker knaagdiertje met een staart van ongeveer een derde van de lichaamslengte." }, bron:null, wn:[
       "Zuidwest-Friesland, mei. Laagveen langs een groot meer.",
       "Ruig rietland met zeggen en biezen, nauwelijks gemaaid.",
       "Lage, natte delen die bij hoog water onderlopen, met hogere pollen ertussen.",
       "Paadjes door de vegetatie, afgeknipte stukjes zegge en groene keutels van ±6 mm.",
-      "Een donkere woelmuis met een staart van ongeveer een derde van de lichaamslengte."
+      "Een donker knaagdiertje met een staart van ongeveer een derde van de lichaamslengte."
+    ] },
+    { bron:"Zodion, soortpagina noordse woelmuis; BIJ12", sl:{ i:2, t:"Pollen in een overstroomd rietland: deze relictsoort is een echte moerasbewoner en zwemt goed." }, wn:[
+      "Friesland, november. Een periode met hoog water.",
+      "Een groot rietland langs een meer in het laagveen.",
+      "Hogere pollen van zegge en riet in een overstroomd rietland.",
+      "Knaagdiertjes die zwemmend van pol naar pol gaan en zich op drijvend riet verschuilen; in de pollen nesten van fijn gras.",
+      "Donkerbruin, groter dan een veldmuis, met een vrij lange staart."
     ] }
   ] },
 { id:"grijze-zeehond", no:44, g:"Z", n:"Grijze zeehond", s:"Halichoerus grypus", r:"BAL", l:220, zz:null, twin:null,
@@ -607,12 +908,19 @@ const SPECIES = [
   x:"gewone-zeehond",
   t:"De gewone zeehond heeft een ronde ‘hondenkop’ met V-vormige neusgaten en jongt in juni–juli. Zijn jongen verliezen hun witte vacht al vóór de geboorte.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Een langgerekte kop met parallelle neusgaten." }, bron:null, wn:[
       "Waddenzee, december. Bij een zeegat met sterke stroming.",
       "Hoge zandplaten die ook bij normaal hoogwater deels droog blijven.",
       "Rustige platen ver van vaargeulen, dicht bij open zee.",
       "Brede sleepsporen; een wollig, wit jong ligt alleen op de plaat.",
       "Langgerekte kop met parallelle neusgaten."
+    ] },
+    { bron:"Zodion, soortpagina grijze zeehond; Ecomare", sl:{ i:4, t:"Een lange kop met een Romeinse neus en parallelle neusgaten." }, wn:[
+      "Waddenzee bij Vlieland, juli. Een heldere zomerdag.",
+      "Een grote zandplaat aan de rand van het Vliestroom-zeegat.",
+      "De hoge rand van de plaat, met diep water direct ernaast.",
+      "Honderden dieren liggen bij laagwater op de plaat; enorme mannetjes van wel drie meter liggen apart en klinken als jammerend gezang.",
+      "Een langgerekte kop met een 'Romeinse neus' en parallelle neusgaten; vaak gevlekt."
     ] }
   ] },
 { id:"zandhagedis", no:45, g:"R", n:"Zandhagedis", s:"Lacerta agilis", r:"HR", l:20, zz:null, twin:null,
@@ -1348,11 +1656,18 @@ const SPECIES = [
   x:"aardmuis",
   t:"De aardmuis heeft een langere, ruigere en donkerdere vacht en zit in vochtiger, ruiger gras. Zeker weten doe je het aan de kiezen: bij de aardmuis heeft de tweede bovenkies een extra lus.",
   cs:[
-    { bron:"Zodion, soortpagina veldmuis", wn:[
+    { sl:{ i:3, t:"Torenvalken boven het land en talloze kleine schedels in braakballen: een veldmuizenplaag." }, bron:"Zodion, soortpagina veldmuis", wn:[
       "Groningen, oktober. Een droge nazomer is net voorbij.",
       "Een uitgestrekt grasland op klei met kort, intensief begraasd gras.",
       "Tientallen gaatjes in de zode, verbonden door kale, ingesleten looppaadjes.",
       "Overal hangen torenvalken en zitten buizerds op de paaltjes; in een braakbal vind je talloze kleine schedels.",
+      "Klein en gedrongen, grijsbruin, met kleine oren in de vacht en een korte staart."
+    ] },
+    { bron:"Zodion, soortpagina veldmuis", sl:{ i:2, t:"Honderden holletjes met kale wisseltjes ertussen: een kolonie die bij een plaag het hele veld overneemt." }, wn:[
+      "Flevoland, mei. Na een zachte winter.",
+      "Een luzerneveld en grasdijken tussen grote akkers.",
+      "Op de dijkhelling honderden holletjes van 2 tot 3 cm, met kale wisseltjes ertussen.",
+      "Bij elk gaatje een hoopje afgeknipte halmen; blauwe kiekendieven en velduilen jagen er overdag.",
       "Klein en gedrongen, grijsbruin, met kleine oren in de vacht en een korte staart."
     ] }
   ] },
@@ -1371,12 +1686,19 @@ const SPECIES = [
   x:"gewone-dwergvleermuis",
   t:"De gewone dwergvleermuis vliegt sneller en schokkeriger, roept rond 45 kHz en heeft een donkerbruine snuit. Een baardvleermuis roept met steile FM-pulsen (Myotis) en heeft een donker gezichtje met een puntige tragus.",
   cs:[
-    { bron:"Zodion, soortpagina gewone baardvleermuis", wn:[
+    { sl:{ i:4, t:"Een donkerbruin tot zwartig gezicht en oren met een lange, spitse tragus." }, bron:"Zodion, soortpagina gewone baardvleermuis", wn:[
       "Zuid-Limburg, september. Vlak na zonsondergang langs een holle weg.",
       "Een kleinschalig landschap met heggen, boomgaarden en een dorp met oude boerderijen.",
       "Een houten gevelbetimmering en een spleet achter een luik aan een schuur.",
       "Laag langs de heg patrouillerend; op de batdetector korte, steile FM-pulsen zonder duidelijke piek.",
       "Klein, met donkerbruin tot zwartig gezicht en oren, en een lange, spitse tragus."
+    ] },
+    { bron:"Zodion, soortpagina gewone baardvleermuis", sl:{ i:4, t:"Een donker gezicht met een baardje en een spits oorklepje: de kleinste Myotis van Nederland." }, wn:[
+      "Zuid-Limburg, februari. In een kalksteengroeve.",
+      "Een groeve in een hellingbos aan de rand van een dorp.",
+      "Een koude gang met een vochtige wand vol kleine spleetjes.",
+      "Een klein vleermuisje dat vrij aan de wand hangt in winterslaap; de vacht zit vol dauwdruppels.",
+      "Klein, met een donker gezicht en donkere oren, een spits oorklepje en een 'baardje' van haren rond de mond."
     ] }
   ] },
 { id:"amerikaanse-brulkikker", no:null, g:"A", n:"Amerikaanse brulkikker", s:"Lithobates catesbeianus", r:"NB", l:15, zz:null, twin:null,
@@ -1461,12 +1783,19 @@ const SPECIES = [
   x:"bruinvis",
   t:"Een bruinvis is veel kleiner (tot 1,8 m), heeft een lage driehoekige rugvin, geen snavel, en zwemt meestal alleen of met z'n tweeën zonder te springen.",
   cs:[
-    { bron:"Zodion, soortpagina tuimelaar", wn:[
+    { sl:{ i:4, t:"Een korte, duidelijke snavel en een hoge, sikkelvormige rugvin." }, bron:"Zodion, soortpagina tuimelaar", wn:[
       "Waddenzee bij Den Helder, augustus. Vanaf de veerboot.",
       "Een diepe zeegeul tussen twee eilanden met sterke stroming.",
       "Vlak langs de boeg, waar de boot een golf opstuwt.",
       "Een groepje van zo'n tien dieren dat hoog uit het water springt en op de boeggolf meesurft.",
       "Grijs, tot drie meter lang, met een korte, duidelijke snavel en een hoge, sikkelvormige rugvin."
+    ] },
+    { bron:"Zodion, soortpagina tuimelaar", sl:{ i:4, t:"Een korte, duidelijke snavel en een hoge sikkelvin bij een dier van drie meter: geen bruinvis." }, wn:[
+      "Noordzeekust bij Scheveningen, september. Vanaf de pier.",
+      "Ondiepe kustzee met scholen haring en makreel.",
+      "Een zone net achter de branding, op een paar honderd meter van het strand.",
+      "Een groep van een stuk of twintig grote dieren die samen een school vissen opdrijven; ze springen helemaal uit het water.",
+      "Groot en egaal leigekleurd, tot drie meter, met een korte, duidelijke snavel en een hoge, sikkelvormige rugvin."
     ] }
   ] },
 { id:"huiskat", no:null, g:"Z", n:"Huiskat", s:"Felis catus", r:"NB", l:75, zz:null, twin:null,
@@ -1562,12 +1891,19 @@ const SPECIES = [
   x:"tuimelaar",
   t:"De tuimelaar is egaal grijs en zie je vaker dicht onder de kust. Deze soort heeft een korte witte snavel, een lichte vlek achter de rugvin en leeft vooral in de diepere, koudere Noordzee.",
   cs:[
-    { bron:"Zodion, soortpagina witsnuitdolfijn", wn:[
+    { sl:{ i:4, t:"Een korte, witte snavel en lichte flankvlekken." }, bron:"Zodion, soortpagina witsnuitdolfijn", wn:[
       "Kust van Texel, januari. Na een week met harde noordwestenwind.",
       "Een breed zandstrand aan de Noordzee.",
       "De vloedlijn, tussen aangespoeld zeewier en schelpen.",
       "Een groot, glad dier van ruim twee meter dat dood is aangespoeld; strandingsonderzoekers nemen monsters.",
       "Zwart met een lichte flank- en rugvlek, een hoge sikkelvormige rugvin en een korte, witte snavel."
+    ] },
+    { bron:"Zodion, soortpagina witsnuitdolfijn", sl:{ i:4, t:"Een korte, witte snavel en een lichte vlek achter de rugvin." }, wn:[
+      "Doggersbank, juni. Ver uit de kust, vanaf een onderzoeksschip.",
+      "Diep, koel en helder zeewater, ver van de kust.",
+      "Een windmolenpark op volle zee, waar veel vis rond de funderingen zit.",
+      "Een groep van zo'n tien krachtige dieren die rond het schip springen en een stuk meezwemmen.",
+      "Zwart en wit, met een lichte vlek achter de rugvin en een korte, witte snavel."
     ] }
   ] },
 { id:"wolf", no:116, g:"Z", n:"Wolf", s:"Canis lupus", r:"BAL", l:150, zz:"Z", twin:null,
@@ -1575,12 +1911,19 @@ const SPECIES = [
   x:"vos",
   t:"Vossenprenten zijn kleiner (ongeveer 5 cm lang) en lopen vaak in een licht zigzaggend spoor. Deze prenten zijn 9–11 cm lang en liggen in draf vrijwel op één rechte lijn.",
   cs:[
-    { bron:"BIJ12, wolf in Nederland; Zodion, soortpagina wolf", wn:[
+    { sl:{ i:4, t:"Een prent van zo'n 10 cm waarbij de twee middelste tenen ver naar voren staan." }, bron:"BIJ12, wolf in Nederland; Zodion, soortpagina wolf", wn:[
       "Noord-Veluwe, januari. Een dun laagje sneeuw.",
       "Een groot bosgebied met heide en stuifzand.",
       "Een zandweg die kilometers rechtdoor loopt door het bos.",
       "Een lang, kaarsrecht spoor van grote prenten; verderop een grote keutel vol haren en botsplinters van ree.",
       "Een prent van zo'n 10 cm met vier tenen en nagels; de twee middelste tenen staan ver naar voren."
+    ] },
+    { bron:"BIJ12, wolf in Nederland", sl:{ i:3, t:"Een huilkoor met piepende jongen: een roedel met welpen op een rendez-vousplek." }, wn:[
+      "Drenthe, juli. Een warme, stille avond.",
+      "Een groot bos- en heidegebied met vennen.",
+      "Een open plek in het bos met platgetrapt gras, botten en speelgoed van gewei.",
+      "Na zonsondergang een huilkoor van volwassen dieren en hoge, piepende stemmen van jongen; op een cameraval een groep van zes.",
+      "Grijsbruin en hoogpotig, met lichte wangen, een donkere zadelvlek en een staart die recht naar beneden hangt."
     ] }
   ] },
 { id:"zwarte-wouw", no:117, g:"B", n:"Zwarte wouw", s:"Milvus migrans", r:"VRJ", l:55, zz:"ZZ", twin:null,
@@ -1874,12 +2217,19 @@ const SPECIES = [
   x:"wolf",
   t:"De wolf is veel groter (schouderhoogte 70–80 cm), grijzer, met een zware kop en prenten van zo'n 10 cm. Deze soort is nauwelijks groter dan een vos, goudbruin, met een kortere staart en prenten van rond de 6 cm.",
   cs:[
-    { bron:"BIJ12, goudjakhals; Zodion, soortpagina goudjakhals", wn:[
+    { sl:{ i:4, t:"Goudgrijs met rossige poten en oren, en een vrij korte staart met een donkere punt." }, bron:"BIJ12, goudjakhals; Zodion, soortpagina goudjakhals", wn:[
       "Noord-Friesland, februari. Een grauwe, winderige dag.",
       "Een buitendijkse kwelder met slenken, grenzend aan akkers en weiland.",
       "Een dichte rietkraag en ruigte aan de voet van de zeedijk.",
       "Op een wildcamera 's nachts een slank, hoogpotig dier langs de dijk; bij een doodgebeten schaap is DNA verzameld.",
       "Goudgrijs met rossige poten en oren, een spitse snuit en een vrij korte staart met een donkere punt."
+    ] },
+    { bron:"BIJ12, goudjakhals in Nederland", sl:{ i:3, t:"Een hoog, jodelend groepsgehuil: anders dan het lage huilen van de wolf." }, wn:[
+      "Drenthe, oktober. Een heldere nacht.",
+      "Een beekdal met ruig grasland, rietkragen en kleine bosjes.",
+      "Een dichte rietruigte langs de beek, ver van paden.",
+      "Een hoog, jankend en jodelend gehuil dat door de groep wordt overgenomen; op een cameraval een slank dier dat muizen vangt.",
+      "Zo groot als een vos maar hoger op de poten, geelgrijs met een gouden gloed, met een vrij korte staart met een donkere punt."
     ] }
   ] },
 { id:"pimpernelblauwtje", no:140, g:"V", n:"Pimpernelblauwtje", s:"Phengaris teleius", r:"HR", l:3.5, zz:"Z", twin:"donker-pimpernelblauwtje",
