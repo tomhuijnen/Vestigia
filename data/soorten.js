@@ -512,7 +512,7 @@ const SPECIES = [
       "Utrecht, december. Veenweidegebied.",
       "Sloten met veel kikkers, en knotwilgen.",
       "Een boerenerf met houtstapels en een schuur met een kruipruimte.",
-      "Een voorraad padden met een beet in de kop; een sterke, onaangename geur.",
+      "Een voorraad verlamde padden en kikkers; een sterke, onaangename geur.",
       "Een licht gezichtsmasker op een donkere kop."
     ] },
     { bron:"Zodion, soortpagina bunzing", sl:{ i:4, t:"Een donkere band over de ogen tussen witte vlekken: een bandietenmasker. Hij jaagt veel op kikkers en padden." }, wn:[
