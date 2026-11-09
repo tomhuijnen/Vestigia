@@ -219,7 +219,7 @@ function ontdekPlaat(t){
   return `<div class="ontdek">
     <div class="plate ontdekplaat" aria-hidden="true"><div class="band" style="background:var(--g-${t.g})"><span>${GROUPS[t.g]}</span><b>nº ${dexNo(t.id)}</b></div>
       <div class="mid"><span class="nm">${esc(t.n)}</span><span class="sc">${esc(t.s)}</span></div><span class="stamp">nieuw</span><span class="sluier"></span></div>
-    <div><span class="caps">Nieuwe plaat</span><p><b>${esc(t.n)}</b> staat nu in je ${NAAM.vestiarium}: plaat ${n} van ${TARGETS.length}.</p>
+    <div><span class="caps">Nieuwe soort!</span><p><b>${esc(t.n)}</b> staat nu in je ${NAAM.vestiarium}: plaat ${n} van ${TARGETS.length}.</p>
       <button class="linklike" id="toDex">Open het ${NAAM.vestiarium}</button></div></div>`;
 }
 function renderResult(){
@@ -273,7 +273,7 @@ function renderResult(){
   $("copyBtn").onclick = () => shareOut(resultShare(), $("copyMsg"), card);
   $("nextBtn").onclick = () => startFree();
   if ($("oefenWijzig")) $("oefenWijzig").onclick = () => Spelen.wijzig();
-  $("toDex").onclick = () => showDex();
+  $("toDex").onclick = () => showDex(ontdek ? t.id : undefined);
   $("repFromResult").onclick = e => openReport(t.id, e.currentTarget, S.k);
   if ($("inviteFromResult")) $("inviteFromResult").onclick = () => League.openUitnodigen();
   Profiel.toonWinst();

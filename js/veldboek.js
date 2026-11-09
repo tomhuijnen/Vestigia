@@ -22,7 +22,28 @@ function rosette(color, on, label){
     <circle cx="40" cy="40" r="21" fill="none" stroke="${on ? color : "#d3d8cd"}" stroke-width="1"/>
     <text x="40" y="45.5" text-anchor="middle" font-family="Rubik, Arial, sans-serif" font-weight="600" font-size="16" fill="${on ? color : "#b9c0b1"}">${label}</text></svg>`;
 }
-function medal(on, no){
+/* Uitsnede per medaillesoort: [midden x, midden y, grootte] binnen de avatartekening (100 × 100),
+   zodat het dier in het midden van de medaille staat en hem vult. */
+const MEDAL_CROP = {
+  "tweekleurige-vleermuis": [50, 54, 98], "grijze-grootoorvleermuis": [48, 56, 82], "noordse-woelmuis": [52, 64, 76],
+  "knoflookpad": [50, 58, 88], "gestippelde-alver": [48, 50, 84], "europese-steur": [51, 52, 94], "zwarte-wouw": [50, 52, 92],
+  "hop": [56, 54, 92], "kleine-vliegenvanger": [58, 56, 84], "ruigpootuil": [50, 50, 80]
+};
+let medalNr = 0;
+function medal(on, no, id){
+  if (on && id && typeof AVATARS !== "undefined" && AVATARS[id]){
+    const [cx, cy, size] = MEDAL_CROP[id] || [50, 50, 90], k = 56 / size, c = "md" + (++medalNr);
+    const tx = 12 - (cx - size / 2) * k, ty = 21 - (cy - size / 2) * k;
+    return `<svg viewBox="0 0 80 80" aria-hidden="true" class="medal-dier">
+    <path d="M28 0 L35 20 L29 23 L21 3 Z" fill="#1c3326"/><path d="M52 0 L45 20 L51 23 L59 3 Z" fill="#4a7a46"/>
+    <defs><clipPath id="${c}"><circle cx="40" cy="49" r="28"/></clipPath></defs>
+    <circle cx="40" cy="49" r="31.5" fill="#c98d26" stroke="#a8731b" stroke-width="1.6"/>
+    <circle cx="40" cy="49" r="28" fill="#fbf4e2"/>
+    <g clip-path="url(#${c})"><g color="#7fa88c" style="--av-bg:#fbf4e2" transform="translate(${tx.toFixed(2)} ${ty.toFixed(2)}) scale(${k.toFixed(4)})">${AVATARS[id].replaceAll("{id}", c)}</g></g>
+    <circle cx="40" cy="49" r="28" fill="none" stroke="#e8c06a" stroke-width="1.2"/>
+    <rect x="27" y="11" width="26" height="11" rx="5.5" fill="#fbfaf4" stroke="#a8731b" stroke-width="1"/>
+    <text x="40" y="19.5" text-anchor="middle" font-family="Rubik, Arial, sans-serif" font-weight="700" font-size="8" fill="#6e4a1d">nº${no}</text></svg>`;
+  }
   return `<svg viewBox="0 0 80 80" aria-hidden="true">
     <path d="M27 4 L37 34 L30 38 L20 8 Z" fill="${on ? "#1c3326" : "#d3d8cd"}"/><path d="M53 4 L43 34 L50 38 L60 8 Z" fill="${on ? "#4a7a46" : "#e3e3da"}"/>
     <circle cx="40" cy="52" r="23" fill="${on ? "#c98d26" : "none"}" stroke="${on ? "#a8731b" : "#b9c0b1"}" stroke-width="2" ${on ? "" : 'stroke-dasharray="3 3"'}/>
@@ -45,7 +66,7 @@ function renderTrophies(st){
   const medals = medalSpecies(st);
   $("medalRow").innerHTML = medals.map(t => {
     const on = have.includes("M:" + t.id);
-    return `<div class="award${on ? " got" : " locked"}">${medal(on, dexNo(t.id))}<span class="an">${on ? esc(t.n) : "Zeldzame soort"}</span>
+    return `<div class="award${on ? " got" : " locked"}">${medal(on, dexNo(t.id), t.id)}<span class="an">${on ? esc(t.n) : "Zeldzame soort"}</span>
       <span class="ac">${on ? "<i>" + esc(t.s) + "</i>" : "Nog niet gevonden"}</span></div>`;
   }).join("");
   $("medalWord").textContent = telwoord(medals.length);
@@ -147,7 +168,7 @@ function nextAward(){
   let badge, kind, name, text, extra = "";
   if (k.startsWith("M:")){
     const t = BY_ID.get(k.slice(2));
-    badge = medal(true, dexNo(t.id)); kind = "Nieuwe medaille"; name = t.n;
+    badge = medal(true, dexNo(t.id), t.id); kind = "Nieuwe medaille"; name = t.n;
     text = `Je hebt de ${esc(t.n.toLowerCase())} (<i>${esc(t.s)}</i>) gedetermineerd, een van de ${telwoord(medalSpecies(store.get()).length)} meest zeldzame soorten van Vestigia. De medaille hangt nu in je ${NAAM.vestiarium}.`;
     /* bij elke medaillesoort hoort een avatar die je alleen zo kunt krijgen (niet te koop) */
     if (typeof AVATARS !== "undefined" && AVATARS[t.id]){
@@ -185,9 +206,25 @@ document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("awardP
 const DEX = TARGETS.slice().sort((a, b) => a.no - b.no);
 function dexNo(id){ const t = BY_ID.get(id); return String(t && t.no || 0).padStart(3, "0"); }
 let dexFilter = "ALL", dexOnlyFound = false;
-function showDex(){
+function showDex(focusId){
+  if (focusId){ const t = BY_ID.get(focusId); if (t && dexFilter !== "ALL" && dexFilter !== t.g) dexFilter = "ALL"; }
   setView("dex");
   renderDex(); renderCarry(); Profiel.inVestiarium(); window.scrollTo({ top:0, behavior:"auto" });
+  if (focusId) lichtUit(focusId);
+}
+/* Na 'Open het Vestiarium' bij een nieuwe soort: rustig naar die plaat scrollen en hem even laten oppoppen */
+function lichtUit(id){
+  const el = document.querySelector(`#dexGrid .plate[data-n="${CSS.escape(id)}"]`) || document.querySelector(`.plate[data-n="${CSS.escape(id)}"]`);
+  if (!el) return;
+  const rustig = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  setTimeout(() => {
+    el.scrollIntoView({ behavior: rustig ? "auto" : "smooth", block: "center" });
+    let klaar = false;
+    const pop = () => { if (klaar) return; klaar = true; el.classList.remove("uitlicht"); void el.offsetWidth; el.classList.add("uitlicht");
+      setTimeout(() => el.classList.remove("uitlicht"), 900); };
+    if ("onscrollend" in window) window.addEventListener("scrollend", pop, { once: true });
+    setTimeout(pop, rustig ? 50 : 900);
+  }, 250);
 }
 /* ---------- vaakst verward ----------
    Uit het logboek: welke soort gokte je fout, en wat was het echt? Paren tellen in beide richtingen samen

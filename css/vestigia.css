@@ -279,7 +279,7 @@ details.register[open] summary .caps::after{content:" ↑"}
 .confuse .caps{color:var(--ochre)}
 .confuse p{margin:0}
 .dexnote{font-style:italic; color:var(--ink-2)}
-.dexnote a, .linklike{color:var(--ink); font-style:normal; font-weight:700; text-decoration:underline; text-decoration-color:var(--mint); text-underline-offset:3px; cursor:pointer; background:none; border:0; padding:0; font:inherit}
+.dexnote a, .linklike{font:inherit; color:var(--ink); font-style:normal; font-weight:700; text-align:left; text-decoration:underline; text-decoration-color:var(--green); text-decoration-thickness:1.5px; text-underline-offset:3px; cursor:pointer; background:none; border:0; padding:0}
 
 /* veldboek */
 :root{--g-Z:#7a4e34; --g-R:#6b7629; --g-A:#2e7267; --g-F:#2f5884; --g-B:#a8731b; --g-V:#7a4a86}
@@ -313,7 +313,7 @@ details.register[open] summary .caps::after{content:" ↑"}
 .award.got{box-shadow:0 0 0 1.5px var(--green) inset}
 .award.got .ac{color:var(--ink)}
 .plate.rare{box-shadow:0 0 0 2px #c79a2e inset}
-.plate.rare .band::after{content:"★"; position:absolute; left:50%; transform:translateX(-50%); color:var(--ochre-soft); font-size:.9rem}
+.plate.rare .band span::after{content:"★"; margin-left:5px; color:var(--ochre-soft); font-size:.9rem; letter-spacing:0}
 .plate .band{position:relative}
 .awardnote{background:var(--green); color:#fff; border-radius:4px; padding:10px 14px; display:flex; gap:12px; align-items:center}
 .awardnote b{font-family:var(--display);  font-size:1.15rem}
@@ -670,14 +670,14 @@ body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
 .volledig .fine{margin:6px 0 4px}
 
 /* ── update 2: leren na afloop en ontdekkingsmoment ── */
-.clue.sleutel{background:#fbf3dc; border-radius:8px; box-shadow:0 0 0 1.5px #d9b45a inset; padding-left:10px; padding-right:10px}
-.sltag{display:inline-block; margin-left:6px; padding:0 6px; border-radius:3px; background:#d9b45a; color:#3b2c08; font-size:.66rem; letter-spacing:.06em}
+.clue.sleutel{background:var(--mint); border-radius:8px; box-shadow:0 0 0 1.5px var(--moss) inset; padding-left:10px; padding-right:10px}
+.sltag{display:inline-block; margin-left:6px; padding:0 6px; border-radius:3px; background:var(--moss); color:#fff; font-size:.66rem; letter-spacing:.06em}
 .bronregel{list-style:none; padding:8px 4px 0; font-size:.82rem; color:var(--ink-2)}
 .bronregel .caps{margin-right:6px}
 .bronregel a{color:inherit}
-.sleutelbox{border-left:3px solid #d9b45a; background:#fbf3dc; padding:8px 12px; border-radius:0 6px 6px 0; margin:10px 0}
+.sleutelbox{border-left:3px solid var(--moss); background:var(--mint); padding:8px 12px; border-radius:0 6px 6px 0; margin:10px 0}
 .sleutelbox p{margin:2px 0 0}
-.ontdek{display:grid; grid-template-columns:132px 1fr; gap:14px; align-items:center; margin:12px 0; padding:12px; background:var(--leaf); border-radius:10px}
+.ontdek{display:grid; grid-template-columns:156px 1fr; gap:14px; align-items:center; margin:12px 0; padding:12px; background:var(--leaf); border-radius:10px}
 .ontdek p{margin:2px 0 4px}
 .ontdekplaat{min-height:150px; cursor:default; pointer-events:none}
 .ontdekplaat .nm{font-size:1rem}
@@ -722,4 +722,76 @@ body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
 .veldpill{display:inline-flex; align-items:center; gap:5px; height:30px; padding:0 10px; border-radius:15px; border:1px solid rgba(255,255,255,.45); background:rgba(0,0,0,.18); color:#fff; font:600 .78rem/1 var(--caps); letter-spacing:.04em; text-transform:uppercase; cursor:pointer; margin-left:auto}
 .veldpill[hidden]{display:none}
 .slimbar .veldpill{height:26px}
-.veldpill + .eikelbtn{margin-left:8px}
+.veldpill:not([hidden]) + .eikelbtn{margin-left:0}
+
+/* ───────── donkere modus: veldgids bij nacht (bosgroen-zwart, gebroken wit, salie-groene accenten) ───────── */
+html.donker{
+  --paper:#111a15; --leaf:#18241d; --ink:#e4ece6; --ink-2:#a3b2a8; --rule:#2c3b32;
+  --green:#7fb894; --green-d:#a9d6b8; --mint:#1f3427; --ochre:#7fb894; --moss:#6fa985; --none:#26332b;
+  color-scheme: dark;
+}
+html.donker body{background:var(--paper); color:var(--ink)}
+html.donker .masthead{background:linear-gradient(160deg,#20352a 0%,#152219 100%)}
+html.donker .slimbar{background:#152219}
+html.donker .masthead, html.donker .slimbar{--mint:#d4efdd}
+html.donker :is(.qbtn,.opts,.copyout,.sheet,.award,.plate,.gcard,.sheet.report select,.sheet.report textarea,.sheet.report input,details.carry,.playerbox input,.ranklist li,.ui-kaart,.lgcard,.lgform input,.pfopt,.pr,.bel .bol,.spgroepen .chipbtn,.tip,.foutlijst li,.stempels li,.vwlijst > li){background:#1d2a22; color:var(--ink)}
+html.donker .tabbar{background:#141f19; border-color:var(--rule)}
+html.donker .tabbar *{color:var(--ink-2)}
+html.donker .tabbar .mid .ic{background:var(--green)}
+html.donker .seg{background:#1d2a22}
+html.donker .seg button[aria-pressed="true"]{color:#0f1712}
+html.donker .seg::before{background:var(--green)}
+html.donker .btn{background:var(--green); color:#0f1712}
+html.donker .btn:disabled{background:#2c3b32; color:#6f8077}
+html.donker .btn.line{background:transparent; color:var(--green-d); border-color:var(--green)}
+html.donker input{background:transparent; color:var(--ink)}
+html.donker .account{box-shadow:0 1px 0 var(--rule)}
+html.donker .clue.sleutel, html.donker .sleutelbox{background:#1f3427; box-shadow:0 0 0 1.5px #4f8a64 inset}
+html.donker .sleutelbox{box-shadow:none; border-left-color:#6fa985}
+html.donker .sltag{background:#6fa985; color:#0f1712}
+html.donker .confuse{background:#1f3427}
+html.donker .welcome{background:#18241d}
+html.donker .toast, html.donker #toast{background:#e4ece6; color:#111a15}
+html.donker .menu{background:#18241d; color:var(--ink)}
+html.donker .menulist button[aria-current="page"]{background:#1f3427; color:var(--ink)}
+
+/* schakelaar donkere modus in het menu */
+.schakel{flex:0 0 44px; width:44px; height:26px; border-radius:13px; background:var(--rule); position:relative; transition:background .25s ease}
+.schakel b{position:absolute; top:3px; left:3px; width:20px; height:20px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.25); transition:transform .25s cubic-bezier(.3,1.4,.5,1)}
+#themaBtn[aria-checked="true"] .schakel{background:var(--green)}
+#themaBtn[aria-checked="true"] .schakel b{transform:translateX(18px); background:#111a15}
+.menulist.minor button.themaauto{min-height:0; margin-top:-8px; padding:2px 12px 8px; font-size:.8rem; color:var(--green-d); text-decoration:underline; text-underline-offset:2px}
+.menulist.minor button.themaauto:hover{background:none}
+html.thema-wissel, html.thema-wissel *{transition:background-color .3s ease, color .3s ease, border-color .3s ease!important}
+@media (prefers-reduced-motion:reduce){ .schakel, .schakel b{transition:none} html.thema-wissel, html.thema-wissel *{transition:none!important} }
+html.donker :is(.seg button[aria-pressed="false"]:hover, .iconbtn:hover){background:#24332a}
+html.donker .pfgeheim{background:#1d2a22; border-color:#3a4c41}
+html.donker .prtxt .tb{background:#2c3b32}
+html.donker .bel.later .bol{background:#1a251e; color:#6f8077; border-color:#3a4c41}
+html.donker .oefenkader{background:#241c12; border-color:#7a5a32}
+html.donker .oefenen #gameView .seg button[aria-pressed="false"]:hover{background:#33281a}
+html.donker .tip.tweeling{background:#2a2414}
+html.donker .oefenen .masthead{background:linear-gradient(160deg,#3d2b14 0%,#241a0d 100%)}
+html.donker .oefenen .slimbar{background:#2d2010}
+html.donker .oefenen #gameView{--green:#c99a5b; --green-d:#e0b77c; --mint:#2d2414; --leaf:#201a10; --ochre:#c99a5b; --moss:#b38750; --rule:#3d3220}
+html.donker .oefenen .tabbar .mid .ic{background:#c99a5b}
+html.donker .chipbtn[aria-pressed="true"]{color:#0f1712}
+/* nieuwe soort in het Vestiarium even uitlichten */
+@keyframes uitlicht{0%{transform:scale(1)} 35%{transform:scale(1.09); box-shadow:0 0 0 3px var(--green), 0 10px 24px rgba(28,51,38,.25)} 100%{transform:scale(1)}}
+.plate.uitlicht{animation:uitlicht .8s cubic-bezier(.3,1.3,.5,1); position:relative; z-index:2}
+@media (prefers-reduced-motion:reduce){ .plate.uitlicht{animation:none; box-shadow:0 0 0 3px var(--green)} }
+
+/* plaatband: groepsnaam en nummer altijd op één regel, naam krimpt als het krap wordt */
+.plate .band{gap:8px}
+.plate .band span{min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.plate .band b{flex:0 0 auto; white-space:nowrap}
+/* podium in de ranglijst */
+.ranklist li.podium{border-width:1.5px}
+.ranklist li.p1{border-color:#d4a72c; box-shadow:0 0 0 1px #d4a72c inset, 0 2px 10px rgba(212,167,44,.18)}
+.ranklist li.p2{border-color:#9aa5ab; box-shadow:0 0 0 1px #9aa5ab inset}
+.ranklist li.p3{border-color:#b0723f; box-shadow:0 0 0 1px #b0723f inset}
+.ranklist li.p1 .pos{display:grid; justify-items:center; line-height:1}
+.ranklist .kroon{width:20px; height:14px; display:block; margin-bottom:1px}
+html.donker .ranklist li.p1{background:#262414}
+.ontdekplaat .band{font-size:.62rem; padding:6px 8px; letter-spacing:.06em}
+.ontdekplaat .band b{font-size:.92rem}

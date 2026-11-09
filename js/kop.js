@@ -287,3 +287,25 @@ if ("IntersectionObserver" in window){
     $("slimbar").querySelectorAll("button").forEach(b => b.tabIndex = show ? 0 : -1);
   }, { threshold: 0 }).observe($("masthead"));
 }
+
+/* Donkere modus: volgt de instelling van het toestel, tot de speler zelf kiest met de schakelaar in het menu.
+   'Volg toestel' haalt de eigen keuze weer weg. Opslag: localStorage vestigia:thema = "licht" | "donker". */
+const Thema = (() => {
+  const mq = window.matchMedia ? matchMedia("(prefers-color-scheme: dark)") : null;
+  const eigen = () => { try { return localStorage.getItem("vestigia:thema"); } catch(e){ return null; } };
+  const donker = () => { const t = eigen(); return t ? t === "donker" : !!(mq && mq.matches); };
+  function pas(anim){
+    const root = document.documentElement;
+    if (anim){ root.classList.add("thema-wissel"); setTimeout(() => root.classList.remove("thema-wissel"), 350); }
+    root.classList.toggle("donker", donker());
+    const b = $("themaBtn"); if (b) b.setAttribute("aria-checked", String(donker()));
+    const a = $("themaAutoRij"); if (a) a.hidden = !eigen();
+    const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = donker() ? "#152219" : "#4b7a5e";
+  }
+  function zet(t){ try { t ? localStorage.setItem("vestigia:thema", t) : localStorage.removeItem("vestigia:thema"); } catch(e){} pas(true); }
+  if ($("themaBtn")) $("themaBtn").onclick = () => zet(donker() ? "licht" : "donker");
+  if ($("themaAuto")) $("themaAuto").onclick = () => zet(null);
+  if (mq){ const f = () => { if (!eigen()) pas(true); }; mq.addEventListener ? mq.addEventListener("change", f) : mq.addListener(f); }
+  pas(false);
+  return { donker, zet };
+})();
