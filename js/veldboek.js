@@ -189,8 +189,39 @@ function showDex(){
   setView("dex");
   renderDex(); renderCarry(); Profiel.inVestiarium(); window.scrollTo({ top:0, behavior:"auto" });
 }
+/* ---------- vaakst verward ----------
+   Uit het logboek: welke soort gokte je fout, en wat was het echt? Paren tellen in beide richtingen samen
+   (boomkruiper voor kortsnavelboomkruiper is hetzelfde paar als andersom). Foute gokken worden bijgehouden sinds update 1. */
+function verwarringen(st){
+  const tel = new Map();
+  for (const e of st.log || []){
+    if (!Array.isArray(e.f) || !BY_ID.get(e.s)) continue;
+    for (const g of e.f){
+      if (!BY_ID.get(g) || g === e.s) continue;
+      const [a, b] = [e.s, g].sort(), k = a + "|" + b;
+      const r = tel.get(k) || { a, b, n: 0, zelfdeGroep: BY_ID.get(a).g === BY_ID.get(b).g, laatst: 0 };
+      r.n++; r.laatst = Math.max(r.laatst, e.t); tel.set(k, r);
+    }
+  }
+  /* paren binnen één diergroep eerst: dat zijn de echte verwarringen; een vleermuis gokken bij een vogel is eerder zoeken */
+  return [...tel.values()].sort((p, q) => q.n - p.n || q.zelfdeGroep - p.zelfdeGroep || q.laatst - p.laatst);
+}
+function renderFouten(st){
+  const el = $("foutenBody"); if (!el) return;
+  const paren = verwarringen(st).filter(p => p.zelfdeGroep || p.n >= 2).slice(0, 6);
+  if (!paren.length){
+    el.innerHTML = `<p class="fine">Hier zie je straks welke soorten je het vaakst door elkaar haalt, met een knop om juist die te oefenen. Foute gokken worden bijgehouden vanaf 9 november 2026.</p>`;
+    return;
+  }
+  const ids = [...new Set(paren.flatMap(p => [p.a, p.b]))].filter(id => TARGETS.some(t => t.id === id));
+  el.innerHTML = `<ul class="foutlijst">${paren.map(p => { const a = BY_ID.get(p.a), b = BY_ID.get(p.b);
+      return `<li><span class="paar"><b>${esc(a.n)}</b><span class="tussen" aria-label="en">⇄</span><b>${esc(b.n)}</b></span><span class="keer">${p.n}× verward</span></li>`; }).join("")}</ul>
+    ${ids.length ? `<button class="btn line" id="oefenFouten">Oefen deze ${ids.length} soorten</button>` : ""}`;
+  if ($("oefenFouten")) $("oefenFouten").onclick = () => startFree({ g: null, nieuw: false, ids });
+}
 function renderDex(){
   const st = store.get(), dex = st.dex || {};
+  renderFouten(st);
   const found = DEX.filter(t => dex[t.id] && dex[t.id].w > 0).length;
   $("dexCount").innerHTML = `${found}<small>van ${DEX.length} gedetermineerd</small>`;
   renderTrophies(st);

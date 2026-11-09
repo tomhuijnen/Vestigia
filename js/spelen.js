@@ -14,6 +14,7 @@ const Spelen = (() => {
   function bewaar(k){ try { localStorage.setItem(KEY, JSON.stringify({ g: k.g || null, nieuw: !!k.nieuw })); } catch(e){} }
   const ALLES = { g: null, nieuw: false };
   function omschrijving(k){
+    if (k.ids) return "de soorten die je het vaakst verwart";
     const groep = k.g && GROUPS[k.g] ? GROUPS[k.g].toLowerCase() : null;
     if (k.nieuw) return groep ? `${groep} die je nog niet hebt` : "soorten die je nog niet hebt";
     return groep ? `alle ${groep}` : "alle soorten";
@@ -87,13 +88,13 @@ const Spelen = (() => {
     const el = $("oefenKader"), oefen = !!S && S.mode === "free";
     el.hidden = !oefen;
     if (!oefen) return;
-    const k = { g: S.groep || null, nieuw: !!S.nieuw };
+    const k = { g: S.groep || null, nieuw: !!S.nieuw, ids: S.ids || null };
     const groepen = [[null, "Alle"]].concat(Object.entries(GROUPS).filter(([g]) => TARGETS.some(t => t.g === g)));
     el.open = kaderOpen;
     el.innerHTML = `
       <summary><span class="caps">Oefenen · telt niet voor de ranglijst</span><span class="okeuze">${esc(omschrijving(k).replace(/^./, c => c.toUpperCase()))}</span></summary>
       <div class="spgroepen" role="group" aria-label="Diergroep">${groepen.map(([g, naam]) =>
-        `<button type="button" class="chipbtn" data-g="${g || ""}" aria-pressed="${k.g === g}">${esc(naam)}${k.nieuw ? ` <small>${nogOpen(g)}</small>` : ""}</button>`).join("")}</div>
+        `<button type="button" class="chipbtn" data-g="${g || ""}" aria-pressed="${!k.ids && k.g === g}">${esc(naam)}${k.nieuw ? ` <small>${nogOpen(g)}</small>` : ""}</button>`).join("")}</div>
       <label class="spnieuw"><input type="checkbox" id="spNieuw"${k.nieuw ? " checked" : ""}> Alleen soorten die nog niet in mijn ${esc(NAAM.vestiarium)} staan</label>
       <p class="fine">Een andere keuze geeft meteen een nieuwe oefencasus.</p>`;
     el.ontoggle = () => { kaderOpen = el.open; };

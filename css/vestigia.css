@@ -656,3 +656,32 @@ body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
 .volledig summary::after{content:""; width:7px; height:7px; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg) translateY(-2px); transition:transform .2s}
 .volledig[open] summary::after{transform:rotate(-135deg) translateY(-1px)}
 .volledig .fine{margin:6px 0 4px}
+
+/* ── update 2: leren na afloop en ontdekkingsmoment ── */
+.clue.sleutel{background:#fbf3dc; border-radius:8px; box-shadow:0 0 0 1.5px #d9b45a inset}
+.sltag{display:inline-block; margin-left:6px; padding:0 6px; border-radius:3px; background:#d9b45a; color:#3b2c08; font-size:.66rem; letter-spacing:.06em}
+.bronregel{list-style:none; padding:8px 4px 0; font-size:.82rem; color:var(--ink-2)}
+.bronregel .caps{margin-right:6px}
+.bronregel a{color:inherit}
+.sleutelbox{border-left:3px solid #d9b45a; background:#fbf3dc; padding:8px 12px; border-radius:0 6px 6px 0; margin:10px 0}
+.sleutelbox p{margin:2px 0 0}
+.ontdek{display:grid; grid-template-columns:132px 1fr; gap:14px; align-items:center; margin:12px 0; padding:12px; background:var(--leaf); border-radius:10px}
+.ontdek p{margin:2px 0 4px}
+.ontdekplaat{min-height:150px; cursor:default; pointer-events:none}
+.ontdekplaat .nm{font-size:1rem}
+.ontdekplaat .stamp{bottom:12px; right:8px; color:#a3341f; border-color:#a3341f; font-size:.74rem}
+.ontdekplaat .sluier{position:absolute; inset:0; background:repeating-linear-gradient(-45deg, var(--leaf) 0 7px, #ebeae1 7px 14px); opacity:0}
+.resultin .ontdekplaat .sluier{animation:sluierWeg 1.1s .35s ease both}
+.resultin .ontdekplaat .band{animation:bandIn .7s .5s cubic-bezier(.3,.7,.2,1) both}
+.resultin .ontdekplaat .stamp{animation:stempel .45s 1.25s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes sluierWeg{0%{opacity:1} 100%{opacity:0}}
+@keyframes bandIn{from{clip-path:inset(0 100% 0 0)} to{clip-path:inset(0 0 0 0)}}
+@keyframes stempel{0%{opacity:0; transform:rotate(-6deg) scale(2.4)} 100%{opacity:1; transform:rotate(-6deg) scale(1)}}
+@media (prefers-reduced-motion:reduce){ .resultin .ontdekplaat .sluier, .resultin .ontdekplaat .band, .resultin .ontdekplaat .stamp{animation:none} }
+.fouten{margin:18px 0}
+.fouten h3{margin:0 0 8px}
+.foutlijst{list-style:none; margin:0 0 10px; padding:0; display:grid; gap:6px}
+.foutlijst li{display:flex; justify-content:space-between; align-items:center; gap:10px; padding:8px 12px; background:#fff; border-radius:8px; box-shadow:0 0 0 1px var(--rule) inset}
+.foutlijst .paar{display:flex; flex-wrap:wrap; align-items:center; gap:6px}
+.foutlijst .tussen{color:var(--ochre)}
+.foutlijst .keer{font-size:.82rem; color:var(--ink-2); white-space:nowrap}
