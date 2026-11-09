@@ -1158,7 +1158,7 @@ const SPECIES = [
     { bron:"RAVON, soortpagina geelbuikvuurpad", sl:{ i:3, t:"De 'onkenreflex': rug hol en poten omhoog om de felgele buik te tonen als waarschuwing." }, wn:[
       "Zuid-Limburg, augustus. Na een hevige onweersbui.",
       "Een groeve waar graafmachines rijden.",
-      "Vers regenwater in diepe bandensporen.",
+      "Vers water van de bui in diepe bandensporen.",
       "Bij gevaar hol het dier de rug, steekt de poten omhoog en laat een felgele buik met zwarte vlekken zien.",
       "Klein, grijsbruin en wrattig, met een geel-zwart gevlekte buik."
     ] }
@@ -1368,12 +1368,19 @@ const SPECIES = [
   x:"kleine-modderkruiper",
   t:"De kleine modderkruiper heeft zes korte baarddraden en een rij donkere vlekken langs de flank, en leeft op zandige bodems in helder water. Hij valt niet onder de soortenbescherming.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Tien baarddraden rond de bek: de kleine modderkruiper heeft er zes." }, bron:null, wn:[
       "Zuid-Holland, juni. Een veenpolder.",
       "Kleine slootjes met krabbescheer en veel waterplanten.",
       "Een dikke laag organische modder en ’s zomers bijna geen zuurstof.",
       "Een positief eDNA-monster; diep in de modder kronkelt een langgerekte vis.",
       "Tien baarddraden."
+    ] },
+    { bron:"RAVON, soortpagina grote modderkruiper", sl:{ i:3, t:"Lucht happen en piepen: deze vis ademt ook via zijn darm en overleeft zo zuurstofloze bagger." }, wn:[
+      "Noordwest-Overijssel, september. Het jaarlijkse slootschonen.",
+      "Een veenweidepolder met smalle, verlandende sloten.",
+      "Een hoop bagger die net met de maaikorf op de kant is gelegd.",
+      "In de bagger spartelt een langgerekte vis die een zacht piepend geluid maakt; hij hapt lucht als hij weer in het water ligt.",
+      "Tot 30 cm, geelbruin met donkere lengtestrepen."
     ] }
   ] },
 { id:"beekprik", no:68, g:"F", n:"Beekprik", s:"Lampetra planeri", r:"BAL", l:14, zz:null, twin:null,
@@ -1381,12 +1388,19 @@ const SPECIES = [
   x:"rivierprik",
   t:"De rivierprik trekt naar zee, wordt veel groter (±30–40 cm) en paait als volwassen dier in grotere rivieren. Hij valt niet onder de soortenbescherming van de Omgevingswet.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:1, t:"Een koude sprengenbeek: deze soort leeft zijn hele leven in kleine beken, terwijl de rivierprik naar zee trekt." }, bron:null, wn:[
       "Veluwe, april.",
       "Een koude sprengenbeek onder een bladerdak.",
       "Grindbanken afgewisseld met slibrijke plekken.",
       "Kleine kuiltjes in het grind; in het slib blinde, wormachtige larven.",
       "Geen kaken, maar een zuigmond."
+    ] },
+    { bron:"RAVON, soortpagina beekprik", sl:{ i:4, t:"Zeven kieuwopeningen op een rij achter het oog, op een aalvormig lijf zonder kaken." }, wn:[
+      "Twente, oktober. Een koele, heldere dag.",
+      "Een kleine laaglandbeek met houtige oevers en bladpakketten.",
+      "Een slibbank in de binnenbocht van een meander.",
+      "In het gezeefde slib dunne, slijmerige larfjes, en een paar zilverige dieren die net van larve naar volwassen veranderen.",
+      "Zo'n 15 cm, aalvormig, met zeven kieuwopeningen achter het oog."
     ] }
   ] },
 { id:"kwabaal", no:69, g:"F", n:"Kwabaal", s:"Lota lota", r:"BAL", l:45, zz:null, twin:null,
@@ -1394,12 +1408,19 @@ const SPECIES = [
   x:"aal",
   t:"De aal heeft geen baarddraad en geen afzonderlijke rugvinnen: rug-, staart- en aarsvin lopen in één zoom door.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Paaien in de koudste weken van de winter: uniek onder onze zoetwatervissen." }, bron:null, wn:[
       "IJssel, januari.",
       "Uiterwaarden met strangen en kribvakken.",
       "IJskoud, helder water; in het voorjaar ondergelopen graslanden.",
       "Overdag verscholen onder stenen; paai juist in de koudste weken.",
       "Eén baarddraad aan de kin."
+    ] },
+    { bron:"RAVON, soortpagina kwabaal", sl:{ i:4, t:"Eén baarddraad aan de kin en een lange tweede rugvin: de enige kabeljauwachtige in zoet water." }, wn:[
+      "Drentsche Aa, april. Een zonnige dag na een natte winter.",
+      "Een beekdal met hooilanden die in de winter onderlopen.",
+      "Ondiep, met gras begroeid water dat langzaam wegzakt.",
+      "Tussen het ondergelopen gras zwemmen piepkleine, donkere visjes.",
+      "Een langgerekte vis met een lange tweede rugvin en één baarddraad aan de kin."
     ] }
   ] },
 { id:"elrits", no:70, g:"F", n:"Elrits", s:"Phoxinus phoxinus", r:"BAL", l:9, zz:null, twin:null,
@@ -1407,12 +1428,19 @@ const SPECIES = [
   x:"gestippelde-alver",
   t:"De gestippelde alver is hoger gebouwd en heeft een opvallende dubbele rij donkere stippen langs de zijlijn.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Mannetjes met een rode buik: het paarkleed in het voorjaar." }, bron:null, wn:[
       "Zuid-Limburg, mei.",
       "Een ondiepe, schaduwrijke beek.",
       "Helder, zuurstofrijk water over grind.",
       "Scholen kleine visjes; mannetjes met een rode buik.",
       "Zeer fijne schubben en een donkere lengteband."
+    ] },
+    { bron:"RAVON, soortpagina elrits", sl:{ i:4, t:"Een rij donkere vlekken langs de flank met een gouden streep erboven, en zeer fijne schubben." }, wn:[
+      "Achterhoek, augustus. Een warme dag met laag water.",
+      "Een beek met snelstromende stukken en zandige kommen.",
+      "Een ondiep grindbed vlak onder een stuw.",
+      "Een school van tientallen kleine visjes staat bij de kant tegen de stroom in; bij verstoring schieten ze allemaal tegelijk weg.",
+      "Klein, tot 10 cm, met een rij donkere vlekken langs de flank en een goudkleurige streep erboven."
     ] }
   ] },
 { id:"beekdonderpad", no:71, g:"F", n:"Beekdonderpad", s:"Cottus rhenanus", r:"BAL", l:12, zz:null, twin:"rivierdonderpad",
@@ -1420,12 +1448,19 @@ const SPECIES = [
   x:"rivierdonderpad",
   t:"De rivierdonderpad lijkt sterk op de beekdonderpad, maar leeft in grote rivieren, kanalen en meren, vaak tussen stortsteen. Hij valt niet onder de soortenbescherming van de Omgevingswet.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:1, t:"Een snelstromende beek in het heuvelland: de rivierdonderpad zit juist tussen de stortstenen van rivieren en meren." }, bron:null, wn:[
       "Zuid-Limburg, maart.",
       "Een snelstromende beek in het heuvelland.",
       "Een stenige bodem, stroomopwaarts van een stuw.",
       "Oranje eitjes onder een platte steen; de vis hipt over de bodem.",
       "Een brede, platte kop en waaiervormige borstvinnen."
+    ] },
+    { bron:"RAVON, soortpagina beekdonderpad", sl:{ i:1, t:"Een koude, kleine bovenloop: deze soort leeft niet in de grote rivieren." }, wn:[
+      "Veluwe, augustus. Een warme nacht.",
+      "Een koude sprengenbeek in een loofbos.",
+      "Een stenige bodem met takken en wortels in de stroming.",
+      "Met een zaklamp zie je een vis die roerloos op de bodem ligt en perfect opgaat in de stenen; hij zwemt in korte sprongetjes weg.",
+      "Een plompe bodemvis zonder schubben, met een brede kop en grote, uitgespreide vinnen aan de zijkant."
     ] }
   ] },
 { id:"gestippelde-alver", no:72, g:"F", n:"Gestippelde alver", s:"Alburnoides bipunctatus", r:"BAL", l:12, zz:"ZZ", twin:null,
@@ -1433,12 +1468,19 @@ const SPECIES = [
   x:"elrits",
   t:"De elrits is ronder en kleiner, heeft zeer fijne schubben en een donkere lengteband, maar geen dubbele stippenrij langs de zijlijn.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Een dubbele rij stippen langs de zijlijn." }, bron:null, wn:[
       "Zuid-Limburg, juni.",
       "Een snelstromende beek.",
       "Grindbanken afgewisseld met diepere kuilen.",
       "Een school zilverachtige visjes van ±10 cm boven grind.",
       "Een dubbele rij stippen langs de zijlijn."
+    ] },
+    { bron:"RAVON, soortpagina gestippelde alver", sl:{ i:4, t:"Een zijlijn met aan beide kanten een rij donkere puntjes." }, wn:[
+      "Zuid-Limburg, mei. Een zonnige ochtend.",
+      "De Geul, waar ze door het heuvelland meandert.",
+      "Ondiepe, snelstromende grindbanken.",
+      "Grote scholen staan dicht opeen boven het grind; mannetjes hebben kleine witte knobbeltjes op de kop.",
+      "Zilverig, met een zijlijn die aan weerszijden door een rij donkere puntjes wordt begeleid."
     ] }
   ] },
 { id:"noordzeehouting", no:73, g:"F", n:"Noordzeehouting", s:"Coregonus oxyrinchus", r:"HR", l:40, zz:null, twin:null,
@@ -1446,12 +1488,19 @@ const SPECIES = [
   x:"spiering",
   t:"De spiering is kleiner, heeft een grote bek met tanden en geen spitse, overhangende snuit, en ruikt naar komkommer.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Een vetvin en een spitse snuit die over de bek hangt." }, bron:null, wn:[
       "Afsluitdijk, november.",
       "De overgang van zout Waddenwater naar het zoete IJsselmeer.",
       "De spuisluizen, waar zoet water naar zee stroomt.",
       "Zilverachtige vissen verzamelen zich om naar zoet water te trekken.",
       "Een kleine vetvin en een spitse, overhangende snuit."
+    ] },
+    { bron:"RAVON, soortpagina noordzeehouting", sl:{ i:4, t:"Een vetvin bij een zilverige trekvis met een overhangende snuit." }, wn:[
+      "Haringvliet, april. Een heldere voorjaarsdag.",
+      "Een groot zoetwaterbekken achter sluizen die op een kier staan.",
+      "De sluisopening, waar zoet en zout water mengen.",
+      "Jonge, zilverige vissen van een paar centimeter trekken met het spuiwater mee naar zee.",
+      "Een zalmachtige met een vetvin en een stompe neus die over de bek steekt."
     ] }
   ] },
 { id:"steenuil", no:74, g:"B", n:"Steenuil", s:"Athene noctua", r:"VRJ", l:22, zz:null, twin:null,
@@ -1864,12 +1913,19 @@ const SPECIES = [
   x:"noordzeehouting",
   t:"De noordzeehouting heeft gewone schubben, een vetvin en een vlezige neuspunt, maar geen rijen beenplaten en geen baarddraden.",
   cs:[
-    { bron:"RAVON, soortpagina Europese steur; ARK Rewilding", wn:[
+    { sl:{ i:4, t:"Vier baarddraden voor een spitse snuit, rijen benige platen en een ongelijke staartvin." }, bron:"RAVON, soortpagina Europese steur; ARK Rewilding", wn:[
       "Biesbosch, augustus. Op een kade staan medewerkers met tanks op een aanhanger.",
       "Een zoetwatergetijdengebied met kreken en een brede rivierarm.",
       "Een zandige plaat in de stroming, waar het water bij eb snel uitloopt.",
       "Jonge vissen met een zendertje gaan één voor één het water in; ze zwemmen dicht over de bodem weg.",
       "Een spitse snuit met vier baarddraden ervoor, vijf rijen benige platen op het lijf en een ongelijke staartvin."
+    ] },
+    { bron:"RAVON, soortpagina Europese steur", sl:{ i:4, t:"Rijen benige schilden en een haaiachtige staartvin: een oervis die al miljoenen jaren zo uitziet." }, wn:[
+      "Voordelta bij Zeeland, oktober. Een rustige dag op zee.",
+      "Ondiepe kustzee met zandbanken.",
+      "Het net van een garnalenkotter, vlak over de bodem gesleept.",
+      "Tussen de garnalen een vis met een zendermerkje; de visser fotografeert hem en zet hem direct terug.",
+      "Torpedovormig, zo'n halve meter, met een staart met een lange bovenpunt, als bij een haai, en rijen benige schilden op rug en flanken."
     ] }
   ] },
 { id:"kleine-modderkruiper", no:null, g:"F", n:"Kleine modderkruiper", s:"Cobitis taenia", r:"NB", l:10, zz:null, twin:null,
@@ -2398,12 +2454,19 @@ const SPECIES = [
   x:"donker-pimpernelblauwtje",
   t:"Het donker pimpernelblauwtje is van onderen egaal donker chocoladebruin met maar één rij stippen, en de rups wordt sneller door de gewone steekmier geadopteerd. Deze soort is van onderen lichtbruin met twee rijen zwarte stippen en leeft samen met de moerassteekmier.",
   cs:[
-    { bron:"De Vlinderstichting; Natura 2000-profiel H1059; BIJ12", wn:[
+    { sl:{ i:3, t:"Een rupsje dat door mieren het nest in wordt gesleept: het leeft daar verder van mierenbroed." }, bron:"De Vlinderstichting; Natura 2000-profiel H1059; BIJ12", wn:[
       "Moerputten bij 's-Hertogenbosch, juli. Een warme, zonnige middag.",
       "Een vochtig, schraal hooiland met blauwgrasland-soorten, laat in het jaar gemaaid.",
       "Hoge, donkerrode bloemhoofdjes op lange stelen, ruim boven het gras uit.",
       "Een klein blauw vlindertje dat eitjes legt in de bloemknoppen; later in de zomer slepen mieren een rupsje hun nest in.",
       "Spanwijdte zo'n 3,5 cm; bovenkant blauw met donkere vlekjes, onderkant lichtbruin met twee rijen zwarte stippen."
+    ] },
+    { bron:"De Vlinderstichting, soortpagina pimpernelblauwtje", sl:{ i:4, t:"Een lichte onderkant met twee rijen stippen: bij de donkere tweelingsoort is de onderkant chocoladebruin." }, wn:[
+      "Noord-Brabant, begin augustus. Vroeg in de ochtend na een koele nacht.",
+      "Een hooiland dat in fasen wordt gemaaid: een deel is al kort, een deel staat nog.",
+      "Hoge, roodbruine bloemknopjes van de waardplant in het ongemaaide deel.",
+      "Kleine blauwe vlindertjes met dauw op de vleugels zitten met de vleugels dicht op die knopjes.",
+      "Onderkant licht grijsbruin met twee rijen zwarte stippen."
     ] }
   ] },
 { id:"teunisbloempijlstaart", no:141, g:"V", n:"Teunisbloempijlstaart", s:"Proserpinus proserpina", r:"HR", l:4.5, zz:"Z", twin:null,
@@ -2411,12 +2474,19 @@ const SPECIES = [
   x:"groot-avondrood",
   t:"De rups van groot avondrood heeft een echte ‘pijl’ op het achterlijf en grote oogvlekken achter de kop. Deze rups mist de pijl en heeft op die plek een bultje met een oogvlek; de vlinder is groen in plaats van roze.",
   cs:[
-    { bron:"De Vlinderstichting, soortpagina en monitoringhandleiding teunisbloempijlstaart", wn:[
+    { sl:{ i:3, t:"Een rups zonder stekel op het achterlijf: de meeste pijlstaartrupsen hebben die wel." }, bron:"De Vlinderstichting, soortpagina en monitoringhandleiding teunisbloempijlstaart", wn:[
       "Millingerwaard, juli. Laat in de middag.",
       "Een rivieruiterwaard met ruigte, zandige oevers en struweel.",
       "Een ruig stuk met harig wilgenroosje, basterdwederik en teunisbloem.",
       "Een dikke groene of bruine rups zonder stekel op het achterlijf; bijna volgroeid kruipt hij de grond in om als pop te overwinteren.",
       "Een kleine pijlstaart met groene, getande vleugels, een donkere middenband en oranje achtervleugels; vliegt in de schemering."
+    ] },
+    { bron:"De Vlinderstichting, soortpagina teunisbloempijlstaart", sl:{ i:4, t:"Een kleine pijlstaart met groene, getande voorvleugels." }, wn:[
+      "Maasvallei bij Roermond, juni. Een warme avond.",
+      "Een grindgat met ruige, zandige oevers.",
+      "Een braakliggend stuk met kaardebollen, kattenstaart en ruigte.",
+      "In de schemering zweeft een klein, snel insect als een kolibrie voor de bloemen en schiet dan schichtig weg.",
+      "Klein, met groene vleugels met een getande rand en oranjegele achtervleugels."
     ] }
   ] },
 { id:"grote-vos", no:142, g:"V", n:"Grote vos", s:"Nymphalis polychloros", r:"BAL", l:6, zz:"Z", twin:null,
@@ -2424,12 +2494,19 @@ const SPECIES = [
   x:"kleine-vos",
   t:"De kleine vos is kleiner, feller oranje, heeft een witte vlek bij de vleugelpunt en blauwe randvlekjes op alle vleugels, en de rups eet brandnetel. Deze soort is groter en doffer, met blauwe randjes alleen op de achtervleugels, en de rupsen leven in een gezamenlijk spinsel op iep of wilg.",
   cs:[
-    { bron:"De Vlinderstichting, De dagvlinders van Nederland (grote vos)", wn:[
+    { sl:{ i:3, t:"Een spinsel vol zwarte rupsen hoog in een iep." }, bron:"De Vlinderstichting, De dagvlinders van Nederland (grote vos)", wn:[
       "Noord-Brabant, maart. De eerste warme dag van het jaar.",
       "Een oude bosrand met vrijstaande iepen en wilgen langs een zonnig pad.",
       "Een holle boom en een houtstapel waarin een vlinder heeft overwinterd.",
       "Een grote oranje vlinder die zich zonnig op een stam laat opwarmen; later in het voorjaar een spinsel vol zwarte rupsen hoog in een iep.",
       "Spanwijdte zo'n 6 cm; oranjebruin met zwarte vlekken en een smalle rand van blauwe vlekjes langs de achtervleugels."
+    ] },
+    { bron:"De Vlinderstichting, soortpagina grote vos", sl:{ i:4, t:"Geen witte vlek bij de vleugelpunt en groter: het verschil met de kleine vos." }, wn:[
+      "Zuid-Limburg, juli. Een warme dag.",
+      "Een oude hoogstamboomgaard naast een bosrand.",
+      "Een eik met uitvloeiend sap en rottend fruit onder de bomen.",
+      "Verse, grote oranje vlinders zuigen aan het sap; na een paar weken zijn ze verdwenen tot het volgende voorjaar.",
+      "Spanwijdte zo'n 6 cm; oranjebruin met zwarte vlekken en zonder witte vlek bij de vleugelpunt."
     ] }
   ] },
 { id:"donker-pimpernelblauwtje", no:null, g:"V", n:"Donker pimpernelblauwtje", s:"Phengaris nausithous", r:"HR", l:3.5, zz:null, twin:"pimpernelblauwtje",
@@ -2443,12 +2520,19 @@ const SPECIES = [
   x:"kleine-ijsvogelvlinder",
   t:"De kleine ijsvogelvlinder is kleiner, zwart met een witte band maar zonder paarse glans en zonder oogvlek op de achtervleugel, en zweeft laag langs bosranden met kamperfoelie. Deze soort glanst (bij het mannetje) paars en heeft een oranje omrande oogvlek op de achtervleugel.",
   cs:[
-    { bron:"De Vlinderstichting, De dagvlinders van Nederland (grote weerschijnvlinder)", wn:[
+    { sl:{ i:4, t:"Een paarse glans in het licht op een bruinzwarte vleugel met een witte band." }, bron:"De Vlinderstichting, De dagvlinders van Nederland (grote weerschijnvlinder)", wn:[
       "Veluwezoom, juli. Een warme, windstille ochtend.",
       "Een oud loofbos met open plekken, brede lanen en veel boswilg langs de randen.",
       "De bovenste takken van een vrijstaande eik waar mannetjes elkaar achternazitten, en een boswilg aan een beschaduwde bosrand.",
       "Een grote vlinder die op het pad zit te likken aan een uitwerpsel en een plasje; een stinkend stukje kaas lokt hem naar beneden.",
       "Spanwijdte zo'n 6,5 cm; bruinzwart met een witte band, in het licht paars glanzend, met een oogvlek op de achtervleugel."
+    ] },
+    { bron:"De Vlinderstichting, soortpagina grote weerschijnvlinder", sl:{ i:3, t:"Een groene rups met twee hoorntjes op boswilg: de waardplant en de rups van deze soort." }, wn:[
+      "Noord-Brabant, mei. Een zonnige ochtend.",
+      "Een loofbos met brede, zonnige paden.",
+      "Een wilg met brede, ronde bladeren in de halfschaduw aan de bosrand.",
+      "Op zo'n blad een groene rups met twee hoorntjes op de kop, die er van opzij uitziet als een slak.",
+      "Later in de zomer vliegt hier een grote, bruinzwarte vlinder met een witte band."
     ] }
   ] },
 { id:"kleine-ijsvogelvlinder", no:144, g:"V", n:"Kleine ijsvogelvlinder", s:"Limenitis camilla", r:"BAL", l:5.5, zz:"MA", twin:null,
@@ -2456,12 +2540,19 @@ const SPECIES = [
   x:"grote-weerschijnvlinder",
   t:"De grote weerschijnvlinder is groter, glanst (bij het mannetje) paars en heeft een oogvlek op de achtervleugel; hij vliegt vooral hoog in de boomkruinen. Deze soort zweeft laag en sierlijk langs schaduwrijke bosranden en zet eitjes af op kamperfoelie.",
   cs:[
-    { bron:"De Vlinderstichting, De dagvlinders van Nederland (kleine ijsvogelvlinder)", wn:[
+    { sl:{ i:3, t:"Afwisselend klapperen en lang zweven: de typische vlucht van deze vlinder." }, bron:"De Vlinderstichting, De dagvlinders van Nederland (kleine ijsvogelvlinder)", wn:[
       "Twente, juni. Een zonnige middag na een regenbui.",
       "Een vochtig, half beschaduwd bos met eiken en berken en brede, open paden.",
       "Wilde kamperfoelie die in slingers over de struiken langs de bosrand hangt.",
       "Een zwarte vlinder die afwisselend klappert en lang zweeft, steeds rond dezelfde zonnige plek; in de winter een opgerold blaadje met een rupsje op een kamperfoelietakje.",
       "Spanwijdte zo'n 5,5 cm; bovenkant zwart met een witte vlekkenband, onderkant oranjebruin met wit en zwarte stippen."
+    ] },
+    { bron:"De Vlinderstichting, soortpagina kleine ijsvogelvlinder", sl:{ i:4, t:"Geen paarse glans: het verschil met de grote weerschijnvlinder, die er van boven op lijkt." }, wn:[
+      "Achterhoek, juli. Een warme, zonnige middag.",
+      "Een vochtig loofbos met oude eiken.",
+      "Een braamstruweel in de halfschaduw langs een bospad.",
+      "Een zwarte vlinder met een witte band zweeft met een paar vleugelslagen tussen de bomen en landt op braambloesem.",
+      "Onderkant oranjebruin met een witte band; geen paarse glans aan de bovenkant."
     ] }
   ] }
 ];
