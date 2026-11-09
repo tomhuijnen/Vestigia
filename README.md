@@ -13,7 +13,7 @@ Determinatiespel over beschermde fauna van Nederland: herken de soort aan habita
 | `index.html` | de pagina zelf |
 | `css/vestigia.css` | opmaak |
 | `data/teksten.js` | namen in beeld (Vestiarium, Streeplijst, eikels); een andere naam is hier één aanpassing |
-| `data/soorten.js` | alle soorten, kenmerken en casussen (uitleg van de velden bovenin het bestand) |
+| `data/soorten.js` | alle soorten, kenmerken en casussen (uitleg van de velden bovenin het bestand); diergroepen: zoogdieren, reptielen, amfibieën, vissen, vogels en vlinders |
 | `data/sporen.js` | pootafdrukken en loopsporen voor de openingsanimatie (das, vos, ree, wild zwijn, boommarter) |
 | `data/dagschema.js` | de vaste dagcasus per dag; niet met de hand wijzigen |
 | `js/kern.js` | soorten, dagschema, opslag en de omzetting van oude opslag, titels, logboek |
@@ -31,7 +31,7 @@ Determinatiespel over beschermde fauna van Nederland: herken de soort aan habita
 | `js/app.js` | spelregels, kop, installeren en opstarten |
 | `sw.js` | service worker (offline en updates) |
 
-De databasescripts (001 t/m 004) staan bewust niet in deze repo, maar in het Project Vestigia.
+De databasescripts (001 t/m 005) staan bewust niet in deze repo, maar in het Project Vestigia.
 
 ## Werkwijze bij een wijziging
 

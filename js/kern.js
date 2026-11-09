@@ -157,7 +157,7 @@ function migrate(st){
 
 /* ---------- titels en medailles ----------
    Een behaalde titel of medaille wordt bewaard en nooit meer afgenomen, ook niet als er later soorten bijkomen. */
-const TITLES = { Z:"Keutelkoning", R:"Slangenbezweerder", A:"Poelenprofessor", F:"Kieuwenkenner", B:"Braakbalbaron" };
+const TITLES = { Z:"Keutelkoning", R:"Slangenbezweerder", A:"Poelenprofessor", F:"Kieuwenkenner", B:"Braakbalbaron", V:"Rupsenridder" };
 const TITLE_ALL = "Veldheer van Vestigia";
 function earnedNow(dex){
   const got = id => dex[id] && dex[id].w > 0, out = [];

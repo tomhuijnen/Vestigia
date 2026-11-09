@@ -4,7 +4,7 @@
    Velden per soort
    id    vaste sleutel. Verandert nooit, ook niet als de naam verandert (zet de oude naam dan in ALIASES).
    no    vast platennummer in het Vestiarium. Alleen soorten met een casus hebben er een; nieuwe nummers komen achteraan.
-   g     diergroep (GROUPS) · n Nederlandse naam · s wetenschappelijke naam · r regime (LABELS.r) · l lengte in cm
+   g     diergroep (GROUPS) · n Nederlandse naam · s wetenschappelijke naam · r regime (LABELS.r) · l lengte in cm (vlinders: spanwijdte)
    zz    zeldzaamheidsklasse (RARITY), op basis van de bronnen. De klasse ZZ levert een medaille op. null = nog niet bepaald.
    twin  id van de tweelingsoort (gokken telt niet als poging). Geldt alleen in de richting waarin het hier staat.
    h a v b w   kenmerken (LABELS); de eerste waarde is de hoofdwaarde
@@ -35,7 +35,7 @@ const REGIME_INFO = {
 
 const CLUE_TYPES = ["Locatie & seizoen","Habitat","Microhabitat","Spoor of geluid","Kenmerk"];
 
-const GROUPS = { Z:"Zoogdieren", R:"Reptielen", A:"Amfibieën", F:"Vissen", B:"Vogels" };
+const GROUPS = { Z:"Zoogdieren", R:"Reptielen", A:"Amfibieën", F:"Vissen", B:"Vogels", V:"Vlinders" };
 
 const RARITY = { A:"Algemeen", MA:"Minder algemeen", Z:"Zeldzaam", ZZ:"Zeer zeldzaam" };
 
@@ -1881,5 +1881,50 @@ const SPECIES = [
       "Op een wildcamera 's nachts een slank, hoogpotig dier langs de dijk; bij een doodgebeten schaap is DNA verzameld.",
       "Goudgrijs met rossige poten en oren, een spitse snuit en een vrij korte staart met een donkere punt."
     ] }
-  ] }
+  ] },
+{ id:"pimpernelblauwtje", no:140, g:"V", n:"Pimpernelblauwtje", s:"Phengaris teleius", r:"HR", l:3.5, zz:"Z", twin:"donker-pimpernelblauwtje",
+  h:["OPEN","MOER"], a:["DAG"], v:["PLANT","ONG"], b:["VEG","GROND"], w:["SLAAP"],
+  x:"donker-pimpernelblauwtje",
+  t:"Het donker pimpernelblauwtje is van onderen egaal donker chocoladebruin met maar één rij stippen, en de rups wordt sneller door de gewone steekmier geadopteerd. Deze soort is van onderen lichtbruin met twee rijen zwarte stippen en leeft samen met de moerassteekmier.",
+  cs:[
+    { bron:"De Vlinderstichting; Natura 2000-profiel H1059; BIJ12", wn:[
+      "Moerputten bij 's-Hertogenbosch, juli. Een warme, zonnige middag.",
+      "Een vochtig, schraal hooiland met blauwgrasland-soorten, laat in het jaar gemaaid.",
+      "Hoge, donkerrode bloemhoofdjes op lange stelen, ruim boven het gras uit.",
+      "Een klein blauw vlindertje dat eitjes legt in de bloemknoppen; later in de zomer slepen mieren een rupsje hun nest in.",
+      "Spanwijdte zo'n 3,5 cm; bovenkant blauw met donkere vlekjes, onderkant lichtbruin met twee rijen zwarte stippen."
+    ] }
+  ] },
+{ id:"teunisbloempijlstaart", no:141, g:"V", n:"Teunisbloempijlstaart", s:"Proserpinus proserpina", r:"HR", l:4.5, zz:"Z", twin:null,
+  h:["OPEN","STROOM","HALF"], a:["SCHEMER","NACHT"], v:["PLANT"], b:["VEG","GROND"], w:["SLAAP"],
+  x:"groot-avondrood",
+  t:"De rups van groot avondrood heeft een echte ‘pijl’ op het achterlijf en grote oogvlekken achter de kop. Deze rups mist de pijl en heeft op die plek een bultje met een oogvlek; de vlinder is groen in plaats van roze.",
+  cs:[
+    { bron:"De Vlinderstichting, soortpagina en monitoringhandleiding teunisbloempijlstaart", wn:[
+      "Millingerwaard, juli. Laat in de middag.",
+      "Een rivieruiterwaard met ruigte, zandige oevers en struweel.",
+      "Een ruig stuk met harig wilgenroosje, basterdwederik en teunisbloem.",
+      "Een dikke groene of bruine rups zonder stekel op het achterlijf; bijna volgroeid kruipt hij de grond in om als pop te overwinteren.",
+      "Een kleine pijlstaart met groene, getande vleugels, een donkere middenband en oranje achtervleugels; vliegt in de schemering."
+    ] }
+  ] },
+{ id:"grote-vos", no:142, g:"V", n:"Grote vos", s:"Nymphalis polychloros", r:"BAL", l:6, zz:"Z", twin:null,
+  h:["BOS","HALF"], a:["DAG"], v:["PLANT"], b:["BOOM"], w:["SLAAP"],
+  x:"kleine-vos",
+  t:"De kleine vos is kleiner, feller oranje, heeft een witte vlek bij de vleugelpunt en blauwe randvlekjes op alle vleugels, en de rups eet brandnetel. Deze soort is groter en doffer, met blauwe randjes alleen op de achtervleugels, en de rupsen leven in een gezamenlijk spinsel op iep of wilg.",
+  cs:[
+    { bron:"De Vlinderstichting, De dagvlinders van Nederland (grote vos)", wn:[
+      "Noord-Brabant, maart. De eerste warme dag van het jaar.",
+      "Een oude bosrand met vrijstaande iepen en wilgen langs een zonnig pad.",
+      "Een holle boom en een houtstapel waarin een vlinder heeft overwinterd.",
+      "Een grote oranje vlinder die zich zonnig op een stam laat opwarmen; later in het voorjaar een spinsel vol zwarte rupsen hoog in een iep.",
+      "Spanwijdte zo'n 6 cm; oranjebruin met zwarte vlekken en een smalle rand van blauwe vlekjes langs de achtervleugels."
+    ] }
+  ] },
+{ id:"donker-pimpernelblauwtje", no:null, g:"V", n:"Donker pimpernelblauwtje", s:"Phengaris nausithous", r:"HR", l:3.5, zz:null, twin:"pimpernelblauwtje",
+  h:["OPEN","MOER"], a:["DAG"], v:["PLANT","ONG"], b:["VEG","GROND"], w:["SLAAP"] },
+{ id:"kleine-vos", no:null, g:"V", n:"Kleine vos", s:"Aglais urticae", r:"NB", l:5, zz:null, twin:null,
+  h:["HALF","BEB","OPEN"], a:["DAG"], v:["PLANT"], b:["VEG"], w:["SLAAP"] },
+{ id:"groot-avondrood", no:null, g:"V", n:"Groot avondrood", s:"Deilephila elpenor", r:"NB", l:6, zz:null, twin:null,
+  h:["HALF","STROOM","BEB"], a:["SCHEMER","NACHT"], v:["PLANT"], b:["VEG","GROND"], w:["SLAAP"] }
 ];
