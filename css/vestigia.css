@@ -137,9 +137,18 @@ button.tile:focus-visible{outline:2px solid var(--mint); outline-offset:2px}
 
 /* ── pagina ── */
 .wrap{max-width:1260px; margin:0 auto; padding:28px max(20px, env(safe-area-inset-right)) calc(56px + env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left))}
-.layout{display:grid; grid-template-columns:minmax(280px,350px) 1fr; gap:34px; align-items:start}
+.layout{display:grid; grid-template-columns:minmax(280px,350px) 1fr; grid-template-areas:"mode work" "notes work"; grid-template-rows:auto 1fr; column-gap:34px; row-gap:22px; align-items:start}
 .layout>*,.work>*{min-width:0}
-@media (max-width:880px){ .layout{grid-template-columns:1fr; gap:28px} }
+.layout>.modebar{grid-area:mode; max-width:none; margin:0}
+.layout>.notities{grid-area:notes}
+/* laptop: tijdens het spel staat de determinatie op hoogte van de waarnemingen; na afloop schuift het resultaat omhoog tot de modusknoppen */
+.layout>.work{grid-area:notes; grid-column:2}
+.layout.afgerond>.work{grid-area:work}
+@media (max-width:880px){
+  .layout{grid-template-columns:1fr; grid-template-areas:"mode" "notes" "work"; grid-template-rows:auto; row-gap:28px}
+  .layout>.modebar{max-width:460px; margin-bottom:-6px}
+  .layout>.work, .layout.afgerond>.work{grid-area:work; grid-column:auto}
+}
 .sechead{display:flex; justify-content:space-between; align-items:baseline; gap:12px; border-bottom:2px solid var(--green); padding-bottom:6px; margin:0 0 4px}
 .sechead h2{font-family:var(--display); font-weight:500; font-size:1.4rem; color:var(--green); margin:0; line-height:1.1}
 .sechead .caps{color:var(--ink-2)}
@@ -161,6 +170,8 @@ button.tile:focus-visible{outline:2px solid var(--mint); outline-offset:2px}
 
 /* determinatie */
 .work{display:grid; gap:34px}
+.resultaat{display:grid; gap:14px}
+.account.vervolg{border-top-width:0; padding-top:18px}
 .det{display:grid; gap:10px}
 .det-row{display:flex; gap:12px; align-items:stretch}
 .combo{position:relative; flex:1}
@@ -512,7 +523,8 @@ svg.avatar.groot{width:104px; height:104px; flex:0 0 104px}
 .pfopt:hover{border-color:var(--green)}
 .pfopt.aan{border-color:var(--green); background:var(--mint)}
 .pfopt.dicht{opacity:.55; cursor:default}
-.pfopt .pl{font-weight:700; font-size:.85rem; line-height:1.2}
+.pfopt{min-width:0}
+.pfopt .pl{font-weight:700; font-size:.85rem; line-height:1.2; max-width:100%; hyphens:auto; -webkit-hyphens:auto; overflow-wrap:anywhere}
 .pfopt .ps{font-size:.75rem; color:var(--ink-2); display:flex; align-items:center; gap:4px; min-height:1em}
 .pfopt[data-zeker] .ps{color:var(--green-d); font-weight:700}
 .pfgeheim{width:64px; height:64px; border-radius:50%; display:grid; place-items:center; background:#e9ece6; color:var(--ink-2); font-family:var(--display); font-weight:700; font-size:1.6rem; border:2px dashed #c7cfc8}
@@ -658,7 +670,7 @@ body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
 .volledig .fine{margin:6px 0 4px}
 
 /* ── update 2: leren na afloop en ontdekkingsmoment ── */
-.clue.sleutel{background:#fbf3dc; border-radius:8px; box-shadow:0 0 0 1.5px #d9b45a inset}
+.clue.sleutel{background:#fbf3dc; border-radius:8px; box-shadow:0 0 0 1.5px #d9b45a inset; padding-left:10px; padding-right:10px}
 .sltag{display:inline-block; margin-left:6px; padding:0 6px; border-radius:3px; background:#d9b45a; color:#3b2c08; font-size:.66rem; letter-spacing:.06em}
 .bronregel{list-style:none; padding:8px 4px 0; font-size:.82rem; color:var(--ink-2)}
 .bronregel .caps{margin-right:6px}
@@ -685,3 +697,5 @@ body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
 .foutlijst .paar{display:flex; flex-wrap:wrap; align-items:center; gap:6px}
 .foutlijst .tussen{color:var(--ochre)}
 .foutlijst .keer{font-size:.82rem; color:var(--ink-2); white-space:nowrap}
+
+.helpuitleg{display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; margin:0 0 6px}

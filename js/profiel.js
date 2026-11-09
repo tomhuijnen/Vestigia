@@ -195,16 +195,55 @@ const Profiel = (() => {
         <div class="actions"><button class="btn line" id="pfNaarShop">Naar de shop</button></div>
       </section>
       <section class="pfsec" aria-labelledby="pfPrH"><h3 id="pfPrH">Prestaties</h3><div class="prlist">${prestatieLijst()}</div></section>`}
+      <section class="pfsec" id="pfNaamSec" aria-labelledby="pfNaamH"${naamRest === null ? " hidden" : ""}><h3 id="pfNaamH">Spelersnaam</h3>
+        <p class="fine" id="pfNaamUitleg">${naamUitleg()}</p>
+        ${naamRest > 0 ? `<div class="row2"><input id="pfNaamIn" maxlength="20" autocomplete="nickname" value="${esc(me.name)}" aria-label="Nieuwe spelersnaam"><button class="btn line" id="pfNaamBtn">Wijzig naam</button></div>` : ""}
+        <span class="msg" id="pfNaamMsg"></span>
+      </section>
       <section class="pfsec" aria-labelledby="pfCodeH"><h3 id="pfCodeH">Spelerscode</h3>
         <p class="fine">Met je spelerscode speel je verder op een ander apparaat, of haal je alles terug als je browsergegevens gewist zijn. Deel hem met niemand: met deze code speel je als jou.</p>
         <div class="actions"><button class="btn line" id="pfCode">Kopieer spelerscode</button><span class="msg" id="pfCodeMsg"></span></div>
       </section>`;
     $("pfCode").onclick = () => { kopieerCode($("pfCodeMsg")); codeTip(); };
+    if ($("pfNaamBtn")) $("pfNaamBtn").onclick = wijzigNaam;
+    if (naamRest === null && !naamGeprobeerd) haalNaamRest();
     if (!geenDb){
       $("pfTabs").querySelectorAll(".chipbtn").forEach(b => b.onclick = () => { tab = b.dataset.t; teken(); });
       $("pfNaarShop").onclick = () => showShop(tab);
       $("pfOpties").querySelectorAll("button.pfopt").forEach(b => b.onclick = () => b.dataset.shop ? showShop(tab) : kies(tab, b.dataset.v || null, $("pfMsg")));
     }
+  }
+  /* spelersnaam wijzigen: hooguit 3 keer; alles hangt aan je spelers-id, dus voortgang en ranglijst blijven */
+  let naamRest = null, naamGeprobeerd = false;
+  const naamUitleg = () => naamRest > 0
+    ? `Je kunt je naam nog ${naamRest === 1 ? "één keer" : naamRest + " keer"} wijzigen. Je ${NAAM.vestiarium}, punten, eikels en leagues blijven gewoon van jou.`
+    : "Je hebt je naam al 3 keer gewijzigd; meer kan niet.";
+  async function haalNaamRest(){
+    naamGeprobeerd = true;
+    try { naamRest = await online.rpc("name_changes_left", args()); if (VIEW === "profiel") teken(); }
+    catch(e){ naamRest = null; }                       // supabase-008 is nog niet gedraaid: sectie blijft verborgen
+  }
+  async function wijzigNaam(){
+    const inp = $("pfNaamIn"), msg = $("pfNaamMsg"), naam = inp.value.trim();
+    if (naam === p().name){ msg.textContent = "Dit is al je naam."; return; }
+    if (naam.length < 2){ msg.textContent = "Kies een naam van minstens 2 tekens."; return; }
+    if (!confirmNaam(naam)) return;
+    $("pfNaamBtn").disabled = true; msg.textContent = "Even geduld…";
+    try {
+      naamRest = await online.hernoem(naam);
+      teken(); toast(`Je speelt nu als ${naam}.`);
+    } catch(e){
+      $("pfNaamBtn").disabled = false;
+      msg.textContent = e.status && e.status < 500 ? e.message : "Wijzigen lukte niet. Controleer je internetverbinding.";
+    }
+  }
+  /* tweede klik bevestigt: een wijziging is er één van de drie */
+  let bevestig = "";
+  function confirmNaam(naam){
+    if (bevestig === naam){ bevestig = ""; return true; }
+    bevestig = naam;
+    $("pfNaamMsg").textContent = `Klik nogmaals om ‘${naam}’ te bevestigen. Dit telt als 1 van je ${naamRest} wijzigingen.`;
+    return false;
   }
   /* Mijn profiel: ‘geen’, dan alles wat je hebt (goedkoop naar duur), en een knop naar de shop */
   function opties(){

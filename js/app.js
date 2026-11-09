@@ -5,6 +5,7 @@ const help = $("help");
 function openHelp(){ help.hidden = false; $("closeHelp").focus(); }
 function closeHelp(){ help.hidden = true; $("menuBtn").focus({ preventScroll: true }); }
 $("closeHelp").addEventListener("click", closeHelp);
+$("helpUitleg").addEventListener("click", () => { help.hidden = true; Uitleg.start(); });
 help.addEventListener("click", e => { if (e.target === help) closeHelp(); });
 document.addEventListener("keydown", e => {
   if (e.key !== "Escape") return;
