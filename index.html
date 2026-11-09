@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Karla:ital,wght@0,400;0,500;0,700;1,400&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/vestigia.css?v=202611091413">
+<link rel="stylesheet" href="css/vestigia.css?v=202611091433">
 </head>
 <body>
 <!-- openingsanimatie: staat meteen in beeld (geen witte flits), en is in dezelfde sessie al gezien → niet tonen -->
@@ -55,15 +55,15 @@
     <div class="actions"><button class="btn" id="codeTipCopy">Kopieer spelerscode</button><button class="linklike" id="codeTipLater">Later</button><span class="msg" id="codeTipMsg"></span></div>
   </div>
   <details class="oefenkader" id="oefenKader" hidden></details>
-  <div class="modebar">
-    <div class="seg" role="group" aria-label="Spelmodus">
-      <button type="button" id="modeClassic" aria-pressed="true">Klassiek<span class="done" id="doneClassic" hidden><svg role="img" aria-label="vandaag gespeeld" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7.5l3 3 6-7"/></svg></span></button>
-      <button type="button" id="modeExpert" aria-pressed="false">Expert<span class="done" id="doneExpert" hidden><svg role="img" aria-label="vandaag gespeeld" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7.5l3 3 6-7"/></svg></span></button>
-    </div>
-    <button type="button" class="qbtn" id="modeHelp" aria-label="Wat is het verschil tussen klassiek en expert?">?</button>
-  </div>
   <main class="layout">
-    <section aria-labelledby="notesH">
+    <div class="modebar">
+      <div class="seg" role="group" aria-label="Spelmodus">
+        <button type="button" id="modeClassic" aria-pressed="true">Klassiek<span class="done" id="doneClassic" hidden><svg role="img" aria-label="vandaag gespeeld" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7.5l3 3 6-7"/></svg></span></button>
+        <button type="button" id="modeExpert" aria-pressed="false">Expert<span class="done" id="doneExpert" hidden><svg role="img" aria-label="vandaag gespeeld" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7.5l3 3 6-7"/></svg></span></button>
+      </div>
+      <button type="button" class="qbtn" id="modeHelp" aria-label="Wat is het verschil tussen klassiek en expert?">?</button>
+    </div>
+    <section class="notities" aria-labelledby="notesH">
       <div class="sechead"><h2 id="notesH">Waarnemingen</h2><span class="caps" id="clueCount">1 van 5</span></div>
       <ol class="clues" id="clues"></ol>
       <div class="expertbar" id="notesFoot" hidden>
@@ -73,7 +73,10 @@
     </section>
 
     <div class="work">
-      <section id="resultCard" hidden aria-live="polite"></section>
+      <div class="resultaat" id="resultWrap" hidden>
+        <section id="resultCard" aria-live="polite"></section>
+        <section id="resultCard2" class="account vervolg"></section>
+      </div>
 
       <section class="det" aria-labelledby="gLabel">
         <div class="sechead"><h2 id="gLabel"><label for="gInput">Determinatie</label></h2><span class="caps" id="leftLabel"></span></div>
@@ -268,6 +271,7 @@
 <div class="overlay" id="help" hidden role="dialog" aria-modal="true" aria-labelledby="helpH">
   <div class="sheet">
     <div class="top"><h2 id="helpH">Spelregels</h2><button class="closebtn" id="closeHelp">Sluiten</button></div>
+    <p class="helpuitleg"><button class="btn line" id="helpUitleg" type="button">Bekijk de uitleg opnieuw</button> <span class="fine">Een korte rondleiding langs het spel in vijf stappen.</span></p>
     <p>Elke casus is een waarneming in het veld. Je begint met de locatie en het seizoen. Bij elke foute determinatie komt er een waarneming bij. De waarnemingen zijn kaal: je krijgt alleen wat je ziet of hoort, de interpretatie is aan jou. Je hebt vijf pogingen, en het kan best dat je de soort niet vindt.</p>
     <h3>Tips</h3>
     <p>Na elke foute determinatie krijg je één tip over de gezochte soort: eerst iets wat jouw soort en de gezochte soort gemeen hebben, en als dat er niet meer is, iets waarin ze verschillen. Een tip komt nooit twee keer. Wie dezelfde gokken doet, krijgt dezelfde tips.</p>
@@ -286,7 +290,7 @@
     <h3 data-naam="vestiarium">Vestiarium</h3>
     <p>Elke soort die je goed determineert (in welke modus dan ook) komt als genummerde plaat in je <span data-naam="vestiarium">Vestiarium</span>, met je beste score. Je voortgang wordt in deze browser bewaard, en met een spelersnaam ook online.</p>
     <h3>Trofeeën</h3>
-    <p>Heb je alle soorten van een diergroep gedetermineerd, dan verdien je de titel van die groep. Met alle <span data-tel="doelsoorten">100</span> soorten word je Veldheer van Vestigia. <span data-tel="medailles" data-hoofd="1">Vijf</span> extra lastige soorten leveren een medaille op; welke dat zijn, zie je pas als je ze hebt gevonden.</p>
+    <p>Heb je alle soorten van een diergroep gedetermineerd, dan verdien je de titel van die groep. Met alle <span data-tel="doelsoorten">100</span> soorten word je Veldheer van Vestigia. De <span data-tel="medailles">vijf</span> meest zeldzame soorten leveren een medaille op; welke dat zijn, zie je pas als je ze hebt gevonden.</p>
     <h3>Ranglijst</h3>
     <p>Met een spelersnaam doe je mee aan de ranglijst. Alleen je eerste poging aan de dagcasus telt: 5 punten in één poging, 1 punt bij de vijfde. In de expertmodus krijg je 6 punten als je na één waarneming goed zit. Klassiek en expert hebben dezelfde casus; daarom telt alleen de modus die je die dag als eerste speelt.</p>
     <h3>Installeren</h3>
@@ -326,22 +330,22 @@
 </div>
 
 <script src="config.js"></script>
-<script src="data/teksten.js?v=202611091413"></script>
-<script src="data/soorten.js?v=202611091413"></script>
-<script src="data/sporen.js?v=202611091413"></script>
-<script src="data/dagschema.js?v=202611091413"></script>
-<script src="js/kern.js?v=202611091413"></script>
-<script src="js/spel.js?v=202611091413"></script>
-<script src="js/veldboek.js?v=202611091413"></script>
-<script src="js/melden.js?v=202611091413"></script>
-<script src="js/kop.js?v=202611091413"></script>
-<script src="js/spelen.js?v=202611091413"></script>
-<script src="js/opening.js?v=202611091413"></script>
-<script src="js/uitleg.js?v=202611091413"></script>
-<script src="js/online.js?v=202611091413"></script>
-<script src="js/league.js?v=202611091413"></script>
-<script src="data/avatars.js?v=202611091413"></script>
-<script src="js/profiel.js?v=202611091413"></script>
-<script src="js/app.js?v=202611091413"></script>
+<script src="data/teksten.js?v=202611091433"></script>
+<script src="data/soorten.js?v=202611091433"></script>
+<script src="data/sporen.js?v=202611091433"></script>
+<script src="data/dagschema.js?v=202611091433"></script>
+<script src="js/kern.js?v=202611091433"></script>
+<script src="js/spel.js?v=202611091433"></script>
+<script src="js/veldboek.js?v=202611091433"></script>
+<script src="js/melden.js?v=202611091433"></script>
+<script src="js/kop.js?v=202611091433"></script>
+<script src="js/spelen.js?v=202611091433"></script>
+<script src="js/opening.js?v=202611091433"></script>
+<script src="js/uitleg.js?v=202611091433"></script>
+<script src="js/online.js?v=202611091433"></script>
+<script src="js/league.js?v=202611091433"></script>
+<script src="data/avatars.js?v=202611091433"></script>
+<script src="js/profiel.js?v=202611091433"></script>
+<script src="js/app.js?v=202611091433"></script>
 </body>
 </html>

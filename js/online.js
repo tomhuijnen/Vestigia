@@ -239,9 +239,12 @@ const online = (() => {
     laatsteHaal = Date.now();
     try {
       /* koos je op een ander apparaat een naam voor dit gekoppelde account, dan speel je hier nu ook onder die naam */
+      const naam = await rpc("player_name", { p_id: p.id, p_key: p.key });
       if (!player()){
-        const naam = await rpc("player_name", { p_id: p.id, p_key: p.key });
         if (naam && !String(naam).startsWith("~")){ setPlayer({ id: p.id, key: p.key, name: naam }); setKoppeling(null); $("welcome").hidden = true; Profiel.naNaam(); toast(`Je speelt nu als ${naam}, net als op je andere apparaat.`); }
+      } else if (naam && !String(naam).startsWith("~") && naam !== player().name){
+        /* naam gewijzigd op een ander apparaat */
+        setPlayer(Object.assign({}, player(), { name: naam })); renderRank(); renderMenu(); if (VIEW === "profiel") Profiel.naNaam();
       }
       const prog = await rpc("get_progress", { p_id: p.id, p_key: p.key });
       if (prog && (prog.dex || prog.dexId)){ mergeProgressData(prog); naSamenvoegen(); syncSoon(); }
@@ -278,7 +281,14 @@ const online = (() => {
     queueRecentDaily(); await syncNu(); flush(); naSamenvoegen();
     return String(name).startsWith("~") ? null : name;
   }
-  return { enabled, rpc, player, account, koppeling, koppelcode, koppel, afterGame, haalVoortgang, flush, syncSoon, renderRank, refreshWeek, renderScope, setScope,
+  /* naam wijzigen (hooguit 3 keer); geeft het aantal resterende wijzigingen terug */
+  async function hernoem(naam){
+    const p = player(); naam = String(naam || "").trim().replace(/\s+/g, " ");
+    const rest = await rpc("rename_player", { p_id: p.id, p_key: p.key, p_name: naam });
+    setPlayer(Object.assign({}, p, { name: naam })); renderRank(); renderMenu();
+    return rest;
+  }
+  return { enabled, rpc, player, hernoem, account, koppeling, koppelcode, koppel, afterGame, haalVoortgang, flush, syncSoon, renderRank, refreshWeek, renderScope, setScope,
            setMode: (m, s) => { rankMode = m; if (s !== undefined) setScope(s); else renderRank(); } };
 })();
 

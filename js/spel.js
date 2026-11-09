@@ -223,8 +223,9 @@ function ontdekPlaat(t){
       <button class="linklike" id="toDex">Open het ${NAAM.vestiarium}</button></div></div>`;
 }
 function renderResult(){
-  const card = $("resultCard");
-  if (S.status === "playing"){ card.hidden = true; card.innerHTML = ""; return; }
+  const card = $("resultCard"), card2 = $("resultCard2"), wrap = $("resultWrap");
+  document.querySelector(".layout").classList.toggle("afgerond", S.status !== "playing");
+  if (S.status === "playing"){ wrap.hidden = true; card.innerHTML = card2.innerHTML = ""; return; }
   const t = BY_ID.get(S.target), won = S.status === "won", xs = BY_ID.get(t.x);
   const traits = [["Leefgebied","h"],["Activiteit","a"],["Voedsel","v"],["Verblijf","b"],["Winter","w"]]
     .map(([lab,k]) => `<div><dt>${lab}</dt><dd>${t[k].map(x => LABELS[k][x]).join(", ")}</dd></div>`).join("")
@@ -235,9 +236,10 @@ function renderResult(){
   let stats = "";
   if (S.mode === "daily"){
     const s = store.get()[S.expert ? "statsX" : "stats"];
-    if (s) stats = `<div class="stats"><div><b>${s.played}</b>gespeeld</div><div><b>${s.played ? Math.round(100*s.won/s.played) : 0}%</b>gedetermineerd</div><div><b>${s.streak}</b>huidige reeks</div><div><b>${s.best}</b>langste reeks</div></div>`;
+    if (s) stats = `<span class="caps">Jouw dagcasussen in ${S.expert ? "expert" : "klassiek"}</span><div class="stats"><div><b>${s.played}</b>gespeeld</div><div><b>${s.played ? Math.round(100*s.won/s.played) : 0}%</b>gedetermineerd</div><div><b>${s.streak}</b>huidige reeks</div><div><b>${s.best}</b>langste reeks</div></div>`;
   }
   card.className = "account" + (won ? "" : " lost") + (freshResult && !matchMedia("(prefers-reduced-motion: reduce)").matches ? " resultin" : "");
+  card2.className = "account vervolg" + (card.classList.contains("resultin") ? " resultin" : "");
   const ontdek = won && S.nieuwePlaat && freshResult;     // alleen direct na het spel, niet bij later terugkijken
   freshResult = false;
   card.innerHTML = `
@@ -253,6 +255,8 @@ function renderResult(){
     <div class="confuse"><span class="caps">Verwar niet met</span><p><b>${esc(xs.n)}.</b> ${S.guesses.includes(t.x) ? "Die soort heb je in deze casus ook geprobeerd. " : ""}${esc(t.t)}</p></div>
     ${(S.newAwards || []).map(k => { const [kind, name] = awardLabel(k); return `<div class="awardnote"><span class="caps">Nieuwe ${kind.toLowerCase()}</span><b>${esc(name)}</b></div>`; }).join("")}
     ${ontdek ? ontdekPlaat(t) : `<p class="dexnote">${won ? `Plaat <b>nº ${dexNo(t.id)}</b> staat nu in je ${NAAM.vestiarium}.` : `Genoteerd als waargenomen in je ${NAAM.vestiarium} (nº ${dexNo(t.id)}).`} <button class="linklike" id="toDex">Open het ${NAAM.vestiarium}</button></p>`}
+    <button class="reportbtn" id="repFromResult">Klopt er iets niet in deze casus? Meld een fout</button>`;
+  card2.innerHTML = `
     ${stats}
     ${S.mode === "free" ? `<p class="oefenkeuze">Je oefent met ${esc(Spelen.omschrijving({ g: S.groep, nieuw: S.nieuw, ids: S.ids }))}. <button class="linklike" id="oefenWijzig">Wijzig</button></p>` : ""}
     <div class="actions">
@@ -261,8 +265,8 @@ function renderResult(){
       <span class="msg" id="copyMsg"></span>
     </div>
     ${S.mode === "daily" && online.enabled ? `<p class="inviteline">Samen spelen is leuker. <button class="linklike" id="inviteFromResult">Nodig een speler uit</button></p>` : ""}
-    <button class="reportbtn" id="repFromResult">Klopt er iets niet in deze casus? Meld een fout</button>`;
-  card.hidden = false;
+`;
+  wrap.hidden = false;
   $("copyBtn").onclick = () => shareOut(resultShare(), $("copyMsg"), card);
   $("nextBtn").onclick = () => startFree();
   if ($("oefenWijzig")) $("oefenWijzig").onclick = () => Spelen.wijzig();
