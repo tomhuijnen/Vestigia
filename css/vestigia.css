@@ -78,6 +78,9 @@ button.tile:focus-visible{outline:2px solid var(--mint); outline-offset:2px}
 @media (prefers-reduced-motion:reduce){ .seg.klaar::before{transition:none} }
 .seg button[aria-pressed="false"]:hover{background:#e6eee7}
 .seg .done{display:inline-flex; color:var(--green)}
+.seg button.slot{color:#8b968e; cursor:default}
+.seg button.slot:hover{background:transparent}
+.seg .slotje{display:inline-flex; color:#8b968e}
 .seg button[aria-pressed="true"] .done{color:var(--mint)}
 .qbtn{flex:0 0 44px; width:44px; height:44px; border-radius:22px; border:1.5px solid var(--green); background:#fff; color:var(--green-d); font-family:var(--display); font-weight:600; font-size:1.1rem; cursor:pointer}
 .qbtn:hover{background:var(--leaf)}

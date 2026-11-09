@@ -105,7 +105,7 @@ const online = (() => {
     }
     setQueue(q);
   }
-  /* ranglijst: Iedereen of een van je leagues (scope), en Vandaag / Deze week / Altijd / Streeplijst */
+  /* ranglijst: Iedereen of een van je leagues (scope), en Vandaag / Deze week / Altijd. De Streeplijst is eruit (november 2026). */
   let rankMode = "week", scope = null;      /* week: vroeg op de dag staat er bij Vandaag nog weinig */
   function renderScope(){
     const box = $("rankScope"), ls = player() ? League.cached() : [];
@@ -118,7 +118,7 @@ const online = (() => {
   }
   function setScope(id){
     scope = id || null;
-    if (scope){ League.setLast(scope); if (rankMode === "dex") rankMode = "week"; League.vernieuwTegel().catch(() => {}); }
+    if (scope){ League.setLast(scope); League.vernieuwTegel().catch(() => {}); }
     renderRank();
   }
   function weekStart(i){ const dow = (new Date(START + i * 864e5).getUTCDay() + 6) % 7; return i - dow; }
@@ -138,13 +138,13 @@ const online = (() => {
   const RANK_RULE = {
     day: "Punten uit de dagcasus van vandaag. Oefenen telt niet mee.",
     week: "Punten uit de dagcasussen van deze week (vanaf maandag). Oefenen telt niet mee.",
-    all: "Alle punten uit de dagcasussen sinds de start. Oefenen telt niet mee.",
-    dex: `Platen in het ${NAAM.vestiarium}, uit alle modi, ook uit oefenen.`
+    all: "Alle punten uit de dagcasussen sinds de start. Oefenen telt niet mee."
   };
   async function renderRank(){
+    if (!RANK_RULE[rankMode]) rankMode = "week";     // oude links naar de Streeplijst komen bij Deze week uit
     renderPlayerBox(); renderScope();
     const list = $("rankList"), lg = scope && League.cached().find(l => l.id === scope);
-    $("rankTabs").querySelectorAll(".chipbtn").forEach(b => { b.setAttribute("aria-pressed", b.dataset.r === rankMode); if (b.dataset.r === "dex") b.hidden = !!lg; });
+    $("rankTabs").querySelectorAll(".chipbtn").forEach(b => b.setAttribute("aria-pressed", b.dataset.r === rankMode));
     $("rankRule").textContent = lg
       ? `Alleen de ${lg.members} ${+lg.members === 1 ? "lid" : "leden"} van ${lg.name}. Iedereen telt mee vanaf de dag dat hij of zij lid werd. ` + RANK_RULE[rankMode]
       : RANK_RULE[rankMode];
@@ -167,19 +167,13 @@ const online = (() => {
           <span class="who"><b>${esc(r.name)}</b>${r.expert ? `<span class="xbadge">expert</span>` : ""}<span>${r.won ? (r.expert ? `gedetermineerd na ${r.clues} waarneming${r.clues > 1 ? "en" : ""}` : `gedetermineerd in ${r.tries} ${r.tries === 1 ? "poging" : "pogingen"}`) : "niet gevonden"}</span></span>
           <span class="pts">${r.points}<small>punten</small></span></li>`).join("");
         if (!rows.length) html = `<p class="rankempty">Nog niemand heeft dagcasus #${today + 1} gespeeld. Ben jij de eerste?</p>`;
-      } else if (rankMode === "week" || rankMode === "all"){
+      } else {
         const from = rankMode === "week" ? weekStart(today) : 0;
         rows = await rpc("leaderboard_range", { p_from: from, p_to: today });
         html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}" data-n="${esc(r.name)}"><span class="pos">${i + 1}</span>
           <span class="who"><b>${esc(r.name)}</b><span>${r.won} van ${r.played} dagcasussen gedetermineerd</span></span>
           <span class="pts">${r.points}<small>punten</small></span></li>`).join("");
         if (!rows.length) html = `<p class="rankempty">${rankMode === "week" ? "Deze week" : "Tot nu toe"} zijn er nog geen dagcasussen gespeeld.</p>`;
-      } else {
-        rows = await rpc("leaderboard_dex");
-        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}" data-n="${esc(r.name)}"><span class="pos">${i + 1}</span>
-          <span class="who"><b>${esc(r.name)}</b><span>${r.trophies} ${r.trophies === 1 ? "trofee" : "trofeeën"}</span></span>
-          <span class="pts">${r.found}<small>van ${TARGETS.length}</small></span></li>`).join("");
-        if (!rows.length) html = `<p class="rankempty">Nog niemand heeft platen in zijn ${NAAM.vestiarium}.</p>`;
       }
       list.innerHTML = html; list.classList.remove("met-av");
       Profiel.versier(list);

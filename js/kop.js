@@ -69,7 +69,8 @@ const TILES = [
     const i = todayIndex(), c = finished(st, i, false), x = finished(st, i, true);
     if (!c && !x) return { label: `Dagcasus #${i + 1}`, value: "Nog te spelen", sub: "klassiek of expert" };
     const p = dayPoints(st, i);
-    return { label: `Dagcasus #${i + 1}`, value: `${p} ${p === 1 ? "punt" : "punten"}`, sub: `klassiek${c ? " ✓" : ""} · expert${x ? " ✓" : ""}` };
+    const eerst = eersteModus(st, i), op = m => (eerst !== null && eerst !== m) ? " op slot" : "";
+    return { label: `Dagcasus #${i + 1}`, value: `${p} ${p === 1 ? "punt" : "punten"}`, sub: `klassiek${c ? " ✓" : op(false)} · expert${x ? " ✓" : op(true)}` };
   }},
   { id: "reeks", render(st){
     const s = playStreak(st);
@@ -109,6 +110,7 @@ function renderTiles(){
 }
 
 /* ---------- regel boven de naam, schakelaar en vinkjes ---------- */
+const SLOTJE = `<svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6.2" width="9" height="6.3" rx="1.4"/><path d="M4.6 6.2V4.6a2.4 2.4 0 0 1 4.8 0v1.6"/></svg>`;
 function renderKop(){
   /* boven de naam staat alleen bij oefenen iets: welk nummer en welke dag het is, zie je al in de tegel */
   $("fSeries").textContent = S.mode === "daily" ? "" : `Oefencasus${S.groep && GROUPS[S.groep] ? " · " + GROUPS[S.groep] : ""}`;
@@ -124,6 +126,17 @@ function renderKop(){
   const st = store.get(), i = todayIndex(), daily = S.mode === "daily";
   $("doneClassic").hidden = !(daily && finished(st, i, false));
   $("doneExpert").hidden = !(daily && finished(st, i, true));
+  /* Slotje: heb je de dagcasus vandaag al in de ene modus gespeeld, dan zit de andere op slot (zelfde casus, je kent
+     het antwoord al). Bij oefenen zit er nooit een slot op. */
+  const eerst = daily ? eersteModus(st, i) : null;
+  for (const [id, expert] of [["modeClassic", false], ["modeExpert", true]]){
+    const dicht = eerst !== null && eerst !== expert, b = $(id);
+    b.classList.toggle("slot", dicht);
+    let k = b.querySelector(".slotje");
+    if (dicht && !k){ b.insertAdjacentHTML("beforeend", `<span class="slotje" aria-hidden="true">${SLOTJE}</span>`); }
+    if (!dicht && k) k.remove();
+    dicht ? b.setAttribute("aria-label", `${expert ? "Expert" : "Klassiek"}: vandaag op slot`) : b.removeAttribute("aria-label");
+  }
   renderTiles(); renderMenu();
 }
 
