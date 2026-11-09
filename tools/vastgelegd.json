@@ -677,8 +677,8 @@
    "no": 119,
    "casussen": 1
   },
-  "taigaboomkruiper": {
-   "n": "Taigaboomkruiper",
+  "kortsnavelboomkruiper": {
+   "n": "Kortsnavelboomkruiper",
    "no": 120,
    "casussen": 1
   },
@@ -867,7 +867,7 @@
   "gewone-pad#1",
   "slechtvalk#1",
   "adder#1",
-  "taigaboomkruiper#1",
+  "kortsnavelboomkruiper#1",
   "otter#1",
   "grote-bonte-specht#1",
   "ruigpootuil#1",
@@ -920,7 +920,7 @@
   "bruinvis#1",
   "zwarte-specht#1",
   "beekprik#1",
-  "taigaboomkruiper#1",
+  "kortsnavelboomkruiper#1",
   "waterspitsmuis#1",
   "rosse-vleermuis#1",
   "torenvalk#1",

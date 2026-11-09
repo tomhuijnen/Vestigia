@@ -95,7 +95,7 @@ const DAGSCHEMA = [
   "gewone-pad#1"                    , //  90 · do 4 feb 2027
   "slechtvalk#1"                    , //  91 · vr 5 feb 2027
   "adder#1"                         , //  92 · za 6 feb 2027
-  "taigaboomkruiper#1"              , //  93 · zo 7 feb 2027
+  "kortsnavelboomkruiper#1"              , //  93 · zo 7 feb 2027
   "otter#1"                         , //  94 · ma 8 feb 2027
   "grote-bonte-specht#1"            , //  95 · di 9 feb 2027
   "ruigpootuil#1"                   , //  96 · wo 10 feb 2027
@@ -148,7 +148,7 @@ const DAGSCHEMA = [
   "bruinvis#1"                      , // 143 · ma 29 mrt 2027
   "zwarte-specht#1"                 , // 144 · di 30 mrt 2027
   "beekprik#1"                      , // 145 · wo 31 mrt 2027
-  "taigaboomkruiper#1"              , // 146 · do 1 apr 2027
+  "kortsnavelboomkruiper#1"              , // 146 · do 1 apr 2027
   "waterspitsmuis#1"                , // 147 · vr 2 apr 2027
   "rosse-vleermuis#1"               , // 148 · za 3 apr 2027
   "torenvalk#1"                     , // 149 · zo 4 apr 2027

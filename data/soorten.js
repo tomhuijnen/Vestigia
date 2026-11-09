@@ -1609,7 +1609,7 @@ const SPECIES = [
       "Klein; de man zwart-wit met een witte vleugelvlek en een wit vlekje op het voorhoofd."
     ] }
   ] },
-{ id:"boomkruiper", no:119, g:"B", n:"Boomkruiper", s:"Certhia brachydactyla", r:"VR", l:12, zz:"A", twin:"taigaboomkruiper",
+{ id:"boomkruiper", no:119, g:"B", n:"Boomkruiper", s:"Certhia brachydactyla", r:"VR", l:12, zz:"A", twin:"kortsnavelboomkruiper",
   h:["BOS","BEB","HALF"], a:["DAG"], v:["ONG"], b:["BOOM"], w:["ACT"],
   x:"boomklever",
   t:"De boomklever klimt ook kopje-onder, is blauwgrijs met oranje en heeft een rechte snavel. Deze soort klimt alleen spiraalsgewijs omhoog en heeft een dunne, gebogen snavel.",
@@ -1622,12 +1622,12 @@ const SPECIES = [
       "Bruin gestreept van boven, vuilwit van onder, met een dunne, gebogen snavel en stijve staartveren."
     ] }
   ] },
-{ id:"taigaboomkruiper", no:120, g:"B", n:"Taigaboomkruiper", s:"Certhia familiaris", r:"VR", l:12, zz:"Z", twin:"boomkruiper",
+{ id:"kortsnavelboomkruiper", no:120, g:"B", n:"Kortsnavelboomkruiper", s:"Certhia familiaris", r:"VR", l:12, zz:"Z", twin:"boomkruiper",
   h:["BOS"], a:["DAG"], v:["ONG"], b:["BOOM"], w:["ACT"],
   x:"boomklever",
   t:"De boomklever klimt ook kopje-onder, is blauwgrijs met oranje en heeft een rechte snavel. Deze soort klimt alleen spiraalsgewijs omhoog en heeft een dunne, gebogen snavel.",
   cs:[
-    { bron:"Vogelbescherming en Sovon, soortpagina taigaboomkruiper", wn:[
+    { bron:"Sovon, soortpagina kortsnavelboomkruiper", wn:[
       "Twente, maart. Vlak bij de Duitse grens.",
       "Een oud, koel naaldbos met sparren en lariksen, afgewisseld met beuken.",
       "Een losgeraakte schorsflap aan een dode spar.",
