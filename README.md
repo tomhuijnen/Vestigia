@@ -26,12 +26,12 @@ Determinatiespel over beschermde fauna van Nederland: herken de soort aan habita
 | `js/uitleg.js` | uitleg bij de eerste keer, en via het menu |
 | `js/online.js` | ranglijst en synchronisatie met Supabase |
 | `js/league.js` | uitnodigen en leagues, en de links `?van=` en `?league=` |
-| `data/avatars.js` | de 24 avatartekeningen (prijzen staan in Supabase) |
+| `data/avatars.js` | de 29 avatartekeningen, waarvan 10 medaille-avatars in kleur (prijzen staan in Supabase) |
 | `js/profiel.js` | eikels, avatars, Mijn profiel (kiezen uit wat je hebt), shop (kopen, goedkoop naar duur) en prestaties met eikels |
 | `js/app.js` | spelregels, kop, installeren en opstarten |
 | `sw.js` | service worker (offline en updates) |
 
-Het databasescript staat bewust niet in deze repo, maar in het Project Vestigia.
+De databasescripts (001 t/m 004) staan bewust niet in deze repo, maar in het Project Vestigia.
 
 ## Werkwijze bij een wijziging
 

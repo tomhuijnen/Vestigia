@@ -45,8 +45,12 @@ function eersteModus(st, i){
 const dayPoints = (st, i) => { const m = eersteModus(st, i); return m === null ? 0 : gamePoints(finished(st, i, m), m); };
 function weekStartDay(i){ const dow = (new Date(START + i * DAY).getUTCDay() + 6) % 7; return i - dow; }
 /* dagen op rij waarop je de dagcasus speelde (klassiek of expert); vandaag telt mee zodra je hem gespeeld hebt */
+/* Reeks: dagen waarop je de dagcasus afrondde. Uit de spellen op dit apparaat én uit het logboek, dat met je andere
+   apparaten wordt samengevoegd. Alleen de spellen was niet genoeg: van andere apparaten komen alleen gisteren en vandaag mee. */
 function playStreak(st){
   const days = new Set(Object.entries(st.games || {}).filter(([, g]) => g && g.status !== "playing").map(([k]) => +(k.match(/^d(\d+)/) || [, -1])[1]));
+  for (const e of st.log || []) if (e && e.m === "daily" && Number.isInteger(e.d) && e.d >= 0) days.add(e.d);
+  days.delete(-1);
   const today = todayIndex();
   let cur = 0;
   for (let i = days.has(today) ? today : today - 1; days.has(i); i--) cur++;
