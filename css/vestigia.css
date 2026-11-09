@@ -801,19 +801,26 @@ html.donker .ranklist li.p1{background:#262414}
 /* prestige-lijsten (update 5) */
 @keyframes ljdraai{to{transform:rotate(360deg)}}
 @keyframes ljterug{to{transform:rotate(-360deg)}}
-@keyframes ljflits{0%,100%{opacity:1} 50%{opacity:.55}}
-@keyframes ljhalo{0%,100%{opacity:.18; transform:scale(.75)} 50%{opacity:.7; transform:scale(1.25)}}
-@keyframes ljadem{0%,100%{opacity:.15} 50%{opacity:.6}}
-@keyframes ljglans{0%{transform:rotate(-30deg); opacity:0} 6%{opacity:1} 44%{opacity:1} 50%{transform:rotate(330deg); opacity:0} 100%{transform:rotate(330deg); opacity:0}}
+@keyframes ljzweef{0%,100%{transform:translateY(0)} 30%{transform:translateY(1.6px)} 65%{transform:translateY(-1.2px)}}
+@keyframes ljhalo{0%,100%{opacity:.25; transform:scale(.7)} 50%{opacity:.95; transform:scale(1.2)}}
+@keyframes ljster{0%,100%{opacity:0} 45%,55%{opacity:1}}
+@keyframes ljadem{0%,100%{opacity:.15} 50%{opacity:.65}}
+@keyframes ljglans{0%{transform:rotate(-40deg); opacity:0} 8%{opacity:1} 52%{opacity:1} 62%{transform:rotate(320deg); opacity:0} 100%{transform:rotate(320deg); opacity:0}}
+@keyframes ljfonkel{0%,50%{transform:scale(0) rotate(0); opacity:0} 58%{transform:scale(1) rotate(45deg); opacity:1} 70%{transform:scale(0) rotate(90deg); opacity:0} 100%{opacity:0}}
 svg .lj-draai, svg .lj-glans{transform-origin:50px 50px; will-change:transform}
 svg .lj-draai{animation:ljdraai 18s linear infinite}
 svg .lj-traag{animation-duration:40s}
-svg .lj-terug{animation:ljterug 11s linear infinite}
+svg .lj-n1{animation-duration:22s}
+svg .lj-n3{animation-duration:31s}
+svg .lj-terug{animation:ljterug 13s linear infinite}
+svg .lj-zweef{animation:ljzweef 5.2s cubic-bezier(.45,0,.55,1) infinite; animation-delay:var(--d,0s)}
+svg .lj-halo{transform-box:fill-box; transform-origin:center; animation:ljhalo 3.4s cubic-bezier(.45,0,.55,1) infinite; animation-delay:var(--d,0s)}
+svg .lj-ster{animation:ljster 2.8s ease-in-out infinite; animation-delay:var(--d,0s)}
 svg .lj-adem{animation:ljadem 4.5s cubic-bezier(.45,0,.55,1) infinite}
-svg .lj-glans{animation:ljglans 7s cubic-bezier(.65,0,.35,1) infinite}
-svg .lj-flits{animation:ljflits 3.6s cubic-bezier(.45,0,.55,1) infinite; animation-delay:var(--d,0s)}
-svg .lj-halo{transform-box:fill-box; transform-origin:center; animation:ljhalo 3.6s cubic-bezier(.45,0,.55,1) infinite; animation-delay:inherit}
-@media (prefers-reduced-motion:reduce){ svg .lj-draai, svg .lj-flits, svg .lj-halo, svg .lj-adem, svg .lj-glans{animation:none} svg .lj-glans{opacity:0} }
+svg .lj-adem2{animation-duration:6.5s; animation-delay:-2s}
+svg .lj-glans{animation:ljglans 3.6s cubic-bezier(.65,0,.35,1) infinite}
+svg .lj-fonkel{transform-box:fill-box; transform-origin:center; animation:ljfonkel 3.6s cubic-bezier(.65,0,.35,1) infinite}
+@media (prefers-reduced-motion:reduce){ svg .lj-draai, svg .lj-zweef, svg .lj-halo, svg .lj-ster, svg .lj-adem, svg .lj-glans, svg .lj-fonkel{animation:none} svg .lj-glans, svg .lj-fonkel{opacity:0} svg .lj-ster{opacity:.6} }
 .pfopt.prestige{box-shadow:0 0 0 1.5px #d4a72c inset; background:linear-gradient(160deg,#fffaf0,#fdf1d3)}
 .pfopt.prestige .ps{color:#8a6416; font-weight:700}
 .pfopt.prestige{padding-top:22px}
