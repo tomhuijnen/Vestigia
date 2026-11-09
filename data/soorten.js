@@ -1926,5 +1926,31 @@ const SPECIES = [
 { id:"kleine-vos", no:null, g:"V", n:"Kleine vos", s:"Aglais urticae", r:"NB", l:5, zz:null, twin:null,
   h:["HALF","BEB","OPEN"], a:["DAG"], v:["PLANT"], b:["VEG"], w:["SLAAP"] },
 { id:"groot-avondrood", no:null, g:"V", n:"Groot avondrood", s:"Deilephila elpenor", r:"NB", l:6, zz:null, twin:null,
-  h:["HALF","STROOM","BEB"], a:["SCHEMER","NACHT"], v:["PLANT"], b:["VEG","GROND"], w:["SLAAP"] }
+  h:["HALF","STROOM","BEB"], a:["SCHEMER","NACHT"], v:["PLANT"], b:["VEG","GROND"], w:["SLAAP"] },
+{ id:"grote-weerschijnvlinder", no:143, g:"V", n:"Grote weerschijnvlinder", s:"Apatura iris", r:"BAL", l:6.5, zz:"Z", twin:null,
+  h:["BOS"], a:["DAG"], v:["PLANT","ONG"], b:["BOOM"], w:["SLAAP"],
+  x:"kleine-ijsvogelvlinder",
+  t:"De kleine ijsvogelvlinder is kleiner, zwart met een witte band maar zonder paarse glans en zonder oogvlek op de achtervleugel, en zweeft laag langs bosranden met kamperfoelie. Deze soort glanst (bij het mannetje) paars en heeft een oranje omrande oogvlek op de achtervleugel.",
+  cs:[
+    { bron:"De Vlinderstichting, De dagvlinders van Nederland (grote weerschijnvlinder)", wn:[
+      "Veluwezoom, juli. Een warme, windstille ochtend.",
+      "Een oud loofbos met open plekken, brede lanen en veel boswilg langs de randen.",
+      "De bovenste takken van een vrijstaande eik waar mannetjes elkaar achternazitten, en een boswilg aan een beschaduwde bosrand.",
+      "Een grote vlinder die op het pad zit te likken aan een uitwerpsel en een plasje; een stinkend stukje kaas lokt hem naar beneden.",
+      "Spanwijdte zo'n 6,5 cm; bruinzwart met een witte band, in het licht paars glanzend, met een oogvlek op de achtervleugel."
+    ] }
+  ] },
+{ id:"kleine-ijsvogelvlinder", no:144, g:"V", n:"Kleine ijsvogelvlinder", s:"Limenitis camilla", r:"BAL", l:5.5, zz:"MA", twin:null,
+  h:["BOS","HALF"], a:["DAG"], v:["PLANT"], b:["VEG"], w:["SLAAP"],
+  x:"grote-weerschijnvlinder",
+  t:"De grote weerschijnvlinder is groter, glanst (bij het mannetje) paars en heeft een oogvlek op de achtervleugel; hij vliegt vooral hoog in de boomkruinen. Deze soort zweeft laag en sierlijk langs schaduwrijke bosranden en zet eitjes af op kamperfoelie.",
+  cs:[
+    { bron:"De Vlinderstichting, De dagvlinders van Nederland (kleine ijsvogelvlinder)", wn:[
+      "Twente, juni. Een zonnige middag na een regenbui.",
+      "Een vochtig, half beschaduwd bos met eiken en berken en brede, open paden.",
+      "Wilde kamperfoelie die in slingers over de struiken langs de bosrand hangt.",
+      "Een zwarte vlinder die afwisselend klappert en lang zweeft, steeds rond dezelfde zonnige plek; in de winter een opgerold blaadje met een rupsje op een kamperfoelietakje.",
+      "Spanwijdte zo'n 5,5 cm; bovenkant zwart met een witte vlekkenband, onderkant oranjebruin met wit en zwarte stippen."
+    ] }
+  ] }
 ];
