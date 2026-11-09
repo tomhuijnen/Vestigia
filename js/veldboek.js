@@ -144,11 +144,18 @@ function showAwards(list){ awardQueue = list.slice(); nextAward(); }
 function nextAward(){
   const k = awardQueue.shift();
   if (!k){ $("awardPop").hidden = true; return; }
-  let badge, kind, name, text;
+  let badge, kind, name, text, extra = "";
   if (k.startsWith("M:")){
     const t = BY_ID.get(k.slice(2));
     badge = medal(true, dexNo(t.id)); kind = "Nieuwe medaille"; name = t.n;
     text = `Je hebt de ${esc(t.n.toLowerCase())} (<i>${esc(t.s)}</i>) gedetermineerd, een van de ${telwoord(medalSpecies(store.get()).length)} lastigste soorten van Vestigia. De medaille hangt nu in je ${NAAM.vestiarium}.`;
+    /* bij elke medaillesoort hoort een avatar die je alleen zo kunt krijgen (niet te koop) */
+    if (typeof AVATARS !== "undefined" && AVATARS[t.id]){
+      const metNaam = online.enabled && online.player();
+      extra = `<div class="awardavatar">${avatarSVG({ avatar: t.id }, "avatar")}<p><b>Nieuwe avatar vrijgespeeld:</b> de ${esc(t.n.toLowerCase())}. ${metNaam
+        ? `Je vindt hem in <button class="linklike" id="awardProf">Mijn profiel</button>.`
+        : `Kies een spelersnaam om hem te gebruiken in de ranglijst.`}</p></div>`;
+    }
   } else if (k === "T:ALL"){
     badge = rosette("#2f3b40", true, TARGETS.length); kind = "Eindtitel"; name = TITLE_ALL;
     text = `Alle ${TARGETS.length} soorten staan in je ${NAAM.vestiarium}. Een groter compliment heeft Vestigia niet.`;
@@ -161,13 +168,14 @@ function nextAward(){
   const conf = Array.from({length:26}, (_, i) => `<i style="left:${(i*37)%100}%; background:${colors[i % colors.length]}; animation-delay:${(i%9)*0.07}s; transform:rotate(${i*23}deg)"></i>`).join("");
   $("awardSheet").innerHTML = `<div class="confetti" aria-hidden="true">${conf}</div>
     <span class="kind">${kind}</span><div class="badge">${badge}</div>
-    <h2 id="awardH">Gefeliciteerd!</h2><p class="nm">${esc(name)}</p><p>${text}</p>
+    <h2 id="awardH">Gefeliciteerd!</h2><p class="nm">${esc(name)}</p><p>${text}</p>${extra}
     <div class="actions"><button class="btn" id="awardNext">${awardQueue.length ? "Volgende" : "Verder spelen"}</button><button class="btn line" id="awardDex">Bekijk ${NAAM.vestiarium}</button></div>
     ${awardQueue.length ? `<span class="queue">Nog ${awardQueue.length} andere trofee${awardQueue.length > 1 ? "ën" : ""}</span>` : ""}`;
   $("awardPop").hidden = false;
   $("awardNext").focus();
   $("awardNext").onclick = nextAward;
   $("awardDex").onclick = () => { awardQueue = []; $("awardPop").hidden = true; showDex(); };
+  if ($("awardProf")) $("awardProf").onclick = () => { awardQueue = []; $("awardPop").hidden = true; showProfiel(); };
 }
 $("awardPop").addEventListener("click", e => { if (e.target === $("awardPop")) nextAward(); });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("awardPop").hidden){ awardQueue = []; $("awardPop").hidden = true; } });

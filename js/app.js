@@ -102,8 +102,11 @@ if ("serviceWorker" in navigator && (location.protocol === "https:" || location.
       });
     });
   }).catch(() => {});
+  /* Alleen herladen bij een update. Bij het allereerste bezoek neemt de service worker de pagina ook over
+     (controllerchange), maar dan is er niets te vernieuwen; herladen brak toen de openingsanimatie af. */
+  const hadController = !!navigator.serviceWorker.controller;
   let reloaded = false;
-  navigator.serviceWorker.addEventListener("controllerchange", () => { if (!reloaded){ reloaded = true; location.reload(); } });
+  navigator.serviceWorker.addEventListener("controllerchange", () => { if (hadController && !reloaded){ reloaded = true; location.reload(); } });
 }
 
 start();

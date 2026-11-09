@@ -19,16 +19,17 @@ const Opening = (() => {
     for (let i = vrij.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [vrij[i], vrij[j]] = [vrij[j], vrij[i]]; }
     return vrij.slice(0, n);
   }
-  /* Zoveel prenten dat het spoor ruim de diagonaal van het scherm beslaat: het dier loopt het beeld in en weer uit. */
+  /* Zoveel prenten dat het spoor ruim de diagonaal van het scherm beslaat: het dier loopt het beeld in en weer uit.
+     Geen vaste grens van 24 prenten meer: bij de das (twee prenten per stap) hield het spoor op een laptop halverwege op. */
   function spoor(id, u){
     const diag = Math.hypot(innerWidth, innerHeight) * 1.05;
     let n = 2, pts = spoorPatroon(id, n);
-    while (n < 24){
+    while (n < 40){
       const ys = pts.map(p => p.y);
       if ((Math.max(...ys) - Math.min(...ys)) * u >= diag) break;
       n++; pts = spoorPatroon(id, n);
     }
-    return pts.slice(0, 24).sort((a, b) => b.y - a.y);     // van achter naar voor: zo verschijnen ze
+    return pts.sort((a, b) => b.y - a.y);     // van achter naar voor: zo verschijnen ze
   }
   /* Drie looprichtingen die elkaar niet in het midden kruisen: links, midden en rechts, elk schuin omhoog. */
   const BANEN = [
@@ -41,12 +42,12 @@ const Opening = (() => {
     return new Promise(resolve => {
       const el = $("opening");
       if (!el || document.documentElement.classList.contains("geen-opening")){ if (el) el.remove(); resolve(); return; }
-      try { sessionStorage.setItem(KEY, "1"); } catch(e){}
       const timers = [];
       let klaar = false;
       const later = (ms, fn) => timers.push(setTimeout(fn, ms));
       function einde(snel){
         if (klaar) return; klaar = true;
+        try { sessionStorage.setItem(KEY, "1"); } catch(e){}      // pas als hij echt klaar is: zo blijft hij na een herlaad niet weg
         timers.forEach(clearTimeout);
         el.style.transition = `opacity ${snel ? 0.15 : 0.35}s ease`;
         el.classList.add("weg");
