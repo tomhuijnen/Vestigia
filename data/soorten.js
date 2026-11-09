@@ -2177,7 +2177,7 @@ const SPECIES = [
       "Een paar dat samen een buizerd wegjaagt; een schor, herhaald ‘kraa’.",
       "Geheel zwart met een zware snavel waarvan de basis is bevederd."
     ] },
-    { bron:"Vogelbescherming, vogelgids zwarte kraai", sl:{ i:4, t:"Een bevederde snavelbasis en een recht afgesneden staart: de raaf heeft een wigvormige staart." }, wn:[
+    { bron:"Vogelbescherming, vogelgids zwarte kraai", sl:{ i:4, t:"Een bevederde snavelbasis en een recht afgesneden staart: de raaf is veel groter, zo groot als een buizerd, en heeft een wigvormige staart." }, wn:[
       "Den Bosch, april. Een zonnige ochtend.",
       "Een woonwijk met plantsoenen en grasvelden.",
       "Een nest hoog in een plataan.",
@@ -2688,10 +2688,10 @@ const SPECIES = [
       "Klein en grijsbruin met een opvallende oogring; witte vlekken aan de zijkanten van een zwarte staart."
     ] },
     { bron:"Vogelbescherming, vogelgids kleine vliegenvanger", sl:{ i:4, t:"Een oranjerode keel en een zwart-witte staart." }, wn:[
-      "Veluwe, mei. Een warme dag.",
-      "Een oud beukenbos met weinig ondergroei.",
-      "Hoog in de kruinen.",
-      "Een zingend mannetje met een helder, dalend liedje.",
+      "Westkapelle, eind mei. Na een warme nacht met oostenwind.",
+      "Een zeedijk met een klein bosje van populieren en vlier.",
+      "Het bladerdak van het bosje, vlak achter de dijk.",
+      "Iets kleins en beweeglijks vangt insecten in de kruin en laat af en toe een helder, dalend liedje horen; de volgende dag is het doorgetrokken.",
       "Een man met een oranjerode keel, grijze kop en zwart-witte staart."
     ] }
   ] },
@@ -2747,12 +2747,12 @@ const SPECIES = [
       "Een diep, galmend ‘krok-krok’; twee vogels die samen duikelen en op de rug draaien in de lucht.",
       "Geheel zwart, groot als een buizerd, met een zware snavel, ruige keel en wigvormige staart."
     ] },
-    { bron:"Vogelbescherming, vogelgids raaf", sl:{ i:4, t:"Een wigvormige staart: de zwarte kraai heeft een rechte staart." }, wn:[
+    { bron:"Vogelbescherming, vogelgids raaf", sl:{ i:4, t:"Zo groot als een buizerd met een wigvormige staart: de zwarte kraai is een stuk kleiner en heeft een recht afgesneden staart." }, wn:[
       "Veluwe, september. Een koele dag.",
       "Een groot bos.",
       "Een kadaver van een edelhert.",
       "Een groep grote zwarte vogels eet; een diep 'krok' ver hoorbaar.",
-      "Groot en zwart, met een wigvormige staart."
+      "Zo groot als een buizerd, zwart, met een zware snavel en een wigvormige staart."
     ] }
   ] },
 { id:"ruigpootuil", no:135, g:"B", n:"Ruigpootuil", s:"Aegolius funereus", r:"VR", l:25, zz:"ZZ", twin:null,
