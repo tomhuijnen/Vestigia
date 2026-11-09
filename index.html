@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Karla:ital,wght@0,400;0,500;0,700;1,400&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/vestigia.css?v=202611091439">
+<link rel="stylesheet" href="css/vestigia.css?v=202611091453">
 </head>
 <body>
 <!-- openingsanimatie: staat meteen in beeld (geen witte flits), en is in dezelfde sessie al gezien → niet tonen -->
@@ -54,6 +54,7 @@
     <p><b>Bewaar je spelerscode.</b> Daarmee speel je verder op een ander apparaat, of haal je je voortgang terug als je browsergegevens gewist zijn. Je vindt hem altijd in Mijn profiel.</p>
     <div class="actions"><button class="btn" id="codeTipCopy">Kopieer spelerscode</button><button class="linklike" id="codeTipLater">Later</button><span class="msg" id="codeTipMsg"></span></div>
   </div>
+  <section class="veldweek" id="veldweekBalk" hidden aria-live="polite"></section>
   <details class="oefenkader" id="oefenKader" hidden></details>
   <main class="layout">
     <div class="modebar">
@@ -176,6 +177,10 @@
       <h3 id="dexPrestH">Prestaties</h3>
       <div class="prlist" id="dexPrestList"></div>
     </section>
+    <section class="veldweken" id="dexVeldweken" hidden aria-labelledby="dexVwH">
+      <h3 id="dexVwH">Veldweken</h3>
+      <div id="vwBody"></div>
+    </section>
     <section class="fouten" id="dexFouten" aria-labelledby="dexFoutenH">
       <h3 id="dexFoutenH">Vaakst verward</h3>
       <div id="foutenBody"></div>
@@ -291,6 +296,8 @@
     <p>Elke soort die je goed determineert (in welke modus dan ook) komt als genummerde plaat in je <span data-naam="vestiarium">Vestiarium</span>, met je beste score. Je voortgang wordt in deze browser bewaard, en met een spelersnaam ook online.</p>
     <h3>Trofeeën</h3>
     <p>Heb je alle soorten van een diergroep gedetermineerd, dan verdien je de titel van die groep. Met alle <span data-tel="doelsoorten">100</span> soorten word je Veldheer van Vestigia. De <span data-tel="medailles">vijf</span> meest zeldzame soorten leveren een medaille op; welke dat zijn, zie je pas als je ze hebt gevonden.</p>
+    <h3>Veldweek</h3>
+    <p>Eén keer per maand, in de eerste volledige week (maandag tot en met zondag), hebben alle dagcasussen één thema, zoals ‘Nachtdieren’ of ‘Langs de waterkant’. Twee dagen vooraf zie je dat er een veldweek aankomt; het thema zie je pas op maandag. Elke gespeelde dagcasus levert een stempel op. Alle zeven: +25 eikels, vijf of zes: +10. De puntentelling voor de ranglijst verandert niet.</p>
     <h3>Ranglijst</h3>
     <p>Met een spelersnaam doe je mee aan de ranglijst. Alleen je eerste poging aan de dagcasus telt: 5 punten in één poging, 1 punt bij de vijfde. In de expertmodus krijg je 6 punten als je na één waarneming goed zit. Klassiek en expert hebben dezelfde casus; daarom telt alleen de modus die je die dag als eerste speelt.</p>
     <h3>Installeren</h3>
@@ -330,22 +337,23 @@
 </div>
 
 <script src="config.js"></script>
-<script src="data/teksten.js?v=202611091439"></script>
-<script src="data/soorten.js?v=202611091439"></script>
-<script src="data/sporen.js?v=202611091439"></script>
-<script src="data/dagschema.js?v=202611091439"></script>
-<script src="js/kern.js?v=202611091439"></script>
-<script src="js/spel.js?v=202611091439"></script>
-<script src="js/veldboek.js?v=202611091439"></script>
-<script src="js/melden.js?v=202611091439"></script>
-<script src="js/kop.js?v=202611091439"></script>
-<script src="js/spelen.js?v=202611091439"></script>
-<script src="js/opening.js?v=202611091439"></script>
-<script src="js/uitleg.js?v=202611091439"></script>
-<script src="js/online.js?v=202611091439"></script>
-<script src="js/league.js?v=202611091439"></script>
-<script src="data/avatars.js?v=202611091439"></script>
-<script src="js/profiel.js?v=202611091439"></script>
-<script src="js/app.js?v=202611091439"></script>
+<script src="data/teksten.js?v=202611091453"></script>
+<script src="data/soorten.js?v=202611091453"></script>
+<script src="data/sporen.js?v=202611091453"></script>
+<script src="data/dagschema.js?v=202611091453"></script>
+<script src="data/veldweken.js?v=202611091453"></script>
+<script src="js/kern.js?v=202611091453"></script>
+<script src="js/spel.js?v=202611091453"></script>
+<script src="js/veldboek.js?v=202611091453"></script>
+<script src="js/melden.js?v=202611091453"></script>
+<script src="js/kop.js?v=202611091453"></script>
+<script src="js/spelen.js?v=202611091453"></script>
+<script src="js/opening.js?v=202611091453"></script>
+<script src="js/uitleg.js?v=202611091453"></script>
+<script src="js/online.js?v=202611091453"></script>
+<script src="js/league.js?v=202611091453"></script>
+<script src="data/avatars.js?v=202611091453"></script>
+<script src="js/profiel.js?v=202611091453"></script>
+<script src="js/app.js?v=202611091453"></script>
 </body>
 </html>

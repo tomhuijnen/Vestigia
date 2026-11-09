@@ -219,9 +219,20 @@ function renderFouten(st){
     ${ids.length ? `<button class="btn line" id="oefenFouten">Oefen deze ${ids.length} soorten</button>` : ""}`;
   if ($("oefenFouten")) $("oefenFouten").onclick = () => startFree({ g: null, nieuw: false, ids });
 }
+/* stempelkaarten van alle veldweken tot nu toe, nieuwste eerst */
+function renderVeldweken(st){
+  const sec = $("dexVeldweken"); if (!sec) return;
+  const vandaag = todayIndex(), weken = [];
+  for (let d = VELDWEEK_VANAF; d <= vandaag; d++){ const v = veldweek(d); if (v && v.start === d) weken.push(v); }
+  sec.hidden = !weken.length;
+  if (!weken.length) return;
+  const fmt = new Intl.DateTimeFormat("nl-NL", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+  $("vwBody").innerHTML = `<ul class="vwlijst">${weken.reverse().map(v => { const k = stempelkaart(st, v);
+    return `<li class="${k.n === 7 ? "compleet" : ""}"><div><b>${esc(v.titel)}</b><span class="fine">week van ${fmt.format(new Date(START + v.start * DAY))}${k.n === 7 ? " · compleet" : ` · ${k.n} van 7`}</span></div>${k.html}</li>`; }).join("")}</ul>`;
+}
 function renderDex(){
   const st = store.get(), dex = st.dex || {};
-  renderFouten(st);
+  renderFouten(st); renderVeldweken(st);
   const found = DEX.filter(t => dex[t.id] && dex[t.id].w > 0).length;
   $("dexCount").innerHTML = `${found}<small>van ${DEX.length} gedetermineerd</small>`;
   renderTrophies(st);

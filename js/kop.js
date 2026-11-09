@@ -47,10 +47,14 @@ function weekStartDay(i){ const dow = (new Date(START + i * DAY).getUTCDay() + 6
 /* dagen op rij waarop je de dagcasus speelde (klassiek of expert); vandaag telt mee zodra je hem gespeeld hebt */
 /* Reeks: dagen waarop je de dagcasus afrondde. Uit de spellen op dit apparaat én uit het logboek, dat met je andere
    apparaten wordt samengevoegd. Alleen de spellen was niet genoeg: van andere apparaten komen alleen gisteren en vandaag mee. */
-function playStreak(st){
+function speeldagen(st){
   const days = new Set(Object.entries(st.games || {}).filter(([, g]) => g && g.status !== "playing").map(([k]) => +(k.match(/^d(\d+)/) || [, -1])[1]));
   for (const e of st.log || []) if (e && e.m === "daily" && Number.isInteger(e.d) && e.d >= 0) days.add(e.d);
   days.delete(-1);
+  return days;
+}
+function playStreak(st){
+  const days = speeldagen(st);
   const today = todayIndex();
   let cur = 0;
   for (let i = days.has(today) ? today : today - 1; days.has(i); i--) cur++;
@@ -137,7 +141,44 @@ function renderKop(){
     if (!dicht && k) k.remove();
     dicht ? b.setAttribute("aria-label", `${expert ? "Expert" : "Klassiek"}: vandaag op slot`) : b.removeAttribute("aria-label");
   }
+  renderVeldweek(st, daily ? S.caseNo - 1 : i, daily);
   renderTiles(); renderMenu();
+}
+
+/* ---------- veldweek: aankondiging (2 dagen vooraf, zonder thema), thema en stempelkaart ---------- */
+const STEMPEL = `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><g fill="currentColor"><ellipse cx="12" cy="15.5" rx="4.6" ry="3.9"/><ellipse cx="6" cy="10" rx="1.9" ry="2.4"/><ellipse cx="9.6" cy="6.6" rx="1.9" ry="2.5"/><ellipse cx="14.4" cy="6.6" rx="1.9" ry="2.5"/><ellipse cx="18" cy="10" rx="1.9" ry="2.4"/></g></svg>`;
+function stempelkaart(st, vw){
+  const dagen = speeldagen(st), vandaag = todayIndex();
+  let n = 0;
+  const vakjes = Array.from({ length: 7 }, (_, j) => {
+    const d = vw.start + j, ok = dagen.has(d); if (ok) n++;
+    const dagnaam = new Intl.DateTimeFormat("nl-NL", { weekday: "short", timeZone: "UTC" }).format(new Date(START + d * DAY));
+    return `<li class="${ok ? "ok" : d < vandaag ? "gemist" : d === vandaag ? "nu" : ""}" title="${dagnaam}">${ok ? STEMPEL : `<span>${esc(dagnaam)}</span>`}</li>`;
+  }).join("");
+  return { n, html: `<ol class="stempels" aria-label="${n} van 7 dagen gespeeld">${vakjes}</ol>` };
+}
+let veldweekOpen = null;
+function renderVeldweek(st, d, daily){
+  const el = $("veldweekBalk"); if (!el) return;
+  const vw = daily ? veldweek(d) : null, op = daily && !vw ? veldweekOpkomst(todayIndex()) : null;
+  if (!vw && op === null){ el.hidden = true; el.innerHTML = ""; return; }
+  el.hidden = false;
+  if (!vw){
+    const over = op - todayIndex(), dagnaam = new Intl.DateTimeFormat("nl-NL", { weekday: "long", timeZone: "UTC" }).format(new Date(START + op * DAY));
+    el.className = "veldweek binnenkort";
+    el.innerHTML = `<span class="caps">Binnenkort</span><p><b>${over === 1 ? "Morgen" : "Over twee dagen"} begint een veldweek.</b> Zeven dagen lang hebben alle dagcasussen één thema. Welk thema? Dat zie je ${over === 1 ? "morgen" : dagnaam}.</p>`;
+    return;
+  }
+  /* de uitleg staat open zolang je deze veldweek voor het eerst ziet (tot je de app opnieuw opent) */
+  let gezien = null; try { gezien = localStorage.getItem("vestigia:veldweek"); } catch(e){}
+  if (gezien !== String(vw.start)){ veldweekOpen = vw.start; try { localStorage.setItem("vestigia:veldweek", String(vw.start)); } catch(e){} }
+  const nieuw = veldweekOpen === vw.start;
+  const k = stempelkaart(st, vw);
+  el.className = "veldweek";
+  el.innerHTML = `<div class="vwkop"><span class="caps">Veldweek · dag ${vw.dag + 1} van 7</span><h3>${esc(vw.titel)}</h3></div>
+    ${k.html}
+    <details class="vwintro"${nieuw ? " open" : ""}><summary>Over deze veldweek</summary><p>${esc(vw.intro)}</p>
+      <p class="fine">Speel alle zeven dagcasussen van deze week voor +25 eikels (5 of 6 dagen: +10). Gespeeld telt; je hoeft ze niet allemaal te vinden. Je stempelkaart komt in je ${NAAM.vestiarium}.</p></details>`;
 }
 
 /* ---------- venster: klassiek of expert ---------- */

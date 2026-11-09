@@ -699,3 +699,21 @@ body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
 .foutlijst .keer{font-size:.82rem; color:var(--ink-2); white-space:nowrap}
 
 .helpuitleg{display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; margin:0 0 6px}
+
+/* veldweek */
+.veldweek{background:var(--leaf); border:1px solid var(--rule); border-left:5px solid var(--moss); border-radius:10px; padding:14px 18px; margin:0 0 18px; display:grid; gap:10px}
+.veldweek.binnenkort{border-left-color:var(--ochre)}
+.veldweek p{margin:0}
+.veldweek .vwkop h3{font-family:var(--display); font-weight:700; font-size:1.35rem; margin:2px 0 0; color:var(--green-d)}
+.veldweek .vwintro summary{cursor:pointer; color:var(--green-d); font-weight:600}
+.veldweek .vwintro p{margin-top:6px}
+.stempels{list-style:none; margin:0; padding:0; display:flex; gap:6px; flex-wrap:wrap}
+.stempels li{width:38px; height:38px; border-radius:50%; border:1.5px dashed var(--rule); display:grid; place-items:center; font-size:.68rem; color:var(--ink-2); text-transform:lowercase; background:#fff}
+.stempels li.ok{border:2px solid var(--moss); color:var(--green-d); background:var(--mint); transform:rotate(-8deg)}
+.stempels li.nu{border-color:var(--green); border-style:solid}
+.stempels li.gemist{opacity:.45}
+.vwresult{display:grid; gap:8px}
+.vwlijst{list-style:none; margin:0; padding:0; display:grid; gap:10px}
+.vwlijst > li{display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px 16px; padding:10px 12px; border:1px solid var(--rule); border-radius:10px; background:#fff}
+.vwlijst > li > div{display:grid; gap:2px}
+.vwlijst > li.compleet{border-color:var(--moss); background:var(--leaf)}

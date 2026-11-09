@@ -154,7 +154,7 @@ const Profiel = (() => {
   let tab = "avatar", shopTab = "avatar";
   const TABS = [["avatar", "Avatar"], ["titel", "Ondertitel"], ["lijst", "Lijst"], ["kleur", "Kleur"]];
   const VELD = { avatar: "avatar", titel: "subtitle", lijst: "frame", kleur: "color" };
-  const OPBOUW = [["dagcasus", "Dagcasussen"], ["reeksen", "Reeksen van 7 dagen"], ["platen", `Platen in het ${NAAM.vestiarium}`],
+  const OPBOUW = [["dagcasus", "Dagcasussen"], ["reeksen", "Reeksen van 7 dagen"], ["veldweken", "Veldweken"], ["platen", `Platen in het ${NAAM.vestiarium}`],
                   ["trofeeen", "Titels en medailles"], ["uitnodigingen", "Uitgenodigde spelers"], ["prestaties", "Prestaties"], ["minispellen", "Minispellen"]];
   const zonderNaam = (body, wat) => {
     body.innerHTML = `<div class="playerbox"><p><b>Kies eerst een spelersnaam.</b> ${wat}</p>
