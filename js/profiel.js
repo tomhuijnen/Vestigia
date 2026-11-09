@@ -170,7 +170,7 @@ const Profiel = (() => {
   }
   /* een keuzeknop; staat: "aan" (in gebruik), "" (kiezen), "koop" (te koop), "heb" (in bezit, in de shop), "dicht" (te verdienen) */
   const knop = (waarde, inhoud, label, staat, item) => `<button class="pfopt${staat === "aan" ? " aan" : ""}${staat === "dicht" ? " dicht" : ""}" data-v="${esc(waarde)}"${item ? ` data-item="${esc(item.item)}" data-prijs="${item.price}"` : ""}${staat === "dicht" ? " disabled" : ""}>
-      ${inhoud}<span class="pl">${esc(label)}</span><span class="ps">${staat === "aan" ? "in gebruik" : staat === "koop" ? `${EIKEL} ${item.price}` : staat === "heb" ? "in bezit" : staat === "dicht" ? "te verdienen" : ""}</span></button>`;
+      ${inhoud}<span class="pl">${esc(label)}</span><span class="ps">${staat === "aan" ? "in gebruik" : staat === "koop" ? `${EIKEL} ${item.price}` : staat === "heb" ? "in bezit" : staat === "gratis" ? "gratis" : staat === "dicht" ? "te verdienen" : ""}</span></button>`;
   const heeft = (own, i) => own.has(i.item) || (i.price === 0 && i.for_sale);
   const waardeVan = i => i.item.slice(i.item.indexOf(":") + 1);
   const voorbeeld = (soort, v) => { const me = mijn(); return soort === "titel" ? "" : avatarSVG(Object.assign({}, me, { [VELD[soort]]: v }), "avatar mid"); };
@@ -249,11 +249,13 @@ const Profiel = (() => {
     $("shopTabs").querySelectorAll(".chipbtn").forEach(b => b.onclick = () => { shopTab = b.dataset.t; tekenShop(); });
     $("shopOpties").querySelectorAll("button.pfopt:not(.dicht)").forEach(b => b.onclick = () => koop(b));
   }
-  /* te koop (goedkoop naar duur), dan wat je al hebt, dan wat je alleen kunt verdienen */
+  /* gratis (voor iedereen, kost geen eikels), te koop (goedkoop naar duur), dan wat je al hebt, dan wat je alleen kunt verdienen */
   function shopOpties(){
     const me = mijn(), own = bezit(), items = (winkel || []).filter(i => i.kind === shopTab && i.price > 0);
+    const gratis = (winkel || []).filter(i => i.kind === shopTab && i.price === 0 && i.for_sale);
     const koopbaar = items.filter(i => i.for_sale && !own.has(i.item)), gekocht = items.filter(i => own.has(i.item));
-    let html = koopbaar.map(i => knop(waardeVan(i), voorbeeld(shopTab, waardeVan(i)), i.label, "koop", i)).join("")
+    let html = gratis.map(i => knop(waardeVan(i), voorbeeld(shopTab, waardeVan(i)), i.label, me[VELD[shopTab]] === waardeVan(i) ? "aan" : "gratis", i)).join("")
+             + koopbaar.map(i => knop(waardeVan(i), voorbeeld(shopTab, waardeVan(i)), i.label, "koop", i)).join("")
              + gekocht.map(i => knop(waardeVan(i), voorbeeld(shopTab, waardeVan(i)), i.label, me[VELD[shopTab]] === waardeVan(i) ? "aan" : "heb", i)).join("");
     if (!koopbaar.length) html = `<p class="fine pfnoot">Je hebt alles uit deze rij al.</p>` + html;
     if (shopTab === "avatar"){
@@ -272,7 +274,7 @@ const Profiel = (() => {
   /* kopen gaat in twee tikken; daarna is het meteen in gebruik. Iets wat je al hebt, zet je met één tik in gebruik. */
   async function koop(b){
     const item = b.dataset.item, prijs = +b.dataset.prijs || 0, w = wallet() || { saldo: 0 }, msg = $("shopMsg");
-    if (bezit().has(item)) return kies(shopTab, b.dataset.v || null, msg);
+    if (prijs === 0 || bezit().has(item)) return kies(shopTab, b.dataset.v || null, msg);     // gratis of al in bezit: meteen gebruiken
     if (w.saldo < prijs){ msg.textContent = `Je hebt nog ${prijs - w.saldo} eikels nodig.`; return; }
     if (!b.dataset.zeker){ b.dataset.zeker = "1"; b.querySelector(".ps").textContent = `kopen voor ${prijs}?`; setTimeout(() => { if (b.isConnected){ delete b.dataset.zeker; b.querySelector(".ps").innerHTML = `${EIKEL} ${prijs}`; } }, 4000); return; }
     b.disabled = true; msg.textContent = "Even geduld…";
