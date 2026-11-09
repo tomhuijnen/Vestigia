@@ -928,12 +928,19 @@ const SPECIES = [
   x:"levendbarende-hagedis",
   t:"De levendbarende hagedis is slanker en bruiner, heeft geen witte oogvlekjes, en mannetjes hebben een oranje buik in plaats van groene flanken. Hij legt geen eieren.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Groene flanken en rijen witte oogvlekjes over de rug: een mannetje in paarkleed." }, bron:null, wn:[
       "Drenthe, eind mei.",
       "Droge heide op zandgrond met struikhei en vliegdennen.",
       "Zuidgerichte randen met kale, open zandplekken.",
       "Kleine, schuine gangetjes in het zand en in juni gegraven kuiltjes.",
       "Groene flanken en rijen witte vlekjes over de rug."
+    ] },
+    { bron:"RAVON, soortpagina zandhagedis", sl:{ i:4, t:"Een gedrongen bouw met oogvlekken (donker met witte kern): de levendbarende hagedis is slanker en heeft die niet." }, wn:[
+      "Kennemerduinen, eind augustus. Een warme middag.",
+      "Open duinen met helm, duinroosje en duindoorn.",
+      "Een zonnige, zandige helling op het zuiden met konijnenholen.",
+      "Tientallen piepkleine, net uit het ei gekropen jongen schieten tussen de helmpollen weg.",
+      "Gedrongen, met een korte kop en rijen donkere vlekken met een witte kern over rug en flanken."
     ] }
   ] },
 { id:"gladde-slang", no:46, g:"R", n:"Gladde slang", s:"Coronella austriaca", r:"HR", l:60, zz:null, twin:null,
@@ -941,12 +948,19 @@ const SPECIES = [
   x:"adder",
   t:"De adder heeft een doorlopende zigzagband, een verticale spleetpupil en gekielde schubben.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Een vervellingshuid met gladde schubben: de adder heeft gekielde schubben." }, bron:null, wn:[
       "Veluwe, september.",
       "Heide met struikhei en pijpenstrootje.",
       "Een structuurrijke overgang van heide naar bos, met veel hagedissen.",
       "Een vervellingshuid met gladde, niet gekielde schubben.",
       "Ronde pupil en een donkere streep door het oog."
+    ] },
+    { bron:"RAVON, soortpagina gladde slang", sl:{ i:4, t:"Een donkere kopvlek en rijen losse vlekjes in plaats van een zigzagband, met een ronde pupil." }, wn:[
+      "Noord-Brabant, mei. Een zonnige ochtend na een koude nacht.",
+      "Een heideterrein met vliegdennen, braam en hier en daar een houtwal.",
+      "Onder een golfplaat die monitoringsvrijwilligers hebben neergelegd.",
+      "Een dier dat zich stevig om je hand wikkelt en fel bijt, maar zonder gevolgen.",
+      "Grijsbruin, met een donkere vlek op het achterhoofd, twee rijen kleine vlekjes over de rug en een ronde pupil."
     ] }
   ] },
 { id:"adder", no:47, g:"R", n:"Adder", s:"Vipera berus", r:"BAL", l:60, zz:null, twin:null,
@@ -954,12 +968,19 @@ const SPECIES = [
   x:"gladde-slang",
   t:"De gladde slang heeft geen doorlopende zigzagband, maar een ronde pupil, gladde schubben en een donkere streep door het oog.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Een verticale spleetpupil en een doorlopende zigzagband over de rug." }, bron:null, wn:[
       "Dwingelderveld, maart.",
       "Natte en droge heide met pijpenstrootje en dennenopslag.",
       "Een beschutte zuidrand die vroeg in het jaar al warm wordt.",
       "Meerdere slangen dicht bij elkaar in de zon; in april duwen twee slangen tegen elkaar.",
       "Verticale spleetpupil en een zigzagband."
+    ] },
+    { bron:"RAVON, soortpagina adder", sl:{ i:4, t:"Een rode iris met spleetpupil en een zigzagband: onze enige gifslang." }, wn:[
+      "Fochteloërveen, eind augustus. Een broeierige dag.",
+      "Hoogveen en natte heide met dopheide en pijpenstrootje.",
+      "Een zonnige pol in de luwte van een berkenopslag.",
+      "Een paar dikke, drachtige vrouwtjes liggen dicht bij elkaar te zonnen; een week later liggen er kleine, levend geboren jongen.",
+      "Bruin met een donkere zigzag over de rug, een rode iris en een spleetpupil."
     ] }
   ] },
 { id:"ringslang", no:48, g:"R", n:"Ringslang", s:"Natrix helvetica", r:"BAL", l:90, zz:null, twin:null,
@@ -967,12 +988,19 @@ const SPECIES = [
   x:"adder",
   t:"Ook een adder kan zwemmen, maar de ringslang heeft gele halvemaanvlekken in de nek, een ronde pupil en wordt veel groter.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Eieren in een composthoop: de enige inheemse slang die eieren legt, en daarvoor broeiende hopen opzoekt." }, bron:null, wn:[
       "Vechtplassen, juli.",
       "Moerasbos, rietlanden en open water met veel kikkers.",
       "Bij een boerderij een grote mesthoop en composthopen.",
       "Lege, leerachtige eischalen in de composthoop; een slang zwemt met de kop boven water.",
       "Lichte halvemaanvlekken achter de kop."
+    ] },
+    { bron:"RAVON, soortpagina ringslang", sl:{ i:3, t:"Een stinkende vloeistof en schijndood: zo verdedigt deze slang zich, want bijten doet hij vrijwel nooit." }, wn:[
+      "De Weerribben, april. Een zonnige, nog frisse ochtend.",
+      "Rietland en moerasbos rond petgaten.",
+      "Een droge rietbult aan de rand van een legakker.",
+      "Een paar slangen zonnen opgerold; opgepakt verspreidt er één een stinkende vloeistof en doet daarna alsof hij dood is.",
+      "Grijsgroen, met kleine zwarte vlekjes langs de flanken, een ronde pupil en twee gele vlekken achter de kop."
     ] }
   ] },
 { id:"hazelworm", no:49, g:"R", n:"Hazelworm", s:"Anguis fragilis", r:"BAL", l:40, zz:null, twin:null,
@@ -980,12 +1008,19 @@ const SPECIES = [
   x:"gladde-slang",
   t:"Een slang kan zijn ogen niet sluiten en kan zijn staart niet afwerpen. De hazelworm heeft beweegbare oogleden en een stijve, glanzende bouw.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Knipperen met de ogen: beweegbare oogleden hebben alleen hagedissen, geen slangen." }, bron:null, wn:[
       "Achterhoek, juni.",
       "Bosranden en ruige bermen.",
       "Een dikke strooisellaag, houtstapels en vochtige plekken na regen.",
       "Onder een plank iets glanzends en koperkleurigs, zonder poten; de staart breekt af.",
       "Het dier knippert met zijn ogen."
+    ] },
+    { bron:"RAVON, soortpagina hazelworm", sl:{ i:2, t:"Een vaste plek onder een dakpan of plank: deze pootloze hagedis kruipt graag onder warme voorwerpen." }, wn:[
+      "Veluwe, september. Een zachte, regenachtige dag.",
+      "Een tuin aan de bosrand, met een composthoop en stapels oude dakpannen.",
+      "Onder een dakpan die al jaren in het gras ligt.",
+      "Een groepje piepjonge dieren, glanzend goud van boven en zwart van onder, met een dun zwart streepje over de rug.",
+      "Langgerekt en zonder poten, met gladde, glanzende schubben en geen zichtbare nek."
     ] }
   ] },
 { id:"levendbarende-hagedis", no:50, g:"R", n:"Levendbarende hagedis", s:"Zootoca vivipara", r:"BAL", l:15, zz:null, twin:null,
@@ -993,12 +1028,19 @@ const SPECIES = [
   x:"zandhagedis",
   t:"De zandhagedis is gedrongener, heeft rijen witte oogvlekjes op de rug en groene flanken bij de mannetjes in het voorjaar, en legt eieren in warm zand.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Jongen zonder eieren: deze soort brengt levende jongen ter wereld." }, bron:null, wn:[
       "Drenthe, april.",
       "Hoogveenrestant met natte heide en veenmos.",
       "Pollen pijpenstrootje en een koel, vochtig microklimaat.",
       "In augustus piepkleine, zwarte jongen; nergens eieren te vinden.",
       "Een oranje buik met zwarte vlekjes."
+    ] },
+    { bron:"RAVON, soortpagina levendbarende hagedis", sl:{ i:3, t:"Het water in vluchten en zwemmen: deze soort leeft in natte heide en hoogveen en zwemt goed." }, wn:[
+      "Brabantse Kempen, juli. Een zonnige ochtend na regen.",
+      "Vochtige heide langs een ven, met dopheide en veenmos.",
+      "Pollen pijpenstrootje vlak langs de waterkant.",
+      "Een paar kleine, bruine reptielen zonnen op een pol; bij verstoring vluchten ze het water in en zwemmen weg.",
+      "Klein en slank, bruin, met een smalle kop en een dunne donkere rugstreep."
     ] }
   ] },
 { id:"muurhagedis", no:51, g:"R", n:"Muurhagedis", s:"Podarcis muralis", r:"HR", l:20, zz:null, twin:null,
@@ -1006,12 +1048,19 @@ const SPECIES = [
   x:"zandhagedis",
   t:"De zandhagedis is gedrongener, leeft op zandgrond in heide en duinen en heeft rijen witte oogvlekjes in plaats van een netvormige tekening.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Verticaal omhoog rennen en in de voegen van een muur verdwijnen." }, bron:null, wn:[
       "Zuid-Limburg, mei. Een oude binnenstad.",
       "Vestingmuren van natuursteen.",
       "Muren op het zuiden met veel voegen en kieren.",
       "Hagedissen schieten de voegen in en rennen verticaal omhoog.",
       "Een netvormige tekening en een platte kop."
+    ] },
+    { bron:"RAVON, soortpagina muurhagedis", sl:{ i:2, t:"Oude vestingmuren in Maastricht: de enige plek in Nederland waar deze soort van nature leeft." }, wn:[
+      "Maastricht, september. Een warme nazomermiddag.",
+      "Oude vestingwerken in een stadspark, met gazons en grachten.",
+      "Een muurtop met klimop en losse stenen in de volle zon.",
+      "Jonge dieren van dit jaar zonnen plat tegen de warme stenen; bij een schaduw verdwijnen ze bliksemsnel in een spleet.",
+      "Slank, met een lange staart en een platte kop, bruin of grijs met een donkere zijband."
     ] }
   ] },
 { id:"kamsalamander", no:52, g:"A", n:"Kamsalamander", s:"Triturus cristatus", r:"HR", l:15, zz:null, twin:null,
@@ -1019,12 +1068,19 @@ const SPECIES = [
   x:"kleine-watersalamander",
   t:"De kleine watersalamander is kleiner (±9 cm), heeft een gladde huid, en bij het mannetje loopt de golvende kam door tot op de staart. De larven blijven dichter bij bodem en planten.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Een wrattige, donkere huid en een oranje buik met grote zwarte vlekken." }, bron:null, wn:[
       "Twente, april.",
       "Kleinschalig landschap met houtwallen en grasland.",
       "Een zonnige, visloze poel vol waterplanten.",
       "Dubbelgevouwen blaadjes met lichte eitjes; larven zweven midden in het water.",
       "Een wrattige, donkere huid en een oranje buik met zwarte vlekken."
+    ] },
+    { bron:"RAVON, soortpagina kamsalamander", sl:{ i:3, t:"Een hoge, getande kam die bij de staartwortel onderbroken is, en een zilveren staartband." }, wn:[
+      "Betuwe, juni. Een warme nacht.",
+      "Een uiterwaard met kleiputten, meidoornhagen en grasland.",
+      "Een oude kleiput met veel ondergedoken waterplanten, zonder vis.",
+      "Met een zaklamp zie je grote salamanders met een hoge, getande rugkam die bij de staartwortel onderbroken is, en een zilverwitte band over de staart.",
+      "Groot, tot 16 cm, zwartbruin met witte stippels op de flanken."
     ] }
   ] },
 { id:"boomkikker", no:53, g:"A", n:"Boomkikker", s:"Hyla arborea", r:"HR", l:4.5, zz:null, twin:null,
@@ -1032,12 +1088,19 @@ const SPECIES = [
   x:"poelkikker",
   t:"Groene kikkers zitten aan de waterkant in plaats van hoog in struiken, missen de kleefschijfjes en kwaken met kwaakblazen aan de zijkant van de bek.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Kleefschijfjes aan de tenen: geen andere inheemse soort klimt zo hoog." }, bron:null, wn:[
       "Achterhoek, mei.",
       "Coulisselandschap met bramenstruwelen.",
       "Ondiepe, zonbeschenen poelen zonder vis.",
       "Overdag dieren hoog in de bramen; ’s avonds een luid ‘kè-kè-kè’.",
       "Kleefschijfjes aan de tenen."
+    ] },
+    { bron:"RAVON, soortpagina boomkikker", sl:{ i:4, t:"Een donkere zijstreep op een fel groen lijf en schijfjes aan de tenen." }, wn:[
+      "Zeeuws-Vlaanderen, augustus. Een warme, zonnige middag.",
+      "Een kreek met braamstruweel en wilgen langs de oever.",
+      "Grote bramenbladeren in de volle zon, op anderhalve meter hoogte.",
+      "Kleine, fel groene kikkertjes zitten met ingetrokken poten te zonnen op de bladeren.",
+      "Glad en fel groen, met een donkere streep van de neus tot de achterpoot en schijfjes aan de tenen."
     ] }
   ] },
 { id:"rugstreeppad", no:54, g:"A", n:"Rugstreeppad", s:"Epidalea calamita", r:"HR", l:7, zz:null, twin:null,
@@ -1045,12 +1108,19 @@ const SPECIES = [
   x:"gewone-pad",
   t:"De gewone pad heeft geen gele rugstreep, springt of loopt langzaam, legt eisnoeren met twee tot vier rijen eitjes in diepere wateren en roept zacht.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Een lichte streep over het midden van de rug." }, bron:null, wn:[
       "Bouwlocatie, mei.",
       "Opgespoten zand met nauwelijks vegetatie.",
       "Tijdelijke, ondiepe plassen die snel opwarmen.",
       "Eisnoeren in een kale plas; op een warme avond een luid geratel.",
       "Een lichte streep over het midden van de rug."
+    ] },
+    { bron:"RAVON, soortpagina rugstreeppad", sl:{ i:3, t:"Rennen als een muis: deze pad springt nauwelijks en heeft daarom korte achterpoten." }, wn:[
+      "Texel, juli. Een warme, windstille nacht.",
+      "Een jonge duinvallei met kaal zand en een paar lage plantjes.",
+      "Een ondiepe plas die in de zomer bijna uitdroogt.",
+      "Overdag ingegraven in het zand; 's nachts rent een dier als een muis over het zand, in plaats van te springen.",
+      "Gedrongen en wrattig, met groengele ogen en een lichtgele streep over de rug."
     ] }
   ] },
 { id:"knoflookpad", no:55, g:"A", n:"Knoflookpad", s:"Pelobates fuscus", r:"HR", l:6, zz:"ZZ", twin:null,
@@ -1058,12 +1128,19 @@ const SPECIES = [
   x:"gewone-pad",
   t:"De gewone pad heeft een horizontale pupil en geen hoornige graafschop, en zijn larven blijven klein en zwart.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Zacht geklok onder water, alleen goed te horen met een hydrofoon." }, bron:null, wn:[
       "Noord-Brabant, april.",
       "Zandige akkers en een stuk heide.",
       "Een diepe, vegetatierijke poel naast losse, goed vergraafbare grond.",
       "Met een hydrofoon zacht geklok onder water; in juli zeer grote larven.",
       "Een verticale pupil en een hoornige graafschop."
+    ] },
+    { bron:"RAVON, soortpagina knoflookpad", sl:{ i:3, t:"Achterwaarts in het zand graven met een hoornige graafschop: daar komt de bijnaam 'zandschop' vandaan." }, wn:[
+      "Twente, september. Een droge avond.",
+      "Een akker met aardappels op losse, zandige grond, naast een poel.",
+      "De rand van de akker, waar het zand rul en kaal is.",
+      "Een dier dat zich met de hielen achterwaarts in het zand graaft en binnen een minuut verdwenen is; opgepakt ruikt het naar ui.",
+      "Glad, grijsbruin met olijfgroene vlekken, met grote, uitpuilende ogen met een verticale pupil."
     ] }
   ] },
 { id:"geelbuikvuurpad", no:56, g:"A", n:"Geelbuikvuurpad", s:"Bombina variegata", r:"HR", l:4.5, zz:null, twin:null,
@@ -1071,12 +1148,19 @@ const SPECIES = [
   x:"vroedmeesterpad",
   t:"De vroedmeesterpad heeft een verticale pupil en geen felgekleurde buik, en het mannetje draagt de eieren mee.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Een hartvormige pupil." }, bron:null, wn:[
       "Zuid-Limburg, juni.",
       "Een groeve en bospaden met kale, verdichte grond.",
       "Karrensporen en ondiepe plasjes vol regenwater.",
       "Losse eitjes in een modderig plasje; een zacht ‘oe… oe’.",
       "Een hartvormige pupil."
+    ] },
+    { bron:"RAVON, soortpagina geelbuikvuurpad", sl:{ i:3, t:"De 'onkenreflex': rug hol en poten omhoog om de felgele buik te tonen als waarschuwing." }, wn:[
+      "Zuid-Limburg, augustus. Na een hevige onweersbui.",
+      "Een groeve waar graafmachines rijden.",
+      "Vers regenwater in diepe bandensporen.",
+      "Bij gevaar hol het dier de rug, steekt de poten omhoog en laat een felgele buik met zwarte vlekken zien.",
+      "Klein, grijsbruin en wrattig, met een geel-zwart gevlekte buik."
     ] }
   ] },
 { id:"vroedmeesterpad", no:57, g:"A", n:"Vroedmeesterpad", s:"Alytes obstetricans", r:"HR", l:5, zz:null, twin:null,
@@ -1084,12 +1168,19 @@ const SPECIES = [
   x:"geelbuikvuurpad",
   t:"De geelbuikvuurpad heeft een hartvormige pupil en een gele buik met zwarte vlekken, en legt losse eitjes in tijdelijke plasjes.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Een mannetje dat de eisnoeren om zijn achterpoten draagt." }, bron:null, wn:[
       "Zuid-Limburg, juni.",
       "Een oude mergelgroeve met stenige hellingen.",
       "Een vijver bij een boerderij en droge muren vol kieren.",
       "’s Nachts een helder fluitje; een mannetje met eisnoeren om de achterpoten.",
       "Klein, grijsbruin, met een verticale pupil."
+    ] },
+    { bron:"RAVON, soortpagina vroedmeesterpad", sl:{ i:3, t:"Grote larven die laat in het jaar nog in de vijver zitten: bij deze soort overwinteren ze vaak in het water." }, wn:[
+      "Zuid-Limburg, oktober. Een vochtige avond.",
+      "Een dorp in het Geuldal met tuinen en stapelmuren.",
+      "Een droge stapelmuur van mergelblokken naast een tuinvijver.",
+      "Onder een losse steen een klein, gedrongen dier; in de vijver zwemmen nog grote larven die de winter in het water doorbrengen.",
+      "Klein en grijsbruin, met een verticale pupil en een rij lichtere wratjes langs elke flank."
     ] }
   ] },
 { id:"heikikker", no:58, g:"A", n:"Heikikker", s:"Rana arvalis", r:"HR", l:6.5, zz:null, twin:null,
@@ -1097,12 +1188,19 @@ const SPECIES = [
   x:"bruine-kikker",
   t:"De bruine kikker heeft een stompere snuit, een kleine, zachte knobbel aan de achterpoot en vaak een gevlekte buik, en kleurt niet blauw.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Een spitse snuit en een grote, harde knobbel aan de achterpoot." }, bron:null, wn:[
       "Drenthe, maart.",
       "Natte heide en hoogveenrestanten.",
       "Zure, voedselarme vennen met ondiepe, zonnige oevers.",
       "Eiklompen dicht bij elkaar; onder water een zacht ‘woeb-woeb’.",
       "Een spitse snuit en een grote, harde knobbel aan de achterpoot."
+    ] },
+    { bron:"RAVON, soortpagina heikikker", sl:{ i:4, t:"Een slank lijf met een spitse snuit: de bruine kikker is plomper en heeft een stompe snuit." }, wn:[
+      "Engbertsdijksvenen, juni. Een warme dag.",
+      "Hoogveen met dopheide, veenmos en berkenopslag.",
+      "Een vochtige plek tussen de dopheide, een eind van het water.",
+      "Een kikker springt weg tussen de dopheide; hij is roodbruin met een brede, lichte streep over de rug.",
+      "Slank, met een spitse snuit en een donkere vlek achter het oog."
     ] }
   ] },
 { id:"vuursalamander", no:59, g:"A", n:"Vuursalamander", s:"Salamandra salamandra", r:"BAL", l:17, zz:null, twin:null,
@@ -1110,12 +1208,19 @@ const SPECIES = [
   x:"alpenwatersalamander",
   t:"De alpenwatersalamander is kleiner, leeft in het voorjaar in het water, heeft een egaal oranje buik en geen gele vlekken op de rug.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Zwart met gele vlekken." }, bron:null, wn:[
       "Zuid-Limburg, oktober, regennacht.",
       "Hellingbos van beuk en eik.",
       "Bronnetjes en koele, kleine bronbeken.",
       "Larven met een lichte vlek bij elke poot in de beek; nergens eieren.",
       "Zwart met gele vlekken."
+    ] },
+    { bron:"RAVON, soortpagina vuursalamander", sl:{ i:4, t:"Groot en zwart met gele vlekken en gifklieren achter de ogen." }, wn:[
+      "Zuid-Limburg, april. Een regenachtige nacht.",
+      "Een bronbos met hellingen vol varens en mos.",
+      "Een bospad langs een bronbeek, nat van de regen.",
+      "Dikke, glanzend zwarte amfibieën kruipen traag over het pad; een vrouwtje loopt naar het water.",
+      "Groot, tot 20 cm, met opvallende gifklieren achter de ogen en grote gele vlekken."
     ] }
   ] },
 { id:"gewone-pad", no:60, g:"A", n:"Gewone pad", s:"Bufo bufo", r:"BAL", l:10, zz:null, twin:null,
@@ -1123,12 +1228,19 @@ const SPECIES = [
   x:"rugstreeppad",
   t:"De rugstreeppad heeft een gele rugstreep en korte achterpoten, rent in plaats van te springen, legt eisnoeren met één of twee rijen eitjes in ondiepe plassen zonder vis, en roept luid ratelend.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Een koperkleurig oog met horizontale pupil." }, bron:null, wn:[
       "Gelderland, maart.",
       "Een bos met een weg erdoor en een vijver aan de overkant.",
       "Een diepe vijver met vis.",
       "Lange eisnoeren om waterplanten; langs de weg schermen met emmers.",
       "Een koperkleurig oog met horizontale pupil."
+    ] },
+    { bron:"RAVON, soortpagina gewone pad", sl:{ i:4, t:"Een wrattige huid met grote oorklieren en een oranjebruin oog, zonder rugstreep." }, wn:[
+      "Amsterdam, augustus. Een warme avond.",
+      "Een stadstuin met een schuurtje en een kelder.",
+      "Een vochtige kelder waar een kelderraam altijd op een kier staat.",
+      "Een groot, traag dier zit elke avond onder de buitenlamp en vangt slakken en kevers.",
+      "Een droge, wrattige huid, grote schuine oorklieren en een oranjebruin oog."
     ] }
   ] },
 { id:"bruine-kikker", no:61, g:"A", n:"Bruine kikker", s:"Rana temporaria", r:"BAL", l:8, zz:null, twin:null,
@@ -1136,12 +1248,19 @@ const SPECIES = [
   x:"heikikker",
   t:"De heikikker heeft een spitse snuit en een grote, harde knobbel aan de achterpoot, leeft in zure, voedselarme wateren, en de mannetjes kleuren in de paartijd blauw.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Een stompe snuit en een kleine, zachte knobbel aan de achterpoot." }, bron:null, wn:[
       "Utrecht, februari.",
       "Weilanden met slootjes, en tuinen.",
       "Ondiep, stilstaand water met ijs langs de randen.",
       "Grote eiklompen, de eerste van het jaar; onder water een zacht gegrom.",
       "Een stompe snuit en een kleine, zachte knobbel aan de achterpoot."
+    ] },
+    { bron:"RAVON, soortpagina bruine kikker", sl:{ i:4, t:"Een stompe snuit: het verschil met de spitssnuitige heikikker." }, wn:[
+      "Salland, september. Een vochtige ochtend.",
+      "Een hooiland met sloten en houtwallen.",
+      "Hoog gras langs de slootkant, nat van de dauw.",
+      "Overal springen jonge amfibieën van dit jaar door het gras weg, ver van het water.",
+      "Bruin, met een stompe snuit en een donkere vlek achter het oog."
     ] }
   ] },
 { id:"kleine-watersalamander", no:62, g:"A", n:"Kleine watersalamander", s:"Lissotriton vulgaris", r:"BAL", l:9, zz:null, twin:null,
@@ -1149,12 +1268,19 @@ const SPECIES = [
   x:"kamsalamander",
   t:"De kamsalamander is groter (±15 cm), heeft een wrattige, donkere huid en een getande kam die bij de staartwortel onderbroken is.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Een gestippelde keel." }, bron:null, wn:[
       "Haarlem, april.",
       "Tuinen in een woonwijk.",
       "Een tuinvijver zonder vis, met waterplanten.",
       "Dubbelgevouwen blaadjes met eitjes; een mannetje met een golvende kam.",
       "Een gestippelde keel."
+    ] },
+    { bron:"RAVON, soortpagina kleine watersalamander", sl:{ i:4, t:"Stippen op buik én keel: bij de vinpootsalamander is de keel ongevlekt." }, wn:[
+      "Gelderland, oktober. Een vochtige dag.",
+      "Een tuin met een vijver, een heg en bloembedden.",
+      "Onder een stoeptegel in het gras, een eind van de vijver.",
+      "Een klein dier met een droge, fluweelachtige bruine huid ligt opgerold onder de tegel.",
+      "Een oranje buik met kleine zwarte stippen, ook op de keel."
     ] }
   ] },
 { id:"alpenwatersalamander", no:63, g:"A", n:"Alpenwatersalamander", s:"Ichthyosaura alpestris", r:"BAL", l:10, zz:null, twin:null,
@@ -1162,12 +1288,19 @@ const SPECIES = [
   x:"vinpootsalamander",
   t:"De vinpootsalamander is kleiner, heeft een lichte, ongevlekte keel en een lichtgeel tot oranje streepje op de buik; mannetjes hebben donkere zwemvliezen en een draadje aan de staartpunt.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Een oranje buik zonder vlekken." }, bron:null, wn:[
       "Veluwe, april.",
       "Loofbos op de hogere zandgronden.",
       "Een koele, schaduwrijke bospoel zonder vis.",
       "Een mannetje met blauwe flanken; de dieren overwinteren in de bosbodem.",
       "Een oranje buik zonder vlekken."
+    ] },
+    { bron:"RAVON, soortpagina alpenwatersalamander", sl:{ i:4, t:"Een buik die volledig oranje is, zonder vlekken." }, wn:[
+      "Achterhoek, mei. Een milde nacht.",
+      "Een landgoedbos met eiken en beuken.",
+      "Een kleine, beschaduwde poel tussen de beuken, met bladeren op de bodem.",
+      "In het licht van een zaklamp vrouwtjes met een grijsblauw gemarmerde rug en mannetjes met een lage, gestippelde kam.",
+      "Een egaal oranje buik."
     ] }
   ] },
 { id:"vinpootsalamander", no:64, g:"A", n:"Vinpootsalamander", s:"Lissotriton helveticus", r:"BAL", l:8, zz:null, twin:null,
@@ -1175,12 +1308,19 @@ const SPECIES = [
   x:"kleine-watersalamander",
   t:"De kleine watersalamander heeft een gestippelde keel; het mannetje heeft een hoge, golvende kam in plaats van een draadje aan de staart.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Donkere achterpoten en een draadje aan de staartpunt bij het mannetje." }, bron:null, wn:[
       "De Kempen, april.",
       "Heide en bos op zandgrond.",
       "Een zuur, voedselarm ven met veenmos.",
       "Mannetjes met donkere achterpoten en een draadje aan de staartpunt.",
       "Een lichte, ongevlekte keel."
+    ] },
+    { bron:"RAVON, soortpagina vinpootsalamander", sl:{ i:3, t:"Zwemvliezen tussen de tenen van de achterpoten: daar komt de naam van deze salamander vandaan." }, wn:[
+      "Veluwe, mei. Een zonnige middag.",
+      "Een heideven omringd door bos.",
+      "Ondiep, helder water met veenmos aan de oever.",
+      "Mannetjes met zwemvliezen tussen de tenen van de achterpoten en een lage, rechte rugkam.",
+      "Klein, met een bleke, ongevlekte keel."
     ] }
   ] },
 { id:"poelkikker", no:65, g:"A", n:"Poelkikker", s:"Pelophylax lessonae", r:"HR", l:7, zz:null, twin:"middelste-groene-kikker",
@@ -1188,12 +1328,19 @@ const SPECIES = [
   x:"meerkikker",
   t:"De meerkikker is veel groter, heeft grijze kwaakblazen en een kleine knobbel aan de achterpoot, en overwintert in het water.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:4, t:"Een grote, halvemaanvormige knobbel aan de achterpoot." }, bron:null, wn:[
       "Veluwe, mei.",
       "Heide en bos op voedselarme zandgrond.",
       "Een voedselarm ven met een zonnige oever.",
       "Een luid, snorrend koor met witte kwaakblazen; ’s winters niet in het water.",
       "Een grote, halvemaanvormige knobbel aan de achterpoot."
+    ] },
+    { bron:"RAVON, soortpagina poelkikker", sl:{ i:3, t:"Overwinteren op het land, ver van het water: de meerkikker overwintert juist in het water." }, wn:[
+      "Drenthe, november. Een koude dag.",
+      "Een bosrand naast een hoogveenrestant.",
+      "Onder een rottende boomstronk, honderden meters van het water.",
+      "Een kleine groene kikker in winterrust, ver van het water.",
+      "Klein en groen, met korte achterpoten en een grote, harde hielknobbel."
     ] }
   ] },
 { id:"meerkikker", no:66, g:"A", n:"Meerkikker", s:"Pelophylax ridibundus", r:"BAL", l:11, zz:null, twin:null,
@@ -1201,12 +1348,19 @@ const SPECIES = [
   x:"poelkikker",
   t:"De poelkikker is kleiner, heeft witte kwaakblazen en een grote, halvemaanvormige knobbel aan de achterpoot, en overwintert op het land.",
   cs:[
-    { bron:null, wn:[
+    { sl:{ i:3, t:"Grijze kwaakblazen: bij de poelkikker zijn ze wit." }, bron:null, wn:[
       "Zuid-Holland, juni.",
       "Een polder met brede boezemwateren.",
       "Groot, open en voedselrijk water.",
       "Een luid geratel met grijze kwaakblazen; ’s winters op de bodem van het water.",
       "Groot, met een kleine knobbel aan de achterpoot."
+    ] },
+    { bron:"RAVON, soortpagina meerkikker", sl:{ i:4, t:"Groot en olijfgroen met een kleine hielknobbel: de grootste inheemse groene kikker." }, wn:[
+      "Rivierengebied, augustus. Een hete middag.",
+      "Een uiterwaard met grote plassen en rietkragen.",
+      "Een brede oever met veel kroos.",
+      "Grote kikkers zonnen op de oever en eten ook andere, kleinere kikkers.",
+      "Groot, olijfgroen tot bruin, met een kleine hielknobbel en lange achterpoten."
     ] }
   ] },
 { id:"grote-modderkruiper", no:67, g:"F", n:"Grote modderkruiper", s:"Misgurnus fossilis", r:"BAL", l:25, zz:null, twin:null,
@@ -1807,12 +1961,19 @@ const SPECIES = [
   x:"meerkikker",
   t:"De meerkikker is groter, vaak olijfbruiner, heeft grijze tot donkere kwaakblazen en zit vooral in grote, voedselrijke wateren. Het tweelingsoortverschil met de poelkikker zit in de hielknobbel: bij de poelkikker groot en halfrond.",
   cs:[
-    { bron:"RAVON, soortpagina middelste groene kikker", wn:[
+    { sl:{ i:4, t:"Een middelgrote hielknobbel: tussen poel- en meerkikker in." }, bron:"RAVON, soortpagina middelste groene kikker", wn:[
       "Midden-Brabant, mei. Een warme middag.",
       "Een boerensloot en een poel in een weidegebied met houtwallen.",
       "Een zonnige oever met kroos en drijvende waterplanten.",
       "Luid gekwaak in koor; mannetjes met witte kwaakblazen naast de mondhoeken.",
       "Groen met donkere vlekken en een lichte rugstreep; middelgrote hielknobbel."
+    ] },
+    { bron:"RAVON, soortpagina middelste groene kikker", sl:{ i:4, t:"Kenmerken precies tussen poel- en meerkikker in: deze soort is een kruising tussen die twee." }, wn:[
+      "Utrecht, augustus. Een warme dag.",
+      "Een veenweidepolder met smalle sloten.",
+      "Een slootkant met kroos en waterlelies.",
+      "Groene kikkers op de oever die met een plons het water in springen.",
+      "Groen met donkere vlekken, en kenmerken die precies tussen die van de poel- en meerkikker in liggen."
     ] }
   ] },
 { id:"rivierprik", no:null, g:"F", n:"Rivierprik", s:"Lampetra fluviatilis", r:"NB", l:35, zz:null, twin:null,
