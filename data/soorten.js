@@ -2170,12 +2170,19 @@ const SPECIES = [
   x:"roek",
   t:"De roek heeft een kale, grijswitte snavelbasis, een ‘broekje’ van losse veren en broedt in kolonies. Deze soort heeft een bevederde snavelbasis en broedt in paren met een eigen territorium.",
   cs:[
-    { bron:"Vogelbescherming, soortpagina zwarte kraai", wn:[
+    { sl:{ i:4, t:"Een bevederde snavelbasis: bij de roek is die kaal en grijswit." }, bron:"Vogelbescherming, soortpagina zwarte kraai", wn:[
       "Friesland, november. Na een stormnacht.",
       "Open weidegebied met verspreide bomenrijen langs de boerderijen.",
       "Een los takkennest hoog in een solitaire es, al jaren in gebruik.",
       "Een paar dat samen een buizerd wegjaagt; een schor, herhaald ‘kraa’.",
       "Geheel zwart met een zware snavel waarvan de basis is bevederd."
+    ] },
+    { bron:"Vogelbescherming, vogelgids zwarte kraai", sl:{ i:4, t:"Een bevederde snavelbasis en een recht afgesneden staart: de raaf heeft een wigvormige staart." }, wn:[
+      "Den Bosch, april. Een zonnige ochtend.",
+      "Een woonwijk met plantsoenen en grasvelden.",
+      "Een nest hoog in een plataan.",
+      "Een grote zwarte vogel rooft een ei uit een merelnest terwijl kleine vogels alarm slaan; het paar blijft het hele jaar in zijn territorium.",
+      "Geheel zwart, met een bevederde snavelbasis en een recht afgesneden staart."
     ] }
   ] },
 { id:"grauwe-gans", no:109, g:"B", n:"Grauwe gans", s:"Anser anser", r:"VR", l:80, zz:"A", twin:null,
@@ -2183,12 +2190,19 @@ const SPECIES = [
   x:"eidereend",
   t:"Een eidereend is een zee-eend die schelpdieren duikt, met een wigvormige kop en een man in zwart-wit. Deze soort graast in groepen op land en heeft een oranje snavel en roze poten.",
   cs:[
-    { bron:"Vogelbescherming en Sovon, soortpagina grauwe gans", wn:[
+    { sl:{ i:4, t:"Een oranje snavel en vleeskleurige poten." }, bron:"Vogelbescherming en Sovon, soortpagina grauwe gans", wn:[
       "Zuid-Holland, december. Een grijze, windstille dag.",
       "Graslanden en oogstakkers langs een groot rietmoeras.",
       "Een ondergelopen perceel met plassen en afgegraasde graszode.",
       "Honderden grazende vogels; overal lange, groene keutels en een luid, rauw ‘ga-ga-ga’.",
       "Grijsbruin, groot, met een oranje snavel en vleeskleurige poten."
+    ] },
+    { bron:"Vogelbescherming, vogelgids grauwe gans", sl:{ i:4, t:"Een oranje snavel en roze poten: de enige inheemse broedgans met die combinatie." }, wn:[
+      "Oostvaardersplassen, juni. Een warme dag.",
+      "Een groot moeras met plassen en rietland.",
+      "Ondiep water langs een rietkraag.",
+      "Honderden grote grijze vogels kunnen tijdelijk niet vliegen omdat ze hun slagpennen vervangen; ouderparen zwemmen met gele kuikens.",
+      "Grijsbruin, met een oranje snavel en roze poten."
     ] }
   ] },
 { id:"tuimelaar", no:102, g:"Z", n:"Tuimelaar", s:"Tursiops truncatus", r:"HR", l:300, zz:"Z", twin:null,
@@ -2246,12 +2260,19 @@ const SPECIES = [
   x:"grote-gele-kwikstaart",
   t:"De grote gele kwikstaart heeft een gele onderstaartdek en buik, een langere staart en zit bij stromend water. Deze soort is zwart-wit-grijs en zit overal waar kort gras of verharding is.",
   cs:[
-    { bron:"Vogelbescherming, soortpagina witte kwikstaart", wn:[
+    { sl:{ i:3, t:"Tientallen vogels die samen op een verlichte, warme plek slapen." }, bron:"Vogelbescherming, soortpagina witte kwikstaart", wn:[
       "Westland, oktober. Aan het eind van de middag.",
       "Een kassengebied met erven, parkeerterreinen en sloten.",
       "Een kasdak en de verlichte overkapping van een tankstation.",
       "Tientallen vogels die met een scherp ‘tsli-wiet’ binnenkomen en samen gaan slapen.",
       "Slank, grijs-wit-zwart, met een lange staart die voortdurend op en neer wipt."
+    ] },
+    { bron:"Vogelbescherming, vogelgids witte kwikstaart", sl:{ i:4, t:"Grijs-zwart-wit met een zwarte bef: de grote gele heeft een gele onderkant." }, wn:[
+      "Drenthe, april. Een zonnige ochtend.",
+      "Een boerenerf naast een weiland.",
+      "Een nis in een houtstapel bij de schuur.",
+      "Een slanke vogel trippelt snel over het erf, rent achter vliegjes aan en wipt met de staart.",
+      "Grijs, zwart en wit, met een zwarte bef en een wit gezicht."
     ] }
   ] },
 { id:"roodborsttapuit", no:111, g:"B", n:"Roodborsttapuit", s:"Saxicola rubicola", r:"VR", l:12, zz:"MA", twin:null,
@@ -2259,12 +2280,19 @@ const SPECIES = [
   x:"tapuit",
   t:"De tapuit staat rechtop op de grond, heeft een witte stuit met een zwarte T op de staart en broedt in konijnenholen. Deze soort zit op toppen van struikjes en broedt op de grond in de vegetatie.",
   cs:[
-    { bron:"Vogelbescherming en Sovon, soortpagina roodborsttapuit", wn:[
+    { sl:{ i:3, t:"Een droog 'wiet-tek-tek', als twee steentjes die tegen elkaar slaan." }, bron:"Vogelbescherming en Sovon, soortpagina roodborsttapuit", wn:[
       "Kempen, september. Na een koude nacht.",
       "Een heideterrein met verspreide brem en jonge berken.",
       "De hoogste top van een bremstruik langs een zandpad.",
       "Een droog ‘wiet-tek-tek’, alsof er twee steentjes tegen elkaar worden geslagen.",
       "Klein en gedrongen; een man met zwarte kop, witte halsvlek en oranjerode borst."
+    ] },
+    { bron:"Vogelbescherming, vogelgids roodborsttapuit", sl:{ i:4, t:"Een zwarte kop met een witte halsvlek en oranjerode borst." }, wn:[
+      "Duinen bij Den Haag, april. Een zonnige dag.",
+      "Open duin met duindoorn en braam.",
+      "De top van een duindoornstruik.",
+      "Een mannetje zit op het hoogste puntje, vliegt op met een kort liedje en duikt dan omlaag naar een rups.",
+      "Klein, met een zwarte kop, witte halsvlek en oranjerode borst."
     ] }
   ] },
 { id:"grutto", no:112, g:"B", n:"Grutto", s:"Limosa limosa", r:"VR", l:40, zz:"MA", twin:null,
@@ -2272,12 +2300,19 @@ const SPECIES = [
   x:"kievit",
   t:"De kievit is kleiner, heeft een korte snavel en een kuif, en is groenig zwart met wit. Deze soort heeft lange poten en een lange, rechte snavel.",
   cs:[
-    { bron:"Vogelbescherming en Sovon, soortpagina grutto", wn:[
+    { sl:{ i:4, t:"Een lange rechte snavel en in de vlucht een brede witte vleugelstreep." }, bron:"Vogelbescherming en Sovon, soortpagina grutto", wn:[
       "Friesland, juli. Het broedseizoen is net voorbij.",
       "Een ondiep plasdras-perceel naast kruidenrijk, laat gemaaid grasland.",
       "Een slikkige rand met ondiep water, waar honderden vogels samen staan.",
       "Een verzamelplaats voor de trek naar het zuiden; een luid ‘grut-to, grut-to’.",
       "Lange poten, een lange rechte snavel en in de vlucht een brede witte vleugelstreep."
+    ] },
+    { bron:"Vogelbescherming, vogelgids grutto", sl:{ i:4, t:"Een oranjebruine borst en een lange rechte snavel: de wulp heeft een gebogen snavel." }, wn:[
+      "Zuidwest-Friesland, april. Een winderige dag.",
+      "Bloemrijk grasland met een hoog waterpeil.",
+      "Een paaltje bij een greppel.",
+      "Een vogel zit luid roepend op een paaltje en valt een kraai aan die over het weiland vliegt.",
+      "Oranjebruine hals en borst, een lange rechte snavel en lange poten."
     ] }
   ] },
 { id:"merel", no:113, g:"B", n:"Merel", s:"Turdus merula", r:"VR", l:25, zz:"A", twin:null,
@@ -2285,12 +2320,19 @@ const SPECIES = [
   x:"spreeuw",
   t:"De spreeuw heeft lichte stippen, een korte staart en loopt kwiek in groepen. Deze soort is effen zwart (man) of donkerbruin (vrouw), wipt alleen over het gazon en woelt bladeren om.",
   cs:[
-    { bron:"Vogelbescherming, soortpagina merel", wn:[
+    { sl:{ i:4, t:"Een zwarte vogel met een oranjegele snavel en oogring." }, bron:"Vogelbescherming, soortpagina merel", wn:[
       "Amsterdam, december. In de schemering.",
       "Stadstuinen en een park met struikgewas.",
       "Een bladerdek onder een hulst vol rode bessen.",
       "Ritselend omgewoelde bladeren; een luid, opgewonden alarm ‘tsjak-tsjak-tsjak’.",
       "Een zwarte vogel met een oranjegele snavel en oogring."
+    ] },
+    { bron:"Vogelbescherming, vogelgids merel", sl:{ i:4, t:"Een zwart mannetje met een gele snavel." }, wn:[
+      "Utrecht, maart. Vroeg in de ochtend.",
+      "Een woonwijk met gazons en heggen.",
+      "Klimop tegen een schutting.",
+      "Vanaf de nok van een dak klinkt een melodieus, fluitend lied; op het gazon staat een vogel met scheve kop te luisteren en trekt een worm uit de grond.",
+      "Het mannetje is zwart met een gele snavel; het vrouwtje donkerbruin."
     ] }
   ] },
 { id:"houtduif", no:114, g:"B", n:"Houtduif", s:"Columba palumbus", r:"VR", l:41, zz:"A", twin:null,
@@ -2298,12 +2340,19 @@ const SPECIES = [
   x:"kauw",
   t:"De kauw is zwart met een grijze nek en roept ‘kja’. Deze soort is blauwgrijs en roze, heeft witte halsvlekken en koert zacht.",
   cs:[
-    { bron:"Vogelbescherming, soortpagina houtduif", wn:[
+    { sl:{ i:4, t:"Een witte halsvlek en in de vlucht een witte vleugelband." }, bron:"Vogelbescherming, soortpagina houtduif", wn:[
       "Zeeland, november. Een oogstakker na de herfstbewerking.",
       "Akkerland met bomenrijen en kleine bosjes.",
       "Een dunne, doorzichtige ‘vlonder’ van takjes in een conifeer.",
       "Grote groepen op een koolveld; het klapperen van vleugels bij het opvliegen en een zacht ‘roe-koe-koe’.",
       "Blauwgrijs, met een roze borst, witte halsvlek en in de vlucht een witte vleugelband."
+    ] },
+    { bron:"Vogelbescherming, vogelgids houtduif", sl:{ i:4, t:"Een witte halsvlek en witte vleugelband: de grootste duif van Nederland." }, wn:[
+      "Haarlem, mei. Een zonnige dag.",
+      "Een park met grote bomen.",
+      "Een plataan langs een vijver.",
+      "Een grote duif klimt in de lucht omhoog, klapt luid met de vleugels en glijdt dan omlaag.",
+      "Blauwgrijs, met een witte halsvlek en witte vleugelband."
     ] }
   ] },
 { id:"witsnuitdolfijn", no:115, g:"Z", n:"Witsnuitdolfijn", s:"Lagenorhynchus albirostris", r:"HR", l:270, zz:"Z", twin:null,
@@ -2351,12 +2400,19 @@ const SPECIES = [
   x:"buizerd",
   t:"De buizerd heeft een korte, ronde staart, een gedrongen bouw en cirkelt met iets opgetrokken vleugels. Deze soort heeft een ondiep gevorkte staart die hij voortdurend draait.",
   cs:[
-    { bron:"Sovon, zeldzame broedvogels; Vogelbescherming, soortpagina zwarte wouw", wn:[
+    { sl:{ i:4, t:"Een ondiep gevorkte staart die hij steeds bijdraait." }, bron:"Sovon, zeldzame broedvogels; Vogelbescherming, soortpagina zwarte wouw", wn:[
       "Noord-Limburg, mei. Vlak bij de grensmaas.",
       "Een rivierdal met uiterwaarden, grindplassen en populierenbosjes.",
       "Een oud nest in een populier aan de bosrand, aangekleed met plastic en lappen.",
       "Een roofvogel die laag boven het water dode vis oppikt; een hoog, trillend ‘pie-ie-ie’.",
       "Donkerbruin, met lange vleugels en een ondiep gevorkte staart die hij steeds bijdraait."
+    ] },
+    { bron:"Vogelbescherming, vogelgids zwarte wouw", sl:{ i:4, t:"Een licht gevorkte staart: bij de rode wouw is de staart diep gevorkt." }, wn:[
+      "Gelderse Poort, juni. Een warme dag.",
+      "Uiterwaarden langs de Rijn.",
+      "Een oude populier aan een strang.",
+      "Een roofvogel cirkelt boven een weiland dat gemaaid wordt en draait voortdurend zijn staart.",
+      "Donkerbruin, met een lichtere kop en een licht gevorkte staart."
     ] }
   ] },
 { id:"bonte-vliegenvanger", no:118, g:"B", n:"Bonte vliegenvanger", s:"Ficedula hypoleuca", r:"VR", l:13, zz:"MA", twin:null,
@@ -2364,12 +2420,19 @@ const SPECIES = [
   x:"grauwe-vliegenvanger",
   t:"De grauwe vliegenvanger is grijsbruin met een gestreepte kruin en broedt in een halfopen nis. Deze soort is (bij de man) zwart-wit en broedt in een holte of nestkast met een rond gat.",
   cs:[
-    { bron:"Vogelbescherming en Sovon, soortpagina bonte vliegenvanger", wn:[
+    { sl:{ i:4, t:"Een zwart-wit mannetje met een witte vleugelvlek en voorhoofdsvlekje." }, bron:"Vogelbescherming en Sovon, soortpagina bonte vliegenvanger", wn:[
       "Veluwe, mei. Een zonnige ochtend in het voorjaar.",
       "Een oud eikenbos met weinig ondergroei.",
       "Een nestkast met een rond invlieggat aan een eik.",
       "Een hoog, ritmisch liedje ‘wie-tie-wie-tie’ en een vogel die vanaf een tak insecten in de lucht vangt.",
       "Klein; de man zwart-wit met een witte vleugelvlek en een wit vlekje op het voorhoofd."
+    ] },
+    { bron:"Vogelbescherming, vogelgids bonte vliegenvanger", sl:{ i:4, t:"Een witte vleugelvlek: de grauwe soort heeft die niet." }, wn:[
+      "Kust bij Castricum, augustus. Na een nacht met oostenwind.",
+      "Een duinbos met berken en struweel.",
+      "Struiken aan de rand van het duinbos.",
+      "Een grijsbruine vogel op trek trekt steeds met de vleugels en vangt insecten.",
+      "Bruingrijs van boven, wit van onder, met een witte vleugelvlek."
     ] }
   ] },
 { id:"boomkruiper", no:119, g:"B", n:"Boomkruiper", s:"Certhia brachydactyla", r:"VR", l:12, zz:"A", twin:"kortsnavelboomkruiper",
@@ -2377,12 +2440,19 @@ const SPECIES = [
   x:"boomklever",
   t:"De boomklever klimt ook kopje-onder, is blauwgrijs met oranje en heeft een rechte snavel. Deze soort klimt alleen spiraalsgewijs omhoog en heeft een dunne, gebogen snavel.",
   cs:[
-    { bron:"Vogelbescherming, soortpagina boomkruiper", wn:[
+    { sl:{ i:3, t:"Als een muisje omhoog langs de stam schuiven." }, bron:"Vogelbescherming, soortpagina boomkruiper", wn:[
       "Gelderland, februari. In een stadspark.",
       "Een park met oude eiken en platanen.",
       "Een losse schorsflap waarachter takjes en veertjes zitten.",
       "Een hoog, ijl liedje ‘tie-tie-tietere-tiet’; een vogel die als een muisje omhoog langs de stam schuift.",
       "Bruin gestreept van boven, vuilwit van onder, met een dunne, gebogen snavel en stijve staartveren."
+    ] },
+    { bron:"Vogelbescherming, vogelgids boomkruiper", sl:{ i:4, t:"Vuilwitte, bruinige flanken en een lange snavel: de kortsnavelsoort is zuiverder wit." }, wn:[
+      "Zeeland, november. Een koude dag.",
+      "Een park met oude populieren.",
+      "Stammen met ruwe schors.",
+      "Een vogeltje klimt spiraalsgewijs omhoog langs een stam en vliegt dan naar de voet van de volgende boom.",
+      "Bruin gestreept, met een dunne gebogen snavel en vuilwitte, iets bruinige flanken."
     ] }
   ] },
 { id:"kortsnavelboomkruiper", no:120, g:"B", n:"Kortsnavelboomkruiper", s:"Certhia familiaris", r:"VR", l:12, zz:"Z", twin:"boomkruiper",
@@ -2390,12 +2460,19 @@ const SPECIES = [
   x:"boomklever",
   t:"De boomklever klimt ook kopje-onder, is blauwgrijs met oranje en heeft een rechte snavel. Deze soort klimt alleen spiraalsgewijs omhoog en heeft een dunne, gebogen snavel.",
   cs:[
-    { bron:"Sovon, soortpagina kortsnavelboomkruiper", wn:[
+    { sl:{ i:3, t:"Een snel, dalend liedje dat eindigt in een triller." }, bron:"Sovon, soortpagina kortsnavelboomkruiper", wn:[
       "Twente, maart. Vlak bij de Duitse grens.",
       "Een oud, koel naaldbos met sparren en lariksen, afgewisseld met beuken.",
       "Een losgeraakte schorsflap aan een dode spar.",
       "Een snel, dalend liedje dat eindigt in een triller, anders dan bij zijn algemene evenbeeld.",
       "Bruin gestreept van boven, zuiver wit van onder, met een iets kortere snavel en een witte wenkbrauwstreep."
+    ] },
+    { bron:"Sovon, soortpagina kortsnavelboomkruiper", sl:{ i:3, t:"Een dalend liedje met een triller: zo onderscheid je hem van zijn algemene evenbeeld." }, wn:[
+      "Zuid-Limburg, mei. Een koele ochtend.",
+      "Een hellingbos met fijnsparren en beuken.",
+      "Een spleet achter de schors van een dode beuk.",
+      "Een vogeltje schuift omhoog langs een sparrenstam en zingt een snel, dalend liedje met een triller op het eind.",
+      "Zuiver wit van onder, met een witte wenkbrauwstreep."
     ] }
   ] },
 { id:"brilduiker", no:121, g:"B", n:"Brilduiker", s:"Bucephala clangula", r:"VR", l:45, zz:"MA", twin:null,
@@ -2403,12 +2480,19 @@ const SPECIES = [
   x:"eidereend",
   t:"De eidereend is groter, heeft een wigvormige kop zonder ronde wangvlek en zit vooral op zee en in de Waddenzee. Deze soort heeft een driehoekige kop en (bij de man) een ronde witte vlek voor het oog.",
   cs:[
-    { bron:"Vogelbescherming en Sovon, soortpagina brilduiker", wn:[
+    { sl:{ i:4, t:"Een ronde witte vlek tussen snavel en oog." }, bron:"Vogelbescherming en Sovon, soortpagina brilduiker", wn:[
       "IJsselmeer, januari. Het is ijzig koud.",
       "Een groot zoet meer met dijken en luwe havens.",
       "Een kom achter een strekdam, waar groepjes eenden telkens wegduiken.",
       "Een man die zijn kop ver naar achteren gooit bij de balts; zingende vleugels bij het opvliegen.",
       "Een zwarte, driehoekige kop met een ronde witte vlek tussen snavel en geel oog."
+    ] },
+    { bron:"Vogelbescherming, vogelgids brilduiker", sl:{ i:4, t:"Een chocoladebruine kop met een gele snavelpunt: het vrouwtje." }, wn:[
+      "Veerse Meer, februari. Een koude dag.",
+      "Een groot zout meer met luwe oevers.",
+      "Een kom bij een havenhoofd.",
+      "Een groepje eenden duikt steeds weer; de vrouwtjes hebben een bruine kop.",
+      "Vrouwtje met chocoladebruine kop, witte halsband, grijs lijf en een gele snavelpunt."
     ] }
   ] },
 { id:"draaihals", no:122, g:"B", n:"Draaihals", s:"Jynx torquilla", r:"VR", l:17, zz:"Z", twin:null,
@@ -2416,12 +2500,19 @@ const SPECIES = [
   x:"groene-specht",
   t:"De groene specht is groter, groen met een rode kruin en hakt zelf holen. Deze soort is grijsbruin gevlekt als boomschors en gebruikt bestaande holtes of nestkasten.",
   cs:[
-    { bron:"Sovon en Vogelbescherming, soortpagina draaihals", wn:[
+    { sl:{ i:4, t:"Gevlekt als schors en draait bij gevaar zijn kop als een slang." }, bron:"Sovon en Vogelbescherming, soortpagina draaihals", wn:[
       "Veluwe, mei. Een warme, windstille dag.",
       "Een heideterrein met stuifzand, verspreide oude eiken en dennen.",
       "Een oud spechtenhol in een dode berk aan de rand van een open vlakte.",
       "Een klaaglijk, herhaald ‘kjie-kjie-kjie’; een vogel die op de grond mieren uit een mierenhoop likt.",
       "Grijsbruin gevlekt als schors, met een donkere streep over kruin en rug; draait bij gevaar zijn kop als een slang."
+    ] },
+    { bron:"Vogelbescherming, vogelgids draaihals", sl:{ i:4, t:"Gevlekt als schors: deze kleine specht heeft geen bonte kleuren en hakt geen eigen hol." }, wn:[
+      "Texel, september. Na een paar dagen oostenwind.",
+      "Een duinvallei met duindoorn.",
+      "Een kale zandplek tussen struiken.",
+      "Een vogel zit stil op de grond en likt mieren op; hij valt nauwelijks op.",
+      "Grijsbruin gevlekt als schors, met een donkere streep over kruin en rug."
     ] }
   ] },
 { id:"eidereend", no:123, g:"B", n:"Eidereend", s:"Somateria mollissima", r:"VR", l:60, zz:"MA", twin:null,
@@ -2429,12 +2520,19 @@ const SPECIES = [
   x:"brilduiker",
   t:"De brilduiker is kleiner, heeft een driehoekige kop met een ronde witte wangvlek en zit vooral op zoete meren. Deze soort heeft een wigvormige kop waarbij de snavel doorloopt in het voorhoofd.",
   cs:[
-    { bron:"Vogelbescherming en Sovon, soortpagina eidereend", wn:[
+    { sl:{ i:4, t:"Een zware eend met een wigvormige kop, waarbij het voorhoofd doorloopt in de snavel." }, bron:"Vogelbescherming en Sovon, soortpagina eidereend", wn:[
       "Waddenzee bij Vlieland, december.",
       "Getijdengeulen en wadplaten achter een eiland.",
       "Een mosselbank die bij laagwater droogvalt.",
       "Grote groepen duikende eenden en een zacht, verbaasd ‘ahoo’ van de mannetjes.",
       "Een zware eend met een wigvormige kop; de man wit en zwart met een groene nekvlek."
+    ] },
+    { bron:"Vogelbescherming, vogelgids eidereend", sl:{ i:3, t:"Vrouwtjes die hun kuikens samen in een 'crèche' grootbrengen." }, wn:[
+      "Texel, juni. Een zonnige dag.",
+      "Duinen achter de Waddenkust.",
+      "Een nest van dons tussen het helm.",
+      "Een groep bruine vrouwtjes met tientallen kuikens zwemt samen langs de wadkust.",
+      "Een zware bruine eend met een wigvormige kop."
     ] }
   ] },
 { id:"ekster", no:124, g:"B", n:"Ekster", s:"Pica pica", r:"VR", l:45, zz:"A", twin:null,
@@ -2442,12 +2540,19 @@ const SPECIES = [
   x:"kauw",
   t:"De kauw is helemaal zwart met een grijze nek en een korte staart. Deze soort is zwart-wit met een lange, groenglanzende staart en bouwt een overkapt takkennest.",
   cs:[
-    { bron:"Vogelbescherming, soortpagina ekster", wn:[
+    { sl:{ i:4, t:"Zwart-wit, met een lange glanzende staart." }, bron:"Vogelbescherming, soortpagina ekster", wn:[
       "Noord-Brabant, februari. Langs een provinciale weg.",
       "Een dorpsrand met erven, weilanden en meidoornhagen.",
       "Een groot, bolvormig takkennest met een dak, hoog in een meidoorn.",
       "Een ratelend ‘tsjak-tsjak-tsjak’ en een vogel die verkeersslachtoffers afloopt.",
       "Zwart-wit, met een lange staart die in het licht groen en paars glanst."
+    ] },
+    { bron:"Vogelbescherming, vogelgids ekster", sl:{ i:4, t:"Zwart-wit met een lange, glanzende staart." }, wn:[
+      "Amsterdam, september. Een zonnige dag.",
+      "Een woonwijk.",
+      "Een gazon.",
+      "Een groep van tien vogels achtervolgt luid ratelend een kat; een vogel verstopt een stukje brood onder het gras.",
+      "Zwart-wit, met een lange, glanzende staart."
     ] }
   ] },
 { id:"gekraagde-roodstaart", no:125, g:"B", n:"Gekraagde roodstaart", s:"Phoenicurus phoenicurus", r:"VR", l:14, zz:"MA", twin:null,
@@ -2455,12 +2560,19 @@ const SPECIES = [
   x:"zwarte-roodstaart",
   t:"De zwarte roodstaart is (bij de man) roetzwart zonder oranje borst en broedt aan gebouwen. Deze soort heeft een oranje borst, een witte voorhoofdsband en broedt in boomholtes.",
   cs:[
-    { bron:"Vogelbescherming en Sovon, soortpagina gekraagde roodstaart", wn:[
+    { sl:{ i:4, t:"Een zwarte keel, oranje borst en witte voorhoofdsband." }, bron:"Vogelbescherming en Sovon, soortpagina gekraagde roodstaart", wn:[
       "Drenthe, mei. Vroeg in de ochtend.",
       "Een open, oud eiken-berkenbos aan de rand van de heide.",
       "Een natuurlijke holte in een oude eik met weinig ondergroei eromheen.",
       "Een melancholiek liedje dat begint met ‘hu-ie-tuk-tuk’; een staart die voortdurend trilt.",
       "De man heeft een zwarte keel, oranje borst, witte voorhoofdsband en een roestrode staart."
+    ] },
+    { bron:"Vogelbescherming, vogelgids gekraagde roodstaart", sl:{ i:4, t:"Een zwarte keel, oranje borst en witte voorhoofdsband." }, wn:[
+      "Kennemerduinen, september. Een zachte ochtend.",
+      "Een duinbos met berken.",
+      "Een lage tak boven een zandpad.",
+      "Een vogel duikt steeds naar de grond voor een insect en keert terug; de staart trilt.",
+      "Een man met grijze rug, zwarte keel, oranje borst en een witte voorhoofdsband."
     ] }
   ] },
 { id:"glanskop", no:126, g:"B", n:"Glanskop", s:"Poecile palustris", r:"VR", l:12, zz:"MA", twin:null,
@@ -2468,12 +2580,19 @@ const SPECIES = [
   x:"zwarte-mees",
   t:"De zwarte mees heeft een witte nekvlek en twee witte vleugelstreepjes en houdt van naaldbos. Deze soort heeft een glanzend zwart kapje, een klein zwart befje en geen vleugelstreepjes.",
   cs:[
-    { bron:"Vogelbescherming en Sovon, soortpagina glanskop", wn:[
+    { sl:{ i:4, t:"Een glanzend zwart kapje en een klein befje." }, bron:"Vogelbescherming en Sovon, soortpagina glanskop", wn:[
       "Zuid-Limburg, december. Een vochtig hellingbos.",
       "Een oud loofbos met eiken, beuken en hazelaar.",
       "Een kleine, bestaande holte laag in een rotte stam.",
       "Een explosief ‘pitsjoe’; een vogel die zaadjes één voor één verstopt in schorsspleten.",
       "Grijsbruin, met een glanzend zwart kapje en een klein zwart befje."
+    ] },
+    { bron:"Vogelbescherming, vogelgids glanskop", sl:{ i:4, t:"Een glanzend kapje zonder lichte vleugelvlek: de matkop heeft een dof kapje." }, wn:[
+      "Achterhoek, april. Een zachte dag.",
+      "Vochtig loofbos met elzen en essen.",
+      "Een laag gat in een rotte els.",
+      "Een luide, korte roep en een snel 'tjip-tjip-tjip'.",
+      "Grijsbruin, met een glanzend zwart kapje en een klein befje."
     ] }
   ] },
 { id:"grauwe-vliegenvanger", no:127, g:"B", n:"Grauwe vliegenvanger", s:"Muscicapa striata", r:"VR", l:14, zz:"MA", twin:null,
@@ -2481,12 +2600,19 @@ const SPECIES = [
   x:"bonte-vliegenvanger",
   t:"De bonte vliegenvanger is (bij de man) zwart-wit en broedt in een gesloten holte of nestkast met rond gat. Deze soort is grijsbruin, gestreept op de kruin en broedt in een half-open nis.",
   cs:[
-    { bron:"Vogelbescherming en Sovon, soortpagina grauwe vliegenvanger", wn:[
+    { sl:{ i:3, t:"Steeds vanaf dezelfde tak een insect vangen en terugkeren." }, bron:"Vogelbescherming en Sovon, soortpagina grauwe vliegenvanger", wn:[
       "Achterhoek, juni. Rond de middag.",
       "Een oude boerderijtuin met hoge bomen bij een landgoed.",
       "Een nis in klimop tegen een schuurmuur, of een half-open nestkast.",
       "Een vogel die steeds vanaf dezelfde tak een insect in de lucht vangt en terugkeert; een zacht ‘tsiet’.",
       "Grijsbruin, slank, met een fijn gestreepte kruin en borst en een rechtop zittende houding."
+    ] },
+    { bron:"Vogelbescherming, vogelgids grauwe vliegenvanger", sl:{ i:4, t:"Een gestreepte kruin en geen witte vleugelvlek." }, wn:[
+      "Den Haag, augustus. Een warme dag.",
+      "Een stadspark met oude bomen.",
+      "Een dode tak aan de rand van een open plek.",
+      "Ouders voeren uitgevlogen, gevlekte jongen op een lage tak.",
+      "Grijsbruin en slank, met een fijn gestreepte kruin."
     ] }
   ] },
 { id:"grote-bonte-specht", no:128, g:"B", n:"Grote bonte specht", s:"Dendrocopos major", r:"VR", l:23, zz:"A", twin:null,
@@ -2494,11 +2620,18 @@ const SPECIES = [
   x:"kleine-bonte-specht",
   t:"De kleine bonte specht is mussengroot, heeft dwarse witte strepen over de rug en geen rood onder de staart. Deze soort is lijstergroot, heeft grote witte schoudervlekken en een rode onderstaart.",
   cs:[
-    { bron:"Vogelbescherming, soortpagina grote bonte specht", wn:[
+    { sl:{ i:3, t:"Een spechtensmidse vol dennenkegels." }, bron:"Vogelbescherming, soortpagina grote bonte specht", wn:[
       "Het Gooi, februari. Een windstille, koude ochtend.",
       "Een gemengd bos met grove dennen en eiken.",
       "Een ‘spechtensmidse’: een spleet in een stam vol uitgepikte dennenkegels, met lege kegels eronder.",
       "Een kort, snel roffel dat ver draagt, en een scherp ‘kik’.",
+      "Zwart-wit, met grote witte schoudervlekken en een rode onderstaart."
+    ] },
+    { bron:"Vogelbescherming, vogelgids grote bonte specht", sl:{ i:4, t:"Witte schoudervlekken en een rode onderstaart." }, wn:[
+      "Twente, juni. Een warme dag.",
+      "Een bosrand met berken.",
+      "Een nestkast waarvan het invlieggat is uitgehakt.",
+      "Uit een gat in een berk klinkt de hele dag luid gebedel; een volwassen vogel hakt een nestkast open.",
       "Zwart-wit, met grote witte schoudervlekken en een rode onderstaart."
     ] }
   ] },
@@ -2507,12 +2640,19 @@ const SPECIES = [
   x:"groene-specht",
   t:"De groene specht is groen met een rode kruin en roept een lachend ‘kjuk-kjuk’. Deze soort is roze-oranjebruin met een zwart-witte kuif en roept een dof ‘oep-oep-oep’.",
   cs:[
-    { bron:"Sovon, zeldzame broedvogels; Vogelbescherming, soortpagina hop", wn:[
+    { sl:{ i:4, t:"Oranjeroze met zwart-witte vleugels en een waaierkuif." }, bron:"Sovon, zeldzame broedvogels; Vogelbescherming, soortpagina hop", wn:[
       "Veluwe, april. Een warme dag na de eerste zuidenwind.",
       "Een open heide met stuifzand en kort begraasde graslandjes.",
       "Een kale, zonnige zandplek waar de vogel met zijn snavel in de grond prikt.",
       "Een dof, ver dragend ‘oep-oep-oep’; een vlucht als van een grote, onregelmatig fladderende vlinder.",
       "Oranjeroze, met zwart-wit gestreepte vleugels, een lange gebogen snavel en een kuif die hij als een waaier opzet."
+    ] },
+    { bron:"Vogelbescherming, vogelgids hop", sl:{ i:4, t:"Oranjeroze met zwart-witte vleugels en kuif: onmiskenbaar." }, wn:[
+      "Kust bij Den Helder, april. Een warme dag met zuidoostenwind.",
+      "Grijze duinen met kort gras.",
+      "Een begraasd stuk duin met konijnenholen.",
+      "Een opvallende vogel fladdert met een golvende, vlinderachtige vlucht weg en landt weer, prikkend in de grond.",
+      "Roze-oranje, met zwart-witte vleugels en een kuif."
     ] }
   ] },
 { id:"kleine-bonte-specht", no:130, g:"B", n:"Kleine bonte specht", s:"Dryobates minor", r:"VR", l:15, zz:"MA", twin:null,
@@ -2520,12 +2660,19 @@ const SPECIES = [
   x:"grote-bonte-specht",
   t:"De grote bonte specht is lijstergroot, heeft grote witte schoudervlekken en een rode onderstaart. Deze soort is mussengroot, met dwarse witte strepen over rug en vleugels.",
   cs:[
-    { bron:"Vogelbescherming en Sovon, soortpagina kleine bonte specht", wn:[
+    { sl:{ i:4, t:"Mussengroot, met dwarse witte strepen over de rug." }, bron:"Vogelbescherming en Sovon, soortpagina kleine bonte specht", wn:[
       "Biesbosch, maart. Een broekbos langs een kreek.",
       "Een vochtig wilgenbos met veel dood hout.",
       "Een klein, rond gat in een dunne, rotte wilgentak hoog in de kruin.",
       "Een zwak, lang aangehouden roffel en een hoog, klagend ‘kie-kie-kie-kie’.",
       "Mussengroot, met dwarse witte strepen over de rug en (bij de man) een rode kruin."
+    ] },
+    { bron:"Vogelbescherming, vogelgids kleine bonte specht", sl:{ i:4, t:"Mussengroot met dwars gestreepte rug: geen witte schoudervlekken zoals bij de grote bonte." }, wn:[
+      "Betuwe, april. Een zonnige dag.",
+      "Een hoogstamboomgaard.",
+      "Een dode tak in een oude appelboom.",
+      "Een vogeltje klimt in de dunste takken en roffelt zacht.",
+      "Een zwart-wit geladderde rug en geen witte schoudervlekken."
     ] }
   ] },
 { id:"kleine-vliegenvanger", no:131, g:"B", n:"Kleine vliegenvanger", s:"Ficedula parva", r:"VR", l:12, zz:"ZZ", twin:null,
@@ -2533,12 +2680,19 @@ const SPECIES = [
   x:"grauwe-vliegenvanger",
   t:"De grauwe vliegenvanger is groter, egaal grijsbruin met een gestreepte kruin en heeft geen wit in de staart. Deze soort is klein, met een opvallende witte vlek aan weerszijden van de staartbasis.",
   cs:[
-    { bron:"Sovon en Vogelbescherming, soortpagina kleine vliegenvanger", wn:[
+    { sl:{ i:4, t:"Witte vlekken aan de zijkant van een zwarte staart." }, bron:"Sovon en Vogelbescherming, soortpagina kleine vliegenvanger", wn:[
       "Vlieland, september. Na een paar dagen oostenwind.",
       "Een duinvallei met een klein bosje van berk en populier.",
       "Het lage struikgewas in de luwte van het bosje.",
       "Een droog, ratelend ‘zrrrt’; een vogel die zijn staart steeds even opwipt en spreidt.",
       "Klein en grijsbruin met een opvallende oogring; witte vlekken aan de zijkanten van een zwarte staart."
+    ] },
+    { bron:"Vogelbescherming, vogelgids kleine vliegenvanger", sl:{ i:4, t:"Een oranjerode keel en een zwart-witte staart." }, wn:[
+      "Veluwe, mei. Een warme dag.",
+      "Een oud beukenbos met weinig ondergroei.",
+      "Hoog in de kruinen.",
+      "Een zingend mannetje met een helder, dalend liedje.",
+      "Een man met een oranjerode keel, grijze kop en zwart-witte staart."
     ] }
   ] },
 { id:"koolmees", no:132, g:"B", n:"Koolmees", s:"Parus major", r:"VR", l:14, zz:"A", twin:null,
@@ -2546,12 +2700,19 @@ const SPECIES = [
   x:"pimpelmees",
   t:"De pimpelmees is kleiner, heeft een blauw petje en geen zwarte buikstreep. Deze soort heeft een zwarte kop met witte wangen en een zwarte streep over de gele buik.",
   cs:[
-    { bron:"Vogelbescherming, soortpagina koolmees", wn:[
+    { sl:{ i:4, t:"Een zwarte streep over borst en buik." }, bron:"Vogelbescherming, soortpagina koolmees", wn:[
       "Rotterdam, november. In een volkstuin.",
       "Een stadspark met tuinen en voederplekken.",
       "Een nestkast met een gat van 32 mm, nog vol oud mos van vorig voorjaar.",
       "Een luid ‘tie-tuu, tie-tuu’, ook al in de winter; een vogel die aan een vetbol hangt.",
       "Geel met een zwarte kop, witte wangen en een zwarte streep over borst en buik."
+    ] },
+    { bron:"Vogelbescherming, vogelgids koolmees", sl:{ i:4, t:"Een zwarte streep over de buik." }, wn:[
+      "Gelderland, mei. Een zonnige dag.",
+      "Een tuin met fruitbomen.",
+      "Een nestkast aan een schuur.",
+      "De ouders brengen om de paar minuten een groene rups naar de kast.",
+      "Geel met een zwarte kop en een zwarte streep over de buik."
     ] }
   ] },
 { id:"pimpelmees", no:133, g:"B", n:"Pimpelmees", s:"Cyanistes caeruleus", r:"VR", l:12, zz:"A", twin:null,
@@ -2559,12 +2720,19 @@ const SPECIES = [
   x:"koolmees",
   t:"De koolmees is groter, heeft een zwarte kop en een zwarte streep over de buik. Deze soort heeft een blauw petje, een witte kop met een donkere oogstreep en geen buikstreep.",
   cs:[
-    { bron:"Vogelbescherming, soortpagina pimpelmees", wn:[
+    { sl:{ i:4, t:"Een blauw petje en blauwe vleugels." }, bron:"Vogelbescherming, soortpagina pimpelmees", wn:[
       "Utrecht, januari. Een rietkraag langs een singel.",
       "Een stadsrand met tuinen, singels en een rietkraag.",
       "Rietpluimen en lisdoddes waarvan de stengels zijn opengepikt.",
       "Een kleine vogel die ondersteboven aan een rietstengel hangt; een fijn ‘tsie-tsie-tsurrr’.",
       "Klein, geel van onder, met een blauw petje en blauwe vleugels."
+    ] },
+    { bron:"Vogelbescherming, vogelgids pimpelmees", sl:{ i:4, t:"Een blauw petje: de koolmees heeft een zwarte kop." }, wn:[
+      "Amsterdam, april. Een zonnige dag.",
+      "Een achtertuin.",
+      "Een nestkast met een gat van 28 mm.",
+      "Een klein vogeltje hangt met de buik naar boven aan een wilgenkatje.",
+      "Een blauw petje en een gele buik."
     ] }
   ] },
 { id:"raaf", no:134, g:"B", n:"Raaf", s:"Corvus corax", r:"VR", l:64, zz:"MA", twin:null,
@@ -2572,12 +2740,19 @@ const SPECIES = [
   x:"zwarte-kraai",
   t:"De zwarte kraai is kleiner, met een rechte staart en een schor ‘kraa’. Deze soort is buizerdgroot, heeft een wigvormige staart, een zware snavel en een diep ‘krok-krok’.",
   cs:[
-    { bron:"Vogelbescherming en Sovon, soortpagina raaf", wn:[
+    { sl:{ i:4, t:"Een wigvormige staart en een ruige keel." }, bron:"Vogelbescherming en Sovon, soortpagina raaf", wn:[
       "Drenthe, februari. Boven een uitgestrekt heideveld.",
       "Een groot bos- en heidegebied met verspreide oude grove dennen.",
       "Een groot, stevig takkennest in de kruin van een oude den, bekleed met wol en haar.",
       "Een diep, galmend ‘krok-krok’; twee vogels die samen duikelen en op de rug draaien in de lucht.",
       "Geheel zwart, groot als een buizerd, met een zware snavel, ruige keel en wigvormige staart."
+    ] },
+    { bron:"Vogelbescherming, vogelgids raaf", sl:{ i:4, t:"Een wigvormige staart: de zwarte kraai heeft een rechte staart." }, wn:[
+      "Veluwe, september. Een koele dag.",
+      "Een groot bos.",
+      "Een kadaver van een edelhert.",
+      "Een groep grote zwarte vogels eet; een diep 'krok' ver hoorbaar.",
+      "Groot en zwart, met een wigvormige staart."
     ] }
   ] },
 { id:"ruigpootuil", no:135, g:"B", n:"Ruigpootuil", s:"Aegolius funereus", r:"VR", l:25, zz:"ZZ", twin:null,
@@ -2585,12 +2760,19 @@ const SPECIES = [
   x:"steenuil",
   t:"De steenuil heeft een platte kop, gele ogen onder ‘boze’ wenkbrauwen en zit in kleinschalig boerenland. Deze soort heeft een grote, ronde kop met een licht gezicht met donkere rand en zit in oud naaldbos.",
   cs:[
-    { bron:"Sovon, soortpagina ruigpootuil", wn:[
+    { sl:{ i:4, t:"Dicht bevederde poten en een wit gezicht met donkere rand." }, bron:"Sovon, soortpagina ruigpootuil", wn:[
       "Midden-Drenthe, maart. Een koude, windstille nacht.",
       "Een groot, oud naaldbos met sparren en grove dennen.",
       "Een oud hol van een zwarte specht, hoog in een beuk.",
       "Een snelle reeks zachte, fluitende ‘poe-poe-poe-poe’, die aanzwelt en ver draagt.",
       "Klein, met een grote ronde kop, een wit gezicht met donkere rand, gele ogen en dicht bevederde poten."
+    ] },
+    { bron:"Vogelbescherming, vogelgids ruigpootuil", sl:{ i:4, t:"Een wit gezicht met donkere rand en een vierkante kop." }, wn:[
+      "Veluwe, juni. Een warme nacht.",
+      "Een groot naaldbos.",
+      "Een speciale nestkast hoog in een den.",
+      "Jongen kijken 's nachts uit de kast.",
+      "Klein, met een grote vierkante kop en een wit gezicht met donkere rand."
     ] }
   ] },
 { id:"zeearend", no:136, g:"B", n:"Zeearend", s:"Haliaeetus albicilla", r:"VR", l:85, zz:"Z", twin:null,
@@ -2598,12 +2780,19 @@ const SPECIES = [
   x:"buizerd",
   t:"De buizerd is veel kleiner, met een korte, gebandeerde staart. Deze soort heeft een spanwijdte van meer dan twee meter, ‘plankvleugels’ en (oud) een korte witte wigstaart.",
   cs:[
-    { bron:"Sovon, soortpagina zeearend; Vogelbescherming", wn:[
+    { sl:{ i:4, t:"Brede 'plankvleugels', een zware gele snavel en een witte staart." }, bron:"Sovon, soortpagina zeearend; Vogelbescherming", wn:[
       "Lauwersmeer, december. Een heldere winterdag.",
       "Een groot meer met rietlanden, plassen en verspreide bosjes.",
       "Een reusachtig takkennest in een oude populier aan de rand van een moerasbos.",
       "Duizenden ganzen die tegelijk opvliegen als er een grote roofvogel overkomt.",
       "Enorm, met brede ‘plankvleugels’, een zware gele snavel en een korte witte staart."
+    ] },
+    { bron:"Vogelbescherming, vogelgids zeearend", sl:{ i:4, t:"Een witte staart en een lichte kop: de grootste roofvogel van Nederland." }, wn:[
+      "Biesbosch, april. Een heldere dag.",
+      "Een zoetwatergetijdengebied.",
+      "Een nest in een wilg.",
+      "Een enorme roofvogel vist een karper uit het water.",
+      "Bruin, met een lichte kop en witte staart."
     ] }
   ] },
 { id:"zwarte-mees", no:137, g:"B", n:"Zwarte mees", s:"Periparus ater", r:"VR", l:11, zz:"A", twin:null,
@@ -2611,12 +2800,19 @@ const SPECIES = [
   x:"glanskop",
   t:"De glanskop heeft geen witte nekvlek en geen vleugelstreepjes en zit in loofbos. Deze soort heeft een witte vlek in de nek, twee witte vleugelstreepjes en zit vooral in naaldbos.",
   cs:[
-    { bron:"Vogelbescherming en Sovon, soortpagina zwarte mees", wn:[
+    { sl:{ i:4, t:"Een witte nekvlek en twee witte vleugelstreepjes." }, bron:"Vogelbescherming en Sovon, soortpagina zwarte mees", wn:[
       "Veluwe, oktober. Een rustige najaarsdag.",
       "Een uitgestrekt naaldbos met fijnsparren en douglas.",
       "Een holte tussen boomwortels, laag bij de grond.",
       "Een snel, hoog ‘tsie-tsuu tsie-tsuu’ uit de kruin; kleine vogels die tussen de naalden hangen.",
       "Heel klein, met een zwarte kop, witte wangen, een witte nekvlek en twee witte vleugelstreepjes."
+    ] },
+    { bron:"Vogelbescherming, vogelgids zwarte mees", sl:{ i:4, t:"Een witte nekvlek: dat heeft geen ander klein vogeltje." }, wn:[
+      "Zuid-Limburg, januari. Een koude dag.",
+      "Een fijnsparrenbos.",
+      "Sparrenkegels.",
+      "Kleine vogeltjes eten zaad uit de kegels, samen met goudhaantjes.",
+      "Heel klein, met een zwarte kop en een witte nekvlek."
     ] }
   ] },
 { id:"zwarte-roodstaart", no:138, g:"B", n:"Zwarte roodstaart", s:"Phoenicurus ochruros", r:"VR", l:14, zz:"MA", twin:null,
@@ -2624,12 +2820,19 @@ const SPECIES = [
   x:"gekraagde-roodstaart",
   t:"De gekraagde roodstaart heeft (bij de man) een oranje borst en witte voorhoofdsband en broedt in boomholtes. Deze soort is roetgrijs tot zwart en broedt op richels van gebouwen.",
   cs:[
-    { bron:"Vogelbescherming, soortpagina zwarte roodstaart", wn:[
+    { sl:{ i:4, t:"Een roetgrijs verenkleed met een roestrode staart." }, bron:"Vogelbescherming, soortpagina zwarte roodstaart", wn:[
       "Rotterdamse haven, oktober. Een zonnige middag.",
       "Een industrieterrein met loodsen, containers en braakliggend terrein.",
       "Een richel hoog onder een dakgoot van een loods.",
       "Een krassend liedje dat klinkt alsof er grind wordt geschud; een staart die steeds trilt.",
       "Roetgrijs tot zwart, met een roestrode staart en (bij de man) een witte vleugelvlek."
+    ] },
+    { bron:"Vogelbescherming, vogelgids zwarte roodstaart", sl:{ i:4, t:"Roetgrijs met een roestrode staart." }, wn:[
+      "Zuid-Limburg, april. Vroeg in de ochtend.",
+      "Een dorp met oude huizen.",
+      "De nok van een dak.",
+      "Bij zonsopkomst een kort, rasperig liedje van het hoogste punt van een dak; een nest op een balk in een schuur.",
+      "Roetgrijs met een roestrode staart."
     ] }
   ] },
 { id:"goudjakhals", no:139, g:"Z", n:"Goudjakhals", s:"Canis aureus", r:"BAL", l:100, zz:"Z", twin:null,
