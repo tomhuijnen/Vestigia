@@ -2915,8 +2915,26 @@ const SPECIES = [
       "Spanwijdte zo'n 6 cm; oranjebruin met zwarte vlekken en zonder witte vlek bij de vleugelpunt."
     ] }
   ] },
-{ id:"donker-pimpernelblauwtje", no:null, g:"V", n:"Donker pimpernelblauwtje", s:"Phengaris nausithous", r:"HR", l:3.5, zz:null, twin:"pimpernelblauwtje",
-  h:["OPEN","MOER"], a:["DAG"], v:["PLANT","ONG"], b:["VEG","GROND"], w:["SLAAP"] },
+{ id:"donker-pimpernelblauwtje", no:145, g:"V", n:"Donker pimpernelblauwtje", s:"Phengaris nausithous", r:"HR", l:3.5, zz:"Z", twin:"pimpernelblauwtje",
+  h:["OPEN","MOER"], a:["DAG"], v:["PLANT","ONG"], b:["VEG","GROND"], w:["SLAAP"],
+  x:"pimpernelblauwtje",
+  t:"Het pimpernelblauwtje is van onderen lichter grijsbruin met twee rijen zwarte stippen, vliegt iets eerder en legt één eitje per klein bloemhoofdje. Het donker pimpernelblauwtje zoekt juist de grote, nog gesloten hoofdjes in ruigere vegetatie en leeft met de gewone steekmier.",
+  cs:[
+    { bron:"De Vlinderstichting; Natura 2000-profiel H1061; De dagvlinders van Nederland", sl:{ i:4, t:"Een egaal donker koffiebruine onderkant met maar één rij stippen. Het vrouwtje legt meerdere eitjes in grote bloemhoofdjes die nog niet bloeien." }, wn:[
+      "Roerdal bij Posterholt, eind juli. Een warme, benauwde middag.",
+      "Een beekdal met vochtige graslanden, sloten en ruige randen langs de weg.",
+      "Een wegberm en slootkant met hoge ruigte, waartussen een waardplant met donkerrode bloemhoofdjes staat.",
+      "Kleine blauwe diertjes leggen meerdere eitjes in grote, nog gesloten bloemhoofdjes; in de ruigte veel nesten van de gewone steekmier.",
+      "Spanwijdte zo'n 3,3 cm; onderkant egaal donker koffiebruin met één rij zwarte stippen, zonder stippen langs de rand."
+    ] },
+    { bron:"De Vlinderstichting; Natura 2000-profiel H1061", sl:{ i:2, t:"Hij zoekt de ruigere, iets beschaduwde randen op, waar de gewone steekmier woont. De rups wordt daar meestal binnen een kwartier door de mieren meegenomen." }, wn:[
+      "Midden-Limburg, begin augustus. Een warme, bewolkte avond.",
+      "Een beekdal met hooilanden die laat in het jaar worden gemaaid.",
+      "Een ruige slootrand in de halfschaduw van een rij elzen, waar niet gemaaid wordt.",
+      "Kleine, donkere diertjes slapen met dichtgevouwen vleugels op de donkerrode bloemhoofdjes, soms met een paar op één hoofdje.",
+      "Het mannetje is van boven donkerblauw met een brede zwarte rand; de onderkant is chocoladebruin met één rij stippen."
+    ] }
+  ] },
 { id:"kleine-vos", no:null, g:"V", n:"Kleine vos", s:"Aglais urticae", r:"NB", l:5, zz:null, twin:null,
   h:["HALF","BEB","OPEN"], a:["DAG"], v:["PLANT"], b:["VEG"], w:["SLAAP"] },
 { id:"groot-avondrood", no:null, g:"V", n:"Groot avondrood", s:"Deilephila elpenor", r:"NB", l:6, zz:null, twin:null,

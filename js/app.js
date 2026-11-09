@@ -16,9 +16,10 @@ document.addEventListener("keydown", e => {
 /* namen in beeld uit data/teksten.js */
 document.querySelectorAll("[data-naam]").forEach(el => { if (NAAM[el.dataset.naam]) el.textContent = NAAM[el.dataset.naam]; });
 
-const sorted = SPECIES.slice().sort((a, b) => a.n.localeCompare(b.n, "nl"));
-$("splist").innerHTML = sorted.map(x => `<div class="${x.cs ? "tgt" : ""}"><span>${esc(x.n)}</span> <i>${esc(x.s)}</i></div>`).join("");
-$("listSum").textContent = `${SPECIES.length} soorten · ${TARGETS.length} met casus (*)`;
+const sorted = KIESBAAR.slice().sort((a, b) => a.n.localeCompare(b.n, "nl"));
+const sterretje = KIESBAAR.length !== TARGETS.length;
+$("splist").innerHTML = sorted.map(x => `<div class="${x.cs && sterretje ? "tgt" : ""}"><span>${esc(x.n)}</span> <i>${esc(x.s)}</i></div>`).join("");
+$("listSum").textContent = KIESBAAR.length === TARGETS.length ? `${TARGETS.length} beschermde soorten` : `${KIESBAAR.length} soorten · ${TARGETS.length} met casus (*)`;
 /* aantallen in de spelregels en het veldboek komen uit de data, zodat ze kloppen als er soorten bijkomen */
 document.querySelectorAll("[data-tel=doelsoorten]").forEach(el => el.textContent = TARGETS.length);
 document.querySelectorAll("[data-tel=medailles]").forEach(el => { const w = telwoord(MEDALS.length); el.textContent = el.dataset.hoofd ? w[0].toUpperCase() + w.slice(1) : w; });

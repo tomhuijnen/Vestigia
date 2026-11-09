@@ -210,8 +210,8 @@ const DAGSCHEMA = [
   "gewone-zeehond#1"                , // 205 · zo 30 mei 2027
   "boomkikker#1"                    , // 206 · ma 31 mei 2027
   "rugstreeppad#2"                  , // 207 · di 1 jun 2027
-  "wespendief#1"                    , // 208 · wo 2 jun 2027
-  "pimpernelblauwtje#1"             , // 209 · do 3 jun 2027
+  "wespendief#2"                    , // 208 · wo 2 jun 2027
+  "teunisbloempijlstaart#1"         , // 209 · do 3 jun 2027
   "hazelworm#1"                     , // 210 · vr 4 jun 2027
   "gierzwaluw#2"                    , // 211 · za 5 jun 2027
   "grauwe-gans#2"                   , // 212 · zo 6 jun 2027
@@ -223,20 +223,20 @@ const DAGSCHEMA = [
   "kortsnavelboomkruiper#2"         , // 218 · za 12 jun 2027
   "vinpootsalamander#2"             , // 219 · zo 13 jun 2027
   "grauwe-vliegenvanger#1"          , // 220 · ma 14 jun 2027
-  "teunisbloempijlstaart#2"         , // 221 · di 15 jun 2027
-  "gestippelde-alver#1"             , // 222 · wo 16 jun 2027
+  "grote-vos#2"                     , // 221 · di 15 jun 2027
+  "gestippelde-alver#2"             , // 222 · wo 16 jun 2027
   "noordse-woelmuis#1"              , // 223 · do 17 jun 2027
   "ingekorven-vleermuis#1"          , // 224 · vr 18 jun 2027
-  "zwarte-wouw#2"                   , // 225 · za 19 jun 2027
+  "bonte-vliegenvanger#1"           , // 225 · za 19 jun 2027
   "hamster#2"                       , // 226 · zo 20 jun 2027
   "hazelmuis#2"                     , // 227 · ma 21 jun 2027
   "gekraagde-roodstaart#1"          , // 228 · di 22 jun 2027
-  "wilde-kat#2"                     , // 229 · wo 23 jun 2027
+  "woelrat#2"                       , // 229 · wo 23 jun 2027
   "ree#1"                           , // 230 · do 24 jun 2027
-  "laatvlieger#1"                   , // 231 · vr 25 jun 2027
-  "meerkikker#1"                    , // 232 · za 26 jun 2027
-  "eidereend#2"                     , // 233 · zo 27 jun 2027
-  "grote-modderkruiper#1"           , // 234 · ma 28 jun 2027
-  "ransuil#2"                       , // 235 · di 29 jun 2027
-  "boomvalk#2"                      , // 236 · wo 30 jun 2027
+  "waterspitsmuis#1"                , // 231 · vr 25 jun 2027
+  "grote-modderkruiper#1"           , // 232 · za 26 jun 2027
+  "ruigpootuil#2"                   , // 233 · zo 27 jun 2027
+  "elrits#1"                        , // 234 · ma 28 jun 2027
+  "sperwer#2"                       , // 235 · di 29 jun 2027
+  "torenvalk#1"                     , // 236 · wo 30 jun 2027
 ];
