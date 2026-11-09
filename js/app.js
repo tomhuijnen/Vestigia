@@ -79,9 +79,10 @@ function start(){
 let toastT;
 function toast(msg, action){
   const t = $("toast");
-  t.innerHTML = `<span>${esc(msg)}</span>` + (action ? `<button id="toastBtn">${esc(action.label)}</button>` : "");
+  const knop = action && action.label;
+  t.innerHTML = `<span>${esc(msg)}</span>` + (knop ? `<button id="toastBtn">${esc(action.label)}</button>` : "");
   t.hidden = false;
-  if (action) $("toastBtn").onclick = action.run;
+  if (knop) $("toastBtn").onclick = action.run;
   clearTimeout(toastT);
   if (!action || action.duur) toastT = setTimeout(() => { t.hidden = true; }, action ? action.duur : 3500);   // duur: ook een melding met knop verdwijnt dan vanzelf
 }

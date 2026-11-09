@@ -182,6 +182,7 @@ const Profiel = (() => {
     const geenDb = beschikbaar === false;
     body.innerHTML = `
       <div class="pfkaart">${avatarSVG(me, "avatar groot")}<div><h3>${esc(me.name)}</h3><p class="pfsub">${me.subtitle ? esc(me.subtitle) : "Nog geen ondertitel"}</p></div></div>
+      ${typeof Veld !== "undefined" && Veld.aan() ? `<p class="rankempty"><b>Veldmodus.</b> Zonder internet laden je eikels, de shop en je prestaties niet. Je speelt gewoon verder; alles wordt bijgewerkt zodra je weer online bent.</p>` : ""}
       ${geenDb ? `<p class="rankempty">Eikels, de shop en prestaties komen beschikbaar zodra de database van Vestigia is bijgewerkt.</p>` : `
       <section class="pfsec" aria-labelledby="pfUitH"><h3 id="pfUitH">Uiterlijk</h3>
         <div class="dexfilters" id="pfTabs">${TABS.map(([k, l]) => `<button class="chipbtn" data-t="${k}" aria-pressed="${tab === k}">${l}</button>`).join("")}</div>
