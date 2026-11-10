@@ -1081,3 +1081,10 @@ html.donker .avk-weetje{background:#1d2a22}
 html.donker .avk-melding.goed{background:#1e3527; color:#d6f0dc}
 html.donker .avk-melding.fout{background:#3a1f22; color:#f6d6d6}
 @media (prefers-reduced-motion:reduce){ .adventknop, .avk-podium.open .avk-lampjes .gloed{animation:none} .avk-spoor span svg{opacity:1; animation:none} }
+/* veldweek: vinkje per dag (update 8) */
+.stempels li.ok{display:flex; flex-direction:column; gap:0; line-height:1}
+.stempels li.ok small{font-size:.55rem; margin-top:-2px; opacity:.8}
+.stempels li.ok.goed{border:2px solid var(--moss); color:#2e7d4a; background:var(--mint)}
+.stempels li.ok.mis{border:2px solid #b9c0b6; color:#8c948a; background:#f1f2ee; transform:rotate(-8deg)}
+html.donker .stempels li.ok.goed{color:#8fd3a6; background:#1f3427}
+html.donker .stempels li.ok.mis{color:#8d978f; border-color:#4a564e; background:#1d2a22}
