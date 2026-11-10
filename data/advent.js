@@ -29,5 +29,14 @@ const ADVENT = [
   { dag: 23, soort: "knoflookpad", tekst: "De knoflookpad graaft zich met de hoornige schopjes aan zijn achterpoten diep in losse zandgrond in, onder de vorstgrens.", bron: "RAVON" },
   { dag: 24, soort: "wolf", tekst: "De winter is de tijd waarin wolven paren en roedels het hechtst zijn. Sporen in de sneeuw laten mooi zien hoe een roedel achter elkaar in één spoor loopt. Fijne kerst!", bron: "Zoogdiervereniging" }
 ];
-/* alleen voor ?kerst=demo: zelfde inhoud als supabase-012 */
-const ADVENT_DEMO = d => ({ dag: d, eikels: d === 5 ? 50 : d === 24 ? 25 : [6, 13, 19, 20].includes(d) ? 15 : 10, item: d === 12 ? "kleur:winter" : d === 24 ? "lijst:kerst" : null });
+/* alleen voor ?kerst=demo: zelfde inhoud als supabase-012 (sporenvakje: eikels volgen uit het antwoord) */
+const ADVENT_INHOUD = {
+  1: [10], 2: [0, null, "vos"], 3: [10], 4: [5, "titel:Wintergast"], 5: [50], 6: [15], 7: [0, null, "das"], 8: [10], 9: [10],
+  10: [5, "titel:Sneeuwspoorder"], 11: [0, null, "ree"], 12: [10, "kleur:winter"], 13: [15], 14: [10], 15: [0, null, "boommarter"],
+  16: [5, "kleur:hulst"], 17: [10], 18: [5, "lijst:sneeuwvlokken"], 19: [15], 20: [0, null, "zwijn"], 21: [5, "titel:Midwinter"],
+  22: [10], 23: [5, "titel:Winterkoning"], 24: [25, "lijst:kerst"]
+};
+const ADVENT_DEMO = (d, antwoord) => {
+  const [e, item = null, spoor = null] = ADVENT_INHOUD[d], goed = spoor ? antwoord === spoor : null;
+  return { dag: d, eikels: spoor ? (goed ? 20 : 5) : e, item, spoor, goed, antwoord: antwoord || null };
+};
