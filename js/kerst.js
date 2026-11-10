@@ -122,11 +122,15 @@ const Kerst = (() => {
       return `<button class="avk ${staat}${gekozen === d ? " gekozen" : ""}" data-d="${d}" aria-label="${label}"${staat === "dicht" || staat === "gemist" ? " disabled" : ""}><span class="avk-nr">${d}</span>${v ? klein(v) : ""}${staat === "gemist" ? `<span class="avk-weg">gemist</span>` : ""}</button>`;
     }).join("");
     grid.querySelectorAll(".avk.open, .avk.vandaag").forEach(b => b.onclick = () => klik(+b.dataset.d, b));
+    /* knop onder de kalender: zolang het vakje van vandaag dicht is */
+    const go = $("adventGo");
+    go.hidden = !(s.vandaag && !isOpen(s, s.vandaag));
+    go.onclick = () => { const b = grid.querySelector(".avk.vandaag"); if (b) klik(s.vandaag, b); };
     const v = gekozen && (s.geopend || []).find(x => x.dag === gekozen);
     const box = $("adventVak");
     if (!v){ box.hidden = true; return; }
     box.hidden = false; box.className = "adventvak";
-    box.innerHTML = `<div class="avk-buit">${EIK(v.eikels)}${v.item ? `<span class="avk-extra">${itemBeeld(v.item)}<span>${esc(itemNaam(v.item))}<small>staat in Mijn profiel</small></span></span>` : ""}${v.spoor ? `<span class="avk-extra"><span>${v.goed ? "Spoor goed geraden" : "Spoor niet geraden"}<small>het was ${esc(SPOREN[v.spoor].naam.toLowerCase())}</small></span></span>` : ""}</div>${weetjeHtml(v.dag)}`;
+    box.innerHTML = `<div class="avk-buit">${EIK(v.eikels)}${v.item ? `<span class="avk-extra">${itemBeeld(v.item)}<span>${esc(itemNaam(v.item))}<small>staat in Mijn profiel</small></span></span>` : ""}${v.spoor ? `<span class="avk-extra"><span>${v.goed ? "Spoor goed geraden" : "Spoor niet geraden"}<small>het spoor was van een ${esc(SPOREN[v.spoor].naam.toLowerCase())}</small></span></span>` : ""}</div>${weetjeHtml(v.dag)}`;
   }
 
   /* ---------- openen: het grote moment ---------- */
@@ -161,8 +165,10 @@ const Kerst = (() => {
     const r = knop.getBoundingClientRect();
     const laag = document.createElement("div");
     laag.className = "avk-podium"; laag.setAttribute("role", "dialog"); laag.setAttribute("aria-label", `Vakje ${d}`);
-    laag.innerHTML = `<div class="avk-doos" style="--x:${r.left}px; --y:${r.top}px; --w:${r.width}px">
+    laag.innerHTML = `<div class="avk-sneeuwval" aria-hidden="true"></div>
+      <div class="avk-doos" style="--x:${r.left}px; --y:${r.top}px; --w:${r.width}px">
         <div class="avk-licht" aria-hidden="true"></div>
+        ${LAMPJES}
         <div class="avk-binnen"></div>
         <div class="avk-deur l" aria-hidden="true"><span>${d}</span></div><div class="avk-deur r" aria-hidden="true"></div>
         <div class="avk-strik" aria-hidden="true"></div>
@@ -175,11 +181,13 @@ const Kerst = (() => {
     requestAnimationFrame(() => requestAnimationFrame(() => laag.classList.add("groot")));
     /* bij een gewoon vakje loopt de server alvast mee met de animatie */
     const serverNu = spoor ? null : vraagServer(d).catch(e => ({ fout: e }));
-    await wacht(650);
-    /* 2. deurtjes open, licht en vonkjes */
+    sneeuwIn(laag.querySelector(".avk-sneeuwval"), laag);
+    await wacht(1500);                         // naar voren (0,9 s) en even wiebelen
+    /* 2. deurtjes open, licht, lampjes en vonkjes */
     laag.classList.add("open");
-    vonk(doos, 18);
-    await wacht(550);
+    await wacht(350);
+    vonk(doos, 22);
+    await wacht(950);
     let v;
     if (spoor){
       v = await sporenVraag(binnen, onder, d, spoor);
@@ -199,13 +207,16 @@ const Kerst = (() => {
         : `<div class="avk-buitgroot">${EIK(v.eikels, "groot")}</div>`;
       binnen.classList.add("toon");
     }
-    onder.innerHTML = `${v.item ? `<p class="avk-wat">${esc(itemNaam(v.item))}<small>Nu te kiezen in Mijn profiel</small></p>` : ""}
+    const melding = !spoor ? "" : v.goed
+      ? `<p class="avk-melding goed"><b>Gefeliciteerd!</b> Je antwoord is juist, je hebt 20 eikels verdiend!</p>`
+      : `<p class="avk-melding fout"><b>Helaas,</b> dit was niet het juiste antwoord. Het spoor was van een ${esc(SPOREN[v.spoor].naam.toLowerCase())}. Hier heb je 5 eikels voor de moeite.</p>`;
+    onder.innerHTML = `${melding}${v.item ? `<p class="avk-wat">${esc(itemNaam(v.item))}<small>Nu te kiezen in Mijn profiel</small></p>` : ""}
       ${v.kampioen ? `<p class="avk-wat kampioen"><span class="avk-lint">Adventkampioen</span><small>Alle 24 vakjes geopend!</small></p>` : ""}
       <div class="avk-eikrij">${EIK(v.eikels, "teller")}</div>
       ${weetjeHtml(d)}
       <button class="btn" id="avkVerder">Verder</button>`;
     onder.classList.add("toon");
-    if (v.item || v.kampioen) vonk(doos, 26, true);
+    if (v.item || v.kampioen || v.goed) vonk(doos, 30, true);
     await wacht(500);
     /* 4. eikels vliegen naar het saldo */
     await vliegNaarSaldo(onder.querySelector(".avk-eikrij .avk-eik"), v.eikels);
@@ -225,28 +236,51 @@ const Kerst = (() => {
     const minx = Math.min(...xs) - .8, maxx = Math.max(...xs) + .8, miny = Math.min(...ys) - .8, maxy = Math.max(...ys) + 1.2;
     const sch = 100 / Math.max(maxx - minx, maxy - miny);
     const ox = (100 - (maxx - minx) * sch) / 2, oy = (100 - (maxy - miny) * sch) / 2;     // spoor in het midden
-    binnen.innerHTML = `<div class="avk-spoor" aria-label="Een spoor in de sneeuw">${pts.map(p =>
-      `<span style="left:${(ox + (p.x - minx) * sch).toFixed(1)}%; top:${(oy + (p.y - miny) * sch).toFixed(1)}%; --r:${p.r}deg; --s:${p.spiegel ? -1 : 1}">${prentSVG(spoor, p.voet)}</span>`).join("")}</div>`;
+    binnen.innerHTML = `<div class="avk-spoor" aria-label="Een spoor in de sneeuw">${pts.map((p, i) =>
+      `<span style="left:${(ox + (p.x - minx) * sch).toFixed(1)}%; top:${(oy + (p.y - miny) * sch).toFixed(1)}%; --r:${p.r}deg; --s:${p.spiegel ? -1 : 1}; --vd:${(300 + (pts.length - 1 - i) * 420)}ms">${prentSVG(spoor, p.voet)}</span>`).join("")}</div>`;
     binnen.classList.add("toon", "sp");
     const anderen = Object.keys(SPOREN).filter(k => k !== spoor).sort(() => Math.random() - .5).slice(0, 2);
     const keuzes = [spoor, ...anderen].sort(() => Math.random() - .5);
     onder.innerHTML = `<p class="avk-vraag">Sporenvakje! Welk dier liep hier door de sneeuw?</p>
       <div class="avk-keuzes">${keuzes.map(k => `<button class="btn line" data-k="${k}">${esc(SPOREN[k].naam)}</button>`).join("")}</div>
       <p class="fine">Goed geraden: 20 eikels. Fout: 5 eikels.</p>`;
-    onder.classList.add("toon");
+    /* de vraag komt pas als het hele spoor er staat */
+    setTimeout(() => onder.classList.add("toon"), rustig() ? 0 : 300 + pts.length * 420 + 200);
     return new Promise(res => {
       onder.querySelectorAll("[data-k]").forEach(b => b.onclick = async () => {
         onder.querySelectorAll("[data-k]").forEach(x => x.disabled = true);
         let v; try { v = await vraagServer(d, b.dataset.k); } catch(e){ v = { fout: e }; }
         if (v && !v.fout){
           onder.querySelectorAll("[data-k]").forEach(x => x.classList.add(x.dataset.k === v.spoor ? "goed" : x === b ? "fout" : "uit"));
-          binnen.insertAdjacentHTML("beforeend", `<div class="avk-oordeel ${v.goed ? "goed" : "fout"}">${v.goed ? "Goed!" : `Het was ${esc(SPOREN[v.spoor].naam.toLowerCase())}`}</div>`);
+          binnen.insertAdjacentHTML("beforeend", `<div class="avk-oordeel ${v.goed ? "goed" : "fout"}">${v.goed ? "Goed!" : "Helaas"}</div>`);
           if (v.goed) vonk(binnen.closest(".avk-doos"), 22, true);
-          await wacht(1300);
+          onder.classList.remove("toon");
+          await wacht(1400);
         }
         res(v);
       });
     });
+  }
+  /* een slinger kerstlampjes boven de doos; ze gaan aan als de deurtjes opengaan */
+  const LAMPJES = (() => {
+    const kl = ["#ff4b5c", "#ffd36b", "#5fd38a", "#6bb8ff", "#ff9a4b"], n = 9;
+    let lampen = "";
+    for (let i = 0; i < n; i++){
+      const x = 8 + i * (184 / (n - 1)), y = 14 + Math.sin(Math.PI * (i / (n - 1))) * 14;
+      lampen += `<g class="lamp" style="--k:${kl[i % kl.length]}; --d:${(i * .23).toFixed(2)}s"><rect x="${x - 2}" y="${y - 3}" width="4" height="4" rx="1" fill="#2c3b32"/><ellipse class="gloed" cx="${x}" cy="${y + 5}" rx="7" ry="8"/><ellipse class="peer" cx="${x}" cy="${y + 4.5}" rx="3.2" ry="4.6"/></g>`;
+    }
+    return `<svg class="avk-lampjes" viewBox="0 0 200 40" aria-hidden="true"><path d="M2 8 Q100 44 198 8" fill="none" stroke="#2c3b32" stroke-width="1.6"/>${lampen}</svg>`;
+  })();
+  function sneeuwIn(laag, podium){
+    if (rustig() || !laag) return;
+    const vlok = () => {
+      if (!podium.isConnected) return;
+      const v = document.createElement("i"), s = 3 + Math.random() * 5, duur = 6 + Math.random() * 5;
+      v.style.cssText = `left:${Math.random() * 100}%; width:${s}px; height:${s}px; animation-duration:${duur}s; --zij:${(Math.random() * 80 - 40).toFixed(0)}px; opacity:${(.5 + Math.random() * .45).toFixed(2)}`;
+      laag.appendChild(v); setTimeout(() => v.remove(), duur * 1000 + 100);
+      setTimeout(vlok, 120 + Math.random() * 180);
+    };
+    vlok();
   }
   /* vonkjes en sterretjes vanuit het midden van de doos */
   function vonk(el, n, goud){
