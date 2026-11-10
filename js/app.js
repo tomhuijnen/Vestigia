@@ -88,13 +88,51 @@ function toast(msg, action){
 }
 
 /* ---------- installeren en updates ---------- */
-let installEvt = null;
+/* De knop ‘Installeer als app’ staat er altijd, behalve als Vestigia al als app draait. Alleen Chrome en Edge
+   (en Android) sturen een installatievraag (beforeinstallprompt), en ook die pas na wat interactie, niet als
+   de app al geïnstalleerd is en een tijd niet nadat iemand ‘nee’ zei. Zonder die vraag tonen we uitleg per browser. */
+const alsApp = () => (window.matchMedia && (matchMedia("(display-mode: standalone)").matches || matchMedia("(display-mode: window-controls-overlay)").matches)) || navigator.standalone === true;
+let installEvt = window.__installEvt || null;
 window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; $("installBtn").hidden = false; });
-async function installApp(){
-  if (!installEvt) return;
-  installEvt.prompt(); await installEvt.userChoice.catch(() => {}); installEvt = null; $("installBtn").hidden = true;
+$("installBtn").hidden = alsApp();
+function welkeBrowser(){
+  const ua = navigator.userAgent, mobiel = /Android|iPhone|iPad|iPod/.test(ua) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(ua));
+  if (/iPhone|iPad|iPod/.test(ua) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(ua))) return "ios";
+  if (/Firefox|FxiOS/.test(ua)) return mobiel ? "android" : "firefox";
+  if (/SamsungBrowser/.test(ua)) return "samsung";
+  if (/Edg\//.test(ua)) return "edge";
+  if (/OPR\/|Opera/.test(ua)) return "opera";
+  if (/Chrome|Chromium|CriOS/.test(ua)) return mobiel ? "android" : "chrome";
+  if (/Safari/.test(ua) && /Macintosh/.test(ua)) return "safari";
+  return "anders";
 }
-window.addEventListener("appinstalled", () => { $("installBtn").hidden = true; toast("Vestigia staat nu op je beginscherm."); });
+const INSTALL_UITLEG = {
+  chrome: ["Chrome", `Klik rechts in de adresbalk op het icoontje <b>App installeren</b> (een schermpje met een pijl). Zie je dat niet, klik dan op <b>⋮</b> rechtsboven → <b>Opslaan en delen</b> (of <b>Casten, opslaan en delen</b>) → <b>Pagina installeren als app</b>.`],
+  edge: ["Edge", `Klik rechts in de adresbalk op het icoontje <b>App beschikbaar</b>. Zie je dat niet, klik dan op <b>···</b> rechtsboven → <b>Apps</b> → <b>Deze site als app installeren</b>.`],
+  opera: ["Opera", `Opera kan Vestigia niet altijd als app installeren. Open Vestigia in <b>Chrome</b> of <b>Edge</b> en installeer hem daar.`],
+  safari: ["Safari", `Kies in de menubalk <b>Archief</b> → <b>Voeg toe aan Dock</b> (vanaf macOS Sonoma). Op een oudere macOS kan dat niet; gebruik dan Chrome of Edge.`],
+  firefox: ["Firefox", `Firefox kan op een laptop of pc geen web-apps installeren. Open Vestigia in <b>Chrome</b> of <b>Edge</b> en installeer hem daar. Je kunt in Firefox ook gewoon verder spelen, of de pagina vastzetten (rechtsklik op het tabblad → <b>Tabblad vastmaken</b>).`],
+  ios: ["iPhone of iPad", `Open Vestigia in <b>Safari</b>, tik op <b>Deel</b> (vierkantje met pijl omhoog) en kies <b>Zet op beginscherm</b>. Let op: de app heeft een eigen geheugen. Kopieer eerst je spelerscode in Mijn profiel als je al een naam hebt.`],
+  android: ["Android", `Tik in Chrome op <b>⋮</b> rechtsboven → <b>App installeren</b> of <b>Toevoegen aan startscherm</b>.`],
+  samsung: ["Samsung Internet", `Tik op <b>☰</b> rechtsonder → <b>Pagina toevoegen aan</b> → <b>Startscherm</b>.`],
+  anders: ["je browser", `Installeren werkt het best in <b>Chrome</b> of <b>Edge</b> (op een laptop of pc) en in Safari op een iPhone.`]
+};
+function installUitleg(){
+  const [naam, tekst] = INSTALL_UITLEG[welkeBrowser()], box = $("leaguePop");
+  const kruis = `<svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l10 10M13 3L3 13"/></svg>`;
+  $("leaguePopBody").innerHTML = `
+    <div class="top"><h2 id="leaguePopH">Installeren in ${esc(naam)}</h2><button class="iconbtn" id="ipX" aria-label="Sluiten">${kruis}</button></div>
+    <p>${tekst}</p>
+    <p class="fine">Staat Vestigia al op je computer? Dan biedt de browser installeren niet nog eens aan. Open hem dan via het Startmenu, het Dock of je taakbalk. Je voortgang en spelersnaam neem je mee, want de app gebruikt hetzelfde geheugen als de browser waarin je hem installeert.</p>
+    <div class="row2"><button class="btn" id="ipOk">Begrepen</button></div>`;
+  box.hidden = false;
+  $("ipX").onclick = $("ipOk").onclick = () => { box.hidden = true; };
+}
+async function installApp(){
+  if (!installEvt){ installUitleg(); return; }
+  installEvt.prompt(); await installEvt.userChoice.catch(() => {}); installEvt = window.__installEvt = null;
+}
+window.addEventListener("appinstalled", () => { $("installBtn").hidden = true; toast("Vestigia is geïnstalleerd. Je vindt hem bij je apps."); });
 if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")){
   navigator.serviceWorker.register("sw.js").then(reg => {
     reg.addEventListener("updatefound", () => {

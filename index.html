@@ -18,11 +18,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Karla:ital,wght@0,400;0,500;0,700;1,400&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
 <!-- thema: eigen keuze (licht/donker) of anders de instelling van het toestel; vóór de opmaak, dus geen witte flits -->
 <script>(function(){var t=null;try{t=localStorage.getItem("vestigia:thema")}catch(e){}var d=t?t==="donker":!!(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches);if(d)document.documentElement.classList.add("donker")})()</script>
-<link rel="stylesheet" href="css/vestigia.css?v=202611092039">
+<link rel="stylesheet" href="css/vestigia.css?v=202611101152">
 </head>
 <body>
 <!-- openingsanimatie: staat meteen in beeld (geen witte flits), en is in dezelfde sessie al gezien → niet tonen -->
 <script>try { if (sessionStorage.getItem("vestigia:geopend")) document.documentElement.classList.add("geen-opening"); } catch(e){}</script>
+<script>/* installatievraag zo vroeg mogelijk opvangen: de browser kan hem sturen voordat app.js geladen is */
+window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.preventDefault();window.__installEvt=e;var b=document.getElementById("installBtn");if(b)b.hidden=false});</script>
 <div id="opening" aria-hidden="true"><div class="op-veld" id="opVeld"></div><span class="op-naam mh-name" id="opNaam">Vestigia</span></div>
 <header class="masthead" id="masthead">
   <canvas id="topo" aria-hidden="true"></canvas>
@@ -314,6 +316,7 @@
     <ul>
       <li><b>iPhone:</b> open Vestigia in Safari, tik op Deel en kies ‘Zet op beginscherm’. Let op: de app op je beginscherm heeft een eigen geheugen, los van Safari. Had je in Safari al een spelersnaam? Kopieer dan eerst je spelerscode (Mijn profiel) en plak hem in de app. Kies daar geen nieuwe naam.</li>
       <li><b>Android:</b> kies ‘Installeer als app’ in het menu (tik op je avatar rechtsboven), of kies in het menu van Chrome ‘App installeren’.</li>
+      <li><b>Laptop of pc:</b> kies ‘Installeer als app’ in het menu. Werkt dat niet, dan zie je daar per browser hoe het moet. Chrome en Edge kunnen Vestigia installeren, Safari op de Mac via Archief → ‘Voeg toe aan Dock’. Firefox kan geen apps installeren.</li>
       <li>Na installatie werkt Vestigia ook zonder internet. Heb je geen verbinding, dan gaat vanzelf de <b>veldmodus</b> aan (rechtsboven zie je dat): je speelt gewoon verder, en je dagscore wordt verstuurd zodra je weer verbinding hebt. De ranglijst, eikels en de shop komen dan ook terug.</li>
     </ul>
     <h3>Modi</h3>
@@ -347,24 +350,24 @@
 </div>
 
 <script src="config.js"></script>
-<script src="data/teksten.js?v=202611092039"></script>
-<script src="data/soorten.js?v=202611092039"></script>
-<script src="data/sporen.js?v=202611092039"></script>
-<script src="data/dagschema.js?v=202611092039"></script>
-<script src="data/veldweken.js?v=202611092039"></script>
-<script src="data/toelichting.js?v=202611092039"></script>
-<script src="js/kern.js?v=202611092039"></script>
-<script src="js/spel.js?v=202611092039"></script>
-<script src="js/veldboek.js?v=202611092039"></script>
-<script src="js/melden.js?v=202611092039"></script>
-<script src="js/kop.js?v=202611092039"></script>
-<script src="js/spelen.js?v=202611092039"></script>
-<script src="js/opening.js?v=202611092039"></script>
-<script src="js/uitleg.js?v=202611092039"></script>
-<script src="js/online.js?v=202611092039"></script>
-<script src="js/league.js?v=202611092039"></script>
-<script src="data/avatars.js?v=202611092039"></script>
-<script src="js/profiel.js?v=202611092039"></script>
-<script src="js/app.js?v=202611092039"></script>
+<script src="data/teksten.js?v=202611101152"></script>
+<script src="data/soorten.js?v=202611101152"></script>
+<script src="data/sporen.js?v=202611101152"></script>
+<script src="data/dagschema.js?v=202611101152"></script>
+<script src="data/veldweken.js?v=202611101152"></script>
+<script src="data/toelichting.js?v=202611101152"></script>
+<script src="js/kern.js?v=202611101152"></script>
+<script src="js/spel.js?v=202611101152"></script>
+<script src="js/veldboek.js?v=202611101152"></script>
+<script src="js/melden.js?v=202611101152"></script>
+<script src="js/kop.js?v=202611101152"></script>
+<script src="js/spelen.js?v=202611101152"></script>
+<script src="js/opening.js?v=202611101152"></script>
+<script src="js/uitleg.js?v=202611101152"></script>
+<script src="js/online.js?v=202611101152"></script>
+<script src="js/league.js?v=202611101152"></script>
+<script src="data/avatars.js?v=202611101152"></script>
+<script src="js/profiel.js?v=202611101152"></script>
+<script src="js/app.js?v=202611101152"></script>
 </body>
 </html>
