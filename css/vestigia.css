@@ -899,3 +899,73 @@ html.donker .plate.seen .stamp{color:#9fb0b8; border-color:#9fb0b8; background:r
 .mh-bar .mh-title, .slimbar .mh-title{min-width:0}
 @media (max-width:520px){ .veldpill span{display:none} .veldpill{padding:0 8px; gap:0} }
 .plate.seen .stamp{bottom:8px}
+
+/* ═════════════ update 8: kerst en wachtrij ═════════════ */
+/* knop met cadeautje in de kop (1–24 december), met een stip zolang het vakje van vandaag dicht is */
+.kerstbtn{position:relative; flex-shrink:0; width:36px; height:36px; border-radius:18px; border:1.5px solid var(--mint); background:rgba(28,51,38,.35); color:#fff; display:grid; place-items:center; cursor:pointer; padding:0}
+.kerstbtn:not([hidden]){margin-left:auto}
+.kerstbtn:not([hidden]) + .eikelbtn, .veldpill:not([hidden]) + .kerstbtn{margin-left:0}
+.kerstbtn .stip{position:absolute; top:-2px; right:-2px; width:11px; height:11px; border-radius:50%; background:#e23446; border:2px solid var(--green); display:none}
+.kerstbtn.nieuw .stip{display:block; animation:kstip 2.4s ease-in-out infinite}
+@keyframes kstip{0%,100%{transform:scale(1)} 50%{transform:scale(1.25)}}
+html.donker .kerstbtn{background:rgba(0,0,0,.25)}
+
+/* kerstmuts op het logo (1 december – 6 januari) */
+html.kerst .mh-name{position:relative}
+html.kerst .masthead .mh-name::before, html.kerst .slimbar .mh-name::before{content:""; position:absolute; left:-.32em; top:-.5em; width:.95em; height:.8em; pointer-events:none;
+  transform:rotate(-18deg); background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 34'%3E%3Cpath d='M5 25C9 12 17 3 27 4c6 1 8 7 9 15-3-3-6-4-9-3l-3 9Z' fill='%23d3263a'/%3E%3Cpath d='M27 4c6 1 8 7 9 15-2-2-4-3-6-3 0-5-1-9-3-12Z' fill='%23a5172a'/%3E%3Crect x='2' y='22' width='26' height='8' rx='4' fill='%23fbf7f0'/%3E%3Ccircle cx='35.5' cy='21' r='4' fill='%23fbf7f0'/%3E%3C/svg%3E")}
+html.kerst .slimbar .mh-name::before{top:-.45em}
+
+/* sneeuw op het beginscherm: een paar vlokjes, tien seconden lang */
+.sneeuw{position:fixed; inset:0; pointer-events:none; z-index:19; overflow:hidden}
+.sneeuw i{position:absolute; top:-12px; border-radius:50%; background:#fff; box-shadow:0 0 3px rgba(255,255,255,.9), 0 0 1px rgba(40,70,55,.35); animation:vlok linear forwards}
+@keyframes vlok{from{transform:translate(0,0)} to{transform:translate(var(--zij), 105vh)}}
+html.donker .sneeuw i{background:#e9f1f5}
+
+/* openingsanimatie in de sneeuw: witte grond met blauwgrijze prenten */
+html.kerst #opening{background:radial-gradient(120% 90% at 50% 40%, #f7fafb, #dfe9ee); color:#8aa1ae}
+html.kerst .op-naam{color:var(--green)}
+html.kerst.donker #opening{background:radial-gradient(120% 90% at 50% 40%, #e8eff2, #c7d6de)}
+
+/* adventkalender */
+.adventsheet{max-width:520px; width:100%; gap:10px; border-top-color:#a5172a}
+.adventsheet .top{display:flex; justify-content:space-between; align-items:center}
+.adventsheet h2{margin:0; font-family:var(--display)}
+.adventgrid{display:grid; grid-template-columns:repeat(6, 1fr); gap:7px}
+.avk{position:relative; aspect-ratio:1; border:0; border-radius:9px; padding:0; cursor:default; font:inherit; display:grid; place-items:center;
+  background:linear-gradient(150deg, #2f5d43, #23463a); color:#f3ead2; box-shadow:inset 0 0 0 1px rgba(255,255,255,.08); overflow:hidden}
+.avk-nr{position:absolute; top:4px; left:6px; font-family:var(--display); font-weight:800; font-size:1.05rem; line-height:1}
+.avk.dicht{opacity:.82}
+.avk.vandaag{cursor:pointer; background:linear-gradient(150deg, #c22a3c, #8f1424); box-shadow:0 0 0 2px #f6d77a, 0 6px 16px -6px rgba(165,23,42,.7); animation:avkgloei 2.2s ease-in-out infinite}
+.avk.vandaag::after{content:""; position:absolute; inset:0; background:linear-gradient(90deg, transparent 45%, rgba(246,215,122,.85) 45% 55%, transparent 55%), linear-gradient(0deg, transparent 45%, rgba(246,215,122,.85) 45% 55%, transparent 55%)}
+.avk.vandaag .avk-nr{z-index:1}
+@keyframes avkgloei{0%,100%{transform:scale(1)} 50%{transform:scale(1.05)}}
+.avk.opent{animation:avkopen .65s cubic-bezier(.5,0,.3,1) forwards}
+@keyframes avkopen{0%{transform:scale(1)} 35%{transform:scale(1.15) rotate(-4deg)} 100%{transform:scale(.2) rotate(8deg); opacity:0}}
+.avk.open{cursor:pointer; background:var(--leaf); color:var(--ink); box-shadow:inset 0 0 0 1.5px var(--rule)}
+.avk.open .avk-nr{font-size:.75rem; color:var(--ink-2)}
+.avk.gekozen{box-shadow:inset 0 0 0 2px var(--green)}
+.avk.gemist{opacity:.35; background:repeating-linear-gradient(-45deg, #2f5d43 0 5px, #294f3b 5px 10px)}
+.avk-weg{position:absolute; bottom:4px; left:0; right:0; text-align:center; font:600 .55rem/1 var(--caps); text-transform:uppercase; letter-spacing:.05em}
+.avk-eik{display:inline-flex; align-items:center; gap:2px; font-family:var(--display); font-weight:700; font-size:.82rem; margin-top:8px}
+.avk-eik .eikel{width:14px; height:14px}
+.avk-item{margin-top:8px}
+.avk-item svg{width:30px; height:30px}
+.adventvak{background:var(--leaf); border-radius:10px; padding:12px 14px; display:grid; gap:4px}
+.adventvak p{margin:0}
+.adventvak.nieuw{animation:avkvak .5s cubic-bezier(.2,1.4,.4,1)}
+@keyframes avkvak{from{transform:translateY(10px) scale(.97); opacity:0} to{transform:none; opacity:1}}
+.avk-buit{display:flex; gap:14px; align-items:center; flex-wrap:wrap; margin-bottom:4px}
+.avk-buit .avk-eik{font-size:1.25rem; margin:0}
+.avk-buit .avk-eik .eikel{width:20px; height:20px}
+.avk-extra{display:flex; gap:8px; align-items:center; font-weight:700}
+.avk-extra svg{width:44px; height:44px}
+.avk-extra small{display:block; font-weight:400; color:var(--ink-2); font-size:.8rem}
+html.donker .avk.open, html.donker .adventvak{background:#18241d}
+@media (max-width:420px){ .adventgrid{gap:5px} .avk-nr{font-size:.9rem} }
+@media (prefers-reduced-motion:reduce){ .avk.vandaag, .kerstbtn.nieuw .stip, .avk.opent, .adventvak.nieuw{animation:none} }
+
+/* pop-up uit de wachtrij: kies je avatar */
+.wachtrij-av{display:flex; gap:10px; justify-content:center; margin:4px 0}
+.wachtrij-av svg{width:58px; height:58px}
+#wachtBody .linklike{justify-self:center}

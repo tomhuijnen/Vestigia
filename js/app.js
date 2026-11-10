@@ -73,7 +73,9 @@ function start(){
   store.upgrade();
   startDaily();
   Profiel.start();
-  Opening.run().then(() => Uitleg.automatisch()).then(toonWelkom).then(() => League.verwerk());
+  /* update 8: daarna hooguit één pop-up uit de wachtrij (adventkalender, avatar kiezen) en, in de kerstperiode, wat sneeuw */
+  Opening.run().then(() => Uitleg.automatisch()).then(toonWelkom).then(() => League.verwerk())
+    .then(() => { Kerst.sneeuw(); return Wachtrij.start(); });
 }
 /* ---------- melding in beeld ---------- */
 let toastT;
