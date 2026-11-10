@@ -147,13 +147,22 @@ function renderKop(){
 
 /* ---------- veldweek: aankondiging (2 dagen vooraf, zonder thema), thema en stempelkaart ---------- */
 const STEMPEL = `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><g fill="currentColor"><ellipse cx="12" cy="15.5" rx="4.6" ry="3.9"/><ellipse cx="6" cy="10" rx="1.9" ry="2.4"/><ellipse cx="9.6" cy="6.6" rx="1.9" ry="2.5"/><ellipse cx="14.4" cy="6.6" rx="1.9" ry="2.5"/><ellipse cx="18" cy="10" rx="1.9" ry="2.4"/></g></svg>`;
+/* dagen met een goed gedetermineerde dagcasus (klassiek of expert), ook uit het logboek van andere apparaten */
+function goedeDagen(st){
+  const days = new Set(Object.entries(st.games || {}).filter(([, g]) => g && g.status === "won").map(([k]) => +(k.match(/^d(\d+)/) || [, -1])[1]));
+  for (const e of st.log || []) if (e && e.m === "daily" && e.w && Number.isInteger(e.d) && e.d >= 0) days.add(e.d);
+  return days;
+}
+const VINK = `<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5.5 12.5l4.2 4.2L18.7 7.6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+/* update 8: groen vinkje = goed gedetermineerd, grijs vinkje = gespeeld maar niet gevonden */
 function stempelkaart(st, vw){
-  const dagen = speeldagen(st), vandaag = todayIndex();
+  const dagen = speeldagen(st), goed = goedeDagen(st), vandaag = todayIndex();
   let n = 0;
   const vakjes = Array.from({ length: 7 }, (_, j) => {
-    const d = vw.start + j, ok = dagen.has(d); if (ok) n++;
+    const d = vw.start + j, ok = dagen.has(d), g = ok && goed.has(d); if (ok) n++;
     const dagnaam = new Intl.DateTimeFormat("nl-NL", { weekday: "short", timeZone: "UTC" }).format(new Date(START + d * DAY));
-    return `<li class="${ok ? "ok" : d < vandaag ? "gemist" : d === vandaag ? "nu" : ""}" title="${dagnaam}">${ok ? STEMPEL : `<span>${esc(dagnaam)}</span>`}</li>`;
+    const uitleg = ok ? (g ? `${dagnaam}: goed gedetermineerd` : `${dagnaam}: gespeeld, niet gevonden`) : dagnaam;
+    return `<li class="${ok ? (g ? "ok goed" : "ok mis") : d < vandaag ? "gemist" : d === vandaag ? "nu" : ""}" title="${uitleg}" aria-label="${uitleg}">${ok ? `${VINK}<small>${esc(dagnaam)}</small>` : `<span>${esc(dagnaam)}</span>`}</li>`;
   }).join("");
   return { n, html: `<ol class="stempels" aria-label="${n} van 7 dagen gespeeld">${vakjes}</ol>` };
 }
