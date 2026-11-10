@@ -111,22 +111,58 @@ const INSTALL_UITLEG = {
   edge: ["Edge", `Klik rechts in de adresbalk op het icoontje <b>App beschikbaar</b>. Zie je dat niet, klik dan op <b>···</b> rechtsboven → <b>Apps</b> → <b>Deze site als app installeren</b>.`],
   opera: ["Opera", `Opera kan Vestigia niet altijd als app installeren. Open Vestigia in <b>Chrome</b> of <b>Edge</b> en installeer hem daar.`],
   safari: ["Safari", `Kies in de menubalk <b>Archief</b> → <b>Voeg toe aan Dock</b> (vanaf macOS Sonoma). Op een oudere macOS kan dat niet; gebruik dan Chrome of Edge.`],
-  firefox: ["Firefox", `Firefox kan op een laptop of pc geen web-apps installeren. Open Vestigia in <b>Chrome</b> of <b>Edge</b> en installeer hem daar. Je kunt in Firefox ook gewoon verder spelen, of de pagina vastzetten (rechtsklik op het tabblad → <b>Tabblad vastmaken</b>).`],
+  firefox: ["Firefox", `Firefox kan op een laptop of pc geen web-apps installeren. Open Vestigia in <b>Chrome</b> of <b>Edge</b> en installeer hem daar. Met de knoppen hieronder neem je je spelersnaam en voortgang mee.`],
   ios: ["iPhone of iPad", `Open Vestigia in <b>Safari</b>, tik op <b>Deel</b> (vierkantje met pijl omhoog) en kies <b>Zet op beginscherm</b>. Let op: de app heeft een eigen geheugen. Kopieer eerst je spelerscode in Mijn profiel als je al een naam hebt.`],
   android: ["Android", `Tik in Chrome op <b>⋮</b> rechtsboven → <b>App installeren</b> of <b>Toevoegen aan startscherm</b>.`],
   samsung: ["Samsung Internet", `Tik op <b>☰</b> rechtsonder → <b>Pagina toevoegen aan</b> → <b>Startscherm</b>.`],
   anders: ["je browser", `Installeren werkt het best in <b>Chrome</b> of <b>Edge</b> (op een laptop of pc) en in Safari op een iPhone.`]
 };
+/* Firefox: Vestigia openen in Edge (Windows kent de link microsoft-edge:) of een link kopiëren voor Chrome.
+   De link draagt je spelers- of koppelcode mee in het #-deel (dat gaat niet naar de server); de andere browser
+   koppelt daarmee meteen en haalt je voortgang op. Zonder naam maakt koppelcode() eerst een verborgen account. */
+async function naarAndereBrowser(viaEdge){
+  const msg = $("ipMsg");
+  msg.textContent = "Je voortgang wordt eerst opgeslagen…";
+  let code;
+  try { code = await online.koppelcode(); }
+  catch(e){ msg.textContent = "Dat lukt nu niet. Controleer je internetverbinding."; return; }
+  const link = location.origin + location.pathname + "#koppel=" + encodeURIComponent(code);
+  if (viaEdge){ location.href = "microsoft-edge:" + link; msg.textContent = "Edge wordt geopend. Gebeurt er niets? Kopieer dan de link en plak hem in Edge."; return; }
+  try { await navigator.clipboard.writeText(link); msg.textContent = "Link gekopieerd. Plak hem in de adresbalk van Chrome of Edge. Deel hem met niemand: met deze link speel je als jou."; }
+  catch(e){ msg.innerHTML = `Kopieer deze link en plak hem in Chrome of Edge. Deel hem met niemand.<input class="iplink" readonly value="${esc(link)}">`; const i = msg.querySelector("input"); i.focus(); i.select(); }
+}
+/* aankomst met #koppel=…: koppelen en het #-deel meteen uit de adresbalk halen */
+function koppelUitLink(){
+  const m = location.hash.match(/^#koppel=([^&]+)/);
+  if (!m) return;
+  history.replaceState(null, "", location.pathname + location.search);
+  if (!online.enabled) return;
+  /* je kent het spel al uit Firefox: geen uitleg en geen ‘nieuw’-melding die de bevestiging hieronder verdringt */
+  try { if (!localStorage.getItem("vestigia:tutorial")) localStorage.setItem("vestigia:tutorial", "1"); localStorage.setItem("vestigia:nav-b", "1"); } catch(e){}
+  const code = decodeURIComponent(m[1]), a = online.account(), p = online.player();
+  if (a && code.toLowerCase() === ("VSP-" + a.id + "." + a.key).toLowerCase()){ online.haalVoortgang(); return; }
+  if (p){ toast(`In deze browser speel je al als ${p.name}. Je voortgang uit Firefox is niet overgezet; gebruik daarvoor dezelfde spelersnaam.`, { label: "Oké", duur: 9000, run: () => { $("toast").hidden = true; } }); return; }
+  online.koppel(code).then(
+    naam => toast(naam ? `Welkom, ${naam}. Je voortgang staat erin en blijft gelijk met Firefox.` : "Je voortgang staat erin en blijft gelijk met Firefox.",
+                  { label: "Oké", duur: 8000, run: () => { $("toast").hidden = true; } }),
+    () => toast("Overzetten lukte niet. Kopieer je code in Firefox en plak hem hier in het Vestiarium."));
+}
 function installUitleg(){
-  const [naam, tekst] = INSTALL_UITLEG[welkeBrowser()], box = $("leaguePop");
+  const soort = welkeBrowser(), [naam, tekst] = INSTALL_UITLEG[soort], box = $("leaguePop");
+  const ff = soort === "firefox" && online.enabled, win = /Windows/.test(navigator.userAgent);
   const kruis = `<svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l10 10M13 3L3 13"/></svg>`;
   $("leaguePopBody").innerHTML = `
     <div class="top"><h2 id="leaguePopH">Installeren in ${esc(naam)}</h2><button class="iconbtn" id="ipX" aria-label="Sluiten">${kruis}</button></div>
     <p>${tekst}</p>
+    ${ff ? `<div class="row2">${win ? `<button class="btn" id="ipEdge">Open in Edge</button>` : ""}<button class="btn line" id="ipChrome">Kopieer link voor ${win ? "Chrome" : "Chrome of Edge"}</button></div>
+    <p class="fine" id="ipMsg" aria-live="polite"></p>` : ""}
     <p class="fine">Staat Vestigia al op je computer? Dan biedt de browser installeren niet nog eens aan. Open hem dan via het Startmenu, het Dock of je taakbalk. Je voortgang en spelersnaam neem je mee, want de app gebruikt hetzelfde geheugen als de browser waarin je hem installeert.</p>
-    <div class="row2"><button class="btn" id="ipOk">Begrepen</button></div>`;
+    ${ff ? "" : `<div class="row2"><button class="btn" id="ipOk">Begrepen</button></div>`}`;
   box.hidden = false;
-  $("ipX").onclick = $("ipOk").onclick = () => { box.hidden = true; };
+  $("ipX").onclick = () => { box.hidden = true; };
+  if ($("ipOk")) $("ipOk").onclick = () => { box.hidden = true; };
+  if ($("ipEdge")) $("ipEdge").onclick = () => naarAndereBrowser(true);
+  if ($("ipChrome")) $("ipChrome").onclick = () => naarAndereBrowser(false);
 }
 async function installApp(){
   if (!installEvt){ installUitleg(); return; }
@@ -151,4 +187,5 @@ if ("serviceWorker" in navigator && (location.protocol === "https:" || location.
 }
 
 start();
+koppelUitLink();
 window.__veld = { compare, BY_ID, TARGETS, daily, todayIndex, store, online };   /* voor testen en foutzoeken */
