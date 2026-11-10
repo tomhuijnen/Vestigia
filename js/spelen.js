@@ -132,6 +132,11 @@ const Spelen = (() => {
   $("tabbar").addEventListener("click", e => {
     const b = e.target.closest("[data-tab]"); if (!b) return;
     if (b.dataset.tab !== "spelen") sluit(true);
+    /* update 7: nog een keer op de tab waar je al bent (Ranglijst, Vestiarium) = vloeiend terug naar boven */
+    if (b.dataset.tab !== "spelen" && b.classList.contains("on")){
+      if (window.scrollY > 0) window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+      return;
+    }
     TAB[b.dataset.tab]();
   });
 

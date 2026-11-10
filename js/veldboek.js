@@ -212,19 +212,25 @@ function showDex(focusId){
   renderDex(); renderCarry(); Profiel.inVestiarium(); window.scrollTo({ top:0, behavior:"auto" });
   if (focusId) lichtUit(focusId);
 }
-/* Na 'Open het Vestiarium' bij een nieuwe soort: rustig naar die plaat scrollen en hem even laten oppoppen */
+/* Na 'Open het Vestiarium' bij een nieuwe soort: rustig naar die plaat scrollen en hem even laten oppoppen.
+   Update 7: trager, zodat je het met het oog volgt. Eigen scroll (± 1,4 s, zacht in en uit) in plaats van de snelle
+   'smooth' van de browser; daarna een langere, dubbele uitlichting. */
 function lichtUit(id){
   const el = document.querySelector(`#dexGrid .plate[data-n="${CSS.escape(id)}"]`) || document.querySelector(`.plate[data-n="${CSS.escape(id)}"]`);
   if (!el) return;
   const rustig = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const pop = () => { el.classList.remove("uitlicht"); void el.offsetWidth; el.classList.add("uitlicht");
+    setTimeout(() => el.classList.remove("uitlicht"), 2000); };
   setTimeout(() => {
-    el.scrollIntoView({ behavior: rustig ? "auto" : "smooth", block: "center" });
-    let klaar = false;
-    const pop = () => { if (klaar) return; klaar = true; el.classList.remove("uitlicht"); void el.offsetWidth; el.classList.add("uitlicht");
-      setTimeout(() => el.classList.remove("uitlicht"), 900); };
-    if ("onscrollend" in window) window.addEventListener("scrollend", pop, { once: true });
-    setTimeout(pop, rustig ? 50 : 900);
-  }, 250);
+    const r = el.getBoundingClientRect(), van = window.scrollY;
+    const naar = Math.max(0, Math.min(van + r.top - (innerHeight - r.height) / 2, document.documentElement.scrollHeight - innerHeight));
+    if (rustig || Math.abs(naar - van) < 4){ window.scrollTo(0, naar); setTimeout(pop, 50); return; }
+    const duur = Math.min(1800, 900 + Math.abs(naar - van) * .5), t0 = performance.now();
+    const zacht = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+    const stap = nu => { const x = Math.min(1, (nu - t0) / duur); window.scrollTo(0, van + (naar - van) * zacht(x));
+      if (x < 1) requestAnimationFrame(stap); else setTimeout(pop, 150); };
+    requestAnimationFrame(stap);
+  }, 600);
 }
 /* ---------- vaakst verward ----------
    Uit het logboek: welke soort gokte je fout, en wat was het echt? Paren tellen in beide richtingen samen
@@ -288,8 +294,8 @@ function renderDex(){
     const e = dex[t.id], no = dexNo(t.id), band = `<div class="band" style="background:var(--g-${t.g})"><span>${GROUPS[t.g]}</span><b>nº ${no}</b></div>`;
     if (!e) return `<div class="plate unknown" aria-label="Plaat ${no}: nog niet waargenomen">${band}<div class="mid"><span class="q">?</span><span class="sc">nog niet waargenomen</span></div><div class="ft"><span>&nbsp;</span></div></div>`;
     const won = e.w > 0;
-    const best = won ? [e.b ? `beste ${e.b}${e.b <= MAX ? "/" + MAX : ""}` : "", e.bx ? `expert ${e.bx}` : ""].filter(Boolean).join(" · ") : "nog niet gedetermineerd";
-    return `<button class="plate${won ? "" : " seen"}${won && medalIds.has(t.id) ? " rare" : ""}" data-n="${esc(t.id)}">${band}<div class="mid"><span class="nm">${esc(t.n)}</span><span class="sc">${esc(t.s)}</span></div>
+    const best = won ? [e.b ? `beste ${e.b}${e.b <= MAX ? "/" + MAX : ""}` : "", e.bx ? `expert ${e.bx}` : ""].filter(Boolean).join(" · ") : "&nbsp;";   /* de stempel ‘waargenomen’ zegt het al */
+    return `<button class="plate${won ? "" : " seen"}${won && medalIds.has(t.id) ? " rare" : ""}" data-n="${esc(t.id)}">${band}<div class="mid"><span class="nm${t.n.length > 19 ? " xl" : t.n.length > 15 ? " l" : ""}">${esc(t.n)}</span><span class="sc">${esc(t.s)}</span></div>
       <span class="stamp">${won ? "gedetermineerd" : "waargenomen"}</span><div class="ft"><span>${best}</span><span>${won ? `<b>${e.w}×</b>` : ""}</span></div></button>`;
   }).join("") : `<p class="dexempty">Nog geen platen in deze selectie. Speel een casus om je ${NAAM.vestiarium} te vullen.</p>`;
   $("dexGrid").querySelectorAll("button.plate").forEach(b => b.onclick = () => openPlate(b.dataset.n, b));

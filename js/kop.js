@@ -73,8 +73,8 @@ const TILES = [
     const i = todayIndex(), c = finished(st, i, false), x = finished(st, i, true);
     if (!c && !x) return { label: `Dagcasus #${i + 1}`, value: "Nog te spelen", sub: "klassiek of expert" };
     const p = dayPoints(st, i);
-    const eerst = eersteModus(st, i), op = m => (eerst !== null && eerst !== m) ? " op slot" : "";
-    return { label: `Dagcasus #${i + 1}`, value: `${p} ${p === 1 ? "punt" : "punten"}`, sub: `klassiek${c ? " ✓" : op(false)} · expert${x ? " ✓" : op(true)}` };
+    const eerst = eersteModus(st, i), op = m => (eerst !== null && eerst !== m) ? ` <span class="tslot" role="img" aria-label="op slot">${SLOTJE}</span>` : "";
+    return { label: `Dagcasus #${i + 1}`, value: `${p} ${p === 1 ? "punt" : "punten"}`, subHtml: `klassiek${c ? " ✓" : op(false)} · expert${x ? " ✓" : op(true)}` };
   }},
   { id: "reeks", render(st){
     const s = playStreak(st);
@@ -107,7 +107,7 @@ function renderTiles(){
     return `<${tag} class="tile" data-tile="${t.id}"${t.go ? ' type="button"' : ""}>
       <span class="tl">${esc(r.label)}</span>
       <span class="tv">${r.icon || ""}${esc(r.value)}${r.unit ? ` <small>${esc(r.unit)}</small>` : ""}</span>
-      ${r.bar !== undefined ? `<span class="tb" aria-hidden="true"><i style="width:${Math.round(100 * r.bar)}%"></i></span>` : `<span class="ts">${esc(r.sub || "")}</span>`}
+      ${r.bar !== undefined ? `<span class="tb" aria-hidden="true"><i style="width:${Math.round(100 * r.bar)}%"></i></span>` : `<span class="ts">${r.subHtml || esc(r.sub || "")}</span>`}
     </${tag}>`;
   }).join("");
   $("tiles").querySelectorAll("button.tile").forEach(b => b.onclick = () => TILES.find(t => t.id === b.dataset.tile).go());

@@ -256,6 +256,7 @@ function renderResult(){
   card.innerHTML = `
     <span class="verdict caps">${won ? "Goed gedetermineerd" : "Niet gedetermineerd · het was"}</span>
     <h3>${esc(t.n)}<i>${esc(t.s)}</i></h3>
+    ${!won && S.mode === "daily" ? `<p class="jammer">Jammer, niet gelukt vandaag. Kom morgen terug voor een nieuwe dagcasus!</p>` : ""}
     <p class="eikelline" id="eikelGain" hidden></p>
     <p>${score}${S.mode === "daily" ? ` <span class="ptsline">${eersteModus(store.get(), S.caseNo - 1) === !!S.expert
       ? `${points() ? "+" + points() + " punt" + (points() > 1 ? "en" : "") : "0 punten"} voor de ranglijst`
@@ -372,7 +373,7 @@ function openOpts(){
   if (!q){ closeOpts(); return; }
   const used = new Set(S.guesses);
   optList = KIESBAAR.filter(x => !used.has(x.id)).map(x => ({ x, score: zoekScore(q, x) }))
-    .filter(o => o.score >= 0).sort((p, q2) => p.score - q2.score || p.x.n.localeCompare(q2.x.n, "nl")).slice(0, 8).map(o => o.x);
+    .filter(o => o.score >= 0).sort((p, q2) => p.score - q2.score || p.x.n.length - q2.x.n.length || p.x.n.localeCompare(q2.x.n, "nl")).slice(0, 30).map(o => o.x);   /* gelijke score: korte namen eerst (‘muis’ → muizen vóór vleermuizen); lijst scrollt */
   const ul = $("gOpts");
   if (!optList.length){ ul.innerHTML = `<li aria-disabled="true"><span>Geen soort gevonden</span></li>`; ul.hidden = false; optIdx = -1; return; }
   optIdx = 0;
