@@ -868,3 +868,6 @@ html.donker .mptxt .tb{background:#2c3b32}
 html.donker .toelbtn{background:#1d2a22}
 html.donker .toelbtn[aria-expanded="true"]{background:var(--green); color:#0f1712}
 html.donker .toelbox{background:var(--mint)}
+
+/* link om Vestigia in een andere browser te openen (Firefox) */
+.iplink{display:block; width:100%; margin-top:8px; font:inherit; font-size:13px; padding:8px 10px; border:1px solid var(--rule); border-radius:8px; background:transparent; color:inherit}

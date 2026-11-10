@@ -284,7 +284,7 @@ const online = (() => {
       const rows = await rpc("register_hidden", {}), r = Array.isArray(rows) ? rows[0] : rows;
       a = { id: r.id, key: r.key }; setKoppeling(a);
       queueRecentDaily(); await syncNu(); flush();
-    }
+    } else { await syncNu(); await flush(); }
     return "VSP-" + a.id + "." + a.key;
   }
   /* een code van een ander apparaat gebruiken: spelerscode = verder spelen als die speler, koppelcode = koppelen */
