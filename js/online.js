@@ -204,15 +204,19 @@ const online = (() => {
     if (!enabled){ box.hidden = true; return; }
     box.hidden = false;
     if (p){
-      box.innerHTML = `<p>Je speelt als <b>${esc(p.name)}</b>. Je dagscores en je ${NAAM.vestiarium} worden automatisch bewaard.
+      /* weg te klikken; daarna komt hij niet terug (Mijn profiel staat ook in het menu) */
+      let weg = false; try { weg = localStorage.getItem("vestigia:speeltAlsWeg") === "1"; } catch(e){}
+      if (weg){ box.hidden = true; return; }
+      box.innerHTML = `<button class="pbsluit" id="pbSluit" aria-label="Sluiten">×</button><p>Je speelt als <b>${esc(p.name)}</b>. Je dagscores en je ${NAAM.vestiarium} worden automatisch bewaard.
         Je avatar, eikels, prestaties en je spelerscode (om op een ander apparaat verder te spelen) staan in <button class="linklike" id="pcProf">Mijn profiel</button>.</p>`;
       $("pcProf").onclick = () => showProfiel();
+      $("pbSluit").onclick = () => { try { localStorage.setItem("vestigia:speeltAlsWeg", "1"); } catch(e){} box.hidden = true; };
     } else {
       box.innerHTML = `<p><b>Doe mee aan de ranglijst.</b> Kies een spelersnaam. Je hebt geen account of e-mailadres nodig.</p>
         <div class="row2"><input id="pName" maxlength="20" placeholder="Bijvoorbeeld Tom of Dassenjager" autocomplete="nickname"><button class="btn" id="pJoin">Meedoen</button></div>
         <span class="msg" id="pMsg"></span>
         <details id="pCodeBox"${appApart() ? " open" : ""}><summary>Ik heb al een spelers- of koppelcode</summary>
-          <p style="margin:8px 0 0;font-size:.9em;opacity:.85">${appApart() ? "Speelde je eerder in Safari? De app op je beginscherm heeft een eigen geheugen. Open Vestigia in Safari, ga naar Mijn profiel, kopieer je spelerscode en plak hem hier. Kies dus geen nieuwe naam." : "Je spelerscode staat in Mijn profiel op je andere apparaat."}</p>
+          <p style="margin:8px 0 0;font-size:.9em;opacity:.85">${appApart() ? "Speelde je eerder op de webpagina? De app op je beginscherm heeft een eigen geheugen. Open Vestigia op de webpagina, ga naar Mijn profiel, kopieer je spelerscode en plak hem hier. Kies dus geen nieuwe naam." : "Je spelerscode staat in Mijn profiel op je andere apparaat."}</p>
           <div class="row2" style="margin-top:8px"><input id="pCode" placeholder="VSP-…"><button class="btn line" id="pLogin">Verder spelen</button></div>
         </details>`;
       $("pJoin").onclick = join;
@@ -238,7 +242,7 @@ const online = (() => {
     } catch(e){
       $("pJoin").disabled = false;
       const bezet = e.status && e.status < 500 && /bezet/i.test(e.message || "");
-      $("pMsg").textContent = bezet ? "Deze naam is al bezet. Is het jouw naam van een ander apparaat of uit Safari? Plak dan hieronder je spelerscode (te vinden in Mijn profiel op dat apparaat)."
+      $("pMsg").textContent = bezet ? "Deze naam is al bezet. Is het jouw naam van een ander apparaat of van de webpagina? Plak dan hieronder je spelerscode (te vinden in Mijn profiel op dat apparaat)."
         : e.status && e.status < 500 ? e.message : "Aanmelden lukte niet. Controleer je internetverbinding.";
       if (bezet && $("pCodeBox")){ $("pCodeBox").open = true; $("pCode").focus(); }
     }
@@ -346,7 +350,7 @@ function toonWelkom(){
     const link = League.welkomTekst();
     if (link) $("welcomeText").innerHTML = link;
     else if (online.appApart()){
-      $("welcomeText").innerHTML = `<b>Speelde je al in Safari?</b> De app op je beginscherm heeft een eigen geheugen. Kies dan geen nieuwe naam, maar plak je spelerscode uit Safari (Mijn profiel → Kopieer spelerscode). Dan houd je je naam en voortgang.`;
+      $("welcomeText").innerHTML = `<b>Speelde je al op de webpagina?</b> De app op je beginscherm heeft een eigen geheugen. Kies dan geen nieuwe naam, maar plak je spelerscode van de webpagina (Mijn profiel → Kopieer spelerscode). Dan houd je je naam en voortgang.`;
       $("welcomeGo").textContent = "Spelerscode plakken";
       $("welcomeGo").dataset.code = "1";
       if (!localStorage.getItem("vestigia:welcomeLater:app")) $("welcome").hidden = false;
