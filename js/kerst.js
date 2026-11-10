@@ -385,5 +385,5 @@ const Kerst = (() => {
 
   versier();
   if (winter() && speler()) haal().then(stip);
-  return { versier, sneeuw, open, seizoen: winter };
+  return { versier, sneeuw, open, seizoen: winter, vlieg: vliegNaarSaldo, vonk };
 })();

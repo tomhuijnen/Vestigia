@@ -31,10 +31,12 @@ Determinatiespel over beschermde fauna van Nederland: herken de soort aan habita
 | `js/wachtrij.js` | wachtrij voor pop-ups: nooit twee tegelijk; herinnering om een avatar te kiezen (update 8) |
 | `data/advent.js` | winterweetjes voor de adventkalender (update 8) |
 | `js/kerst.js` | kerstmuts, sneeuw en adventkalender van 1 december t/m 6 januari; testen met `?kerst=demo&dag=12` (update 8) |
+| `data/dwaalgasten.js` | de tien dwaalgasten: naam, waar ze normaal leven en ‘Gezien in Nederland’ (update 9); vragen en antwoorden staan in Supabase |
+| `js/dwaalgast.js` | dwaalgast van de maand: rode pop-up, drie vragen, uitslag, en de verborgen pagina Dwaalgasten in het Vestiarium; voorbeeld met `?dwaalgast=demo&gast=lynx` (update 9) |
 | `js/app.js` | spelregels, kop, installeren en opstarten |
 | `sw.js` | service worker (offline en updates) |
 
-De databasescripts (001 t/m 012) staan bewust niet in deze repo, maar in het Project Vestigia.
+De databasescripts (001 t/m 014) staan bewust niet in deze repo, maar in het Project Vestigia.
 
 ## Werkwijze bij een wijziging
 

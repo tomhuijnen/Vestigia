@@ -18,7 +18,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Karla:ital,wght@0,400;0,500;0,700;1,400&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
 <!-- thema: eigen keuze (licht/donker) of anders de instelling van het toestel; vóór de opmaak, dus geen witte flits -->
 <script>(function(){var t=null;try{t=localStorage.getItem("vestigia:thema")}catch(e){}var d=t?t==="donker":!!(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches);if(d)document.documentElement.classList.add("donker")})()</script>
-<link rel="stylesheet" href="css/vestigia.css?v=202611101419">
+<link rel="stylesheet" href="css/vestigia.css?v=202611101522">
 </head>
 <body>
 <!-- openingsanimatie: staat meteen in beeld (geen witte flits), en is in dezelfde sessie al gezien → niet tonen -->
@@ -35,6 +35,7 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
         <span class="mh-name">Vestigia</span>
       </button>
       <button class="veldpill" id="veldPill" type="button" hidden aria-label="Veldmodus: geen internet. Uitleg"><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 6.5a9 9 0 0 1 12 0M4.3 9a5.5 5.5 0 0 1 7.4 0M8 12.2h0M2.5 2.5l11 11"/></svg><span>Veldmodus</span></button>
+      <button class="dwaalbtn" id="dwaalBtn" type="button" hidden aria-label="Dwaalgast gezien"><svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="15.5" r="4"/><circle cx="17.5" cy="15.5" r="4"/><path d="M10.5 15.5h3M4 12l2.5-7h3l1 4M20 12l-2.5-7h-3l-1 4"/></svg></button>
       <button class="kerstbtn" id="adventBtn" type="button" hidden aria-label="Adventkalender"><svg aria-hidden="true" viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="3" y="8" width="14" height="9" rx="1.2"/><path d="M2.5 5.2h15v2.8h-15zM10 5.2V17"/><path d="M10 5.2C8.6 2.4 5.6 2.4 6.1 4.3c.3 1 2.4.9 3.9.9ZM10 5.2c1.4-2.8 4.4-2.8 3.9-.9-.3 1-2.4.9-3.9.9Z"/></svg><i class="stip" aria-hidden="true"></i></button>
       <button class="eikelbtn" id="eikelBtn" hidden><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path d="M8 2.6V1.2" stroke="#e6c27a" stroke-width="1.4" stroke-linecap="round"/><path d="M2.8 6.6C2.8 4.1 5.1 2.6 8 2.6s5.2 1.5 5.2 4Z" fill="#b98a4a"/><path d="M3.9 7.1h8.2c0 3.6-1.8 6.6-4.1 6.6S3.9 10.7 3.9 7.1Z" fill="#e6c27a"/></svg><span></span></button>
       <button class="menubtn avbtn" id="menuBtn" aria-label="Menu en profiel openen" aria-expanded="false" aria-controls="menu"></button>
@@ -189,6 +190,12 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
     <section class="veldweken" id="dexVeldweken" hidden aria-labelledby="dexVwH">
       <h3 id="dexVwH">Veldweken</h3>
       <div id="vwBody"></div>
+    </section>
+    <section class="dwaalgasten" id="dexDwaal" hidden aria-labelledby="dexDwaalH">
+      <h3 id="dexDwaalH">Dwaalgasten <span class="caps" id="dwaalTel"></span></h3>
+      <p class="fine">Eén keer per maand duikt er een zeer zeldzaam dier op. Bevestig de waarneming en hij komt hier te staan.</p>
+      <div class="dwaalgrid" id="dwaalGrid"></div>
+      <div class="dwaalinfo" id="dwaalInfo" hidden aria-live="polite"></div>
     </section>
     <section class="fouten" id="dexFouten" aria-labelledby="dexFoutenH">
       <h3 id="dexFoutenH">Vaakst verward</h3>
@@ -346,6 +353,10 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
 <div class="overlay bottom" id="wachtPop" hidden role="dialog" aria-modal="true" aria-labelledby="wachtH">
   <div class="sheet modesheet" id="wachtBody"></div>
 </div>
+<!-- update 9: dwaalgast (js/dwaalgast.js) -->
+<div class="overlay dwaalpop" id="dwaalPop" hidden role="dialog" aria-modal="true" aria-labelledby="dwaalH">
+  <div class="sheet dwaalsheet" id="dwaalBody"></div>
+</div>
 <!-- update 8: adventkalender (js/kerst.js) -->
 <div class="overlay" id="adventPop" hidden role="dialog" aria-modal="true" aria-labelledby="adventH">
   <div class="sheet adventsheet">
@@ -368,27 +379,29 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
 </div>
 
 <script src="config.js"></script>
-<script src="data/teksten.js?v=202611101419"></script>
-<script src="data/soorten.js?v=202611101419"></script>
-<script src="data/sporen.js?v=202611101419"></script>
-<script src="data/dagschema.js?v=202611101419"></script>
-<script src="data/veldweken.js?v=202611101419"></script>
-<script src="data/toelichting.js?v=202611101419"></script>
-<script src="js/kern.js?v=202611101419"></script>
-<script src="js/spel.js?v=202611101419"></script>
-<script src="js/veldboek.js?v=202611101419"></script>
-<script src="js/melden.js?v=202611101419"></script>
-<script src="js/kop.js?v=202611101419"></script>
-<script src="js/spelen.js?v=202611101419"></script>
-<script src="js/opening.js?v=202611101419"></script>
-<script src="js/uitleg.js?v=202611101419"></script>
-<script src="js/online.js?v=202611101419"></script>
-<script src="js/league.js?v=202611101419"></script>
-<script src="data/avatars.js?v=202611101419"></script>
-<script src="js/profiel.js?v=202611101419"></script>
-<script src="data/advent.js?v=202611101419"></script>
-<script src="js/wachtrij.js?v=202611101419"></script>
-<script src="js/kerst.js?v=202611101419"></script>
-<script src="js/app.js?v=202611101419"></script>
+<script src="data/teksten.js?v=202611101522"></script>
+<script src="data/soorten.js?v=202611101522"></script>
+<script src="data/sporen.js?v=202611101522"></script>
+<script src="data/dagschema.js?v=202611101522"></script>
+<script src="data/veldweken.js?v=202611101522"></script>
+<script src="data/toelichting.js?v=202611101522"></script>
+<script src="js/kern.js?v=202611101522"></script>
+<script src="js/spel.js?v=202611101522"></script>
+<script src="js/veldboek.js?v=202611101522"></script>
+<script src="js/melden.js?v=202611101522"></script>
+<script src="js/kop.js?v=202611101522"></script>
+<script src="js/spelen.js?v=202611101522"></script>
+<script src="js/opening.js?v=202611101522"></script>
+<script src="js/uitleg.js?v=202611101522"></script>
+<script src="js/online.js?v=202611101522"></script>
+<script src="js/league.js?v=202611101522"></script>
+<script src="data/avatars.js?v=202611101522"></script>
+<script src="js/profiel.js?v=202611101522"></script>
+<script src="data/advent.js?v=202611101522"></script>
+<script src="js/wachtrij.js?v=202611101522"></script>
+<script src="js/kerst.js?v=202611101522"></script>
+<script src="data/dwaalgasten.js?v=202611101522"></script>
+<script src="js/dwaalgast.js?v=202611101522"></script>
+<script src="js/app.js?v=202611101522"></script>
 </body>
 </html>

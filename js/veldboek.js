@@ -275,7 +275,7 @@ function renderVeldweken(st){
 }
 function renderDex(){
   const st = store.get(), dex = st.dex || {};
-  renderFouten(st); renderVeldweken(st);
+  renderFouten(st); renderVeldweken(st); if (typeof Dwaalgast !== "undefined") Dwaalgast.vestiarium();
   const found = DEX.filter(t => dex[t.id] && dex[t.id].w > 0).length;
   $("dexCount").innerHTML = `${found}<small>van ${DEX.length} gedetermineerd</small>`;
   renderTrophies(st);
