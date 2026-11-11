@@ -233,6 +233,24 @@ function ontdekPlaat(t){
     <div><span class="caps">Nieuwe soort!</span><p><b>${esc(t.n)}</b> staat nu in je ${NAAM.vestiarium}: plaat ${n} van ${TARGETS.length}.</p>
       <button class="linklike" id="toDex">Open het ${NAAM.vestiarium}</button></div></div>`;
 }
+/* Cijfers onder een dagcasus (update 9): dezelfde telling als de kop en de prestatie ‘Dagen op rij gespeeld’.
+   Per dag telt de modus die je die dag als eerste speelde (zoals in de ranglijst); de reeks is dagen op rij gespeeld,
+   klassiek en expert samen. Het logboek gaat via Supabase mee naar je andere apparaten; de langste reeks volgens de
+   server (prestatie ‘reeks’) telt ook mee, voor dagen van vóór het logboek. */
+function dagStats(st){
+  const dag = new Map();
+  for (const e of (st.log || []).slice().sort((a, b) => (a.t || 0) - (b.t || 0)))
+    if (e && e.m === "daily" && Number.isInteger(e.d) && e.d >= 0 && !dag.has(e.d)) dag.set(e.d, !!e.w);
+  for (const [k, g] of Object.entries(st.games || {})){
+    const m = k.match(/^d(\d+)/); if (!m || !g || g.status === "playing" || dag.has(+m[1])) continue;
+    dag.set(+m[1], g.status === "won");
+  }
+  if (!dag.size) return null;
+  const r = playStreak(st);
+  let server = 0;
+  try { const p = JSON.parse(localStorage.getItem("vestigia:prestaties")) || []; const x = p.find(q => q.id === "reeks"); server = x ? +x.waarde || 0 : 0; } catch(e){}
+  return { played: dag.size, won: [...dag.values()].filter(Boolean).length, streak: r.cur, best: Math.max(r.best, server, r.cur) };
+}
 function renderResult(){
   const card = $("resultCard"), card2 = $("resultCard2"), wrap = $("resultWrap");
   document.querySelector(".layout").classList.toggle("afgerond", S.status !== "playing");
@@ -246,8 +264,8 @@ function renderResult(){
     : (won ? `Gedetermineerd in ${usedTries()} van de ${MAX} pogingen.` : `Na ${MAX} pogingen niet gevonden.`);
   let stats = "";
   if (S.mode === "daily"){
-    const s = store.get()[S.expert ? "statsX" : "stats"];
-    if (s) stats = `<span class="caps">Jouw dagcasussen in ${S.expert ? "expert" : "klassiek"}</span><div class="stats"><div><b>${s.played}</b>gespeeld</div><div><b>${s.played ? Math.round(100*s.won/s.played) : 0}%</b>gedetermineerd</div><div><b>${s.streak}</b>huidige reeks</div><div><b>${s.best}</b>langste reeks</div></div>`;
+    const s = dagStats(store.get());
+    if (s) stats = `<span class="caps">Jouw dagcasussen</span><div class="stats"><div><b>${s.played}</b>gespeeld</div><div><b>${s.played ? Math.round(100*s.won/s.played) : 0}%</b>gedetermineerd</div><div><b>${s.streak}</b>huidige reeks</div><div><b>${s.best}</b>langste reeks</div></div>`;
   }
   card.className = "account" + (won ? "" : " lost") + (freshResult && !matchMedia("(prefers-reduced-motion: reduce)").matches ? " resultin" : "");
   card2.className = "account vervolg" + (card.classList.contains("resultin") ? " resultin" : "");
