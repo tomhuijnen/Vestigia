@@ -40,7 +40,7 @@ const GROUPS = { Z:"Zoogdieren", R:"Reptielen", A:"Amfibieën", F:"Vissen", B:"V
 const RARITY = { A:"Algemeen", MA:"Minder algemeen", Z:"Zeldzaam", ZZ:"Zeer zeldzaam" };
 
 /* Oude namen die ooit in opslag kunnen staan, met de id waar ze nu bij horen. Voorbeeld: "Wezel (oud)": "wezel" */
-const ALIASES = {};
+const ALIASES = { "Kortsnavelboomkruiper": "kortsnavelboomkruiper" };   // hernoemd naar taigaboomkruiper in update 15 (11-11-2026)
 
 const SPECIES = [
 { id:"das", no:1, g:"Z", n:"Das", s:"Meles meles", r:"BAL", l:85, zz:null, twin:null,
@@ -2447,7 +2447,7 @@ const SPECIES = [
       "Een hoog, ijl liedje ‘tie-tie-tietere-tiet’; iets schuift als een muisje omhoog langs de stam.",
       "Bruin gestreept van boven, vuilwit van onder, met een dunne, gebogen snavel en stijve staartveren."
     ] },
-    { bron:"Vogelbescherming, vogelgids boomkruiper", sl:{ i:4, t:"Vuilwitte, iets bruinige flanken en een lange snavel. De kortsnavelboomkruiper is zuiverder wit van onder." }, wn:[
+    { bron:"Vogelbescherming, vogelgids boomkruiper", sl:{ i:4, t:"Vuilwitte, iets bruinige flanken en een lange snavel. De taigaboomkruiper is zuiverder wit van onder." }, wn:[
       "Zeeland, november. Een koude dag.",
       "Een park met oude populieren.",
       "Stammen met ruwe schors.",
@@ -2455,19 +2455,19 @@ const SPECIES = [
       "Bruin gestreept, met een dunne gebogen snavel en vuilwitte, iets bruinige flanken."
     ] }
   ] },
-{ id:"kortsnavelboomkruiper", no:120, g:"B", n:"Kortsnavelboomkruiper", s:"Certhia familiaris", r:"VR", l:12, zz:"Z", twin:"boomkruiper",
+{ id:"kortsnavelboomkruiper", no:120, g:"B", n:"Taigaboomkruiper", s:"Certhia familiaris", r:"VR", l:12, zz:"Z", twin:"boomkruiper",
   h:["BOS"], a:["DAG"], v:["ONG"], b:["BOOM"], w:["ACT"],
   x:"boomklever",
   t:"De boomklever klimt ook kopje-onder, is blauwgrijs met oranje en heeft een rechte snavel. Deze soort klimt alleen spiraalsgewijs omhoog en heeft een dunne, gebogen snavel.",
   cs:[
-    { sl:{ i:3, t:"Een snel, dalend liedje dat eindigt in een triller. Hij leeft vooral in oude naaldbossen." }, bron:"Sovon, soortpagina kortsnavelboomkruiper", wn:[
+    { sl:{ i:3, t:"Een snel, dalend liedje dat eindigt in een triller. Hij leeft vooral in oude naaldbossen." }, bron:"Sovon, soortpagina taigaboomkruiper (voorheen kortsnavelboomkruiper)", wn:[
       "Twente, maart. Vlak bij de Duitse grens.",
       "Een oud, koel naaldbos met sparren en lariksen, afgewisseld met beuken.",
       "Een losgeraakte schorsflap aan een dode spar.",
       "Een snel, dalend liedje dat eindigt in een triller, anders dan bij zijn algemene evenbeeld.",
       "Bruin gestreept van boven, zuiver wit van onder, met een iets kortere snavel en een witte wenkbrauwstreep."
     ] },
-    { bron:"Sovon, soortpagina kortsnavelboomkruiper", sl:{ i:3, t:"Zijn liedje daalt en eindigt in een triller. Zo onderscheid je hem het best van de gewone boomkruiper." }, wn:[
+    { bron:"Sovon, soortpagina taigaboomkruiper (voorheen kortsnavelboomkruiper)", sl:{ i:3, t:"Zijn liedje daalt en eindigt in een triller. Zo onderscheid je hem het best van de gewone boomkruiper." }, wn:[
       "Zuid-Limburg, mei. Een koele ochtend.",
       "Een hellingbos met fijnsparren en beuken.",
       "Een spleet achter de schors van een dode beuk.",

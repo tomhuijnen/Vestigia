@@ -891,7 +891,7 @@ html.donker .toelbox{background:var(--mint)}
 html.donker .tabbar .mid .ic, html.donker .tabbar .mid .ic *{color:#10201a}
 html.donker .tabbar .mid .ic{border-color:#141f19}
 html.donker .tabbar .mid.open .ic{background:var(--ink)}
-/* update 7: lange namen (kortsnavelboomkruiper) passen op de plaat */
+/* update 7: lange namen (bijv. kleine ijsvogelvlinder) passen op de plaat */
 .plate .nm{overflow-wrap:anywhere; hyphens:auto}
 .plate .nm.l{font-size:1rem}
 .plate .nm.xl{font-size:.9rem}

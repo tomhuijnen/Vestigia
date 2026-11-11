@@ -420,8 +420,16 @@ function afstand(a, b, max){
   return p[b.length];
 }
 const fouten = len => len >= 8 ? 2 : len >= 4 ? 1 : 0;
+/* oude namen (ALIASES) blijven vindbaar, net onder de huidige naam: ‘kortsnavel…’ vindt de taigaboomkruiper */
+const OUDE_NAMEN = new Map();
+for (const [naam, id] of Object.entries(typeof ALIASES === "undefined" ? {} : ALIASES)) (OUDE_NAMEN.get(id) || OUDE_NAMEN.set(id, []).get(id)).push(naam);
 /* lager is beter; -1 = past niet */
 function zoekScore(q, x){
+  const nu = zoekScoreNaam(q, x), oud = (OUDE_NAMEN.get(x.id) || []).map(n => zoekScoreNaam(q, { n, s: x.s })).filter(v => v >= 0).map(v => v + 0.5);
+  const alle = [nu].concat(oud).filter(v => v >= 0);
+  return alle.length ? Math.min(...alle) : -1;
+}
+function zoekScoreNaam(q, x){
   const a = norm(x.n), b = norm(x.s), wa = a.split(" "), wb = b.split(" "), alle = wa.concat(wb), qw = q.split(" ");
   if (a.startsWith(q)) return 0;
   if (wa.some(w => w.startsWith(q))) return 1;
@@ -454,7 +462,7 @@ function zoekGroepen(q){
 let optList = [], optIdx = -1;
 function matchExact(v){
   const q = norm(v); if (!q) return null;
-  const s = KIESBAAR.find(x => norm(x.n) === q || norm(x.s) === q);
+  const s = KIESBAAR.find(x => norm(x.n) === q || norm(x.s) === q || (OUDE_NAMEN.get(x.id) || []).some(n => norm(n) === q));
   return s ? s.id : null;
 }
 function closeOpts(){ $("gOpts").hidden = true; $("gInput").setAttribute("aria-expanded","false"); $("gInput").removeAttribute("aria-activedescendant"); optIdx = -1; }
