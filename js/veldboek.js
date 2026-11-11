@@ -216,7 +216,10 @@ function showDex(focusId){
    Update 7: trager, zodat je het met het oog volgt. Eigen scroll (± 1,4 s, zacht in en uit) in plaats van de snelle
    'smooth' van de browser; daarna een langere, dubbele uitlichting. */
 function lichtUit(id){
-  const el = document.querySelector(`#dexGrid .plate[data-n="${CSS.escape(id)}"]`) || document.querySelector(`.plate[data-n="${CSS.escape(id)}"]`);
+  lichtUitEl(document.querySelector(`#dexGrid .plate[data-n="${CSS.escape(id)}"]`) || document.querySelector(`.plate[data-n="${CSS.escape(id)}"]`));
+}
+/* update 11: ook voor een dwaalgast in het blok Dwaalgasten */
+function lichtUitEl(el){
   if (!el) return;
   const rustig = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   const pop = () => { el.classList.remove("uitlicht"); void el.offsetWidth; el.classList.add("uitlicht");

@@ -37,7 +37,7 @@ Determinatiespel over beschermde fauna van Nederland: herken de soort aan habita
 | `js/app.js` | spelregels, kop, installeren en opstarten |
 | `sw.js` | service worker (offline en updates) |
 
-De databasescripts (001 t/m 015) staan bewust niet in deze repo, maar in het Project Vestigia.
+De databasescripts (001 t/m 016) staan bewust niet in deze repo, maar in het Project Vestigia.
 
 ## Werkwijze bij een wijziging
 

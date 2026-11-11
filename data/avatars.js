@@ -326,22 +326,26 @@ const AVATARS = {
 <path d="M30 86C34 82 40 84 42 88M58 88C60 84 66 82 70 86" fill="none" stroke="#e8dcc6" stroke-width="2.4" stroke-linecap="round"/>`
 };
 /* dwaalgasten (update 9): alleen te verdienen, in kleur, met een eigen achtergrond */
-AVATARS["dg-lynx"] = `<defs><radialGradient id="{id}k" cx=".5" cy=".42" r=".6"><stop offset="0" stop-color="#e2b77c"/><stop offset="1" stop-color="#b9824a"/></radialGradient></defs>
+AVATARS["dg-lynx"] = `<defs><radialGradient id="{id}k" cx=".5" cy=".4" r=".62"><stop offset="0" stop-color="#e4bb80"/><stop offset="1" stop-color="#b9824a"/></radialGradient><linearGradient id="{id}r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9b07a"/><stop offset=".55" stop-color="#ead6b2"/><stop offset="1" stop-color="#f4ead6"/></linearGradient></defs>
 <path fill="#6f8a5a" d="M0 84C25 78 75 78 100 84V100H0Z"/>
-<path fill="#a8733f" d="M18 40L26 6L44 30Z"/><path fill="#a8733f" d="M82 40L74 6L56 30Z"/>
-<path fill="#e8d2a8" d="M24 34L27 15L38 30Z"/><path fill="#e8d2a8" d="M76 34L73 15L62 30Z"/>
-<path fill="#1d1d1d" d="M24 9L26 0L29 8Z"/><path fill="#1d1d1d" d="M76 9L74 0L71 8Z"/><path d="M26 7L26 2M74 7L74 2" stroke="#1d1d1d" stroke-width="1.4"/>
-<path fill="#eedcb6" d="M10 52C8 66 16 82 30 90L50 96L70 90C84 82 92 66 90 52C86 62 78 66 70 66H30C22 66 14 62 10 52Z"/>
-<path d="M14 62L20 66M13 70L21 72M16 78L24 78M86 62L80 66M87 70L79 72M84 78L76 78" stroke="#5a3e24" stroke-width="1.6" stroke-linecap="round"/>
-<path fill="url(#{id}k)" d="M20 48C20 30 34 22 50 22C66 22 80 30 80 48C80 66 68 80 50 82C32 80 20 66 20 48Z"/>
-<g fill="#6b4523"><circle cx="40" cy="30" r="1.6"/><circle cx="50" cy="28" r="1.7"/><circle cx="60" cy="30" r="1.6"/><circle cx="45" cy="34" r="1.3"/><circle cx="55" cy="34" r="1.3"/><circle cx="28" cy="50" r="1.5"/><circle cx="72" cy="50" r="1.5"/><circle cx="26" cy="58" r="1.3"/><circle cx="74" cy="58" r="1.3"/></g>
-<path fill="#f6ecd8" d="M36 58C38 52 44 50 50 54C56 50 62 52 64 58C64 68 58 74 50 74C42 74 36 68 36 58Z"/>
-<ellipse cx="38" cy="45" rx="6" ry="4.6" fill="#c9d65a"/><ellipse cx="62" cy="45" rx="6" ry="4.6" fill="#c9d65a"/>
-<ellipse cx="38" cy="45" rx="1.5" ry="3.8" fill="#151515"/><ellipse cx="62" cy="45" rx="1.5" ry="3.8" fill="#151515"/>
-<path d="M32 45C34 41 42 41 44 45M56 45C58 41 66 41 68 45" fill="none" stroke="#3a2614" stroke-width="1.4"/>
-<path d="M33 50L30 58M67 50L70 58" stroke="#3a2614" stroke-width="1.4" stroke-linecap="round"/>
-<path fill="#8a4f42" d="M45 55H55L50 61Z"/><path d="M50 61V65M50 65C47 68 43 67 42 65M50 65C53 68 57 67 58 65" fill="none" stroke="#3a2614" stroke-width="1.4" stroke-linecap="round"/>
-<path d="M40 64L22 62M40 67L24 70M60 64L78 62M60 67L76 70" stroke="#fff" stroke-opacity=".8" stroke-width=".9"/>`;
+<g transform="translate(5 8) scale(.9)">
+<path fill="#9c6a3a" d="M30 84C30 76 40 72 50 72C60 72 70 76 70 84L74 100H26Z"/>
+<path fill="#a8733f" d="M20 40L27 7L44 29Z"/><path fill="#a8733f" d="M80 40L73 7L56 29Z"/>
+<path fill="#e8d2a8" d="M25 34L28 16L38 29Z"/><path fill="#e8d2a8" d="M75 34L72 16L62 29Z"/>
+<path fill="#1d1d1d" d="M25.5 10L27 0L30 9Z"/><path fill="#1d1d1d" d="M74.5 10L73 0L70 9Z"/>
+<path fill="url(#{id}r)" d="M23 40C19 46 15 52 11 58L18 59C14 64 11 70 9 76L17 75C16 80 17 86 19 90L26 84C28 88 31 92 35 94L39 86C42 89 46 91 50 92C54 91 58 89 61 86L65 94C69 92 72 88 74 84L81 90C83 86 84 80 83 75L91 76C89 70 86 64 82 59L89 58C85 52 81 46 77 40Z"/>
+<g stroke="#2a1a0e" stroke-width="1.7" stroke-linecap="round" fill="none"><path d="M13 60L20 62M11 72L19 71M19 84L25 80M33 90L37 84"/><path d="M87 60L80 62M89 72L81 71M81 84L75 80M67 90L63 84"/></g>
+<path fill="url(#{id}k)" d="M21 48C21 30 34 21 50 21C66 21 79 30 79 48C79 62 71 74 60 80C56 82 53 83 50 83C47 83 44 82 40 80C29 74 21 62 21 48Z"/>
+<path fill="#f3e6cc" d="M30 62C34 70 41 76 50 77C59 76 66 70 70 62C66 66 60 68 50 68C40 68 34 66 30 62Z"/>
+<g fill="#6b4523"><circle cx="40" cy="29" r="1.5"/><circle cx="50" cy="27" r="1.6"/><circle cx="60" cy="29" r="1.5"/><circle cx="45" cy="33" r="1.2"/><circle cx="55" cy="33" r="1.2"/><circle cx="27" cy="52" r="1.4"/><circle cx="73" cy="52" r="1.4"/></g>
+<path d="M26 54C28 60 31 64 35 67M74 54C72 60 69 64 65 67" stroke="#3a2614" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+<path fill="#f6ecd8" d="M37 58C39 52 44 50 50 54C56 50 61 52 63 58C63 67 57 73 50 73C43 73 37 67 37 58Z"/>
+<ellipse cx="38.5" cy="45" rx="6" ry="4.4" fill="#c9d65a"/><ellipse cx="61.5" cy="45" rx="6" ry="4.4" fill="#c9d65a"/>
+<ellipse cx="38.5" cy="45" rx="1.5" ry="3.7" fill="#151515"/><ellipse cx="61.5" cy="45" rx="1.5" ry="3.7" fill="#151515"/>
+<path d="M32.5 45C34.5 41 42.5 41 44.5 45M55.5 45C57.5 41 65.5 41 67.5 45" fill="none" stroke="#3a2614" stroke-width="1.4"/>
+<path d="M39 49.5L37 55M61 49.5L63 55" stroke="#3a2614" stroke-width="1.2" stroke-linecap="round"/>
+<path fill="#8a4f42" d="M45.5 55H54.5L50 60.5Z"/><path d="M50 60.5V64M50 64C47 67 43.5 66.5 42.5 64.5M50 64C53 67 56.5 66.5 57.5 64.5" fill="none" stroke="#3a2614" stroke-width="1.4" stroke-linecap="round"/>
+<path d="M41 63L24 61M41 66L26 69M59 63L76 61M59 66L74 69" stroke="#fff" stroke-opacity=".8" stroke-width=".9"/></g>`;
 
 AVATARS["dg-walrus"] = `<defs><linearGradient id="{id}z" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5c93b5"/><stop offset="1" stop-color="#2e5f80"/></linearGradient></defs>
 <path fill="url(#{id}z)" d="M0 70H100V100H0Z"/><path fill="#eaf4f8" d="M-4 76L30 70L58 74L104 70V100H-4Z" opacity=".95"/><path d="M8 82H30M60 86H88" stroke="#b7d3df" stroke-width="2" stroke-linecap="round"/>
@@ -363,36 +367,51 @@ AVATARS["dg-beloega"] = `<defs><linearGradient id="{id}w" x1="0" y1="0" x2="0" y
 <circle cx="36" cy="50" r="2.2" fill="#22333b"/><circle cx="36.7" cy="49.3" r=".7" fill="#fff"/>
 <path fill="#dbe7ec" d="M48 70C50 80 44 88 36 90C40 82 40 76 42 70Z"/><path d="M60 74C70 74 84 72 98 70" stroke="#b6c9d2" stroke-width="1.4" fill="none"/>`;
 
-AVATARS["dg-lammergier"] = `<defs><linearGradient id="{id}h" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4c27e"/><stop offset="1" stop-color="#d9873c"/></linearGradient></defs>
-<path fill="#9fb3c0" d="M0 70L18 52L30 62L48 40L66 60L80 48L100 66V100H0Z" opacity=".55"/><path fill="#ffffff" d="M44 44L48 40L52 45L49 44L47 47Z" opacity=".8"/>
-<path fill="#3c3f44" d="M26 100C24 80 34 66 50 62C68 58 84 66 92 86L96 100Z"/><path d="M40 80C52 76 66 78 78 86M38 90C52 86 68 88 82 94" fill="none" stroke="#5c6168" stroke-width="2" stroke-linecap="round"/>
-<path fill="url(#{id}h)" d="M30 70C26 52 30 34 44 26C58 18 74 22 80 34C84 44 80 54 72 60C62 66 52 70 44 76Z"/>
-<path fill="#1f1f22" d="M56 34C62 30 72 30 78 34L88 38C82 40 76 40 70 39C66 42 62 42 58 40Z"/>
-<path fill="#4a4d52" d="M76 34C84 34 92 37 96 42C96 46 93 49 90 48C91 45 88 42 84 41L76 39Z"/><path fill="#2b2d31" d="M90 48C92 50 92 53 90 54C88 52 88 50 90 48Z"/>
-<g stroke="#1f1f22" stroke-width="1.6" stroke-linecap="round"><path d="M82 42L84 52"/><path d="M80 42L80 53"/><path d="M78 41L76 51"/></g>
-<circle cx="64" cy="36" r="4.4" fill="#e23a2e"/><circle cx="64" cy="36" r="2.8" fill="#f6e7b6"/><circle cx="64.3" cy="36" r="1.4" fill="#141414"/>
-<path d="M40 44C46 48 52 50 58 50M38 54C44 58 50 60 56 60" fill="none" stroke="#c4782f" stroke-width="1.4" stroke-linecap="round" opacity=".7"/>`;
+AVATARS["dg-lammergier"] = `<defs><linearGradient id="{id}h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6ead2"/><stop offset=".45" stop-color="#f0c991"/><stop offset="1" stop-color="#d98a45"/></linearGradient><linearGradient id="{id}l" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9fbcd0"/><stop offset="1" stop-color="#6f8ea6"/></linearGradient></defs>
+<path fill="url(#{id}l)" d="M0 72L14 56L24 64L40 44L54 58L70 40L86 56L100 50V100H0Z" opacity=".6"/><path fill="#ffffff" d="M36 49L40 44L44 49L41 48L39 51Z M66 45L70 40L74 45L71 44L69 47Z" opacity=".75"/>
+<path fill="#3a3d43" d="M2 100C4 80 16 66 34 62L46 66C42 78 40 90 42 100Z"/>
+<g stroke="#8d939b" stroke-width="1.3" stroke-linecap="round"><path d="M16 84L24 78M20 92L30 84M28 96L36 88M30 78L38 73M36 86L42 80"/></g>
+<path fill="url(#{id}h)" d="M36 50C34 38 40 26 52 23C62 21 70 26 72 34C73 40 71 46 69 52L72 58L69 60L74 68L70 70L76 79L72 81L78 90L74 92L80 100H38C36 88 34 74 36 64L33 60L37 58L34 53Z"/>
+<path d="M44 64C48 66 52 66 56 64M42 74C47 77 54 77 60 74M44 86C50 89 58 89 66 86" stroke="#c4762f" stroke-width="1.3" fill="none" stroke-linecap="round" opacity=".7"/>
+<path d="M42 56C44 58 46 58 48 57M38 46L36 42" stroke="#e8d6b4" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+<path fill="#7a7c80" d="M66 31C73 30 80 31 85 35C88 37 89 41 87 45C86 43 84 41 81 40L67 39Z"/>
+<path fill="#5a5c60" d="M81 40C84 41 86 43 87 45C87 48 85 49 84 48C85 46 84 43 81 41Z"/>
+<path fill="#9a9ca0" d="M67 38H79C76 40 71 41 67 41Z"/>
+<path fill="#1b1b1d" d="M44 32C50 30 58 30 64 31L70 31L71 39L66 39C60 39 55 38 50 37C47 36 45 34 44 32Z"/>
+<path fill="#1b1b1d" d="M66 39C70 40 73 41 75 43C74 46 72 50 69 53C68 50 66 46 65 43Z"/>
+<g stroke="#1b1b1d" stroke-width="1.2" stroke-linecap="round"><path d="M70 47L71 54M72 45L74 51M68 49L67 55"/></g>
+<circle cx="60" cy="34" r="4" fill="#d8322a"/><circle cx="60" cy="34" r="2.7" fill="#f7efc4"/><circle cx="60.2" cy="34" r="1.3" fill="#121212"/><circle cx="59.6" cy="33.4" r=".45" fill="#fff"/>`;
 
-AVATARS["dg-sneeuwuil"] = `<path fill="#e6eef2" d="M0 80C26 74 74 74 100 80V100H0Z"/><path d="M10 88H30M64 90H88" stroke="#c7d6de" stroke-width="2" stroke-linecap="round"/>
-<path fill="#ffffff" d="M18 78C14 54 22 30 50 26C78 30 86 54 82 78C76 92 24 92 18 78Z"/>
-<path fill="#ffffff" d="M24 44C22 26 34 16 50 16C66 16 78 26 76 44C74 56 64 62 50 62C36 62 26 56 24 44Z"/>
-<path d="M24 44C22 26 34 16 50 16C66 16 78 26 76 44" fill="none" stroke="#dfe7ec" stroke-width="2"/>
-<g fill="#2a2f33"><path d="M30 70l2-1.4 1 1.6-2 1.2z"/><path d="M40 76l2-1.4 1 1.6-2 1.2z"/><path d="M58 74l2-1.4 1 1.6-2 1.2z"/><path d="M66 68l2-1.4 1 1.6-2 1.2z"/><path d="M48 82l2-1.4 1 1.6-2 1.2z"/><path d="M36 26l1.6-1 .8 1.2-1.6 1z"/><path d="M62 25l1.6-1 .8 1.2-1.6 1z"/></g>
-<circle cx="38" cy="40" r="7.6" fill="#f3c02e"/><circle cx="62" cy="40" r="7.6" fill="#f3c02e"/><circle cx="38" cy="40" r="4" fill="#141414"/><circle cx="62" cy="40" r="4" fill="#141414"/><circle cx="39.4" cy="38.6" r="1.3" fill="#fff"/><circle cx="63.4" cy="38.6" r="1.3" fill="#fff"/>
-<path d="M29 32C33 30 41 30 45 33M71 32C67 30 59 30 55 33" fill="none" stroke="#c9d3d9" stroke-width="1.6" stroke-linecap="round"/>
-<path fill="#2b2b2b" d="M46 46C48 45 52 45 54 46L50 54Z"/>
-<path d="M36 50C40 54 46 56 50 56C54 56 60 54 64 50" fill="none" stroke="#e1e8ec" stroke-width="1.4"/>`;
+AVATARS["dg-sneeuwuil"] = `<defs><linearGradient id="{id}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e3eaee"/></linearGradient></defs>
+<path fill="#e6eef2" d="M0 84C26 80 74 80 100 84V100H0Z"/><path d="M8 90H26M70 92H90" stroke="#c7d6de" stroke-width="2" stroke-linecap="round"/>
+<path fill="url(#{id}b)" d="M14 100C13 78 20 62 31 56H69C80 62 87 78 86 100Z"/>
+<path fill="#dfe6ea" d="M18 96C18 80 24 66 32 60C30 72 30 86 34 98Z"/><path fill="#dfe6ea" d="M82 96C82 80 76 66 68 60C70 72 70 86 66 98Z"/>
+<g stroke="#3a3f43" stroke-width="1.8" stroke-linecap="round"><path d="M26 70l3.2 .9l3.2 -.9"/><path d="M36 76l3.2 .9l3.2 -.9"/><path d="M48 72l3.2 .9l3.2 -.9"/><path d="M60 76l3.2 .9l3.2 -.9"/><path d="M70 70l3.2 .9l3.2 -.9"/><path d="M30 84l3.2 .9l3.2 -.9"/><path d="M42 88l3.2 .9l3.2 -.9"/><path d="M54 86l3.2 .9l3.2 -.9"/><path d="M66 84l3.2 .9l3.2 -.9"/><path d="M22 92l3.2 .9l3.2 -.9"/><path d="M74 92l3.2 .9l3.2 -.9"/><path d="M31 64l3.2 .9l3.2 -.9"/><path d="M66 64l3.2 .9l3.2 -.9"/><path d="M45 80l3.2 .9l3.2 -.9"/><path d="M58 80l3.2 .9l3.2 -.9"/></g>
+<path fill="#ffffff" d="M25 44C25 30 36 23 50 23C64 23 75 30 75 44C75 57 64 64 50 64C36 64 25 57 25 44Z"/>
+<path d="M31 52C35 58 42 61 50 61C58 61 65 58 69 52" fill="none" stroke="#e4eaee" stroke-width="1.1"/>
+<g fill="#33383c"><path d="M38 28l2.4-1 .8 1.3-2.4 1z"/><path d="M48 26l2.4-1 .8 1.3-2.4 1z"/><path d="M58 28l2.4-1 .8 1.3-2.4 1z"/><path d="M43 32l2-1 .7 1.1-2 1z"/><path d="M54 32l2-1 .7 1.1-2 1z"/></g>
+<ellipse cx="39.5" cy="43" rx="6" ry="4.4" fill="#f2bd25"/><ellipse cx="60.5" cy="43" rx="6" ry="4.4" fill="#f2bd25"/>
+<circle cx="40" cy="43.4" r="2.9" fill="#111"/><circle cx="60" cy="43.4" r="2.9" fill="#111"/><circle cx="40.9" cy="42.6" r=".8" fill="#fff"/><circle cx="60.9" cy="42.6" r=".8" fill="#fff"/>
+<path fill="#ffffff" d="M32 38L47 41.5L47 36L32 35Z"/><path fill="#ffffff" d="M68 38L53 41.5L53 36L68 35Z"/>
+<path d="M33.5 38.6L46.5 41.6M66.5 38.6L53.5 41.6" stroke="#9aa6ad" stroke-width="1.1" stroke-linecap="round"/>
+<path fill="#ffffff" d="M33 47.5C36 49 43 49 46 46.5L46 49C42 51 36 50.5 33 47.5ZM67 47.5C64 49 57 49 54 46.5L54 49C58 51 64 50.5 67 47.5Z"/>
+<path fill="#2a2a2a" d="M47.6 45C48.6 44 51.4 44 52.4 45L50.8 51C50.4 52 49.6 52 49.2 51Z"/>
+<path d="M46 45.5C45 48 45.5 51 47 53M54 45.5C55 48 54.5 51 53 53" stroke="#e3eaee" stroke-width="1.6" fill="none" stroke-linecap="round"/>`;
 
-AVATARS["dg-scharrelaar"] = `<defs><linearGradient id="{id}t" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6fd6e6"/><stop offset="1" stop-color="#2f9fc0"/></linearGradient></defs>
-<path d="M-2 76C20 72 50 74 104 66" stroke="#6b4a2f" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M70 70C76 62 84 60 90 62" stroke="#6b4a2f" stroke-width="2.6" stroke-linecap="round" fill="none"/>
-<path fill="#5c8a3a" d="M84 60C88 54 96 54 98 58C94 62 88 62 84 60Z"/>
-<path fill="#2b4f9c" d="M60 60C70 66 78 76 84 92C76 90 68 84 62 76Z"/>
-<path fill="url(#{id}t)" d="M24 46C24 34 34 26 44 28C52 30 56 38 58 46C62 56 62 66 56 72C48 78 34 76 28 68C24 62 22 54 24 46Z"/>
-<path fill="#a8653a" d="M44 40C54 38 64 44 68 54C70 62 66 70 60 72C58 62 52 52 44 46Z"/>
-<path fill="#3f7fd6" d="M50 54C58 56 64 62 66 70C60 72 54 68 50 62Z"/>
-<path fill="#1f2a38" d="M14 40L26 36L26 42Z"/><path fill="#1f2a38" d="M14 40L26 42L24 44Z"/>
-<circle cx="32" cy="37" r="2.4" fill="#141414"/><circle cx="32.7" cy="36.3" r=".8" fill="#fff"/><path d="M26 38L30 37M35 37L40 39" stroke="#1f2a38" stroke-width="1.4" stroke-linecap="round"/>
-<path d="M38 78L36 86M44 79L44 87" stroke="#3a3a3a" stroke-width="1.6" stroke-linecap="round"/>`;
+AVATARS["dg-scharrelaar"] = `<defs><linearGradient id="{id}t" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7ad8e6"/><stop offset="1" stop-color="#2a97b8"/></linearGradient><linearGradient id="{id}w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4fb0ea"/><stop offset="1" stop-color="#2c5fc4"/></linearGradient></defs>
+<path d="M-2 82C24 78 52 80 104 70" stroke="#6b4a2f" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M74 75C80 68 88 66 94 68" stroke="#6b4a2f" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+<path fill="#5c8a3a" d="M88 66C92 60 99 60 101 64C97 68 92 68 88 66Z"/>
+<g transform="translate(2 -5) scale(1.08)"><path fill="#1f3f86" d="M55 70L63 98L71 97L61 68Z"/><path d="M60 72L66 96" stroke="#2f6fb8" stroke-width="1.3"/>
+<path fill="url(#{id}t)" d="M29 35C29 27 35 22 42 23C48 24 51 30 53 36C61 44 65 56 63 67L59 76C53 78 47 74 43 66C37 56 32 46 29 35Z"/>
+<path fill="#a8653a" d="M45 30C53 33 60 42 62 53C57 50 52 45 48 40C46 37 45 34 45 30Z"/>
+<path fill="#1d2a5e" d="M48 44C57 47 63 57 64 68L66 88C60 82 54 74 50 64C47 57 46 50 48 44Z"/>
+<path fill="url(#{id}w)" d="M48 44C56 46 61 53 62 61C56 60 51 55 48 50Z"/>
+<path d="M51 66L60 84M54 64L63 80" stroke="#33478f" stroke-width="1" fill="none"/>
+<path fill="#151a22" d="M31.5 28.6L20 32.4C19.4 33.4 20 34.3 21 34.3L31.5 35.6Z"/><path d="M20 32.6C19 33.6 19.4 35 20.6 35" stroke="#151a22" stroke-width="1.2" fill="none"/>
+<path d="M31 32H35M39 31.5C42 31 44 32 46 33.5" stroke="#1f2a38" stroke-width="1.6" stroke-linecap="round"/>
+<circle cx="37" cy="31.5" r="2.3" fill="#141414"/><circle cx="37.6" cy="30.9" r=".7" fill="#fff"/>
+<path d="M50 76L49 81M55 77L56 82" stroke="#3a3a3a" stroke-width="1.8" stroke-linecap="round"/>
+</g>`;
 
 AVATARS["dg-lederschildpad"] = `<defs><radialGradient id="{id}w" cx=".5" cy=".4" r=".7"><stop offset="0" stop-color="#2f86a8"/><stop offset="1" stop-color="#103e5a"/></radialGradient></defs>
 <path fill="url(#{id}w)" d="M0 0H100V100H0Z"/><g fill="#9fd3ea" opacity=".35"><path d="M8 20C20 16 30 22 40 18" stroke="#9fd3ea" stroke-width="1.4" fill="none"/><path d="M60 88C72 84 82 90 94 86" stroke="#9fd3ea" stroke-width="1.4" fill="none"/></g>
@@ -406,36 +425,59 @@ AVATARS["dg-lederschildpad"] = `<defs><radialGradient id="{id}w" cx=".5" cy=".4"
 
 AVATARS["dg-zwaardvis"] = `<defs><linearGradient id="{id}w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b8fbf"/><stop offset="1" stop-color="#123f63"/></linearGradient><linearGradient id="{id}f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3f74"/><stop offset=".55" stop-color="#5d6aa0"/><stop offset="1" stop-color="#d8dee8"/></linearGradient></defs>
 <path fill="url(#{id}w)" d="M0 0H100V100H0Z"/><g fill="#bde3f5" opacity=".6"><circle cx="82" cy="24" r="2"/><circle cx="88" cy="16" r="1.3"/></g>
-<path fill="url(#{id}f)" d="M26 52C34 44 50 40 66 42C76 43 84 46 90 50C84 56 74 60 62 62C46 64 34 60 26 52Z"/>
-<path fill="#c6ccd8" d="M2 49L28 50L28 53L2 52Z"/>
+<g transform="translate(9 5) scale(.9)"><path fill="url(#{id}f)" d="M26 52C34 44 50 40 66 42C76 43 84 46 90 50C84 56 74 60 62 62C46 64 34 60 26 52Z"/>
+<path fill="#c6ccd8" d="M4.0 49.08l1 -1.5l1 1.5Z M4.0 52.08l1 1.5l1 -1.5Z M6.6 49.18l1 -1.5l1 1.5Z M6.6 52.18l1 1.5l1 -1.5Z M9.2 49.28l1 -1.5l1 1.5Z M9.2 52.28l1 1.5l1 -1.5Z M11.8 49.38l1 -1.5l1 1.5Z M11.8 52.38l1 1.5l1 -1.5Z M14.4 49.48l1 -1.5l1 1.5Z M14.4 52.48l1 1.5l1 -1.5Z M17.0 49.58l1 -1.5l1 1.5Z M17.0 52.58l1 1.5l1 -1.5Z M19.6 49.68l1 -1.5l1 1.5Z M19.6 52.68l1 1.5l1 -1.5Z M22.2 49.78l1 -1.5l1 1.5Z M22.2 52.78l1 1.5l1 -1.5Z M24.8 49.88l1 -1.5l1 1.5Z M24.8 52.88l1 1.5l1 -1.5Z "/><path fill="#c6ccd8" d="M2 49L28 50L28 53L2 52Z"/>
 <path fill="#2f3566" d="M46 43C48 32 54 22 60 18C60 28 58 36 60 42Z"/>
 <path fill="#2f3566" d="M88 50C92 40 98 34 104 30L104 70C98 66 92 60 88 50Z"/>
 <path fill="#4a5590" d="M52 60C50 66 46 70 42 72C44 66 46 62 48 60Z"/>
 <circle cx="33" cy="50" r="2.4" fill="#10142b"/><circle cx="33.7" cy="49.3" r=".7" fill="#fff"/>
-<path d="M38 56C46 58 58 58 70 56" stroke="#eef2f6" stroke-width="1" fill="none" opacity=".8"/>`;
+<path d="M38 56C46 58 58 58 70 56" stroke="#eef2f6" stroke-width="1" fill="none" opacity=".8"/></g>`;
 
 AVATARS["dg-oleanderpijlstaart"] = `<defs><linearGradient id="{id}v" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7fb45a"/><stop offset="1" stop-color="#3f7a3a"/></linearGradient></defs>
-<path fill="#ec9ab8" d="M52 40C62 34 76 40 80 52C70 56 60 54 52 48Z" opacity=".25"/>
+<g transform="translate(0 7)"><path fill="#ec9ab8" d="M52 40C62 34 76 40 80 52C70 56 60 54 52 48Z" opacity=".25"/>
 <path fill="url(#{id}v)" d="M50 34C40 26 22 20 6 24C8 34 14 46 24 52C32 56 42 54 50 48Z"/>
 <path fill="url(#{id}v)" d="M50 34C60 26 78 20 94 24C92 34 86 46 76 52C68 56 58 54 50 48Z"/>
 <path fill="#557f3c" d="M48 48C40 54 30 62 26 72C34 74 44 68 50 58Z"/><path fill="#557f3c" d="M52 48C60 54 70 62 74 72C66 74 56 68 50 58Z"/>
-<path fill="#d98fb2" d="M30 60C34 62 40 60 44 56M70 60C66 62 60 60 56 56" stroke="#d98fb2" stroke-width="2" fill="none"/>
+<path fill="#d98fb2" d="M30 60C34 62 40 60 44 56M70 60C66 62 60 60 56 56" stroke="#d98fb2" stroke-width="2"/>
 <path d="M10 28C20 30 32 36 42 44M90 28C80 30 68 36 58 44" stroke="#eef3d8" stroke-width="2.2" fill="none" opacity=".85"/>
 <path d="M16 38C24 38 34 42 44 48M84 38C76 38 66 42 56 48" stroke="#2e5a2c" stroke-width="1.6" fill="none"/>
 <path fill="#c88ad1" d="M14 26C18 24 22 26 22 30C18 31 15 29 14 26ZM86 26C82 24 78 26 78 30C82 31 85 29 86 26Z"/>
 <g fill="#f2f6e2"><circle cx="30" cy="30" r="1.6"/><circle cx="70" cy="30" r="1.6"/></g>
 <path fill="#4d7f3c" d="M46 30C46 26 54 26 54 30L53 66C52 72 48 72 47 66Z"/>
 <path d="M47 40H53M47 46H53M47.5 52H52.5M48 58H52" stroke="#e9f0cf" stroke-width="1.2"/>
-<path d="M48 28C44 20 40 16 36 14M52 28C56 20 60 16 64 14" stroke="#2e3a26" stroke-width="1.3" fill="none" stroke-linecap="round"/>`;
+<path d="M48 28C44 20 40 16 36 14M52 28C56 20 60 16 64 14" stroke="#2e3a26" stroke-width="1.3" fill="none" stroke-linecap="round"/></g>`;
 
-AVATARS["dg-grote-trap"] = `<path fill="#c6c48a" d="M0 78C30 72 70 74 100 80V100H0Z"/><path d="M8 84L6 78M14 86L15 79M86 86L88 79M92 84L94 78" stroke="#8a9a5a" stroke-width="1.6" stroke-linecap="round"/>
-<path fill="#f3efe6" d="M34 92C28 80 30 66 40 60C52 54 66 56 74 64C80 72 80 84 74 92Z"/>
-<path fill="#b9844c" d="M38 62C48 54 64 52 78 58C90 64 94 76 92 86C84 78 74 74 64 74C54 74 44 70 38 62Z"/>
-<g stroke="#2a1d12" stroke-width="1.4" stroke-linecap="round"><path d="M50 60L48 64M58 58L56 63M66 58L64 64M74 61L71 66M82 66L78 70M88 72L84 75M60 66L58 70M70 68L67 72M78 72L75 76"/></g>
-<path fill="#c46b2f" d="M30 58C34 54 42 54 46 58C46 64 40 68 34 66C30 64 28 62 30 58Z"/>
-<path fill="#b7b7b2" d="M28 60C24 50 24 36 28 28C32 22 40 22 42 28C44 36 42 48 44 58C40 62 32 64 28 60Z"/>
-<path fill="#a9a9a4" d="M26 30C28 22 36 20 40 24C38 28 32 30 26 30Z"/>
-<path fill="#6c5a44" d="M24 30L14 33L24 35Z"/>
-<circle cx="31" cy="29" r="1.9" fill="#141414"/><circle cx="31.6" cy="28.4" r=".6" fill="#fff"/>
-<g stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" fill="none"><path d="M28 36C22 40 16 40 10 38"/><path d="M29 37C24 43 18 45 12 45"/><path d="M30 38C26 45 20 49 14 51"/></g>
-<path d="M52 92L50 100M64 92L66 100" stroke="#6c5a44" stroke-width="2.2" stroke-linecap="round"/>`;
+AVATARS["dg-grote-trap"] = `<defs><linearGradient id="{id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c2c3c0"/><stop offset="1" stop-color="#a3a7a6"/></linearGradient><linearGradient id="{id}r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9925a"/><stop offset="1" stop-color="#ad7642"/></linearGradient></defs>
+<path fill="#c6c48a" d="M0 82C30 77 70 78 100 83V100H0Z"/><path d="M8 88L6 82M14 90L15 83M84 90L86 83M92 88L94 82" stroke="#8a9a5a" stroke-width="1.6" stroke-linecap="round"/>
+<path d="M50 76L48 94M63 77L64 95" stroke="#8b7a5c" stroke-width="3.2" stroke-linecap="round"/><path d="M45 95H50M61 96H67" stroke="#8b7a5c" stroke-width="2" stroke-linecap="round"/>
+<path fill="#b06a35" d="M90 54L99 49L100 62L92 63Z"/><path d="M95 52L96 62" stroke="#2a1d12" stroke-width="1.4"/>
+<path fill="#f4f1ea" d="M30 62C30 50 44 44 60 44C76 44 90 50 93 59C95 67 91 75 81 78C69 82 51 82 41 78C34 74 30 68 30 62Z"/>
+<path fill="url(#{id}r)" d="M33 57C37 48 48 44 60 44C76 44 89 50 93 59C85 59 75 61 66 63C54 65 43 63 33 57Z"/>
+<g stroke="#2a1d12" stroke-width="1.1" stroke-linecap="round"><path d="M44 50L46 53M51 47L53 51M58 46L60 50M65 46L67 50M72 47L74 51M79 49L81 53M86 52L87 56M48 56L50 59M56 55L58 59M64 55L66 59M72 55L74 58M80 56L81 59"/></g>
+<path fill="#ffffff" d="M66 63C75 61 85 60 93 59C92 67 87 73 79 76C74 72 70 68 66 63Z"/><path d="M68 64C74 69 80 72 84 73" stroke="#d6d2c6" stroke-width="1.2" fill="none"/>
+<path fill="url(#{id}g)" d="M27 34C24 44 23 54 27 62C33 67 42 65 47 58C43 51 41 43 41 34Z"/>
+<path fill="#b8612b" d="M24.6 52C30 57 38 58 45 55.5L47 58C44 64 38 67 32 66C29 65 27 63 26 61C25 58 24.7 55 24.6 52Z"/><path d="M27 63C33 66 41 64 46 59" stroke="#f4f1ea" stroke-width="1.4" fill="none" opacity=".0"/>
+<circle cx="34" cy="30" r="8" fill="url(#{id}g)"/><path d="M28 26C31 23 37 23 40 25" stroke="#8d9192" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+<path fill="#6c5a44" d="M27 28.5L19 30.5L27 33Z"/><path d="M19.5 30.5L27 31" stroke="#4a3d2e" stroke-width=".8"/>
+<circle cx="32" cy="29" r="1.8" fill="#141414"/><circle cx="32.6" cy="28.4" r=".6" fill="#fff"/>
+<g stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" fill="none"><path d="M28 34C32 37 36 38 41 38"/><path d="M28.5 35C31.5 39 35 41 40 42"/><path d="M29 36C31 40 33 43 37 45"/><path d="M27.6 34.5C31 38 34 39.6 38.6 40" stroke-width=".8"/></g>`;
+
+/* update 11: kerstavondcadeau uit de adventkalender (24 december). Niet te koop; een beschermde soort die in de winter
+   echt wit wordt, met het zwarte staartpuntje dat een hermelijn altijd houdt. */
+AVATARS["winter-hermelijn"] = `<defs><linearGradient id="{id}l" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f3a56"/><stop offset="1" stop-color="#4d7596"/></linearGradient><linearGradient id="{id}p" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e4ebf1"/><stop offset=".45" stop-color="#ffffff"/><stop offset="1" stop-color="#dfe7ee"/></linearGradient></defs>
+<path fill="url(#{id}l)" d="M0 0H100V100H0Z"/>
+<g fill="#ffffff"><circle cx="16" cy="22" r="1.6"/><circle cx="26" cy="12" r="1.1"/><circle cx="82" cy="18" r="1.7"/><circle cx="88" cy="34" r="1.1"/><circle cx="12" cy="44" r="1.2"/><circle cx="74" cy="8" r="1"/><circle cx="20" cy="62" r="1.3" opacity=".8"/><circle cx="90" cy="54" r="1.2" opacity=".8"/></g>
+<path fill="#1d1d22" d="M84.6 59.6C87 53 92 51.5 94.5 54.5C96 58.5 92.5 64 87.6 66C87.6 63.5 86.6 61.4 84.6 59.6Z"/>
+<path fill="url(#{id}p)" d="M59 85C69 84 77 78 81 70C83 66 84.5 62 85.5 59.5C87.5 61.5 88 64 87 67C84 76 75 86 61 89Z"/>
+<path fill="url(#{id}p)" d="M40 92C38 80 38 66 41 56C42.5 50 46 46 50 46C54 46 57.5 50 59 56C62 66 62 80 60 92Z"/>
+
+<path d="M43 60C43 57 47 56 48 59C48 61 44 62 43 60ZM57 60C57 57 53 56 52 59C52 61 56 62 57 60Z" fill="#ffffff" stroke="#cfd9e3" stroke-width=".9"/>
+<ellipse cx="36" cy="24" rx="4.6" ry="4" fill="#eef2f6"/><ellipse cx="64" cy="24" rx="4.6" ry="4" fill="#eef2f6"/><ellipse cx="36.3" cy="24.5" rx="2.4" ry="2" fill="#e3c4c6"/><ellipse cx="63.7" cy="24.5" rx="2.4" ry="2" fill="#e3c4c6"/>
+<path fill="#ffffff" d="M32 31C32 24 40 20 50 20C60 20 68 24 68 31C68 36 63 41 57 44.5C54 46.5 52 47.5 50 47.5C48 47.5 46 46.5 43 44.5C37 41 32 36 32 31Z"/>
+<path d="M38 39C42 43 46 45.5 50 46C54 45.5 58 43 62 39" fill="none" stroke="#dbe3ea" stroke-width="1.1"/>
+<ellipse cx="42.5" cy="31.5" rx="2.4" ry="2.2" fill="#121418"/><ellipse cx="57.5" cy="31.5" rx="2.4" ry="2.2" fill="#121418"/><circle cx="43.2" cy="30.8" r=".7" fill="#fff"/><circle cx="58.2" cy="30.8" r=".7" fill="#fff"/>
+<path fill="#3a2c2e" d="M47.8 40.4C48.8 39.7 51.2 39.7 52.2 40.4C51.8 41.8 50.8 42.5 50 42.5C49.2 42.5 48.2 41.8 47.8 40.4Z"/>
+<path d="M50 42.5V44M50 44C48.8 45 47.6 44.8 47 44.2M50 44C51.2 45 52.4 44.8 53 44.2" fill="none" stroke="#7d6a6c" stroke-width=".9" stroke-linecap="round"/>
+<path d="M46 42L32 40M46 43.4L33 45.6M54 42L68 40M54 43.4L67 45.6" stroke="#aebccb" stroke-width=".7"/>
+<path fill="#f4f8fb" d="M-2 86C14 80 30 84 42 88C56 84 72 80 102 86V102H-2Z"/>
+<path d="M8 92C16 90 24 91 30 93M66 94C74 92 84 92 92 94" stroke="#c9d7e3" stroke-width="1.6" stroke-linecap="round" fill="none"/>`;

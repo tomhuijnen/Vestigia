@@ -6,7 +6,7 @@
 "use strict";
 const VELDTHEMAS = {
   nacht:   { titel: "Nachtdieren", f: t => t.a.includes("NACHT"),
-             intro: "De langste nachten van het jaar. Zeven soorten die vooral actief zijn als het donker is: luister, ruik en zoek naar sporen." },
+             intro: "De langste nachten van het jaar. Zeven soorten die vooral actief zijn als het donker is. Raad jij ze allemaal?" },
   stad:    { titel: "Stadsnatuur", f: t => t.b.includes("GEB") || t.h.includes("BEB"),
              intro: "Zeven soorten die het goed doen tussen huizen, schuren, tuinen en parken. Natuur begint bij de voordeur." },
   jagers:  { titel: "Jagers en rovers", f: t => t.v.includes("GEW"),

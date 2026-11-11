@@ -783,8 +783,9 @@ html.donker .oefenen .tabbar .mid .ic{background:#c99a5b}
 html.donker .chipbtn[aria-pressed="true"]{color:#0f1712}
 /* nieuwe soort in het Vestiarium even uitlichten */
 @keyframes uitlicht{0%{transform:scale(1)} 20%{transform:scale(1.1); box-shadow:0 0 0 3px var(--green), 0 10px 24px rgba(28,51,38,.25)} 42%{transform:scale(1.02); box-shadow:0 0 0 3px var(--green)} 62%{transform:scale(1.08); box-shadow:0 0 0 3px var(--green), 0 10px 24px rgba(28,51,38,.25)} 100%{transform:scale(1); box-shadow:0 0 0 0 transparent}}
-.plate.uitlicht{animation:uitlicht 1.8s ease-in-out; position:relative; z-index:2}
-@media (prefers-reduced-motion:reduce){ .plate.uitlicht{animation:none; box-shadow:0 0 0 3px var(--green)} }
+.plate.uitlicht, .dgv.uitlicht{animation:uitlicht 1.8s ease-in-out; position:relative; z-index:2}
+.dgv.uitlicht{--green:#c8202f}
+@media (prefers-reduced-motion:reduce){ .plate.uitlicht, .dgv.uitlicht{animation:none; box-shadow:0 0 0 3px var(--green)} }
 
 /* plaatband: groepsnaam en nummer altijd op één regel, naam krimpt als het krap wordt */
 .plate .band{gap:8px}
@@ -911,7 +912,7 @@ html.donker .plate.seen .stamp{color:#9fb0b8; border-color:#9fb0b8; background:r
 html.donker .kerstbtn{background:rgba(0,0,0,.25)}
 
 /* kerstmuts op het logo (1 – 26 december) */
-html.kerstmuts .mh-name{position:relative}
+html.kerstmuts .masthead .mh-name, html.kerstmuts .slimbar .mh-name{position:relative}
 html.kerstmuts .masthead .mh-name::before, html.kerstmuts .slimbar .mh-name::before{content:""; position:absolute; left:-.32em; top:-.5em; width:.95em; height:.8em; pointer-events:none;
   transform:rotate(-18deg); background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 34'%3E%3Cpath d='M5 25C9 12 17 3 27 4c6 1 8 7 9 15-3-3-6-4-9-3l-3 9Z' fill='%23d3263a'/%3E%3Cpath d='M27 4c6 1 8 7 9 15-2-2-4-3-6-3 0-5-1-9-3-12Z' fill='%23a5172a'/%3E%3Crect x='2' y='22' width='26' height='8' rx='4' fill='%23fbf7f0'/%3E%3Ccircle cx='35.5' cy='21' r='4' fill='%23fbf7f0'/%3E%3C/svg%3E")}
 html.kerstmuts .slimbar .mh-name::before{top:-.45em}
@@ -922,10 +923,14 @@ html.kerstmuts .slimbar .mh-name::before{top:-.45em}
 @keyframes vlok{from{transform:translate(0,0)} to{transform:translate(var(--zij), 105vh)}}
 html.donker .sneeuw i{background:#e9f1f5}
 
-/* openingsanimatie in de sneeuw: witte grond met blauwgrijze prenten */
-html.kerst #opening{background:radial-gradient(120% 90% at 50% 40%, #f7fafb, #dfe9ee); color:#8aa1ae}
-html.kerst .op-naam{color:var(--green)}
-html.kerst.donker #opening{background:radial-gradient(120% 90% at 50% 40%, #e8eff2, #c7d6de)}
+/* openingsanimatie in de winter (update 11): de gewone groene opening met vallende sneeuw en een vliegende slee */
+.op-sneeuw{position:absolute; inset:0; pointer-events:none; overflow:hidden}
+.op-sneeuw i{position:absolute; top:-10px; border-radius:50%; background:#fff; box-shadow:0 0 4px rgba(255,255,255,.8); animation:opVlok linear infinite}
+@keyframes opVlok{from{transform:translate(0,0)} to{transform:translate(var(--zij), 105vh)}}
+.op-slee{position:absolute; left:0; top:0; width:min(52vw, 300px); pointer-events:none; opacity:0; filter:drop-shadow(0 0 6px rgba(255,255,255,.35));
+  animation:opSlee 2.1s cubic-bezier(.35,.05,.55,.95) .1s forwards}
+.op-slee svg{display:block; width:100%; height:auto}
+@keyframes opSlee{0%{opacity:1; transform:translate(-60vw, 40vh) rotate(-9deg)} 55%{transform:translate(30vw, 16vh) rotate(-6deg)} 92%{opacity:1} 100%{opacity:0; transform:translate(105vw, 2vh) rotate(-10deg)}}
 
 /* adventkalender */
 .adventsheet{max-width:520px; width:100%; gap:10px; border-top-color:#a5172a}
@@ -1328,6 +1333,13 @@ html.donker .nw-blokje.rood{background:#8a1a22}
 .xpspook{position:fixed!important; z-index:10001; pointer-events:none; margin:0; transition:opacity .3s}
 .xpspook.veer{animation:xpveer .5s ease-out}
 .xpspook.weg{opacity:0}
+/* update 11: XP-sterretjes uit de adventkalender, en de ring die oplicht */
+.xpster{position:fixed; left:0; top:0; width:22px; height:22px; z-index:10002; pointer-events:none; filter:drop-shadow(0 2px 4px rgba(0,0,0,.35)); will-change:transform}
+.xpster svg{width:100%; height:100%}
+.xpspook.licht{border-radius:50%; box-shadow:0 0 0 5px rgba(198,233,138,.55), 0 0 22px 6px rgba(198,233,138,.55); animation:xpgloed 1.2s ease-in-out infinite alternate}
+.xpspook.licht.veer{animation:xpveer .28s cubic-bezier(.2,1.8,.4,1)}
+@keyframes xpgloed{from{box-shadow:0 0 0 4px rgba(198,233,138,.45), 0 0 16px 4px rgba(198,233,138,.4)} to{box-shadow:0 0 0 7px rgba(198,233,138,.7), 0 0 28px 8px rgba(198,233,138,.65)}}
+.avk-xp.leeg{opacity:.35; transition:opacity .4s}
 @keyframes xpveer{0%{transform:scale(1)} 40%{transform:scale(1.18)} 100%{transform:scale(1)}}
 /* pop-ups: level omhoog en de start */
 #wachtPop.levelpop .sheet{border-top:6px solid var(--lv-ring); justify-items:center; text-align:center; gap:14px}

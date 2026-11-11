@@ -1,6 +1,6 @@
 /* Vestigia – kerst (update 8)
    1 t/m 26 december: een kerstmuts op het logo.
-   1 december t/m 6 januari: pootafdrukken in de sneeuw bij het openen en een paar sneeuwvlokjes op het beginscherm
+   1 december t/m 6 januari: vallende sneeuw en een vliegende slee in de openingsanimatie (update 11) en een paar sneeuwvlokjes op het beginscherm
    (hooguit tien seconden, uit te zetten in het menu, nooit bij ‘minder beweging’).
    1 t/m 24 december: de adventkalender. Elke dag één vakje; alleen het vakje van vandaag gaat open en een gemist vakje
    is weg. In een vakje: eikels, een sporenvraag, een ondertitel, een kleur of een lijst, en altijd een winterweetje.
@@ -89,9 +89,20 @@ const Kerst = (() => {
 
   /* ---------- inhoud tonen ---------- */
   const EIK = (n, cls) => `<span class="avk-eik ${cls || ""}">${EIKEL}<b>+${n}</b></span>`;
-  const ITEMNAAM = { "token:herstel": "Hersteltoken", "kleur:winter": "Achtergrondkleur Winter", "kleur:hulst": "Achtergrondkleur Hulst", "lijst:sneeuwvlokken": "Lijst Sneeuwvlokken", "lijst:kerst": "Kerstlijst" };
+  const ITEMNAAM = { "token:herstel": "Hersteltoken", "kleur:winter": "Achtergrondkleur Winter", "kleur:hulst": "Achtergrondkleur Hulst", "lijst:sneeuwvlokken": "Lijst Sneeuwvlokken", "lijst:kerst": "Kerstlijst", "avatar:winter-hermelijn": "Avatar Hermelijn in winterpels" };
   /* XP-vakje (update 10): item 'xp:150' = 150 ervaringspunten, telt meteen mee voor je level */
   const isXp = item => !!item && item.startsWith("xp:");
+  /* hoe een item in ‘Je hebt … gekregen’ heet (update 11) */
+  const MELDNAAM = { "lijst:kerst": "de Kerstlijst", "lijst:sneeuwvlokken": "de lijst ‘Sneeuwvlokken’", "kleur:winter": "de achtergrondkleur ‘Winter’",
+                     "kleur:hulst": "de achtergrondkleur ‘Hulst’", "avatar:winter-hermelijn": "de avatar ‘Hermelijn in winterpels’" };
+  /* sporenvakjes (update 11): twee opties met een voet die op die van het goede dier lijkt.
+     vos (4 tenen) ↔ wilde kat (4 tenen, rond, zonder nagels) en boommarter; das (5 tenen, lange nagels) ↔ otter en egel;
+     ree (smalle hoefhelften) ↔ edelhert en wild zwijn; boommarter (marterprent in paren) ↔ bunzing en eekhoorn;
+     wild zwijn (hoef met bijhoeven) ↔ edelhert en ree. */
+  const SPOOR_AFLEIDERS = { vos: ["wilde-kat", "boommarter"], das: ["otter", "egel"], ree: ["edelhert", "zwijn"],
+                            boommarter: ["bunzing", "eekhoorn"], zwijn: ["edelhert", "ree"] };
+  const SPOOR_NAAM = { "wilde-kat": "Wilde kat", otter: "Otter", egel: "Egel", edelhert: "Edelhert", bunzing: "Bunzing", eekhoorn: "Eekhoorn" };
+  const spoorNaam = k => (SPOREN[k] && SPOREN[k].naam) || SPOOR_NAAM[k] || k;
   const itemNaam = item => item.startsWith("titel:") ? `Ondertitel ‘${item.slice(6)}’` : isXp(item) ? `${item.slice(3)} ervaringspunten` : (ITEMNAAM[item] || item);
   const XPSTER = `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9Z"/></svg>`;
   function itemBeeld(item, groot){
@@ -99,7 +110,7 @@ const Kerst = (() => {
     if (isXp(item)) return `<span class="avk-xp${groot ? " groot" : ""}">${XPSTER}<b>${esc(v)}${groot ? " XP" : ""}</b></span>`;
     if (item === "token:herstel") return herstelMunt(groot ? 104 : 40, "avk-munt");
     if (item.startsWith("titel:")) return `<span class="avk-lint">${esc(v)}</span>`;
-    return avatarSVG(Object.assign({}, me, item.startsWith("kleur:") ? { color: v } : { frame: v }), "avk-av");
+    return avatarSVG(Object.assign({}, me, item.startsWith("kleur:") ? { color: v } : item.startsWith("avatar:") ? { avatar: v } : { frame: v }), "avk-av");
   }
   function klein(v){       // wat er in een geopend vakje in het rooster staat
     if (v.item && !v.item.startsWith("titel:")) return `<span class="avk-item">${itemBeeld(v.item)}</span>`;
@@ -135,7 +146,7 @@ const Kerst = (() => {
     const box = $("adventVak");
     if (!v){ box.hidden = true; return; }
     box.hidden = false; box.className = "adventvak";
-    box.innerHTML = `<div class="avk-buit">${EIK(v.eikels)}${v.item ? `<span class="avk-extra">${itemBeeld(v.item)}<span>${esc(itemNaam(v.item))}<small>${v.item === "token:herstel" ? "zeer zeldzaam" : isXp(v.item) ? "telt mee voor je level" : "staat in Mijn profiel"}</small></span></span>` : ""}${v.spoor ? `<span class="avk-extra"><span>${v.goed ? "Spoor goed geraden" : "Spoor niet geraden"}<small>het spoor was van een ${esc(SPOREN[v.spoor].naam.toLowerCase())}</small></span></span>` : ""}</div>${weetjeHtml(v.dag)}`;
+    box.innerHTML = `<div class="avk-buit">${EIK(v.eikels)}${v.item ? `<span class="avk-extra">${itemBeeld(v.item)}<span>${esc(itemNaam(v.item))}<small>${v.item === "token:herstel" ? "zeer zeldzaam" : isXp(v.item) ? "telt mee voor je level" : "staat in Mijn profiel"}</small></span></span>` : ""}${v.spoor ? `<span class="avk-extra"><span>${v.goed ? "Spoor goed geraden" : "Spoor niet geraden"}<small>het spoor was van een ${esc(spoorNaam(v.spoor).toLowerCase())}</small></span></span>` : ""}</div>${weetjeHtml(v.dag)}`;
   }
 
   /* ---------- openen: het grote moment ---------- */
@@ -144,12 +155,14 @@ const Kerst = (() => {
     const wat = v.item === "token:herstel" ? "een hersteltoken"
       : v.item && v.item.startsWith("titel:") ? `de ondertitel ‘${v.item.slice(6)}’`
       : isXp(v.item) ? itemNaam(v.item)
+      : v.item && MELDNAAM[v.item] ? MELDNAAM[v.item]
       : v.item ? (itemNaam(v.item).charAt(0).toLowerCase() + itemNaam(v.item).slice(1))
       : `${v.eikels} eikels`;
     const zin = isXp(v.item) ? `<p class="avk-zin">Zonder er ook maar iets voor te doen, dat is lekker levelen!</p>`
       : v.item === "token:herstel"
       ? `<span class="hm-label">Zeer zeldzaam</span><p class="avk-zin">Deze is <b>erg waardevol</b> en zeldzaam. Bewaar hem goed. Waar hij voor dient, ontdek je vanzelf, op het moment dat je hem nodig hebt.</p>`
-      : v.dag === 5 ? `<p class="avk-zin">Sinterklaas heeft goed opgelet dit jaar!</p>`
+      : v.dag === 5 ? `<p class="avk-zin">Sinterklaas heeft echt zijn best gedaan op dit cadeau!</p>`
+      : v.dag === 6 && v.item === "lijst:kerst" ? `<p class="avk-zin">Sinterklaas is het land uit, dus nu mag de kerstversiering erop. Zo heb je hem de hele maand.</p>`
       : v.dag === 24 ? `<p class="avk-zin">Die krijg je nergens anders. Fijne kerst!</p>`
       : v.item ? `<p class="avk-zin">Die krijg je nergens anders, dus laat hem maar zien.</p>`
       : `<p class="avk-zin">${["Lekker sparen voor iets moois in de shop.", "Weer een handje eikels in je wintervoorraad, net als een eekhoorn.", "Daar kun je weer iets leuks mee scoren in de shop."][v.dag % 3]}</p>`;
@@ -245,7 +258,10 @@ const Kerst = (() => {
     /* 4. eikels vliegen naar het saldo */
     await vliegNaarSaldo(onder.querySelector(".avk-eikrij .avk-eik"), v.eikels);
     /* XP-vakje: '+150 XP' vliegt de ring om je avatar in */
-    if (isXp(v.item) && !demo() && typeof Levels !== "undefined") await Levels.naAdvent(binnen.querySelector(".avk-xp"), +v.item.slice(3));
+    if (isXp(v.item) && typeof Levels !== "undefined"){
+      await wacht(300);
+      await (demo() ? Levels.naAdventDemo : Levels.naAdvent)(binnen.querySelector(".avk-xp"), +v.item.slice(3));
+    }
     if (!demo()) Profiel.haalAlles().then(() => Profiel.saldoInKop());
     const verder = laag.querySelector("#avkVerder");
     verder.focus();
@@ -263,12 +279,13 @@ const Kerst = (() => {
     const sch = 100 / Math.max(maxx - minx, maxy - miny);
     const ox = (100 - (maxx - minx) * sch) / 2, oy = (100 - (maxy - miny) * sch) / 2;     // spoor in het midden
     binnen.innerHTML = `<div class="avk-spoor" aria-label="Een spoor in de sneeuw">${pts.map((p, i) =>
-      `<span style="left:${(ox + (p.x - minx) * sch).toFixed(1)}%; top:${(oy + (p.y - miny) * sch).toFixed(1)}%; --r:${p.r}deg; --s:${p.spiegel ? -1 : 1}; --vd:${(300 + (pts.length - 1 - i) * 420)}ms">${prentSVG(spoor, p.voet)}</span>`).join("")}</div>`;
+      `<span style="left:${(ox + (p.x - minx) * sch).toFixed(1)}%; top:${(oy + (p.y - miny) * sch).toFixed(1)}%; --r:${p.r}deg; --s:${p.spiegel ? -1 : 1}; --vd:${300 + i * 420}ms">${prentSVG(spoor, p.voet)}</span>`).join("")}</div>`;
     binnen.classList.add("toon", "sp");
-    const anderen = Object.keys(SPOREN).filter(k => k !== spoor).sort(() => Math.random() - .5).slice(0, 2);
+    /* update 11: de andere twee opties lijken op het goede antwoord (zelfde soort voet), maar zijn wel te onderscheiden */
+    const anderen = (SPOOR_AFLEIDERS[spoor] || Object.keys(SPOREN).filter(k => k !== spoor).slice(0, 2));
     const keuzes = [spoor, ...anderen].sort(() => Math.random() - .5);
     onder.innerHTML = `<p class="avk-vraag">Sporenvakje! Welk dier liep hier door de sneeuw?</p>
-      <div class="avk-keuzes">${keuzes.map(k => `<button class="btn line" data-k="${k}">${esc(SPOREN[k].naam)}</button>`).join("")}</div>
+      <div class="avk-keuzes">${keuzes.map(k => `<button class="btn line" data-k="${k}">${esc(spoorNaam(k))}</button>`).join("")}</div>
       <p class="fine">Goed geraden: 20 eikels. Fout: 5 eikels.</p>`;
     /* de vraag komt pas als het hele spoor er staat */
     setTimeout(() => onder.classList.add("toon"), rustig() ? 0 : 300 + pts.length * 420 + 200);
