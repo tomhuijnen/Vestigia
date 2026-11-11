@@ -436,7 +436,7 @@ const SPECIES = [
       "Lange oren met zwarte punten."
     ] },
     { bron:"Zodion, soortpagina haas", sl:{ i:2, t:"Hij graaft geen holen, maar ligt in een leger: een ondiepe kuil in het open veld. Pas op het laatste moment springt hij op." }, wn:[
-      "Noord-Brabant, september. Een stoppelveld na de maïsoogst.",
+      "Bij Den Bosch, september. Een stoppelveld na de maïsoogst.",
       "Een open akkerlandschap met sloten en een paar knotwilgen.",
       "Een ondiepe kuil, de leger, in de rand van het veld.",
       "Een dier dat pas op het laatste moment opspringt en zigzaggend wegrent; in de modder lange achterpoten voor de korte voorpoten.",
@@ -489,7 +489,7 @@ const SPECIES = [
   t:"De hermelijn is groter, heeft een langere staart met altijd een zwarte punt, en de grens tussen bruin en wit loopt recht.",
   cs:[
     { sl:{ i:4, t:"Een korte staart zonder zwarte punt. Hij is het kleinste roofdier ter wereld." }, bron:null, wn:[
-      "Hoeksche Waard, juli.",
+      "Bij Den Bosch, juli.",
       "Akkers met brede grasbermen en slootkanten.",
       "Een jaar met heel veel veldmuizen.",
       "Heel dunne, gedraaide uitwerpselen van ±2–3 mm; een muizenhol met een nest van muizenhaar.",
@@ -709,7 +709,7 @@ const SPECIES = [
   t:"De ruige dwergvleermuis is iets groter, roept rond 38–40 kHz, en is vooral in de trektijd en bij water te vinden.",
   cs:[
     { sl:{ i:3, t:"Smakkende roepen met een piek rond 45 kHz en kleine keutels onder een stootvoeg. Hij woont graag in spouwmuren." }, bron:null, wn:[
-      "Brabant, juni.",
+      "Bij Den Bosch, juni.",
       "Een nieuwbouwwijk met een stadspark en een vijver.",
       "Woningen met spouwmuren en open stootvoegen.",
       "Kleine, droge keutels onder een stootvoeg; detector: smakkende signalen, piek rond 45 kHz.",
@@ -1356,7 +1356,7 @@ const SPECIES = [
       "Groot, met een kleine knobbel aan de achterpoot."
     ] },
     { bron:"RAVON, soortpagina meerkikker", sl:{ i:4, t:"Groot en olijfgroen met een kleine hielknobbel. Hij eet ook kleinere kikkers." }, wn:[
-      "Rivierengebied, augustus. Een hete middag.",
+      "Bij Den Bosch, augustus. Een hete middag.",
       "Een uiterwaard met grote plassen en rietkragen.",
       "Een brede oever met veel kroos.",
       "Grote, groene dieren zonnen op de oever en eten ook kleinere soortgenoten.",
@@ -1516,7 +1516,7 @@ const SPECIES = [
       "Gele ogen in een platte kop."
     ] },
     { bron:"Vogelbescherming, vogelgids steenuil", sl:{ i:3, t:"Hij loopt vaak over de grond en vangt regenwormen, als een kleine, gedrongen uil met gele ogen." }, wn:[
-      "Noord-Brabant, juni. Een zachte avond.",
+      "Bij Den Bosch, juni. Een zachte avond.",
       "Een boerenerf met schuren en een weide met paarden.",
       "Een lange nestbuis in een oude perenboom.",
       "Jongen zitten bij de ingang; de ouders lopen over het gras en vangen regenwormen. Bij onraad maken ze knikbewegingen.",
@@ -1536,7 +1536,7 @@ const SPECIES = [
       "Sikkelvormige vleugels."
     ] },
     { bron:"Vogelbescherming, vogelgids gierzwaluw", sl:{ i:4, t:"Alle vier de tenen wijzen naar voren. Hij kan niet lopen en vanaf de grond nauwelijks opstijgen; hij slaapt zelfs in de lucht." }, wn:[
-      "Utrecht, eind juli. Een warme dag.",
+      "Den Bosch, eind juli. Een warme dag.",
       "Een nieuwbouwwijk met speciale neststenen in de gevels.",
       "Kleine invliegopeningen vlak onder de dakrand.",
       "Een volgroeid jong ligt op de stoep en komt niet van de grond; kort daarna vertrekt de hele kolonie naar Afrika.",
@@ -1596,7 +1596,7 @@ const SPECIES = [
       "Een lange dolksnavel op een kleine vogel."
     ] },
     { bron:"Vogelbescherming, vogelgids ijsvogel", sl:{ i:3, t:"Hij duikt loodrecht in het water en slaat de vis tegen een tak voordat hij hem doorslikt." }, wn:[
-      "Noord-Brabant, juni. Een zonnige ochtend.",
+      "Bij Den Bosch, juni. Een zonnige ochtend.",
       "Een visvijver op een landgoed.",
       "Een dode tak die laag boven het water hangt.",
       "Iets kleins en fels stort zich loodrecht in het water, komt met een visje boven en slaat het tegen de tak.",
@@ -2235,7 +2235,7 @@ const SPECIES = [
   t:"De meerkikker is groter, vaak olijfbruiner, heeft grijze tot donkere kwaakblazen en zit vooral in grote, voedselrijke wateren. Het tweelingsoortverschil met de poelkikker zit in de hielknobbel: bij de poelkikker groot en halfrond.",
   cs:[
     { sl:{ i:4, t:"Een middelgrote hielknobbel: precies tussen poel- en meerkikker in." }, bron:"RAVON, soortpagina middelste groene kikker", wn:[
-      "Midden-Brabant, mei. Een warme middag.",
+      "Bij Den Bosch, mei. Een warme middag.",
       "Een boerensloot en een poel in een weidegebied met houtwallen.",
       "Een zonnige oever met kroos en drijvende waterplanten.",
       "Luid gekwaak in koor; mannetjes met witte kwaakblazen naast de mondhoeken.",
@@ -2541,7 +2541,7 @@ const SPECIES = [
   t:"De kauw is helemaal zwart met een grijze nek en een korte staart. Deze soort is zwart-wit met een lange, groenglanzende staart en bouwt een overkapt takkennest.",
   cs:[
     { sl:{ i:4, t:"Zwart-wit met een lange, glanzende staart. Zijn nest heeft een dak van takken." }, bron:"Vogelbescherming, soortpagina ekster", wn:[
-      "Noord-Brabant, februari. Langs een provinciale weg.",
+      "Bij Den Bosch, februari. Langs een provinciale weg.",
       "Een dorpsrand met erven, weilanden en meidoornhagen.",
       "Een groot, bolvormig takkennest met een dak, hoog in een meidoorn.",
       "Een ratelend ‘tsjak-tsjak-tsjak’; er loopt er één de verkeersslachtoffers af.",
