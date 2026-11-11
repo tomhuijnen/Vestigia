@@ -47,9 +47,24 @@ for (const e of (typeof DAGSCHEMA !== "undefined" ? DAGSCHEMA : [])){
   DAILY.push({ id, k: ki });
 }
 const DAILY_FIXED = DAILY.length;
+/* Voorbeeld van een veldweek: ?veldweek=demo, met &dag=1…7 (de hoeveelste dag van de week vandaag is; standaard 3),
+   &dag=-1 of -2 (de aankondiging: morgen of over twee dagen) en &thema=nacht, stad, jagers, water, heide, trek, bos,
+   kust, klein, open, winter of planten (standaard nacht). Alleen wat je ziet verandert: de dagcasus blijft gewoon
+   de dagcasus van vandaag, en eikels, punten en de echte stempelkaart veranderen niet. */
+const VW_DEMO = (() => {
+  try {
+    const q = new URLSearchParams(location.search); if (q.get("veldweek") !== "demo") return null;
+    const dag = Math.max(-2, Math.min(7, parseInt(q.get("dag"), 10) || 3)), thema = VELDTHEMAS[q.get("thema")] ? q.get("thema") : "nacht";
+    return { dag: dag === 0 ? 1 : dag, thema };
+  } catch(e){ return null; }
+})();
 /* Veldweek: de eerste volledige week (ma–zo) van elke maand, vanaf VELDWEEK_VANAF. Geeft null buiten een veldweek. */
 function veldweek(d){
   if (typeof VELDTHEMAS === "undefined" || d < 0) return null;
+  if (VW_DEMO){
+    const start = VW_DEMO.dag > 0 ? todayIndex() - VW_DEMO.dag + 1 : todayIndex() - VW_DEMO.dag;
+    return d >= start && d <= start + 6 ? Object.assign({ start, dag: d - start, id: VW_DEMO.thema, demo: true }, VELDTHEMAS[VW_DEMO.thema]) : null;
+  }
   const dt = new Date(START + d * DAY), y = dt.getUTCFullYear(), m = dt.getUTCMonth();
   const eerste = Date.UTC(y, m, 1), maandag = eerste + ((8 - new Date(eerste).getUTCDay()) % 7) * DAY;
   const start = Math.round((maandag - START) / DAY);
