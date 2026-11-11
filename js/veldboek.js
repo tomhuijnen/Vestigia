@@ -266,7 +266,7 @@ function renderFouten(st){
 function renderVeldweken(st){
   const sec = $("dexVeldweken"); if (!sec) return;
   const vandaag = todayIndex(), weken = [];
-  for (let d = VELDWEEK_VANAF; d <= vandaag; d++){ const v = veldweek(d); if (v && v.start === d) weken.push(v); }
+  for (let d = VW_DEMO ? Math.max(0, vandaag - 14) : VELDWEEK_VANAF; d <= vandaag; d++){ const v = veldweek(d); if (v && v.start === d) weken.push(v); }
   sec.hidden = !weken.length;
   if (!weken.length) return;
   const fmt = new Intl.DateTimeFormat("nl-NL", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });

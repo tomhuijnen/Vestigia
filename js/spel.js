@@ -292,7 +292,7 @@ function renderResult(){
   const vwKaart = vw ? stempelkaart(store.get(), vw) : null;
   card2.innerHTML = `
     <section class="xpblok" id="xpBlok" aria-label="Ervaringspunten" hidden></section>
-    ${vw ? `<div class="vwresult"><span class="caps">Veldweek · ${esc(vw.titel)}</span>${vwKaart.html}<p class="fine">${vwKaart.n === 7 ? "Alle zeven dagen gespeeld: +25 eikels." : `${vwKaart.n} van 7 dagen gespeeld${vwKaart.n >= 5 ? " (+10 eikels; met alle zeven +25)" : ""}.`}</p></div>` : ""}
+    ${vw ? `<div class="vwresult"><span class="caps">Veldweek · ${esc(vw.titel)}${vw.demo ? " · voorbeeld" : ""}</span>${vwKaart.html}<p class="fine">${vwKaart.n === 7 ? "Alle zeven dagen gespeeld: +25 eikels." : `${vwKaart.n} van 7 dagen gespeeld${vwKaart.n >= 5 ? " (+10 eikels; met alle zeven +25)" : ""}.`}</p></div>` : ""}
     ${stats}
     ${S.mode === "free" ? `<p class="oefenkeuze">Je oefent met ${esc(Spelen.omschrijving({ g: S.groep, nieuw: S.nieuw, ids: S.ids }))}. <button class="linklike" id="oefenWijzig">Wijzig</button></p>` : ""}
     <div class="actions">

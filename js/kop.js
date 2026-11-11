@@ -157,6 +157,8 @@ const VINK = `<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"
 /* update 8: groen vinkje = goed gedetermineerd, grijs vinkje = gespeeld maar niet gevonden */
 function stempelkaart(st, vw){
   const dagen = speeldagen(st), goed = goedeDagen(st), vandaag = todayIndex();
+  /* voorbeeld (?veldweek=demo): de dagen vóór vandaag als gespeeld, de meeste goed */
+  if (vw.demo) for (let d = vw.start; d < vandaag; d++){ dagen.add(d); if ((d - vw.start) % 3 !== 1) goed.add(d); else goed.delete(d); }
   let n = 0;
   const vakjes = Array.from({ length: 7 }, (_, j) => {
     const d = vw.start + j, ok = dagen.has(d), g = ok && goed.has(d); if (ok) n++;
@@ -175,16 +177,17 @@ function renderVeldweek(st, d, daily){
   if (!vw){
     const over = op - todayIndex(), dagnaam = new Intl.DateTimeFormat("nl-NL", { weekday: "long", timeZone: "UTC" }).format(new Date(START + op * DAY));
     el.className = "veldweek binnenkort";
-    el.innerHTML = `<span class="caps">Binnenkort</span><p><b>${over === 1 ? "Morgen" : "Over twee dagen"} begint een veldweek.</b> Zeven dagen lang hebben alle dagcasussen één thema. Welk thema? Dat zie je ${over === 1 ? "morgen" : dagnaam}.</p>`;
+    el.innerHTML = `<span class="caps">Binnenkort${VW_DEMO ? " · voorbeeld" : ""}</span><p><b>${over === 1 ? "Morgen" : "Over twee dagen"} begint een veldweek.</b> Zeven dagen lang hebben alle dagcasussen één thema. Welk thema? Dat zie je ${over === 1 ? "morgen" : dagnaam}.</p>`;
     return;
   }
   /* de uitleg staat open zolang je deze veldweek voor het eerst ziet (tot je de app opnieuw opent) */
   let gezien = null; try { gezien = localStorage.getItem("vestigia:veldweek"); } catch(e){}
-  if (gezien !== String(vw.start)){ veldweekOpen = vw.start; try { localStorage.setItem("vestigia:veldweek", String(vw.start)); } catch(e){} }
+  if (vw.demo){ if (veldweekOpen === null) veldweekOpen = vw.start; }
+  else if (gezien !== String(vw.start)){ veldweekOpen = vw.start; try { localStorage.setItem("vestigia:veldweek", String(vw.start)); } catch(e){} }
   const nieuw = veldweekOpen === vw.start;
   const k = stempelkaart(st, vw);
   el.className = "veldweek";
-  el.innerHTML = `<div class="vwkop"><span class="caps">Veldweek · dag ${vw.dag + 1} van 7</span><h3>${esc(vw.titel)}</h3></div>
+  el.innerHTML = `<div class="vwkop"><span class="caps">Veldweek · dag ${vw.dag + 1} van 7${vw.demo ? " · voorbeeld" : ""}</span><h3>${esc(vw.titel)}</h3></div>
     ${k.html}
     <details class="vwintro"${nieuw ? " open" : ""}><summary>Over deze veldweek</summary><p>${esc(vw.intro)}</p>
       <p class="fine">Speel alle zeven dagcasussen van deze week voor +25 eikels (5 of 6 dagen: +10). Gespeeld telt; je hoeft ze niet allemaal te vinden. Je stempelkaart komt in je ${NAAM.vestiarium}.</p></details>`;
