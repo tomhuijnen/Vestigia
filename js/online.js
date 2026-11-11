@@ -102,7 +102,7 @@ const online = (() => {
       setQueue(q); klaar.push(flush().then(() => refreshWeek()).catch(() => {}));
     } else klaar.push(uploadLog(account()));
     klaar.push(syncNu());
-    Promise.all(klaar).then(() => Profiel.naSpel()).catch(() => {});
+    Promise.all(klaar).then(() => { Profiel.naSpel(); if (typeof Levels !== "undefined") Levels.naSpel(); }).catch(() => {});
   }
   /* Wie de dagcasus speelde vóór het kiezen van een naam, krijgt die score alsnog in de ranglijst:
      de afgeronde dagcasussen van vandaag en gisteren (ouder neemt de server niet aan). */

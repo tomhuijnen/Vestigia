@@ -101,6 +101,7 @@ const Profiel = (() => {
       online.rpc("prestatie_meta").catch(() => online.rpc("prestatie_eikels"))
         .then(r => { zet(K.beloning, r || []); inVestiarium(); if (VIEW === "profiel") teken(); }).catch(() => {});
       haalMijlpalen(true);
+      Levels.haal().catch(() => {});
       const me = (prof || [])[0]; if (me) { zet(K.mij, { avatar: me.avatar, subtitle: me.subtitle, frame: me.frame, color: me.color }); anderen.set(me.name.toLowerCase(), me); }
       saldoInKop(); renderMenu();
       return true;
@@ -161,7 +162,7 @@ const Profiel = (() => {
     for (const li of lis){
       if (li.querySelector(".rav")) continue;
       const pr = anderen.get(li.dataset.n.toLowerCase()) || { name: li.dataset.n };
-      li.querySelector(".pos").insertAdjacentHTML("afterend", `<span class="rav">${avatarSVG(pr, "avatar klein")}</span>`);
+      li.querySelector(".pos").insertAdjacentHTML("afterend", `<span class="rav">${Levels.ring(avatarSVG(pr, "avatar klein"), pr.level, pr.pct || 0, "klein")}</span>`);
       const regel = li.querySelector(".who > span");
       if (pr.subtitle && regel){ regel.title = regel.textContent; regel.textContent = pr.subtitle; regel.classList.add("sub"); }
     }
@@ -186,7 +187,7 @@ const Profiel = (() => {
   const TABS = [["avatar", "Avatar"], ["titel", "Ondertitel"], ["lijst", "Lijst"], ["kleur", "Kleur"]];
   const VELD = { avatar: "avatar", titel: "subtitle", lijst: "frame", kleur: "color" };
   const OPBOUW = [["dagcasus", "Dagcasussen"], ["reeksen", "Reeksen van 7 dagen"], ["veldweken", "Veldweken"], ["platen", `Platen in het ${NAAM.vestiarium}`],
-                  ["trofeeen", "Titels en medailles"], ["uitnodigingen", "Uitgenodigde spelers"], ["prestaties", "Prestaties"], ["mijlpalen", "Mijlpalen"], ["minispellen", "Minigames"], ["advent", "Adventkalender"], ["dwaalgasten", "Dwaalgasten"]];
+                  ["trofeeen", "Titels en medailles"], ["uitnodigingen", "Uitgenodigde spelers"], ["prestaties", "Prestaties"], ["mijlpalen", "Mijlpalen"], ["minispellen", "Minigames"], ["advent", "Adventkalender"], ["dwaalgasten", "Dwaalgasten"], ["levels", "Levels"]];
   const zonderNaam = (body, wat) => {
     body.innerHTML = `<div class="playerbox"><p><b>Kies eerst een spelersnaam.</b> ${wat}</p>
       <div class="row2"><button class="btn" id="pfNaam">Kies een spelersnaam</button></div></div>`;
@@ -213,16 +214,17 @@ const Profiel = (() => {
     $("pfSaldo").innerHTML = saldoHtml(w);
     const geenDb = beschikbaar === false;
     body.innerHTML = `
-      <div class="pfkaart">${avatarSVG(me, "avatar groot")}<div><h3>${esc(me.name)}</h3><p class="pfsub">${me.subtitle ? esc(me.subtitle) : "Nog geen ondertitel"}</p></div></div>
+      <div class="pfkaart">${Levels.mijnRing(avatarSVG(me, "avatar groot"), "groot")}<div><h3>${esc(me.name)}</h3><p class="pfsub">${me.subtitle ? esc(me.subtitle) : "Nog geen ondertitel"}</p></div></div>
       ${typeof Veld !== "undefined" && Veld.aan() ? `<p class="rankempty"><b>Veldmodus.</b> Zonder internet laden je eikels, de shop en je prestaties niet. Je speelt gewoon verder; alles wordt bijgewerkt zodra je weer online bent.</p>` : ""}
       ${geenDb ? `<p class="rankempty">Eikels, de shop en prestaties komen beschikbaar zodra de database van Vestigia is bijgewerkt.</p>` : `
+      ${Levels.kaartHtml()}
       <section class="pfsec" aria-labelledby="pfUitH"><h3 id="pfUitH">Uiterlijk</h3>
         <div class="dexfilters" id="pfTabs">${TABS.map(([k, l]) => `<button class="chipbtn" data-t="${k}" aria-pressed="${tab === k}">${l}</button>`).join("")}</div>
         <div id="pfOpties" class="pfopties${tab === "titel" ? " pftitels" : ""}">${w ? opties() : `<p class="fine">Laden…</p>`}</div>
         <span class="msg" id="pfMsg"></span>
       </section>
       <section class="pfsec" aria-labelledby="pfEikH"><h3 id="pfEikH">Eikels</h3>
-        <p class="fine">Eikels verdien je met de dagcasus, reeksen, veldweken, platen, trofeeën, prestaties, mijlpalen en uitgenodigde spelers. Je saldo wordt steeds opnieuw uitgerekend uit wat je gespeeld hebt, dus het raakt nooit kwijt.</p>
+        <p class="fine">Eikels verdien je met de dagcasus, reeksen, veldweken, platen, trofeeën, prestaties, mijlpalen${Levels.zichtbaar() ? ", levels" : ""} en uitgenodigde spelers. Je saldo wordt steeds opnieuw uitgerekend uit wat je gespeeld hebt, dus het raakt nooit kwijt.</p>
         ${w ? `<dl class="pfopbouw">${OPBOUW.filter(([k]) => w.opbouw && w.opbouw[k]).map(([k, l]) => `<dt>${l}</dt><dd>+${w.opbouw[k]}</dd>`).join("")}
           ${w.uitgegeven ? `<dt>Uitgegeven in de shop</dt><dd>−${w.uitgegeven}</dd>` : ""}<dt class="tot">Saldo</dt><dd class="tot">${w.saldo}</dd></dl>` : ""}
         <div class="actions"><button class="btn line" id="pfNaarShop">Naar de shop</button></div>
@@ -345,7 +347,7 @@ const Profiel = (() => {
       const heb = [...own].filter(x => x.startsWith("titel:")).map(x => x.slice(6)), pr = lees(K.prest) || [];
       const verdien = [...Object.entries(TITLES).map(([g, t]) => [t, `alle ${GROUPS[g].toLowerCase()} in je ${NAAM.vestiarium}`]), [TITLE_ALL, `alle soorten in je ${NAAM.vestiarium}`],
                        ...pr.map(r => [r.goud_titel, `goud bij ‘${r.label}’`]),
-                       ...(lees(K.mijl) || []).filter(m => m.titel).map(m => [m.titel, `mijlpaal ‘${m.label}’`])].filter(([t]) => !heb.includes(t));
+                       ...(lees(K.mijl) || []).filter(m => m.titel).map(m => [m.titel, `mijlpaal ‘${m.label}’`]), ...Levels.teVerdienen(heb)].filter(([t]) => !heb.includes(t));
       html += verdien.map(([t, hoe]) => `<div class="pfopt dicht"><span class="pl">${esc(t)}</span><span class="ps">${esc(hoe)}</span></div>`).join("");
     }
     return html;
@@ -419,7 +421,7 @@ const Profiel = (() => {
   /* bij het opstarten: saldo en profiel ophalen (stil als het niet lukt) */
   function start(){ saldoInKop(); codeTip(); if (p()) haalAlles().then(() => { codeTip(); inVestiarium(); }); }
 
-  return { render, renderShop, naSpel, toonWinst, versier, saldoInKop, codeTip, start, mijn, inVestiarium, haalAlles,
+  return { render, renderShop, naSpel, toonWinst, versier, saldoInKop, codeTip, start, mijn, inVestiarium, haalAlles, herteken: () => teken(),
            naNaam(){ codeTip(); haalAlles(); } };
 })();
 

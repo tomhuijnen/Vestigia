@@ -31,10 +31,10 @@ const ADVENT = [
 ];
 /* alleen voor ?kerst=demo: zelfde inhoud als supabase-012 (sporenvakje: eikels volgen uit het antwoord) */
 const ADVENT_INHOUD = {
-  1: [10], 2: [0, null, "vos"], 3: [10], 4: [5, "titel:Wintergast"], 5: [50], 6: [15], 7: [0, null, "das"], 8: [10], 9: [10],
-  10: [10], 11: [0, null, "ree"], 12: [10, "kleur:winter"], 13: [15], 14: [10], 15: [0, null, "boommarter"],
+  1: [10], 2: [0, null, "vos"], 3: [0, "xp:150"], 4: [5, "titel:Wintergast"], 5: [50], 6: [15], 7: [0, null, "das"], 8: [10], 9: [0, "xp:150"],
+  10: [10], 11: [0, null, "ree"], 12: [10, "kleur:winter"], 13: [15], 14: [0, "xp:150"], 15: [0, null, "boommarter"],
   16: [5, "kleur:hulst"], 17: [10], 18: [5, "lijst:sneeuwvlokken"], 19: [0, "token:herstel"], 20: [0, null, "zwijn"], 21: [5, "titel:IJsprins"],
-  22: [10], 23: [10], 24: [25, "lijst:kerst"]
+  22: [0, "xp:150"], 23: [10], 24: [25, "lijst:kerst"]
 };
 const ADVENT_DEMO = (d, antwoord) => {
   const [e, item = null, spoor = null] = ADVENT_INHOUD[d], goed = spoor ? antwoord === spoor : null;
