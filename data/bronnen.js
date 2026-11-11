@@ -51,7 +51,6 @@ const BRON_LOS = {
   "tuimelaar":               "https://www.zodion.nl/zoogdiersoorten/walvisachtigen",   // geen eigen soortpagina
   "middelste-groene-kikker": "https://www.ravon.nl/amfibieen/bastaardkikker/",         // RAVON noemt hem bastaardkikker
   "eidereend":               "https://www.vogelbescherming.nl/ontdek-vogels/kennis-over-vogels/vogelgids/vogel/eider",
-  "kortsnavelboomkruiper":   "https://www.vogelbescherming.nl/ontdek-vogels/kennis-over-vogels/vogelgids/vogel/taigaboomkruiper", // Certhia familiaris
   "ruigpootuil":             { naam: "Sovon", url: "https://stats.sovon.nl/ruigpootuil" }  // niet in de vogelgids van Vogelbescherming
 };
 
