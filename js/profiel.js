@@ -43,6 +43,10 @@ const LIJSTEN = {
 /* Medaille-embleem rechtsonder: een gouden munt met ster aan een groen lint. Staat altijd bij een medaille-avatar,
    met of zonder lijst, zodat je in de ranglijst ziet dat de avatar verdiend is en niet gekocht. */
 const MEDAILLE_EMBLEEM = `<g transform="translate(78 78) scale(1.25)"><path d="M-6 -16L-2 -6H2L6 -16Z" fill="#4b7a5e" stroke="#2e5a40" stroke-width=".8"/><circle r="9.5" fill="#c9972e"/><circle r="7.6" fill="#e9c35a"/><path d="M0 -4.6L1.3 -1.4L4.6 -1.3L2 .8L2.9 4.2L0 2.3L-2.9 4.2L-2 .8L-4.6 -1.3L-1.3 -1.4Z" fill="#fff7d6"/></g>`;
+/* Medaille-glans (update 12): een lichtstreep die om de paar seconden schuin over een medaille-avatar trekt, met een
+   fonkeling. Zo vallen de verdiende avatars van de meest zeldzame soorten op in de ranglijst, zonder lijst eromheen.
+   Elke avatar krijgt een eigen vertraging, zodat ze in de ranglijst niet allemaal tegelijk glanzen. */
+const MEDAILLE_GLANS = id => `<defs><linearGradient id="${id}gl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><g clip-path="url(#${id})" class="av-glans" style="--d:-${(Math.random() * 5).toFixed(2)}s"><rect class="av-glans-streep" x="-40" y="-20" width="26" height="140" fill="url(#${id}gl)" transform="rotate(20 50 50)"/></g><path class="av-fonkel" style="--d:-${(Math.random() * 5).toFixed(2)}s" d="M24 20L25.6 25.4L31 27L25.6 28.6L24 34L22.4 28.6L17 27L22.4 25.4Z" fill="#fffbe6"/>`;
 const EIKEL = `<svg class="eikel" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path d="M8 2.6V1.2" stroke="#7d5330" stroke-width="1.4" stroke-linecap="round"/><path d="M2.8 6.6C2.8 4.1 5.1 2.6 8 2.6s5.2 1.5 5.2 4Z" fill="#7d5330"/><path d="M3.9 7.1h8.2c0 3.6-1.8 6.6-4.1 6.6S3.9 10.7 3.9 7.1Z" fill="#d9a441"/></svg>`;
 let avNr = 0;
 /* p = { avatar, frame, color, name }; medaille-avatars krijgen altijd het medaille-embleem rechtsonder */
@@ -54,7 +58,7 @@ function avatarSVG(p, cls){
     ? `<g clip-path="url(#${id})" color="${k.fg}">${AVATARS[p.avatar].replaceAll("{id}", id)}</g>`
     : `<text x="50" y="50" dy=".35em" text-anchor="middle" font-size="46" font-family="Rubik, sans-serif" font-weight="600" fill="${k.fg}">${esc(((p.name || "?").trim()[0] || "?").toUpperCase())}</text>`;
   return `<svg class="${cls || "avatar"}" viewBox="0 0 100 100" aria-hidden="true" style="--av-bg:${k.bg}"><defs><clipPath id="${id}"><circle cx="50" cy="50" r="50"/></clipPath></defs>
-    <circle cx="50" cy="50" r="50" fill="${k.bg}"/>${binnen}${p.frame && LIJSTEN[p.frame] ? LIJSTEN[p.frame].replaceAll("{id}", id) : ""}${medaille ? MEDAILLE_EMBLEEM : ""}</svg>`;
+    <circle cx="50" cy="50" r="50" fill="${k.bg}"/>${binnen}${medaille ? MEDAILLE_GLANS(id) : ""}${p.frame && LIJSTEN[p.frame] ? LIJSTEN[p.frame].replaceAll("{id}", id) : ""}${medaille ? MEDAILLE_EMBLEEM : ""}</svg>`;
 }
 
 const Profiel = (() => {

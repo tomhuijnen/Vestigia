@@ -1449,3 +1449,10 @@ button.st-rij:hover, button.st-rij:focus-visible{background:var(--mint)}
 .st-bar{height:6px; border-radius:99px; background:var(--none, #e5ebe6); overflow:hidden}
 .st-bar i{display:block; height:100%; background:var(--ochre); border-radius:99px}
 .st-n{font-family:var(--display); font-weight:700; text-align:right; font-variant-numeric:tabular-nums}
+
+/* medaille-glans (update 12): streep schuift in 1 s over de avatar, daarna 4 s rust; fonkeling op hetzelfde ritme */
+.av-glans-streep{transform-box:view-box; transform-origin:50px 50px; animation:avGlans 5s ease-in-out infinite; animation-delay:var(--d, 0s)}
+.av-fonkel{transform-box:fill-box; transform-origin:center; opacity:0; animation:avFonkel 5s ease-in-out infinite; animation-delay:var(--d, 0s)}
+@keyframes avGlans{0%{transform:rotate(20deg) translateX(0)} 20%{transform:rotate(20deg) translateX(150px)} 100%{transform:rotate(20deg) translateX(150px)}}
+@keyframes avFonkel{0%, 14%{opacity:0; transform:scale(.2) rotate(0)} 20%{opacity:1; transform:scale(1) rotate(45deg)} 28%, 100%{opacity:0; transform:scale(.2) rotate(90deg)}}
+@media (prefers-reduced-motion: reduce){ .av-glans-streep, .av-fonkel{animation:none} .av-fonkel{opacity:.85; transform:none} }

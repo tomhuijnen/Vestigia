@@ -764,9 +764,9 @@ const SPECIES = [
     ] }
   ] },
 { id:"meervleermuis", no:37, g:"Z", n:"Meervleermuis", s:"Myotis dasycneme", r:"HR", l:11, zz:null, twin:null,
-  h:["STIL","STROOM"], a:["NACHT"], v:["ONG"], b:["GEB"], w:["SLAAP"],
+  h:["STIL","STROOM"], a:["NACHT"], v:["ONG"], b:["GEB"], w:["SLAAP","TREK"],
   x:"watervleermuis",
-  t:"De watervleermuis is kleiner, jaagt boven vijvers en smallere wateren, roept rond 45 kHz en heeft kraamkolonies in bomen.",
+  t:"De watervleermuis is kleiner, jaagt boven vijvers en smallere wateren, roept rond 45 kHz en heeft kraamkolonies in bomen. In de hand heeft de meervleermuis grotere neusknobbels, bredere neusgaten en dikkere, bruinpaarse polsen.",
   cs:[
     { sl:{ i:3, t:"Grote kolonies in spouwmuren vlak bij brede vaarten. Hij jaagt laag boven het water met een piek rond 35 kHz." }, bron:null, wn:[
       "Friesland, juli.",
@@ -775,7 +775,7 @@ const SPECIES = [
       "Een grote kolonie in een spouw; detector: piek rond 35 kHz, laag boven een vaart.",
       "Een grote Myotis met lange voeten."
     ] },
-    { bron:"Zodion, soortpagina meervleermuis", sl:{ i:3, t:"Hij jaagt in lange, rechte banen laag boven brede vaarten en meren, met een piek rond 35 kHz. Hij is groter dan de watervleermuis." }, wn:[
+    { bron:"Zodion, soortpagina meervleermuis", sl:{ i:3, t:"Hij jaagt in lange, rechte banen zo'n 10 tot 60 cm boven brede vaarten en meren, met een piek rond 35 kHz. Hij is groter dan de watervleermuis." }, wn:[
       "Noord-Holland, juni. Een windstille, warme avond.",
       "Een groot meer met brede kanalen en rietoevers.",
       "Een oude kerk vlak bij het water, met honderden dieren op zolder.",

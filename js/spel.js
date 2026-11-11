@@ -361,7 +361,27 @@ function renderHead(){
   $("gBtn").disabled = !matchExact(inp.value) || S.status !== "playing";
 }
 
-function render(){ renderHead(); renderClues(); renderGrid(); renderPips(); renderResult(); }
+function render(){ renderHead(); renderClues(); renderGrid(); renderPips(); renderResult(); tipZoekgroepen(); }
+/* Eenmalige uitleg bij zoeken op een groep (update 12): bij de eerstvolgende casus die je speelt (dag of oefen), zodra er
+   geen pop-up, uitleg of openingsanimatie meer in beeld is. Daarna nooit meer (Nieuw.blokjes onthoudt het). */
+let zoekTipBezig = false;
+function tipZoekgroepen(){
+  if (zoekTipBezig || typeof Nieuw === "undefined" || S.status !== "playing") return;
+  try { if (localStorage.getItem("vestigia:nieuw:zoekgroepen")) return; } catch(e){ return; }
+  zoekTipBezig = true;
+  let poging = 0;
+  const probeer = () => {
+    const rij = document.querySelector(".det-row");
+    const klaar = VIEW === "game" && S.status === "playing" && rij && rij.offsetParent !== null
+      && !(typeof Wachtrij !== "undefined" && Wachtrij.ietsOpen()) && !document.querySelector(".nw-blokje");
+    if (!klaar){ if (++poging < 90) setTimeout(probeer, 2000); else zoekTipBezig = false; return; }
+    const n = typeof ZOEKGROEPEN !== "undefined" ? ZOEKGROEPEN.length : 60;
+    Nieuw.blokjes("zoekgroepen", [
+      { na: rij, tekst: `Nieuw: zoeken op groep. Typ bijvoorbeeld ‘vleermuis’ en je krijgt alle vleermuizen, ook de laatvlieger en de franjestaart, waar dat woord niet in de naam staat. Dat werkt voor ${n} groepen, zoals uil, hert, roofvogel, marter, salamander en vlinder.` }
+    ], { wacht: 900 }).finally(() => { zoekTipBezig = false; });
+  };
+  setTimeout(probeer, 1500);
+}
 
 /* ---------- autocomplete ----------
    Zoeken op Nederlandse én wetenschappelijke naam, met losse woordstukjes ("pleco aus", "gr bonte") en met
