@@ -261,5 +261,7 @@ const Dwaalgast = (() => {
 
   vestiarium();
   if (speler() && !demo()) haal();
-  return { open, haal, vestiarium };
+  /* voor de statistieken: elke beurt met de status gevonden of gevlogen (één per maand) */
+  const verzameling = () => demo() ? demoVerzameling() : (lees().verzameling || []);
+  return { open, haal, vestiarium, verzameling };
 })();

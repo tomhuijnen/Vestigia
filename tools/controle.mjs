@@ -160,6 +160,28 @@ if (args.has("--woorden")){
   for (const t of TARGETS) if (per.get(t.id)) console.log(`  ${t.n}: ${per.get(t.id).sort().join(", ")}`);
 }
 
+/* ---------- 5b. zoeken op een groep (data/zoekgroepen.js) ---------- */
+{
+  const f = path.join(ROOT, "data/zoekgroepen.js");
+  if (fs.existsSync(f)){
+    const ZG = new Function(fs.readFileSync(f, "utf8") + "; return ZOEKGROEPEN;")();
+    const woord = new Map();
+    for (const z of ZG){
+      if (!z.naam || !Array.isArray(z.w) || !z.w.length) { FOUT(`zoekgroep ${z.naam || "(zonder naam)"}: naam of woorden ontbreken`); continue; }
+      if (z.g && !GROUPS[z.g]) FOUT(`zoekgroep ${z.naam}: onbekende diergroep "${z.g}"`);
+      if (!z.g && !(z.ids || []).length) FOUT(`zoekgroep ${z.naam}: geen soorten`);
+      for (const id of z.ids || []) if (!BY_ID.has(id)) FOUT(`zoekgroep ${z.naam}: soort "${id}" bestaat niet`);
+      for (const w of z.w){
+        if (w !== w.toLowerCase() || /[^a-z ]/.test(w)) FOUT(`zoekgroep ${z.naam}: woord "${w}" moet in kleine letters zonder accenten`);
+        if (woord.has(w) && woord.get(w) !== z.naam) LETOP(`zoekwoord "${w}" staat bij ${woord.get(w)} én ${z.naam}`);
+        woord.set(w, z.naam);
+      }
+      const kies = (z.g ? SPECIES.filter(t => t.g === z.g) : (z.ids || []).map(id => BY_ID.get(id)).filter(Boolean)).filter(t => t.r !== "NB");
+      if (!kies.length) LETOP(`zoekgroep ${z.naam}: geen enkele kiesbare (beschermde) soort`);
+    }
+  }
+}
+
 /* ---------- 6. app en database ---------- */
 const sw = fs.readFileSync(path.join(ROOT, "sw.js"), "utf8"), html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
 const stamp = (sw.match(/const VERSION = "vestigia-([^"]+)"/) || [])[1];

@@ -425,7 +425,12 @@ details.carry summary{padding:10px 14px; cursor:pointer; font-weight:700; color:
 .ranklist li{display:grid; grid-template-columns:2.4rem 1fr auto; gap:10px; align-items:center; padding:10px 12px; background:#fff; border:1px solid var(--rule); border-radius:6px}
 .ranklist li.me{border-color:var(--green); box-shadow:0 0 0 1px var(--green) inset; background:var(--mint)}
 .ranklist .pos{font-family:var(--display); font-weight:700; font-size:1.2rem; color:var(--ink-2); text-align:center}
-.ranklist li:nth-child(1) .pos{color:#c79a2e} .ranklist li:nth-child(2) .pos{color:#8d99a0} .ranklist li:nth-child(3) .pos{color:#a8693c}
+.ranklist li[data-pos="1"] .pos{color:#c79a2e} .ranklist li[data-pos="2"] .pos{color:#8d99a0} .ranklist li[data-pos="3"] .pos{color:#a8693c}
+.ranklist .pos.gedeeld{display:grid; justify-items:center; line-height:1}
+.ranklist .pos.gedeeld small{font-family:var(--caps); font-weight:600; font-size:.56rem; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-2); margin-top:2px}
+.opts li.optgroep{cursor:default; position:sticky; top:-4px; z-index:1; background:inherit; padding:6px 14px 5px; border-bottom:1px solid var(--rule)}
+.opts li.optgroep span{font-family:var(--caps); font-weight:600; font-size:.74rem; letter-spacing:.06em; text-transform:uppercase; color:var(--green)}
+.opts li.optgroep i{font-size:.8rem}
 .ranklist .who b{font-family:var(--display); font-weight:600}
 .ranklist .who span{display:block; font-size:.85rem; color:var(--ink-2)}
 .ranklist .pts{font-family:var(--display); font-weight:700; font-size:1.25rem; color:var(--green); text-align:right; font-variant-numeric:tabular-nums}
@@ -1406,3 +1411,41 @@ html.donker .lvkaart, html.donker .lvbuit, html.donker .lvzo{background:#1d2a22}
 html.donker .lvtegels div{background:#18241d}
 html.donker .lvcirkel::before{background:#24452f}
 @media (prefers-reduced-motion:reduce){ .levelpop:not([hidden]) .lvcirkel, .xpspook.veer{animation:none} }
+
+/* links naar bronnen en foto's (update 12) */
+.bronrij{margin:12px 0 4px; display:grid; gap:6px}
+.bronrij .caps{color:var(--ink-2)}
+.bronlinks{display:flex; flex-wrap:wrap; gap:8px}
+.bronlink{display:inline-flex; align-items:center; gap:7px; padding:6px 11px; border:1px solid var(--rule); border-radius:999px; color:var(--green-d, var(--green)); text-decoration:none; font-weight:500; font-size:.92rem; background:var(--leaf, #fff); transition:border-color .15s, background .15s}
+.bronlink:hover, .bronlink:focus-visible{border-color:var(--green); background:var(--mint)}
+.bronlink > svg:last-child{opacity:.6}
+
+/* statistieken (update 12) */
+#statsBody{display:grid; gap:18px; margin-top:18px}
+.st-blok{background:var(--leaf); border:1px solid var(--rule); border-radius:6px; padding:16px 18px}
+.st-blok h3{margin:0 0 4px; font-family:var(--display); font-size:1.25rem}
+.st-blok > .fine{margin:2px 0 10px}
+.st-tegels{gap:22px 30px}
+.st-tegels .st-fout{color:var(--ink-2)}
+.st-sinds{margin:12px 0 0}
+.st-verd{display:grid; grid-template-columns:7.5em 1fr auto; gap:12px; align-items:center; padding:6px 0; border-bottom:1px dashed var(--rule)}
+.st-verd:last-of-type{border-bottom:0}
+.st-vl{font-weight:600}
+.st-vb{height:10px; border-radius:99px; background:var(--none, #e5ebe6); overflow:hidden}
+.st-vb i{display:block; height:100%; background:var(--green); border-radius:99px}
+.st-vn{font-size:.88rem; color:var(--ink-2); font-variant-numeric:tabular-nums; white-space:nowrap}
+.st-twee{display:grid; grid-template-columns:1fr 1fr; gap:18px}
+@media (max-width:700px){ .st-twee{grid-template-columns:1fr} .st-verd{grid-template-columns:1fr auto; gap:6px 12px} .st-vb{grid-column:1 / -1; grid-row:2} }
+.st-top{list-style:none; margin:0; padding:0; counter-reset:st}
+.st-top li{counter-increment:st}
+.st-rij{width:100%; display:grid; grid-template-columns:1.4em minmax(0,1fr) 70px 2.6em; gap:10px; align-items:center; padding:7px 4px; border:0; border-bottom:1px solid var(--rule); background:none; color:inherit; font:inherit; text-align:left}
+.st-rij::before{content:counter(st); font-family:var(--display); font-weight:700; color:var(--ink-2)}
+button.st-rij{cursor:pointer}
+button.st-rij:hover, button.st-rij:focus-visible{background:var(--mint)}
+.st-top li:last-child .st-rij{border-bottom:0}
+.st-naam{display:grid; min-width:0}
+.st-naam b{font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.st-naam small{color:var(--ink-2); font-size:.8rem}
+.st-bar{height:6px; border-radius:99px; background:var(--none, #e5ebe6); overflow:hidden}
+.st-bar i{display:block; height:100%; background:var(--ochre); border-radius:99px}
+.st-n{font-family:var(--display); font-weight:700; text-align:right; font-variant-numeric:tabular-nums}
