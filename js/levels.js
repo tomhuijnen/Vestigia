@@ -295,17 +295,78 @@ const Levels = (() => {
   /* rangen die nog te verdienen zijn, voor de shop (rij Ondertitels) */
   const teVerdienen = bezit => zichtbaar() ? RANGEN.filter(([, r]) => !bezit.includes(r)).map(([n, r]) => [r, `rang bij level ${n}`]) : [];
 
+  /* ---------- adventkalender: XP-sterretjes vliegen de ring in (update 11) ----------
+     Net als de eikels naar je saldo: een zwerm sterretjes vliegt naar je avatar rechtsboven. De ring licht op, en
+     bij elk sterretje dat aankomt loopt hij een stukje verder vol, tot de nieuwe stand (over een level heen kan ook). */
+  const XPSTER = `<svg aria-hidden="true" viewBox="0 0 24 24"><path fill="#c6e98a" stroke="#1f3a2a" stroke-width="1.2" stroke-linejoin="round" d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9Z"/></svg>`;
+  const plek = s => s ? s.level + frac(s) : 0;
+  async function sterrenNaarRing(van, n, voor, na){
+    const b = ringKnop(); if (!b) return;
+    const r = b.getBoundingClientRect();
+    const spook = b.cloneNode(true);
+    spook.removeAttribute("id"); spook.className = b.className + " metlevel xpspook licht"; spook.setAttribute("aria-hidden", "true"); spook.tabIndex = -1;
+    spook.style.cssText = `left:${r.left}px; top:${r.top}px; width:${r.width}px; height:${r.height}px`;
+    let nr = spook.querySelector(".lvnr");
+    if (!nr){ nr = document.createElement("span"); nr.className = "lvnr"; nr.setAttribute("aria-hidden", "true"); spook.appendChild(nr); }
+    const p0 = plek(voor), p1 = Math.max(p0, plek(na));
+    const zetStand = v => { const l = Math.floor(v + 1e-6); spook.style.setProperty("--p", Math.round(100 * (v - l)) + "%"); nr.textContent = l; };
+    zetStand(p0);
+    document.body.appendChild(spook);
+    if (rustig() || !van){ zetStand(p1); await wacht(900); spook.remove(); return; }
+    const a = van.getBoundingClientRect();
+    const x0 = a.left + a.width / 2, y0 = a.top + a.height / 2, x1 = r.left + r.width / 2, y1 = r.top + r.height / 2;
+    const aantal = Math.min(12, Math.max(6, Math.round(n / 15)));
+    van.classList.add("leeg");
+    let aangekomen = 0;
+    await new Promise(klaar => {
+      for (let i = 0; i < aantal; i++){
+        setTimeout(() => {
+          const e = document.createElement("div"); e.className = "xpster"; e.innerHTML = XPSTER;
+          document.body.appendChild(e);
+          const sx = x0 + (Math.random() - .5) * 60, sy = y0 + (Math.random() - .5) * 30;
+          const cx = (sx + x1) / 2 + (Math.random() - .5) * 160, cy = Math.min(sy, y1) - 120 - Math.random() * 120;
+          const draai = (Math.random() < .5 ? -1 : 1) * (200 + Math.random() * 260), duur = 720 + Math.random() * 260, t0 = performance.now();
+          const stap = nu => {
+            const t = Math.min(1, (nu - t0) / duur), u = 1 - t, z = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+            const x = u * u * sx + 2 * u * t * cx + t * t * x1, y = u * u * sy + 2 * u * t * cy + t * t * y1;
+            const sc = t < .2 ? .6 + t * 3 : 1.2 - z * .55;
+            e.style.transform = `translate(${x - 11}px, ${y - 11}px) rotate(${draai * z}deg) scale(${sc})`;
+            if (t < 1) return requestAnimationFrame(stap);
+            e.remove(); aangekomen++;
+            zetStand(p0 + (p1 - p0) * aangekomen / aantal);
+            spook.classList.remove("veer"); void spook.offsetWidth; spook.classList.add("veer");
+            if (aangekomen === aantal) klaar();
+          };
+          requestAnimationFrame(stap);
+        }, i * 85);
+      }
+    });
+    if (!demoAdvent) tekenOveral();
+    await wacht(1100);
+    spook.classList.add("weg");
+    await wacht(300);
+    spook.remove();
+  }
   /* adventkalender: een XP-vakje is open */
+  let demoAdvent = false;
   async function naAdvent(van, n){
     if (!speler()) return;
     const voor = stand;
     let na = null; try { na = await haal(); } catch(e){}
     if (!na) return;
-    await vlieg(van, n, voor);
+    if (na.actief || demo()) await sterrenNaarRing(van, n, voor, na);
     naLevelOmhoog(voor, na);
+  }
+  /* voorbeeld van de adventkalender (?kerst=demo): zelfde animatie, er telt niets mee */
+  async function naAdventDemo(van, n){
+    const voor = stand && stand.stap ? stand : { level: 6, in_level: 140, stap: 300 };
+    let l = voor.level, rest = voor.in_level + n;
+    while (rest >= voor.stap){ rest -= voor.stap; l++; }
+    demoAdvent = true;
+    try { await sterrenNaarRing(van, n, voor, { level: l, in_level: rest, stap: voor.stap }); } finally { demoAdvent = false; }
   }
 
   if (speler()) setTimeout(tekenOveral, 0);
-  return { haal, ring, mijnRing, knop, tekenOveral, naSpel, toonInResultaat, kaartHtml, teVerdienen, naAdvent, zichtbaar,
+  return { haal, ring, mijnRing, knop, tekenOveral, naSpel, toonInResultaat, kaartHtml, teVerdienen, naAdvent, naAdventDemo, zichtbaar,
            stand: () => stand, RANGEN };
 })();

@@ -339,7 +339,7 @@ const Profiel = (() => {
       /* verdiende medaille-avatars (prijs 0, niet te koop) vielen eerst buiten elke rij; nu staan ze er als ‘verdiend’ */
       const verdiend = (winkel || []).filter(i => i.kind === "avatar" && !i.for_sale && i.price === 0 && own.has(i.item));
       html += verdiend.map(i => knop(waardeVan(i), voorbeeld(shopTab, waardeVan(i)), i.label, me[VELD[shopTab]] === waardeVan(i) ? "aan" : "verdiend", i)).join("");
-      const medailles = (winkel || []).filter(i => i.kind === "avatar" && !i.for_sale && !own.has(i.item) && !i.item.startsWith("avatar:dg-"));   // dwaalgasten blijven een verrassing
+      const medailles = (winkel || []).filter(i => i.kind === "avatar" && !i.for_sale && !own.has(i.item) && !i.item.startsWith("avatar:dg-") && !i.item.startsWith("avatar:winter-"));   // dwaalgasten en het kerstavondcadeau blijven een verrassing
       html += medailles.map(i => knop(waardeVan(i), `<span class="pfgeheim">?</span>`, "Medaille-avatar", "dicht", i)).join("")
             + `<p class="fine pfnoot">Medaille-avatars koop je niet: je krijgt ze als je een van de ${telwoord(MEDALS.length)} meest zeldzame soorten determineert.</p>`;
     }

@@ -14,7 +14,10 @@ const Dwaalgast = (() => {
   const CACHE = "vestigia:dwaal", LATER = "vestigia:dwaalLater", DEMO = "vestigia:dwaaldemo";
   try {
     const u = new URLSearchParams(location.search);
-    if (u.get("dwaalgast") === "demo") sessionStorage.setItem(DEMO, DWAALGASTEN[u.get("gast")] ? u.get("gast") : "lynx");
+    /* update 11: ook de spellingen baloega en beluga, en grote trap met een spatie */
+    const ALIAS = { baloega: "beloega", beluga: "beloega", "grote trap": "grote-trap", "grotetrap": "grote-trap" };
+    const gv = (u.get("gast") || "").toLowerCase(), gast = ALIAS[gv] || gv;
+    if (u.get("dwaalgast") === "demo"){ sessionStorage.setItem(DEMO, DWAALGASTEN[gast] ? gast : "lynx"); sessionStorage.removeItem(DEMO + ":v"); }
     if (u.get("dwaalgast") === "uit") sessionStorage.removeItem(DEMO);
   } catch(e){}
   const demo = () => { try { return sessionStorage.getItem(DEMO); } catch(e){ return null; } };
@@ -69,7 +72,7 @@ const Dwaalgast = (() => {
       <div class="dg-beeld"><span class="dg-ping"></span><span class="dg-ping p2"></span>${av(nu.gast, "dg-av")}</div>
       <h2 id="dwaalH">${vg ? "Je dwaalgast is er nog!" : "Wow! Er lijkt een zeer bijzondere dwaalgast in Nederland te zijn opgedoken!"}</h2>
       <p class="dg-wie"><b>${esc(g.naam)}</b> <i>${esc(g.s)}</i></p>
-      <p class="dg-waar"><span class="caps">Normaal te vinden</span>${esc(g.waar)}</p>
+      ${vraagtWaar() ? "" : `<p class="dg-waar"><span class="caps">Normaal te vinden</span>${esc(g.waar)}</p>`}
       <p class="dg-intro">${vg ? `Je was al begonnen. Ga verder waar je gebleven was.` : `Bevestig de waarneming door drie vragen over dit dier goed te beantwoorden. Heb je ze alle drie goed, dan komt hij in je ${NAAM.vestiarium}. Eén fout en hij dwaalt weg.`}</p>
       <button class="btn dg-go" id="dgStart">${vg ? "Verder met de waarneming" : "Waarneming bevestigen"}</button>
       <button class="linklike dg-later" id="dgLater">Later deze maand</button>`;
@@ -90,7 +93,10 @@ const Dwaalgast = (() => {
       { na: $("dgLater"), tekst: "Geen tijd? Kies ‘Later’, dan blijft er tot het einde van de maand een rode knop rechtsboven staan." }
     ], { rood: true, altijd: !!nu.demo });
   }
-  const SOORT = { sporen: "Sporen", gedrag: "Gedrag", geluid: "Geluid", voedsel: "Voedsel", nest: "Nest", rups: "Rups", uiterlijk: "Uiterlijk", verspreiding: "Waar hij leeft" };
+  /* update 11: gaat een van de vragen over waar het dier normaal leeft (zoals bij de zwaardvis), dan staat dat
+     niet al in de eerste pop-up; anders verklapt die het antwoord */
+  const vraagtWaar = () => !!(nu && (nu.vragen || []).some(q => q.soort === "verspreiding"));
+  const SOORT = { sporen: "Sporen", gedrag: "Gedrag", geluid: "Geluid", voedsel: "Voedsel", nest: "Nest", rups: "Rups", uiterlijk: "Uiterlijk", verspreiding: "Waar hij leeft", voortplanting: "Voortplanting", kleur: "Kleur", lichaam: "Lichaam" };
   function vraag(i){
     const q = nu.vragen[i], weg = streep[i] || [];
     const volgorde = q.opties.map((_, k) => k).sort(() => Math.random() - .5);
@@ -193,13 +199,17 @@ const Dwaalgast = (() => {
       <button class="btn dg-go" id="dgDex">Bekijk je dwaalgasten</button><button class="linklike dg-later" id="dgDicht">Sluiten</button>`
     : `
       <div class="dg-beeld weg">${av(nu.gast, "dg-av")}</div>
-      <h2>Helaas, de dwaalgast is weggedwaald</h2>
+      <h2>Helaas, de dwaalgast is verdwenen…</h2>
       <p>Niet alle antwoorden waren goed. Er staat nu een vraagteken in je ${NAAM.vestiarium}; wie weet komt de ${esc(naamKlein())} ooit terug.</p>
       <ol class="dg-antwlijst">${lijst}</ol>
       <div class="dg-gezien"><span class="caps">Gezien in Nederland</span><p>${esc(g.gezien)}</p><p class="fine">Bron: ${esc(g.bron)}</p></div>
       <button class="btn dg-go" id="dgDex">Bekijk je dwaalgasten</button><button class="linklike dg-later" id="dgDicht">Sluiten</button>`;
     $("dgDicht").onclick = sluit;
-    $("dgDex").onclick = () => { sluit(); showDex(); setTimeout(() => { const s = $("dexDwaal"); if (s) s.scrollIntoView({ behavior: "smooth", block: "start" }); }, 350); };
+    /* update 11: net als bij een nieuwe soort: naar het Vestiarium, rustig naar de dwaalgast scrollen en hem uitlichten */
+    const welke = nu.gast;
+    $("dgDex").onclick = () => { sluit(); showDex(); lichtUitEl($("dwaalGrid") && $("dwaalGrid").querySelector(`[data-g="${CSS.escape(welke)}"]`)); };
+    /* voorbeeld: de uitkomst tijdelijk in het Vestiarium tonen (alleen in deze sessie, telt nergens mee) */
+    if (isDemo){ try { const dv = JSON.parse(sessionStorage.getItem(DEMO + ":v")) || []; dv.push({ gast: welke, status: ok ? "gevonden" : "gevlogen" }); sessionStorage.setItem(DEMO + ":v", JSON.stringify(dv)); } catch(e){} }
     if (ok){
       const beeld = vak().querySelector(".dg-beeld");
       if (typeof Kerst !== "undefined" && Kerst.vonk) Kerst.vonk(beeld, 30, true);
@@ -210,9 +220,10 @@ const Dwaalgast = (() => {
   async function open(){ if (!nu) await haal(); if (nu) melding(); }
 
   /* ---------- in het Vestiarium: pas zichtbaar na je eerste dwaalgast ---------- */
+  const demoVerzameling = () => { try { return JSON.parse(sessionStorage.getItem(DEMO + ":v")) || []; } catch(e){ return []; } };
   function vestiarium(){
     const sec = $("dexDwaal"); if (!sec) return;
-    const v = demo() ? [] : (lees().verzameling || []);
+    const v = demo() ? demoVerzameling() : (lees().verzameling || []);
     const per = {};
     for (const b of v) per[b.gast] = per[b.gast] === "gevonden" ? "gevonden" : b.status;
     const n = Object.values(per).filter(x => x === "gevonden").length;
