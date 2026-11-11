@@ -283,6 +283,7 @@ function renderResult(){
   card.className = "account" + (won ? "" : " lost") + (freshResult && !matchMedia("(prefers-reduced-motion: reduce)").matches ? " resultin" : "");
   card2.className = "account vervolg" + (card.classList.contains("resultin") ? " resultin" : "");
   const ontdek = won && S.nieuwePlaat && freshResult;     // alleen direct na het spel, niet bij later terugkijken
+  const vers = freshResult;
   freshResult = false;
   card.innerHTML = `
     <span class="verdict caps">${won ? "Goed gedetermineerd" : "Niet gedetermineerd · het was"}</span>
@@ -314,6 +315,7 @@ function renderResult(){
       <button class="btn line" id="nextBtn">${S.mode === "daily" ? "Speel een oefencasus" : "Nieuwe casus"}</button>
       <span class="msg" id="copyMsg"></span>
     </div>
+    <p class="inviteline statsline">Benieuwd hoe je het tot nu toe doet? <button class="linklike" id="toStats">Bekijk je statistieken</button></p>
     ${S.mode === "daily" && online.enabled ? `<p class="inviteline">Samen spelen is leuker. <button class="linklike" id="inviteFromResult">Nodig een speler uit</button></p>` : ""}
 `;
   wrap.hidden = false;
@@ -328,12 +330,27 @@ function renderResult(){
     if (open) box.classList.remove("toelin"), void box.offsetWidth, box.classList.add("toelin");
   };
   if ($("inviteFromResult")) $("inviteFromResult").onclick = () => League.openUitnodigen();
+  $("toStats").onclick = () => Statistiek.toon();
   Profiel.toonWinst();
   if (typeof Levels !== "undefined") Levels.toonInResultaat();
-  const br = card.querySelector(".bronrij");
-  if (br && typeof Nieuw !== "undefined") Nieuw.blokjes("bronnen", [
-    { na: br, tekst: "Nieuw: lees meer over deze soort op de soortpagina van de bron, of bekijk foto's van het dier. De links openen in een nieuw tabblad." }
-  ], { wacht: 1600 });
+  /* Eenmalige uitleg na een gespeelde casus (update 12): eerst de bronlinks, daarna de statistieken. Na elkaar, nooit
+     tegelijk. Wie de statistieken al via het menu opende, heeft die uitleg daar al gezien en krijgt hem hier niet. */
+  if (typeof Nieuw === "undefined") return;
+  const gezien = k => { try { return !!localStorage.getItem("vestigia:nieuw:" + k); } catch(e){ return true; } };
+  const br = card.querySelector(".bronrij"), sl = card2.querySelector(".statsline");
+  /* wacht tot er geen pop-up meer open staat (nieuwe medaille, level omhoog, dwaalgast …), hooguit twee minuten */
+  const vrij = async () => { for (let i = 0; i < 120; i++){ if (!(typeof Wachtrij !== "undefined" && Wachtrij.ietsOpen()) && !document.querySelector("#awardPop:not([hidden]), .overlay:not([hidden])")) return true; await new Promise(r => setTimeout(r, 1000)); } return false; };
+  (async () => {
+    await new Promise(r => setTimeout(r, 900));
+    if (!(await vrij())) return;
+    if (br && br.isConnected) await Nieuw.blokjes("bronnen", [
+      { na: br, tekst: "Nieuw: lees meer over deze soort op de soortpagina van de bron, of bekijk foto's van het dier. De links openen in een nieuw tabblad." }
+    ], { wacht: 700 });
+    if (!(await vrij())) return;
+    if (vers && sl && sl.isConnected && !gezien("statistiek")) await Nieuw.blokjes("statistiek-na-casus", [
+      { na: sl, tekst: "Nieuw: je statistieken. Hoeveel casussen je speelde, hoeveel je er goed had, en welke soorten je het vaakst tegenkwam of invoerde. Je vindt ze hier en altijd in het menu onder je avatar." }
+    ], { wacht: 1200 });
+  })();
 }
 
 function renderPips(){
