@@ -72,7 +72,7 @@ const Dwaalgast = (() => {
       <div class="dg-beeld"><span class="dg-ping"></span><span class="dg-ping p2"></span>${av(nu.gast, "dg-av")}</div>
       <h2 id="dwaalH">${vg ? "Je dwaalgast is er nog!" : "Wow! Er lijkt een zeer bijzondere dwaalgast in Nederland te zijn opgedoken!"}</h2>
       <p class="dg-wie"><b>${esc(g.naam)}</b> <i>${esc(g.s)}</i></p>
-      <p class="dg-waar"><span class="caps">Normaal te vinden</span>${esc(g.waar)}</p>
+      ${vraagtWaar() ? "" : `<p class="dg-waar"><span class="caps">Normaal te vinden</span>${esc(g.waar)}</p>`}
       <p class="dg-intro">${vg ? `Je was al begonnen. Ga verder waar je gebleven was.` : `Bevestig de waarneming door drie vragen over dit dier goed te beantwoorden. Heb je ze alle drie goed, dan komt hij in je ${NAAM.vestiarium}. Eén fout en hij dwaalt weg.`}</p>
       <button class="btn dg-go" id="dgStart">${vg ? "Verder met de waarneming" : "Waarneming bevestigen"}</button>
       <button class="linklike dg-later" id="dgLater">Later deze maand</button>`;
@@ -93,6 +93,9 @@ const Dwaalgast = (() => {
       { na: $("dgLater"), tekst: "Geen tijd? Kies ‘Later’, dan blijft er tot het einde van de maand een rode knop rechtsboven staan." }
     ], { rood: true, altijd: !!nu.demo });
   }
+  /* update 11: gaat een van de vragen over waar het dier normaal leeft (zoals bij de zwaardvis), dan staat dat
+     niet al in de eerste pop-up; anders verklapt die het antwoord */
+  const vraagtWaar = () => !!(nu && (nu.vragen || []).some(q => q.soort === "verspreiding"));
   const SOORT = { sporen: "Sporen", gedrag: "Gedrag", geluid: "Geluid", voedsel: "Voedsel", nest: "Nest", rups: "Rups", uiterlijk: "Uiterlijk", verspreiding: "Waar hij leeft", voortplanting: "Voortplanting", kleur: "Kleur", lichaam: "Lichaam" };
   function vraag(i){
     const q = nu.vragen[i], weg = streep[i] || [];
