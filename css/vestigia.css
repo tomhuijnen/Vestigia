@@ -507,7 +507,7 @@ svg.avatar.klein{width:34px; height:34px}
 svg.avatar.inmenu{width:44px; height:44px; flex:0 0 44px}
 svg.avatar.mid{width:64px; height:64px}
 svg.avatar.groot{width:104px; height:104px; flex:0 0 104px}
-.ranklist.met-av li{grid-template-columns:2.4rem 34px 1fr auto}
+.ranklist.met-av li{grid-template-columns:2.4rem 36px 1fr auto}
 .ranklist .rav{display:block}
 .ranklist .who span.sub{color:var(--green-d); font-style:italic}
 .eikelline{margin:0; display:flex; align-items:center; gap:6px; font-family:var(--display); font-weight:600; color:#8a5a22}
@@ -1283,24 +1283,24 @@ html.donker .nw-blokje.rood{background:#8a1a22}
 @media (prefers-reduced-motion:reduce){ .nw-blokje, .nw-blokje.weg{animation:none} }
 
 /* ---------- update 10: levels en ervaringspunten ---------- */
-:root{--lv-ring:#c6e98a; --lv-track:rgba(237,251,226,.38); --lv-nr:#c6e98a; --lv-nr-ink:#1f3a2a; --lv-rand:#3b6149; --lv-licht:#4b7a5e; --lv-spoor:#e7ece8}
+:root{--lv-ring:#c6e98a; --lv-track:rgba(237,251,226,.4); --lv-nr:#c6e98a; --lv-nr-ink:#1f3a2a; --lv-rand:#3b6149; --lv-licht:#4b7a5e; --lv-spoor:#dbe3dc}
 /* de knoppen rechtsboven: de rand wordt een voortgangsring met een levelbolletje linksonder */
-.avbtn.metlevel{position:relative; overflow:visible; border:0; padding:3px; width:48px; height:48px; flex-basis:48px;
+.avbtn.metlevel{position:relative; overflow:visible; border:0; padding:5px; width:50px; height:50px; flex-basis:50px;
   background:conic-gradient(var(--lv-ring) 0 var(--p, 0%), var(--lv-track) var(--p, 0%) 100%)}
 .avbtn.metlevel svg.avatar.kop{border-radius:50%; box-shadow:0 0 0 2px var(--lv-rand); background:var(--mint)}
-.slimbar .avbtn.metlevel{width:40px; height:40px; flex-basis:40px}
+.slimbar .avbtn.metlevel{width:42px; height:42px; flex-basis:42px; padding:4px}
 .lvnr{position:absolute; left:-5px; bottom:-3px; min-width:20px; height:19px; padding:0 5px; border-radius:10px; background:var(--lv-nr); color:var(--lv-nr-ink);
   border:2px solid var(--lv-rand); font:700 11px/15px var(--display); text-align:center; font-variant-numeric:tabular-nums; pointer-events:none}
 .slimbar .lvnr{min-width:18px; height:17px; font-size:10px; line-height:13px; padding:0 4px}
 .oefenen .masthead, .oefenen .slimbar{--lv-rand:#6e4a1d}
 /* ring om een avatar in profiel en ranglijst */
-.lvring{position:relative; display:inline-grid; place-items:center; border-radius:50%; padding:4px; flex:0 0 auto;
+.lvring{position:relative; display:inline-grid; place-items:center; border-radius:50%; padding:6px; flex:0 0 auto;
   background:conic-gradient(var(--lv-licht) 0 var(--p, 0%), var(--lv-spoor) var(--p, 0%) 100%)}
 .lvring > svg.avatar{box-shadow:0 0 0 3px var(--paper)}
 .lvring .lvnr{border-color:var(--paper); background:var(--lv-nr); left:-4px; bottom:-2px}
-.lvring.groot{padding:5px}
+.lvring.groot{padding:8px}
 .lvring.groot .lvnr{min-width:28px; height:25px; font-size:14px; line-height:21px; border-radius:13px}
-.lvring.klein{padding:2px; width:34px; height:34px}
+.lvring.klein{padding:3px; width:36px; height:36px}
 .lvring.klein > svg.avatar{width:30px; height:30px; box-shadow:0 0 0 1.5px var(--paper)}
 .lvring.klein .lvnr{min-width:15px; height:14px; font-size:8.5px; line-height:11px; padding:0 3px; border-width:1.5px; left:-4px; bottom:-3px}
 .ranklist .rav{position:relative}
