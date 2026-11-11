@@ -244,7 +244,7 @@ const Levels = (() => {
       <button class="btn" id="lvVerder">Begrepen</button>`, "lvstart");
     if (typeof Nieuw !== "undefined") Nieuw.blokjes("levels", [
       { na: $("wachtBody").querySelector(".lvcirkel"), tekst: "Met ervaringspunten (XP) stijg je in level. Je ziet je level voortaan in de ring om je avatar rechtsboven, en in de ranglijst." },
-      { na: $("lvZo"), tekst: "Je verdient XP met leren: determineren, oefenen en nieuwe soorten ontdekken. Had je een soort eerder fout en heb je hem minstens een dag later goed? Dan krijg je 15 XP extra. Inloggen of geluk levert niets op." },
+      { na: $("lvZo"), tekst: "Je verdient XP met leren: determineren, oefenen en nieuwe soorten ontdekken. Had je een soort eerder fout en heb je hem minstens een dag later goed? Dan krijg je 15 XP extra. Alleen spelen telt: alleen de app openen levert geen XP op." },
       { na: $("lvBuit"), tekst: "Elk level levert eikels op, en elk volgend level iets meer. Bij level 5, 10, 20, 30, 40 en 50 krijg je een nieuwe rang als ondertitel, bij level 20, 40, 60 … een hersteltoken." }
     ], { altijd: demo(), wacht: 900 });
     return p;
