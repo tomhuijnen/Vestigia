@@ -70,7 +70,7 @@ const Dwaalgast = (() => {
       <h2 id="dwaalH">${vg ? "Je dwaalgast is er nog!" : "Wow! Er lijkt een zeer bijzondere dwaalgast in Nederland te zijn opgedoken!"}</h2>
       <p class="dg-wie"><b>${esc(g.naam)}</b> <i>${esc(g.s)}</i></p>
       <p class="dg-waar"><span class="caps">Normaal te vinden</span>${esc(g.waar)}</p>
-      <p>${vg ? `Je was al begonnen. Ga verder waar je gebleven was.` : `Bevestig de waarneming door drie vragen over dit dier goed te beantwoorden. Heb je ze alle drie goed, dan komt hij in je ${NAAM.vestiarium}. Eén fout en hij dwaalt weg.`}</p>
+      <p class="dg-intro">${vg ? `Je was al begonnen. Ga verder waar je gebleven was.` : `Bevestig de waarneming door drie vragen over dit dier goed te beantwoorden. Heb je ze alle drie goed, dan komt hij in je ${NAAM.vestiarium}. Eén fout en hij dwaalt weg.`}</p>
       <button class="btn dg-go" id="dgStart">${vg ? "Verder met de waarneming" : "Waarneming bevestigen"}</button>
       <button class="linklike dg-later" id="dgLater">Later deze maand</button>`;
     $("dgStart").onclick = () => {
@@ -83,6 +83,12 @@ const Dwaalgast = (() => {
       vraag(i);
     };
     $("dgLater").onclick = () => { try { localStorage.setItem(LATER, String(todayIndex())); } catch(e){} sluit(); };
+    /* de eerste keer: uitlegblokjes in de pop-up zelf, nadat hij in beeld is gesprongen */
+    if (!vg && typeof Nieuw !== "undefined") Nieuw.blokjes("dwaalgast", [
+      { na: $("dwaalH"), tekst: "Eén keer per maand duikt er bij jou een dwaalgast op: een zeldzaam dier dat normaal niet in Nederland leeft. Welke dag en welk dier, dat verschilt per speler." },
+      { na: vak().querySelector(".dg-intro"), tekst: `Beantwoord drie vragen over dit dier goed, dan komt hij bij de dwaalgasten in je ${NAAM.vestiarium}, met 50 eikels en zijn avatar. Is een antwoord fout, dan dwaalt hij weg en blijft er een vraagteken achter.` },
+      { na: $("dgLater"), tekst: "Geen tijd? Kies ‘Later’, dan blijft er tot het einde van de maand een rode knop rechtsboven staan." }
+    ], { rood: true, altijd: !!nu.demo });
   }
   const SOORT = { sporen: "Sporen", gedrag: "Gedrag", geluid: "Geluid", voedsel: "Voedsel", nest: "Nest", rups: "Rups", uiterlijk: "Uiterlijk", verspreiding: "Waar hij leeft" };
   function vraag(i){

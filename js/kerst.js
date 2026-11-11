@@ -374,6 +374,11 @@ const Kerst = (() => {
     await haal();
     if (!$("adventPop").hidden && !bezig) teken();
     stip();
+    /* de eerste keer: uitlegblokjes in de kalender zelf (update 9) */
+    if (typeof Nieuw !== "undefined" && stand().vandaag) Nieuw.blokjes("advent", [
+      { na: $("adventSub"), tekst: "Van 1 tot en met 24 december mag er elke dag één vakje open, alleen dat van vandaag. Een gemist vakje is weg. Open je ze alle 24, dan word je Adventkampioen." },
+      { na: $("adventGo"), tekst: "Tik op ‘Open cadeau’. Er zitten eikels in, sporen in de sneeuw om te raden, winterweetjes en een paar dingen die je nergens anders krijgt." }
+    ], { altijd: demo(), wacht: 900 });
   }
   function sluit(){ if (!bezig) $("adventPop").hidden = true; }
 

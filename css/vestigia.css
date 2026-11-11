@@ -1263,3 +1263,21 @@ html.donker .belvink{background:#7fb894; color:#10251a; border-color:#1d2e24}
 .oefenen .toelbox{border-left-color:var(--ochre)}
 html.donker .oefenen .toelbtn{background:#2b2218; border-color:#5a4630}
 html.donker .oefenen .toelbtn[aria-expanded="true"]{background:#c19358; color:#221b13; border-color:#c19358}
+/* uitlegblokjes in een pop-up die net nieuw in beeld kwam (Nieuw.blokjes) */
+.nw-blokje{position:relative; text-align:left; background:#2f4a3a; color:#fff; border-radius:12px; padding:10px 12px 8px; margin:12px 0 4px; display:grid; gap:4px;
+  box-shadow:0 8px 20px rgba(28,51,38,.28); animation:nwblok .45s cubic-bezier(.2,1.4,.4,1); transform-origin:50% 0}
+.nw-blokje.rood{background:#7d0d16; box-shadow:0 8px 20px rgba(120,10,20,.3)}
+.nw-blokje .caps{color:#c6e98a; font-size:.66rem}
+.nw-blokje.rood .caps{color:#ffc7c2}
+.nw-blokje p{margin:0; font-size:.95rem; line-height:1.4}
+.nw-pijl{position:absolute; top:-7px; left:26px; width:14px; height:14px; background:inherit; transform:rotate(45deg); border-radius:2px}
+.nw-bk{display:flex; justify-content:flex-end; align-items:center; gap:12px}
+.nw-bk .linklike{color:rgba(255,255,255,.8); font-size:.85rem; margin-right:auto}
+.nw-volg{font:700 .78rem var(--caps); text-transform:uppercase; letter-spacing:.06em; background:#fff; color:#2f4a3a; border:0; border-radius:999px; padding:7px 14px; cursor:pointer}
+.nw-blokje.rood .nw-volg{color:#7d0d16}
+.nw-blokje.weg{animation:nwweg .2s ease-in forwards}
+@keyframes nwblok{from{opacity:0; transform:translateY(-6px) scale(.9)} to{opacity:1; transform:none}}
+@keyframes nwweg{to{opacity:0; transform:scale(.92)}}
+html.donker .nw-blokje{background:#3c6a4f}
+html.donker .nw-blokje.rood{background:#8a1a22}
+@media (prefers-reduced-motion:reduce){ .nw-blokje, .nw-blokje.weg{animation:none} }
