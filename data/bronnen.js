@@ -1,19 +1,21 @@
 /* Vestigia – links naar bronnen en foto's na het determineren (update 12)
    Per soort twee links: de soortpagina van de organisatie die we als bron gebruiken, en foto's.
-   - Zoogdieren: Zoogdiervereniging · reptielen, amfibieën en vissen: RAVON ·
+   - Zoogdieren: Zodion (voorheen Zoogdiervereniging) · reptielen, amfibieën en vissen: RAVON ·
      vogels: Vogelbescherming · vlinders: De Vlinderstichting.
    - Foto's: de fotopagina van de soort op waarneming.nl, waar validatoren de determinatie van foto's controleren.
      We linken alleen; de foto's blijven van de fotografen en worden niet in de app getoond. Het soortnummer staat in
      WAARNEMING (opgezocht op 11 november 2026). Ontbreekt een nummer, dan valt de link terug op Wikimedia Commons.
    De adressen van de soortpagina's volgen een vast patroon (de Nederlandse naam in kleine letters, met streepjes).
-   Wijkt een pagina af, zet dan het volledige adres in BRON_LOS onder de id van de soort; dat gaat altijd voor. */
+   Wijkt een pagina af, zet dan het volledige adres in BRON_LOS onder de id van de soort; dat gaat altijd voor.
+   Nagelopen op 11 november 2026 (update 15): alle soortpagina's openen; de oude adressen van Zoogdiervereniging,
+   RAVON en De Vlinderstichting stuurden door, daarom staan hieronder de nieuwe. */
 const BRON_SITES = {
-  Z: { naam: "Zoogdiervereniging", url: "https://www.zoogdiervereniging.nl/zoogdiersoorten/" },
-  R: { naam: "RAVON",              url: "https://www.ravon.nl/Soorten/Soortinformatie/" },
-  A: { naam: "RAVON",              url: "https://www.ravon.nl/Soorten/Soortinformatie/" },
-  F: { naam: "RAVON",              url: "https://www.ravon.nl/Soorten/Soortinformatie/" },
-  B: { naam: "Vogelbescherming",   url: "https://www.vogelbescherming.nl/ontdek-vogels/kennis-over-vogels/vogelgids/vogel/" },
-  V: { naam: "De Vlinderstichting", url: "https://www.vlinderstichting.nl/vlinders/overzicht-vlinders/details-vlinder/" }
+  Z: { naam: "Zodion",              url: "https://www.zodion.nl/zoogdiersoorten/" },
+  R: { naam: "RAVON",               url: "https://www.ravon.nl/reptielen/", eind: "/" },
+  A: { naam: "RAVON",               url: "https://www.ravon.nl/amfibieen/", eind: "/" },
+  F: { naam: "RAVON",               url: "https://www.ravon.nl/vissen/", eind: "/" },
+  B: { naam: "Vogelbescherming",    url: "https://www.vogelbescherming.nl/ontdek-vogels/kennis-over-vogels/vogelgids/vogel/" },
+  V: { naam: "De Vlinderstichting", url: "https://vlinderstichting.nl/vlinder/", eind: "/" }
 };
 /* soortnummers op waarneming.nl (waarneming.nl/species/<nummer>/). Let op: waarneming.nl gebruikt soms een andere
    wetenschappelijke naam (laatvlieger Cnephaeus serotinus, noordse woelmuis Alexandromys oeconomus, kauw Coloeus monedula,
@@ -43,14 +45,23 @@ const WAARNEMING = {
   "teunisbloempijlstaart":8656, "grote-vos":677, "donker-pimpernelblauwtje":648, "grote-weerschijnvlinder":676,
   "kleine-ijsvogelvlinder":690
 };
-/* afwijkende adressen: { id: "https://…" } */
-const BRON_LOS = {};
+/* afwijkende adressen: { id: "https://…" }, of { id: { naam, url } } als de pagina bij een andere organisatie staat */
+const BRON_LOS = {
+  "gewone-baardvleermuis":   "https://www.zodion.nl/zoogdiersoorten/baardvleermuis",
+  "tuimelaar":               "https://www.zodion.nl/zoogdiersoorten/walvisachtigen",   // geen eigen soortpagina
+  "middelste-groene-kikker": "https://www.ravon.nl/amfibieen/bastaardkikker/",         // RAVON noemt hem bastaardkikker
+  "eidereend":               "https://www.vogelbescherming.nl/ontdek-vogels/kennis-over-vogels/vogelgids/vogel/eider",
+  "kortsnavelboomkruiper":   "https://www.vogelbescherming.nl/ontdek-vogels/kennis-over-vogels/vogelgids/vogel/taigaboomkruiper", // Certhia familiaris
+  "ruigpootuil":             { naam: "Sovon", url: "https://stats.sovon.nl/ruigpootuil" }  // niet in de vogelgids van Vogelbescherming
+};
 
 const slugVan = n => n.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 function bronLinks(t){
   if (!t) return [];
   const site = BRON_SITES[t.g], uit = [];
-  if (site) uit.push({ soort: "bron", label: site.naam, url: BRON_LOS[t.id] || site.url + slugVan(t.n) });
+  const los = BRON_LOS[t.id];
+  if (los && typeof los === "object") uit.push({ soort: "bron", label: los.naam, url: los.url });
+  else if (site) uit.push({ soort: "bron", label: site.naam, url: los || site.url + slugVan(t.n) + (site.eind || "") });
   uit.push(WAARNEMING[t.id]
     ? { soort: "foto", label: "Foto's op waarneming.nl", url: `https://waarneming.nl/species/${WAARNEMING[t.id]}/photos/` }
     : { soort: "foto", label: "Foto's", url: "https://commons.wikimedia.org/w/index.php?title=Special:MediaSearch&type=image&search=" + encodeURIComponent(t.s) });
