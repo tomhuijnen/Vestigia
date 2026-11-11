@@ -182,6 +182,17 @@ if (args.has("--woorden")){
   }
 }
 
+/* ---------- 5c. fotolinks naar waarneming.nl (data/bronnen.js) ---------- */
+{
+  const f = path.join(ROOT, "data/bronnen.js");
+  if (fs.existsSync(f)){
+    const WN = new Function(fs.readFileSync(f, "utf8") + "; return WAARNEMING;")();
+    for (const id of Object.keys(WN)) if (!BY_ID.has(id)) FOUT(`waarneming.nl-nummer voor onbekende soort "${id}"`);
+    const mist = TARGETS.filter(t => !WN[t.id]).map(t => t.n);
+    if (mist.length) LETOP(`Geen waarneming.nl-nummer (foto-link valt terug op Wikimedia Commons): ${mist.join(", ")}`);
+  }
+}
+
 /* ---------- 6. app en database ---------- */
 const sw = fs.readFileSync(path.join(ROOT, "sw.js"), "utf8"), html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
 const stamp = (sw.match(/const VERSION = "vestigia-([^"]+)"/) || [])[1];
