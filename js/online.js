@@ -102,7 +102,8 @@ const online = (() => {
       setQueue(q); klaar.push(flush().then(() => refreshWeek()).catch(() => {}));
     } else klaar.push(uploadLog(account()));
     klaar.push(syncNu());
-    Promise.all(klaar).then(() => { Profiel.naSpel(); if (typeof Levels !== "undefined") Levels.naSpel(); }).catch(() => {});
+    /* Profiel.naSpel regelt ook de XP (Levels.naSpel), zodat XP, eikels en grote momenten na elkaar komen (update 13) */
+    Promise.all(klaar).then(() => Profiel.naSpel()).catch(() => {});
   }
   /* Wie de dagcasus speelde vóór het kiezen van een naam, krijgt die score alsnog in de ranglijst:
      de afgeronde dagcasussen van vandaag en gisteren (ouder neemt de server niet aan). */
@@ -173,7 +174,7 @@ const online = (() => {
         html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}" data-n="${esc(r.name)}" data-pos="${pl[i].pos}">${posHtml(pl[i])}
           <span class="who"><b>${esc(r.name)}</b><span>${rankMode === "day"
             ? (+r.played ? (+r.won ? "gedetermineerd" : "niet gevonden") : "nog niet gespeeld")
-            : `${r.won} van ${r.played} dagcasussen gedetermineerd`}</span></span>
+            : `${r.won} van ${r.played} ${+r.played === 1 ? "dagcasus" : "dagcasussen"} gedetermineerd`}</span></span>
           <span class="pts">${r.points}<small>punten</small></span></li>`).join("");
       } else if (rankMode === "day"){
         rows = await rpc("leaderboard_day", { p_day: today });
@@ -187,12 +188,13 @@ const online = (() => {
         rows = await rpc("leaderboard_range", { p_from: from, p_to: today });
         const pl = plaatsen(rows, STAND_SLEUTEL);
         html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}" data-n="${esc(r.name)}" data-pos="${pl[i].pos}">${posHtml(pl[i])}
-          <span class="who"><b>${esc(r.name)}</b><span>${r.won} van ${r.played} dagcasussen gedetermineerd</span></span>
+          <span class="who"><b>${esc(r.name)}</b><span>${r.won} van ${r.played} ${+r.played === 1 ? "dagcasus" : "dagcasussen"} gedetermineerd</span></span>
           <span class="pts">${r.points}<small>punten</small></span></li>`).join("");
         if (!rows.length) html = `<p class="rankempty">${rankMode === "week" ? "Deze week" : "Tot nu toe"} zijn er nog geen dagcasussen gespeeld.</p>`;
       }
       list.innerHTML = html; list.classList.remove("met-av");
       podium(list);
+      if (list.querySelector(".pos.gedeeld")) $("rankRule").textContent += " " + GELIJK_REGEL;
       Profiel.versier(list);
       if (me){
         const wk = await refreshWeek();
@@ -333,7 +335,26 @@ function plaatsen(rows, sleutel){
   k.forEach((x, i) => out.push({ pos: i && x === k[i - 1] ? out[i - 1].pos : i + 1, gedeeld: (i > 0 && x === k[i - 1]) || (i < k.length - 1 && x === k[i + 1]) }));
   return out;
 }
-const posHtml = p => `<span class="pos${p.gedeeld ? " gedeeld" : ""}"${p.gedeeld ? ` title="Gedeelde ${p.pos}e plaats" aria-label="Gedeelde ${p.pos}e plaats"` : ""}>${p.pos}${p.gedeeld ? `<small aria-hidden="true">gedeeld</small>` : ""}</span>`;
+/* Een gedeelde plaats is een knopje: tikken legt uit waarom er een plaats wordt overgeslagen (update 13). */
+const posHtml = p => p.gedeeld
+  ? `<button type="button" class="pos gedeeld" aria-label="Gedeelde ${p.pos}e plaats, tik voor uitleg">${p.pos}<small aria-hidden="true">gedeeld</small></button>`
+  : `<span class="pos">${p.pos}</span>`;
+const GELIJK_REGEL = "Gelijke stand? Dan deel je de plaats en wordt de plaats daarna overgeslagen, zoals bij sport.";
+const naamLijst = n => n.length < 2 ? n.join("") : n.slice(0, -1).join(", ") + " en " + n[n.length - 1];
+function gedeeldUitleg(knop){
+  const li = knop.closest("li"), list = li && li.parentElement; if (!list) return;
+  const pos = +li.dataset.pos, mee = [...list.querySelectorAll(`:scope > li[data-pos="${pos}"]`)];
+  const me = (online.player() || {}).name;
+  let namen = mee.map(x => x.dataset.n);
+  if (me && namen.includes(me)) namen = ["jij", ...namen.filter(n => n !== me)];
+  const tekst = naamLijst(namen), zin = tekst.charAt(0).toUpperCase() + tekst.slice(1);
+  const weg = Array.from({ length: mee.length - 1 }, (_, i) => `${pos + 1 + i}e`);
+  const over = weg.length === 1 ? `is er geen ${weg[0]} plaats` : `zijn er geen ${naamLijst(weg)} plaats`;
+  const volgende = pos + mee.length;
+  const na = list.querySelector(`:scope > li[data-pos="${volgende}"]`) ? `; de volgende speler staat ${volgende}e` : "";
+  toast(`Gedeelde ${pos}e plaats. ${zin} staan gelijk, daarom ${over}${na}. Zo telt het ook bij sport.`, { label: "Oké", run: () => { $("toast").hidden = true; }, duur: 8000 });
+}
+document.addEventListener("click", e => { const k = e.target.closest(".ranklist .pos.gedeeld"); if (k) gedeeldUitleg(k); });
 
 /* Top 3 in de ranglijst: dun randje in goud, zilver of brons, en een kroontje bij nummer 1 (alleen met punten).
    Bij een gedeelde plaats krijgen alle spelers op die plaats de rand (en bij nummer 1 allemaal de kroon). */

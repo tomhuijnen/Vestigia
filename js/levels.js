@@ -91,7 +91,7 @@ const Levels = (() => {
     if (won && S.nieuwePlaat) delen.push(["nieuw", 10]);
     return delen;
   }
-  async function naSpel(){
+  async function naSpel(opts){
     if (!speler()) return;
     const voor = stand, key = spelKey();
     let na = null;
@@ -120,6 +120,8 @@ const Levels = (() => {
     toonInResultaat();
     const blok = $("xpBlok");
     await vlieg(blok && !blok.hidden ? blok.querySelector(".xptot") : null, n, voor);
+    /* stil (update 13): Profiel.naSpel toont level omhoog zelf, samen met prestaties en mijlpalen in één pop-up */
+    if (opts && opts.stil) return levelSprong(na);
     naLevelOmhoog(voor, na);
   }
   /* het blok in het resultaat (spel.js zet <section id="xpBlok" hidden> klaar) */
@@ -194,13 +196,14 @@ const Levels = (() => {
     let tokens = 0; for (let l = a + 1; l <= b; l++) if (l % 20 === 0) tokens++;
     return { eikels, rangen, tokens };
   }
-  function rij(ic, kop, sub){ return `<div class="lvbuit">${ic}<span><b>${esc(kop)}</b><small>${esc(sub)}</small></span></div>`; }
+  /* eik: zoveel eikels vliegen vanuit deze rij naar het saldo (alleen direct na een spel, zie Profiel.naSpel) */
+  function rij(ic, kop, sub, eik){ return `<div class="lvbuit"${eik ? ` data-eik="${eik}"` : ""}>${ic}<span><b>${esc(kop)}</b><small>${esc(sub)}</small></span></div>`; }
   function popup(html, cls){
     return new Promise(klaar => {
       const pop = $("wachtPop"), body = $("wachtBody");
       body.innerHTML = html;
       pop.classList.add("levelpop"); if (cls) pop.classList.add(cls);
-      const dicht = () => { pop.hidden = true; pop.classList.remove("levelpop", "lvstart"); document.removeEventListener("keydown", esc_, true); pop.removeEventListener("click", bg); klaar(); };
+      const dicht = () => { pop.hidden = true; pop.classList.remove("levelpop", "lvstart", ...(cls ? [cls] : [])); document.removeEventListener("keydown", esc_, true); pop.removeEventListener("click", bg); klaar(); };
       const esc_ = e => { if (e.key === "Escape"){ e.preventDefault(); e.stopPropagation(); dicht(); } };
       const bg = e => { if (e.target === pop) dicht(); };
       document.addEventListener("keydown", esc_, true); pop.addEventListener("click", bg);
@@ -210,7 +213,7 @@ const Levels = (() => {
     });
   }
   const cirkel = l => `<div class="lvcirkel"><span class="caps">Level</span><b>${l}</b></div>`;
-  function levelOmhoog(a, s){
+  function levelOmhoog(a, s, extra){
     const b = s.level, w = buit(a, b), nieuweRang = w.rangen.length ? w.rangen[w.rangen.length - 1] : null;
     const tok = s.tokens;
     return popup(`
@@ -219,9 +222,10 @@ const Levels = (() => {
       <div class="lvtekst"><h2 id="wachtH">${nieuweRang ? `Je bent nu ${esc(nieuweRang)}` : `Je bent nu level ${b}`}</h2>
         <p>${nieuweRang ? "Een nieuwe rang. De ondertitel staat klaar in je profiel." : b - a > 1 ? `Je bent ${b - a} levels gestegen.` : "Goed bezig! Elk level kost iets meer XP dan het vorige."}</p></div>
       <div class="lvbuitlijst">
-        ${w.eikels ? rij(eik(), `${w.eikels} eikels`, `Elk level iets meer: level ${b + 1} levert ${eikelsVoor(b + 1)} op`) : ""}
+        ${w.eikels ? rij(eik(), `${w.eikels} eikels`, `Elk level iets meer: level ${b + 1} levert ${eikelsVoor(b + 1)} op`, w.eikels) : ""}
         ${w.rangen.map(r => rij(LINT, `Ondertitel ${r}`, "Niet te koop: alleen via je level")).join("")}
         ${w.tokens ? rij(herstelMunt(28), `${w.tokens === 1 ? "1 hersteltoken" : w.tokens + " hersteltokens"}`, `Alleen bij level 20, 40, 60 enzovoort. Je hebt er nu ${tok} van maximaal 2.`) : ""}
+        ${extra || ""}
       </div>
       ${s.volgende_rang ? `<p class="fine lvvolgende">Volgende rang: ${esc(s.volgende_rang)} op level ${s.volgende_rang_level}</p>` : ""}
       <button class="btn" id="lvVerder">Verder</button>`);
@@ -250,15 +254,18 @@ const Levels = (() => {
     return p;
   }
   /* na een spel of een adventvakje: is het level omhoog? Dan meteen, of anders bij de volgende start */
-  function naLevelOmhoog(voor, na){
-    if (!na || !(na.actief || demo())) return;
+  function levelSprong(na){
+    if (!na || !(na.actief || demo())) return null;
     const gezien = lees(K.gezien);
-    if (gezien == null) return;                       // de startpop-up komt eerst, via de wachtrij
-    if (na.level > gezien){
-      if (Wachtrij.ietsOpen()) return;                // er staat iets in beeld: bij de volgende start
-      zet(K.gezien, na.level);
-      levelOmhoog(gezien, na);
-    }
+    if (gezien == null) return null;                  // de startpop-up komt eerst, via de wachtrij
+    if (!(na.level > gezien)) return null;
+    if (Wachtrij.ietsOpen()) return null;             // er staat iets in beeld: bij de volgende start
+    zet(K.gezien, na.level);
+    return { a: gezien, s: na, eikels: buit(gezien, na.level).eikels };
+  }
+  function naLevelOmhoog(voor, na){
+    const j = levelSprong(na);
+    if (j) levelOmhoog(j.a, j.s);
   }
   Wachtrij.voeg({ id: "levels", prio: 1.5,
     async kan(){
@@ -368,5 +375,5 @@ const Levels = (() => {
 
   if (speler()) setTimeout(tekenOveral, 0);
   return { haal, ring, mijnRing, knop, tekenOveral, naSpel, toonInResultaat, kaartHtml, teVerdienen, naAdvent, naAdventDemo, zichtbaar,
-           stand: () => stand, RANGEN };
+           stand: () => stand, RANGEN, levelOmhoog, popup, rij };
 })();

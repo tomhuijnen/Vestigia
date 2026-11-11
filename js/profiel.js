@@ -116,36 +116,125 @@ const Profiel = (() => {
   }
 
   /* ---------- saldo naast het menu ---------- */
+  let vliegt = false;     // terwijl er eikels naar het saldo vliegen, blijft het getal bovenin op de oude stand
   function saldoInKop(){
+    if (vliegt) return;
     const w = wallet(), aan = !!(w && p());
     ["eikelBtn", "slimEikel"].forEach(id => { const b = $(id); if (!b) return; b.hidden = !aan; if (aan) b.querySelector("span").textContent = w.saldo; });
     if (aan) $("eikelBtn").setAttribute("aria-label", `${w.saldo} eikels, naar de shop`);
   }
+  const kopSaldo = n => ["eikelBtn", "slimEikel"].forEach(id => { const b = $(id); if (b && !b.hidden) b.querySelector("span").textContent = n; });
 
-  /* ---------- na een spel: wat leverde het op ---------- */
+  /* ---------- na een spel: wat leverde het op (update 13) ----------
+     Eerst vliegt de XP de ring in (levels.js). Dan vliegen de gewone eikels (dagcasus, nieuwe soort, reeks, veldweek …)
+     vanaf de regel ‘+N eikels’ in de uitslag naar je saldo, zonder pop-up. Grote momenten (prestatie, mijlpaal, level
+     omhoog) komen samen in één pop-up; hun eikels vliegen vanuit die pop-up naar het saldo. Het saldo bovenin telt
+     mee terwijl de eikels landen. Met ‘minder beweging’ springt het getal meteen naar de nieuwe stand. */
   let winst = null;      // { k: spel, n: eikels }
   const spelKey = () => `${S.mode}:${S.caseNo || ""}:${S.target}:${S.expert ? 1 : 0}:${S.k || 0}`;
   const NIV = ["", "brons", "zilver", "goud"];
+  const NIVKLEUR = { 1: ["#c98a52", "#8f5528"], 2: ["#cfd6da", "#7f8b92"], 3: ["#ecc457", "#a8731b"] };
+  const MEDAILLE = (niv, maat) => { const [vul, rand] = NIVKLEUR[niv] || NIVKLEUR[3]; return `<svg class="prmedaille" viewBox="0 0 32 40" width="${maat}" height="${maat * 1.25}" aria-hidden="true">
+    <path d="M9 21L5 38l6-3 4 5 3-14Z" fill="#4b7a5e"/><path d="M23 21l4 17-6-3-4 5-3-14Z" fill="#2e5a40"/>
+    <circle cx="16" cy="15" r="12.5" fill="${vul}" stroke="${rand}" stroke-width="1.8"/><circle cx="16" cy="15" r="8.6" fill="none" stroke="${rand}" stroke-width="1" opacity=".55"/>
+    <path d="M16 9.4l1.7 3.5 3.8.5-2.8 2.6.7 3.8L16 18l-3.4 1.8.7-3.8-2.8-2.6 3.8-.5Z" fill="#fff" opacity=".9"/></svg>`; };
+  const eikRij = (ic, kop, sub, n) => `<div class="lvbuit belrij"${n ? ` data-eik="${n}"` : ""}>${ic}<span><b>${esc(kop)}</b><small>${esc(sub)}</small></span>${n ? `<span class="beleik">${EIKEL}+${n}</span>` : ""}</div>`;
+  const wachtMs = ms => new Promise(r => setTimeout(r, ms));
+  const zichtbaarInBeeld = el => { if (!el || el.hidden) return false; const r = el.getBoundingClientRect(); return r.width > 0 && r.top >= 0 && r.bottom <= innerHeight; };
+  /* eikels laten vliegen; staat de bron niet in beeld, dan vanuit het midden van het scherm */
+  async function vliegNaarKop(van, n, snel){
+    if (!n || typeof Kerst === "undefined") return;
+    let tijdelijk = null;
+    if (!zichtbaarInBeeld(van)){
+      tijdelijk = document.createElement("span");
+      tijdelijk.style.cssText = `position:fixed; left:${innerWidth / 2 - 10}px; top:${innerHeight * .45}px; width:20px; height:20px; pointer-events:none`;
+      document.body.appendChild(tijdelijk); van = tijdelijk;
+    }
+    try { await Kerst.vlieg(van, n, snel); } catch(e){}
+    if (tijdelijk) tijdelijk.remove();
+  }
+  /* wat er na dit spel nieuw behaald is: prestaties (brons, zilver, goud) en mijlpalen */
+  function nieuwBehaald(oudP, pr, oudM, nuM){
+    const uit = [];
+    if (oudP.length) for (const r of pr || []){
+      const was = (oudP.find(o => o.id === r.id) || {}).niveau || 0;
+      if (r.niveau > was){
+        const e = beloning(r.id), erbij = e ? e.slice(was, r.niveau).reduce((a, b) => a + b, 0) : 0;
+        uit.push({ soort: "prestatie", niv: r.niveau, ic: MEDAILLE(r.niveau, 30), groot: MEDAILLE(r.niveau, 84), kop: r.label,
+          sub: `Prestatie · ${NIV[r.niveau]}${r.niveau === 3 && r.goud_titel ? ` · ondertitel ${r.goud_titel}` : ""}`, eikels: erbij,
+          toast: `Prestatie behaald: ${r.label} · ${NIV[r.niveau]}${erbij ? ` · +${erbij} eikels` : ""}${r.niveau === 3 ? ` · ondertitel ${r.goud_titel}` : ""}` });
+      }
+    }
+    if (oudM && oudM.length) for (const m of nuM || []){
+      const was = oudM.find(o => o.id === m.id);
+      if (m.behaald && was && !was.behaald)
+        uit.push({ soort: "mijlpaal", ic: LINT(true).replace('class="mplint"', 'class="mplint" width="30" height="38"'), groot: LINT(true).replace('class="mplint"', 'class="mplint" width="84" height="105"'),
+          kop: m.label, sub: `Mijlpaal${m.titel ? ` · ondertitel ${m.titel}` : ""}`, eikels: m.eikels || 0,
+          toast: `Mijlpaal behaald: ${m.label}${m.eikels ? ` · +${m.eikels} eikels` : ""}${m.titel ? ` · ondertitel ${m.titel}` : ""}` });
+    }
+    return uit;
+  }
+  /* één pop-up voor alle grote momenten; met een level omhoog is het de level-pop-up, met de rest eronder */
+  async function groteMomenten(groot, lv){
+    const rijen = groot.map(g => eikRij(g.ic, g.kop, g.sub, g.eikels)).join("");
+    let dicht;
+    if (lv) dicht = Levels.levelOmhoog(lv.a, lv.s, rijen);
+    else {
+      const een = groot.length === 1 ? groot[0] : null;
+      const prestaties = groot.filter(g => g.soort === "prestatie");
+      const label = groot.every(g => g.soort === "mijlpaal") ? (een ? "Mijlpaal behaald" : "Mijlpalen behaald") : een ? "Prestatie behaald" : "Goed bezig!";
+      dicht = Levels.popup(`
+        <span class="caps lvlabel">${label}</span>
+        <div class="belbadge">${een ? een.groot : prestaties.length ? MEDAILLE(Math.max(...prestaties.map(g => g.niv)), 84) : groot[0].groot}</div>
+        <div class="lvtekst"><h2 id="wachtH">${een ? esc(een.kop) : `${groot.length} keer raak`}</h2>
+          <p>${een ? esc(een.sub.replace(/^(Prestatie|Mijlpaal) · ?/, "")) || "Een mijlpaal blijft altijd van jou." : "Na dit spel heb je meerdere doelen gehaald."}</p></div>
+        <div class="lvbuitlijst">${rijen}</div>
+        <button class="btn" id="lvVerder">Verder</button>`, "belpop");
+    }
+    /* de eikels vliegen pas als de pop-up staat; rij voor rij */
+    await wachtMs(rustigNu() ? 0 : 750);
+    for (const r of $("wachtBody").querySelectorAll("[data-eik]")){
+      if ($("wachtPop").hidden) break;
+      await vliegNaarKop(r.querySelector(".beleik") || r.querySelector("svg"), +r.dataset.eik, true);
+    }
+    /* niet wachten tot de pop-up dicht is: het saldo staat al goed */
+    dicht.catch(() => {});
+  }
+  const rustigNu = () => window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   async function naSpel(){
-    if (!p() || beschikbaar === false) return;
-    const oudW = wallet(), oudP = lees(K.prest) || [], key = spelKey();
+    const lvNa = opts => (typeof Levels !== "undefined" ? Levels.naSpel(opts) : Promise.resolve(null));
+    if (!p() || beschikbaar === false) return lvNa();
+    const oudW = wallet(), oudP = lees(K.prest) || [], oudM = lees(K.mijl), key = spelKey();
+    let w, pr, nuM;
     try {
-      const w = await haalWallet(), pr = await haalPrestaties();
-      saldoInKop(); renderMenu();
-      if (oudW && w.verdiend > oudW.verdiend){
-        winst = { k: key, n: w.verdiend - oudW.verdiend };
-        toonWinst();
+      [w, pr] = await Promise.all([haalWallet(), haalPrestaties()]);
+      nuM = await haalMijlpalen(false);
+    } catch(e){ if (e.status === 404) beschikbaar = false; return lvNa(); }
+    const verdiend = oudW && w.verdiend > oudW.verdiend ? w.verdiend - oudW.verdiend : 0;
+    const groot = nieuwBehaald(oudP, pr, oudM, nuM);
+    vliegt = !!(oudW && verdiend);
+    try {
+      renderMenu();
+      if (verdiend){ winst = { k: key, n: verdiend }; toonWinst(); }
+      const lv = await lvNa({ stil: true }).catch(() => null);
+      if (vliegt) kopSaldo(oudW.saldo);
+      const grootEik = groot.reduce((a, g) => a + g.eikels, 0) + (lv ? lv.eikels : 0);
+      const klein = Math.max(0, verdiend - grootEik);
+      if (klein && vliegt){
+        const regel = $("eikelGain");
+        await vliegNaarKop(regel && winst && winst.k === spelKey() ? regel.querySelector("svg") || regel : null, klein);
+        if (regel) regel.querySelectorAll(".leeg").forEach(x => x.classList.remove("leeg"));
       }
-      if (oudP.length) for (const r of pr){
-        const was = (oudP.find(o => o.id === r.id) || {}).niveau || 0;
-        if (r.niveau > was){
-          const e = beloning(r.id), erbij = e ? e.slice(was, r.niveau).reduce((a, b) => a + b, 0) : 0;
-          toast(`Prestatie behaald: ${r.label} · ${NIV[r.niveau]}${erbij ? ` · +${erbij} eikels` : ""}${r.niveau === 3 ? ` · ondertitel ${r.goud_titel}` : ""}`);
-        }
+      if (groot.length || lv){
+        if (typeof Wachtrij !== "undefined" && Wachtrij.ietsOpen() && !lv) groot.forEach(g => toast(g.toast, { duur: 6000 }));
+        else await groteMomenten(groot, lv);
       }
-      online.rpc("my_items", args()).then(i => zet(K.items, i || [])).catch(() => {});
-      haalMijlpalen(true);
-    } catch(e){ if (e.status === 404) beschikbaar = false; }
+    } finally {
+      vliegt = false; saldoInKop(); renderMenu();
+    }
+    online.rpc("my_items", args()).then(i => zet(K.items, i || [])).catch(() => {});
+    inVestiarium(); if (VIEW === "profiel") teken();
   }
   function toonWinst(){
     const el = $("eikelGain"); if (!el) return;
@@ -229,8 +318,6 @@ const Profiel = (() => {
       </section>
       <section class="pfsec" aria-labelledby="pfEikH"><h3 id="pfEikH">Eikels</h3>
         <p class="fine">Eikels verdien je met de dagcasus, reeksen, veldweken, platen, trofeeën, prestaties, mijlpalen${Levels.zichtbaar() ? ", levels" : ""} en uitgenodigde spelers. Je saldo wordt steeds opnieuw uitgerekend uit wat je gespeeld hebt, dus het raakt nooit kwijt.</p>
-        ${w ? `<dl class="pfopbouw">${OPBOUW.filter(([k]) => w.opbouw && w.opbouw[k]).map(([k, l]) => `<dt>${l}</dt><dd>+${w.opbouw[k]}</dd>`).join("")}
-          ${w.uitgegeven ? `<dt>Uitgegeven in de shop</dt><dd>−${w.uitgegeven}</dd>` : ""}<dt class="tot">Saldo</dt><dd class="tot">${w.saldo}</dd></dl>` : ""}
         <div class="actions"><button class="btn line" id="pfNaarShop">Naar de shop</button></div>
       </section>
       <section class="pfsec" aria-labelledby="pfPrH"><h3 id="pfPrH">Prestaties</h3><div class="prlist">${prestatieLijst()}</div></section>

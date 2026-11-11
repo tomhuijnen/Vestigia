@@ -346,7 +346,8 @@ const Kerst = (() => {
     const m = $("menuBtn").getBoundingClientRect();
     return { el: null, r: { left: m.left - 92, top: m.top + 2, width: 84, height: 36 } };
   }
-  async function vliegNaarSaldo(van, n){
+  /* snel: niet wachten tot het spook-saldo is weggefaded (de volgende vlucht kan meteen; update 13) */
+  async function vliegNaarSaldo(van, n, snel){
     if (!n) return;
     const plek = saldoPlek(), span = plek.el && plek.el.querySelector("span");
     const start = span ? (parseInt(span.textContent.replace(/\D/g, ""), 10) || 0) : 0, eind = start + n;
@@ -387,8 +388,8 @@ const Kerst = (() => {
     });
     if (span) span.textContent = eind;
     spook.classList.add("klaar");
-    await wacht(700);
-    spook.remove();
+    const weg = wacht(700).then(() => spook.remove());
+    if (!snel) await weg;
   }
 
   /* ---------- kalender openen en sluiten ---------- */
