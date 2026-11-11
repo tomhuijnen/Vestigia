@@ -18,7 +18,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Karla:ital,wght@0,400;0,500;0,700;1,400&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
 <!-- thema: eigen keuze (licht/donker) of anders de instelling van het toestel; vóór de opmaak, dus geen witte flits -->
 <script>(function(){var t=null;try{t=localStorage.getItem("vestigia:thema")}catch(e){}var d=t?t==="donker":!!(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches);if(d)document.documentElement.classList.add("donker")})()</script>
-<link rel="stylesheet" href="css/vestigia.css?v=202611111413">
+<link rel="stylesheet" href="css/vestigia.css?v=202611111458">
 </head>
 <body>
 <!-- openingsanimatie: staat meteen in beeld (geen witte flits), en is in dezelfde sessie al gezien → niet tonen -->
@@ -91,7 +91,7 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
         <div class="sechead"><h2 id="gLabel"><label for="gInput">Determinatie</label></h2><span class="caps" id="leftLabel"></span></div>
         <div class="det-row">
           <div class="combo">
-            <input id="gInput" type="text" autocomplete="off" spellcheck="false" placeholder="Nederlandse of wetenschappelijke naam"
+            <input id="gInput" type="text" autocomplete="off" spellcheck="false" placeholder="Soortnaam of groep"
               role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="gOpts">
             <ul class="opts" id="gOpts" role="listbox" hidden></ul>
           </div>
@@ -161,6 +161,14 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
       <div class="dexcount" id="pfSaldo">–<small>eikels</small></div>
     </div>
     <div id="profielBody"></div>
+  </section>
+
+  <section id="statsView" hidden aria-labelledby="statsH">
+    <div class="dexhead">
+      <div><h2 id="statsH">Statistieken</h2><p>Alles wat je speelde, in elke modus: de dagcasus, oefencasussen en ingehaalde dagen. Je statistieken staan in deze browser, en met een spelersnaam ook op je andere apparaten.</p></div>
+      <div class="dexcount" id="stTotaal">–<small>determinaties</small></div>
+    </div>
+    <div id="statsBody"></div>
   </section>
 
   <section id="shopView" hidden aria-labelledby="shopH">
@@ -257,6 +265,7 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
       <li><button data-go="league" id="menuLeague"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="15.5" cy="9.5" r="2.5"/><path d="M2.5 18c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5M13.5 13.6c.6-.3 1.3-.4 2-.4 2.2 0 3.8 1.5 4.3 4"/></svg><span>Leagues</span><small id="menuLeagueN"></small></button></li>
       <li><button data-go="shop" id="menuShop"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h14l-1.2 10H5.2z"/><path d="M8 8V6.5a3 3 0 0 1 6 0V8"/></svg><span>Shop</span></button></li>
       <li hidden><button data-go="advent" id="menuAdvent"><svg aria-hidden="true" viewBox="0 0 20 20" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="3" y="8" width="14" height="9" rx="1.2"/><path d="M2.5 5.2h15v2.8h-15zM10 5.2V17"/><path d="M10 5.2C8.6 2.4 5.6 2.4 6.1 4.3c.3 1 2.4.9 3.9.9ZM10 5.2c1.4-2.8 4.4-2.8 3.9-.9-.3 1-2.4.9-3.9.9Z"/></svg><span>Adventkalender</span></button></li>
+      <li><button data-go="stats" id="menuStats"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 18.5h15"/><path d="M6 15.5v-4M10 15.5V6M14 15.5V9.5M18 15.5V4"/></svg><span>Statistieken</span></button></li>
       <li><button data-go="invite" id="menuInvite"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 18.5c.6-3.3 3-5.2 6-5.2s5.4 1.9 6 5.2M17 7v6M14 10h6"/></svg><span>Speler uitnodigen</span></button></li>
     </ul>
     <hr>
@@ -299,6 +308,7 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
     <p class="helpuitleg"><button class="btn line" id="helpUitleg" type="button">Bekijk de uitleg opnieuw</button> <span class="fine">Een korte rondleiding langs het spel in vijf stappen.</span></p>
     <div class="helpnieuw"><span class="caps">Uitleg bij nieuwe onderdelen</span><div class="helpnieuwrij" id="helpNieuw"></div></div>
     <p>Elke casus is een waarneming in het veld. Je begint met de locatie en het seizoen. Bij elke foute determinatie komt er een waarneming bij. De waarnemingen zijn kaal: je krijgt alleen wat je ziet of hoort, de interpretatie is aan jou. Je hebt vijf pogingen, en het kan best dat je de soort niet vindt.</p>
+    <p>Zoeken kan op de Nederlandse of de wetenschappelijke naam, ook met een tikfout. Typ je een groep, zoals ‘uil’, ‘hert’, ‘vlinder’ of ‘roofvogel’, dan zie je alle soorten uit die groep, ook als het woord niet in hun naam staat.</p>
     <h3>Tips</h3>
     <p>Na elke foute determinatie krijg je één tip over de gezochte soort: eerst iets wat jouw soort en de gezochte soort gemeen hebben, en als dat er niet meer is, iets waarin ze verschillen. Een tip komt nooit twee keer. Wie dezelfde gokken doet, krijgt dezelfde tips.</p>
     <h3>Volledige vergelijking</h3>
@@ -322,7 +332,7 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
     <h3>Dwaalgasten</h3>
     <p>Met een spelersnaam duikt er één keer per maand een dwaalgast bij je op: een zeldzaam dier dat normaal niet in Nederland leeft. De dag en het dier verschillen per speler. Beantwoord drie vragen over het dier goed, dan komt hij bij de dwaalgasten in je <span data-naam="vestiarium">Vestiarium</span>, met 50 eikels en zijn avatar. Is een antwoord fout, dan dwaalt hij weg en blijft er een vraagteken achter.</p>
     <h3>Ranglijst</h3>
-    <p>Met een spelersnaam doe je mee aan de ranglijst. Alleen je eerste poging aan de dagcasus telt: 5 punten in één poging, 1 punt bij de vijfde. In de expertmodus krijg je 6 punten als je na één waarneming goed zit. Klassiek en expert hebben dezelfde casus; daarom telt alleen de modus die je die dag als eerste speelt.</p>
+    <p>Met een spelersnaam doe je mee aan de ranglijst. Alleen je eerste poging aan de dagcasus telt: 5 punten in één poging, 1 punt bij de vijfde. In de expertmodus krijg je 6 punten als je na één waarneming goed zit. Klassiek en expert hebben dezelfde casus; daarom telt alleen de modus die je die dag als eerste speelt. Staan spelers gelijk (evenveel punten en evenveel gedetermineerde dagen), dan delen ze de plaats en krijgen ze dezelfde beloning.</p>
     <h3>Prestaties en mijlpalen</h3>
     <p>Prestaties hebben drie niveaus (brons, zilver en goud) en staan per categorie, zoals Determineren, Specialist en Volhouden. Goud levert een ondertitel op. Mijlpalen haal je maar één keer: bijvoorbeeld een week in de top 3 of als nummer 1 van de weekranglijst. Een week telt zodra hij voorbij is. Elke mijlpaal levert eenmalig eikels op, de grootste ook een ondertitel. Wat je eenmaal behaald hebt, raak je nooit meer kwijt.</p>
     <h3>Installeren</h3>
@@ -382,31 +392,34 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
 </div>
 
 <script src="config.js"></script>
-<script src="data/teksten.js?v=202611111413"></script>
-<script src="data/soorten.js?v=202611111413"></script>
-<script src="data/sporen.js?v=202611111413"></script>
-<script src="data/dagschema.js?v=202611111413"></script>
-<script src="data/veldweken.js?v=202611111413"></script>
-<script src="data/toelichting.js?v=202611111413"></script>
-<script src="js/kern.js?v=202611111413"></script>
-<script src="js/spel.js?v=202611111413"></script>
-<script src="js/veldboek.js?v=202611111413"></script>
-<script src="js/melden.js?v=202611111413"></script>
-<script src="js/kop.js?v=202611111413"></script>
-<script src="js/spelen.js?v=202611111413"></script>
-<script src="js/opening.js?v=202611111413"></script>
-<script src="js/uitleg.js?v=202611111413"></script>
-<script src="js/online.js?v=202611111413"></script>
-<script src="js/league.js?v=202611111413"></script>
-<script src="data/avatars.js?v=202611111413"></script>
-<script src="js/profiel.js?v=202611111413"></script>
-<script src="data/advent.js?v=202611111413"></script>
-<script src="js/wachtrij.js?v=202611111413"></script>
-<script src="js/kerst.js?v=202611111413"></script>
-<script src="data/dwaalgasten.js?v=202611111413"></script>
-<script src="js/dwaalgast.js?v=202611111413"></script>
-<script src="js/nieuw.js?v=202611111413"></script>
-<script src="js/levels.js?v=202611111413"></script>
-<script src="js/app.js?v=202611111413"></script>
+<script src="data/teksten.js?v=202611111458"></script>
+<script src="data/soorten.js?v=202611111458"></script>
+<script src="data/sporen.js?v=202611111458"></script>
+<script src="data/dagschema.js?v=202611111458"></script>
+<script src="data/veldweken.js?v=202611111458"></script>
+<script src="data/toelichting.js?v=202611111458"></script>
+<script src="data/zoekgroepen.js?v=202611111458"></script>
+<script src="data/bronnen.js?v=202611111458"></script>
+<script src="js/kern.js?v=202611111458"></script>
+<script src="js/spel.js?v=202611111458"></script>
+<script src="js/veldboek.js?v=202611111458"></script>
+<script src="js/melden.js?v=202611111458"></script>
+<script src="js/kop.js?v=202611111458"></script>
+<script src="js/spelen.js?v=202611111458"></script>
+<script src="js/opening.js?v=202611111458"></script>
+<script src="js/uitleg.js?v=202611111458"></script>
+<script src="js/online.js?v=202611111458"></script>
+<script src="js/league.js?v=202611111458"></script>
+<script src="data/avatars.js?v=202611111458"></script>
+<script src="js/profiel.js?v=202611111458"></script>
+<script src="data/advent.js?v=202611111458"></script>
+<script src="js/wachtrij.js?v=202611111458"></script>
+<script src="js/kerst.js?v=202611111458"></script>
+<script src="data/dwaalgasten.js?v=202611111458"></script>
+<script src="js/dwaalgast.js?v=202611111458"></script>
+<script src="js/nieuw.js?v=202611111458"></script>
+<script src="js/levels.js?v=202611111458"></script>
+<script src="js/statistiek.js?v=202611111458"></script>
+<script src="js/app.js?v=202611111458"></script>
 </body>
 </html>

@@ -141,8 +141,8 @@ const online = (() => {
     const p = player(); if (!enabled || !p) return null;
     const today = todayIndex(), w = weekStart(today);
     const rows = await rpc("leaderboard_range", { p_from: w, p_to: today });
-    const pos = rows.findIndex(r => r.name === p.name);
-    const info = { w, pos: pos + 1, n: rows.length, pts: pos >= 0 ? +rows[pos].points : 0 };
+    const pos = rows.findIndex(r => r.name === p.name), pl = plaatsen(rows, STAND_SLEUTEL);
+    const info = { w, pos: pos >= 0 ? pl[pos].pos : 0, gedeeld: pos >= 0 && pl[pos].gedeeld, n: rows.length, pts: pos >= 0 ? +rows[pos].points : 0 };
     try { localStorage.setItem("vestigia:week", JSON.stringify(info)); } catch(e){}
     renderTiles();
     if (typeof League !== "undefined") League.bijwerken();
@@ -169,21 +169,24 @@ const online = (() => {
       if (lg){
         const from = rankMode === "day" ? today : rankMode === "week" ? weekStart(today) : 0;
         rows = await rpc("league_board", { p_id: player().id, p_key: player().key, p_league: lg.id, p_from: from, p_to: today });
-        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}" data-n="${esc(r.name)}"><span class="pos">${i + 1}</span>
+        const pl = plaatsen(rows, STAND_SLEUTEL);
+        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}" data-n="${esc(r.name)}" data-pos="${pl[i].pos}">${posHtml(pl[i])}
           <span class="who"><b>${esc(r.name)}</b><span>${rankMode === "day"
             ? (+r.played ? (+r.won ? "gedetermineerd" : "niet gevonden") : "nog niet gespeeld")
             : `${r.won} van ${r.played} dagcasussen gedetermineerd`}</span></span>
           <span class="pts">${r.points}<small>punten</small></span></li>`).join("");
       } else if (rankMode === "day"){
         rows = await rpc("leaderboard_day", { p_day: today });
-        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}" data-n="${esc(r.name)}"><span class="pos">${i + 1}</span>
+        const pl = plaatsen(rows, DAG_SLEUTEL);
+        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}" data-n="${esc(r.name)}" data-pos="${pl[i].pos}">${posHtml(pl[i])}
           <span class="who"><b>${esc(r.name)}</b>${r.expert ? `<span class="xbadge">expert</span>` : ""}<span>${r.won ? (r.expert ? `gedetermineerd na ${r.clues} waarneming${r.clues > 1 ? "en" : ""}` : `gedetermineerd in ${r.tries} ${r.tries === 1 ? "poging" : "pogingen"}`) : "niet gevonden"}</span></span>
           <span class="pts">${r.points}<small>punten</small></span></li>`).join("");
         if (!rows.length) html = `<p class="rankempty">Nog niemand heeft dagcasus #${today + 1} gespeeld. Ben jij de eerste?</p>`;
       } else {
         const from = rankMode === "week" ? weekStart(today) : 0;
         rows = await rpc("leaderboard_range", { p_from: from, p_to: today });
-        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}" data-n="${esc(r.name)}"><span class="pos">${i + 1}</span>
+        const pl = plaatsen(rows, STAND_SLEUTEL);
+        html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}" data-n="${esc(r.name)}" data-pos="${pl[i].pos}">${posHtml(pl[i])}
           <span class="who"><b>${esc(r.name)}</b><span>${r.won} van ${r.played} dagcasussen gedetermineerd</span></span>
           <span class="pts">${r.points}<small>punten</small></span></li>`).join("");
         if (!rows.length) html = `<p class="rankempty">${rankMode === "week" ? "Deze week" : "Tot nu toe"} zijn er nog geen dagcasussen gespeeld.</p>`;
@@ -317,15 +320,31 @@ const online = (() => {
            setMode: (m, s) => { rankMode = m; if (s !== undefined) setScope(s); else renderRank(); } };
 })();
 
-/* Top 3 in de ranglijst: dun randje in goud, zilver of brons, en een kroontje bij nummer 1 (alleen met punten) */
+/* Gelijke stand = gedeelde plaats (update 12). Spelers die op alles gelijk staan waarop de ranglijst sorteert, krijgen
+   hetzelfde nummer, en de volgende plaats schuift door (1, 2, 2, 4), zoals bij sport. Week, altijd en leagues: gelijke punten
+   én evenveel gedetermineerde dagen. Vandaag: gelijke punten in dezelfde modus (expert gaat voor klassiek).
+   Binnen een gedeelde plaats blijft de volgorde van de server staan (op naam; bij vandaag wie het eerst klaar was), maar
+   die betekent niets meer. De beloningen voor de weekranglijst (mijlpalen podium en weekwinnaar) rekent de server op
+   dezelfde manier uit (techniek/supabase-017-update12.sql), dus iedereen op een gedeelde plaats krijgt dezelfde beloning. */
+const STAND_SLEUTEL = r => (+r.points || 0) + "|" + (+r.won || 0);
+const DAG_SLEUTEL = r => (+r.points || 0) + "|" + (r.expert ? 1 : 0);
+function plaatsen(rows, sleutel){
+  const k = rows.map(sleutel), out = [];
+  k.forEach((x, i) => out.push({ pos: i && x === k[i - 1] ? out[i - 1].pos : i + 1, gedeeld: (i > 0 && x === k[i - 1]) || (i < k.length - 1 && x === k[i + 1]) }));
+  return out;
+}
+const posHtml = p => `<span class="pos${p.gedeeld ? " gedeeld" : ""}"${p.gedeeld ? ` title="Gedeelde ${p.pos}e plaats" aria-label="Gedeelde ${p.pos}e plaats"` : ""}>${p.pos}${p.gedeeld ? `<small aria-hidden="true">gedeeld</small>` : ""}</span>`;
+
+/* Top 3 in de ranglijst: dun randje in goud, zilver of brons, en een kroontje bij nummer 1 (alleen met punten).
+   Bij een gedeelde plaats krijgen alle spelers op die plaats de rand (en bij nummer 1 allemaal de kroon). */
 const KROON = `<svg class="kroon" viewBox="0 0 24 16" aria-hidden="true"><path d="M2 14L1 4l6 4 5-7 5 7 6-4-1 10Z" fill="#e2b84e" stroke="#a8731b" stroke-width="1.2" stroke-linejoin="round"/><circle cx="12" cy="9.5" r="1.6" fill="#a3341f"/></svg>`;
 function podium(list){
   const rij = [...list.querySelectorAll(":scope > li")];
-  rij.slice(0, 3).forEach((li, i) => {
-    const pts = parseInt((li.querySelector(".pts") || {}).textContent, 10);
-    if (!(pts > 0)) return;
-    li.classList.add("podium", "p" + (i + 1));
-    if (i === 0){ const pos = li.querySelector(".pos"); if (pos && !pos.querySelector(".kroon")) pos.insertAdjacentHTML("afterbegin", KROON); }
+  rij.forEach((li, i) => {
+    const pts = parseInt((li.querySelector(".pts") || {}).textContent, 10), pos = +li.dataset.pos || i + 1;
+    if (!(pts > 0) || pos > 3) return;
+    li.classList.add("podium", "p" + pos);
+    if (pos === 1){ const pos = li.querySelector(".pos"); if (pos && !pos.querySelector(".kroon")) pos.insertAdjacentHTML("afterbegin", KROON); }
   });
 }
 function showRank(mode, scopeId){

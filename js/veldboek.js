@@ -321,6 +321,7 @@ function openPlate(n, from){
     <h3>Kenmerken</h3><dl class="traits">${traits}</dl>
     ${ks.map(k => `<h3>Waarnemingen uit ${ks.length > 1 ? "casus " + (k + 1) : "de casus"}</h3><ol class="cl">${t.cs[k].wn.map((c, i) => `<li><span class="caps" style="color:var(--ink-2)">${CLUE_TYPES[i]}</span><br>${esc(c)}</li>`).join("")}</ol>`).join("")}
     <div class="confuse"><span class="caps">Verwar niet met</span><p><b>${esc(xs.n)}.</b> ${esc(t.t)}</p></div>
+    ${bronRij(t)}
     <button class="reportbtn" id="repFromPlate">Klopt er iets niet? Meld een fout</button>`;
   plateReturn = from || null;
   $("plateView").hidden = false; $("closePlate").focus();

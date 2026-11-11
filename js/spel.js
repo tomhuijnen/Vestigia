@@ -251,6 +251,19 @@ function dagStats(st){
   try { const p = JSON.parse(localStorage.getItem("vestigia:prestaties")) || []; const x = p.find(q => q.id === "reeks"); server = x ? +x.waarde || 0 : 0; } catch(e){}
   return { played: dag.size, won: [...dag.values()].filter(Boolean).length, streak: r.cur, best: Math.max(r.best, server, r.cur) };
 }
+/* Links naar de soortpagina van de bron en naar foto's (update 12, data/bronnen.js); openen in een nieuw tabblad */
+const PIJL_UIT = `<svg aria-hidden="true" viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2H2v8h8V7M7 2h3v3M10 2L5.5 6.5"/></svg>`;
+const BRON_IC = {
+  bron: `<svg aria-hidden="true" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2.5 3.2c2-.8 3.8-.6 5.5.6 1.7-1.2 3.5-1.4 5.5-.6v9.6c-2-.8-3.8-.6-5.5.6-1.7-1.2-3.5-1.4-5.5-.6Z"/><path d="M8 3.8v9.6"/></svg>`,
+  foto: `<svg aria-hidden="true" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><rect x="2" y="4" width="12" height="9" rx="1.5"/><path d="M5.5 4l1-1.6h3L10.5 4"/><circle cx="8" cy="8.5" r="2.3"/></svg>`
+};
+function bronRij(t){
+  const ls = typeof bronLinks === "function" ? bronLinks(t) : [];
+  if (!ls.length) return "";
+  const lid = /^Europese/.test(t.n) ? t.n : t.n.toLowerCase();
+  return `<div class="bronrij"><span class="caps">Meer over de ${esc(lid)}</span><div class="bronlinks">${ls.map(l =>
+    `<a class="bronlink" href="${esc(l.url)}" target="_blank" rel="noopener">${BRON_IC[l.soort] || ""}<span>${esc(l.soort === "bron" ? "Soortpagina " + l.label : l.label)}</span>${PIJL_UIT}</a>`).join("")}</div></div>`;
+}
 function renderResult(){
   const card = $("resultCard"), card2 = $("resultCard2"), wrap = $("resultWrap");
   document.querySelector(".layout").classList.toggle("afgerond", S.status !== "playing");
@@ -285,6 +298,7 @@ function renderResult(){
     <dl class="traits">${traits}</dl>
     ${curCase().sl ? `<div class="sleutelbox"><span class="caps">Typisch ${esc(/^Europese/.test(t.n) ? t.n : t.n.toLowerCase())}</span><p>${esc(curCase().sl.t)}</p></div>` : ""}
     <div class="confuse"><span class="caps">Verwar niet met</span><p><b>${esc(xs.n)}.</b> ${S.guesses.includes(t.x) ? "Die soort heb je in deze casus ook geprobeerd. " : ""}${esc(t.t)}</p></div>
+    ${bronRij(t)}
     ${(S.newAwards || []).map(k => { const [kind, name] = awardLabel(k); return `<div class="awardnote"><span class="caps">Nieuwe ${kind.toLowerCase()}</span><b>${esc(name)}</b></div>`; }).join("")}
     ${ontdek ? ontdekPlaat(t) : `<p class="dexnote">${won ? `Plaat <b>nº ${dexNo(t.id)}</b> staat nu in je ${NAAM.vestiarium}.` : `Genoteerd als waargenomen in je ${NAAM.vestiarium} (nº ${dexNo(t.id)}).`} <button class="linklike" id="toDex">Open het ${NAAM.vestiarium}</button></p>`}
     <button class="reportbtn" id="repFromResult">Klopt er iets niet in deze casus? Meld een fout</button>`;
@@ -316,6 +330,10 @@ function renderResult(){
   if ($("inviteFromResult")) $("inviteFromResult").onclick = () => League.openUitnodigen();
   Profiel.toonWinst();
   if (typeof Levels !== "undefined") Levels.toonInResultaat();
+  const br = card.querySelector(".bronrij");
+  if (br && typeof Nieuw !== "undefined") Nieuw.blokjes("bronnen", [
+    { na: br, tekst: "Nieuw: lees meer over deze soort op de soortpagina van de bron, of bekijk foto's van het dier. De links openen in een nieuw tabblad." }
+  ], { wacht: 1600 });
 }
 
 function renderPips(){
@@ -343,7 +361,27 @@ function renderHead(){
   $("gBtn").disabled = !matchExact(inp.value) || S.status !== "playing";
 }
 
-function render(){ renderHead(); renderClues(); renderGrid(); renderPips(); renderResult(); }
+function render(){ renderHead(); renderClues(); renderGrid(); renderPips(); renderResult(); tipZoekgroepen(); }
+/* Eenmalige uitleg bij zoeken op een groep (update 12): bij de eerstvolgende casus die je speelt (dag of oefen), zodra er
+   geen pop-up, uitleg of openingsanimatie meer in beeld is. Daarna nooit meer (Nieuw.blokjes onthoudt het). */
+let zoekTipBezig = false;
+function tipZoekgroepen(){
+  if (zoekTipBezig || typeof Nieuw === "undefined" || S.status !== "playing") return;
+  try { if (localStorage.getItem("vestigia:nieuw:zoekgroepen")) return; } catch(e){ return; }
+  zoekTipBezig = true;
+  let poging = 0;
+  const probeer = () => {
+    const rij = document.querySelector(".det-row");
+    const klaar = VIEW === "game" && S.status === "playing" && rij && rij.offsetParent !== null
+      && !(typeof Wachtrij !== "undefined" && Wachtrij.ietsOpen()) && !document.querySelector(".nw-blokje");
+    if (!klaar){ if (++poging < 90) setTimeout(probeer, 2000); else zoekTipBezig = false; return; }
+    const n = typeof ZOEKGROEPEN !== "undefined" ? ZOEKGROEPEN.length : 60;
+    Nieuw.blokjes("zoekgroepen", [
+      { na: rij, tekst: `Nieuw: zoeken op groep. Typ bijvoorbeeld ‘vleermuis’ en je krijgt alle vleermuizen, ook de laatvlieger en de franjestaart, waar dat woord niet in de naam staat. Dat werkt voor ${n} groepen, zoals uil, hert, roofvogel, marter, salamander en vlinder.` }
+    ], { wacht: 900 }).finally(() => { zoekTipBezig = false; });
+  };
+  setTimeout(probeer, 1500);
+}
 
 /* ---------- autocomplete ----------
    Zoeken op Nederlandse én wetenschappelijke naam, met losse woordstukjes ("pleco aus", "gr bonte") en met
@@ -381,6 +419,21 @@ function zoekScore(q, x){
   if (qw.every(t => { const kt = fouten(t.length); return alle.some(w => w.startsWith(t) || (kt && (afstand(t, w.slice(0, t.length), kt) <= kt || afstand(t, w, kt) <= kt))); })) return 5;
   return -1;
 }
+/* Zoeken op een groep (update 12): ‘vlinder’, ‘hert’, ‘uil’, ‘roofvogel’ … geven alle soorten uit die groep (data/zoekgroepen.js).
+   Eerst groepen waarvan een woord precies klopt; anders groepen waarvan een woord begint met wat je typte (vanaf 4 letters);
+   anders met een tikfout (vanaf 5 letters). Leden van de groep komen direct na soorten waarvan de naam zelf begint met wat je typte. */
+const ZG = (typeof ZOEKGROEPEN === "undefined" ? [] : ZOEKGROEPEN).map(z => {
+  const kies = new Set(KIESBAAR.map(x => x.id));
+  const ids = z.g ? KIESBAAR.filter(x => x.g === z.g).map(x => x.id) : (z.ids || []).filter(id => kies.has(id));
+  return { naam: z.naam, wn: z.w.map(norm), ids: new Set(ids) };
+}).filter(z => z.ids.size);
+function zoekGroepen(q){
+  if (!q || q.length < 3) return [];
+  let gs = ZG.filter(z => z.wn.includes(q));
+  if (!gs.length && q.length >= 4) gs = ZG.filter(z => z.wn.some(w => w.startsWith(q)));
+  if (!gs.length && q.length >= 5){ const k = fouten(q.replace(/ /g, "").length); gs = ZG.filter(z => z.wn.some(w => afstand(q, w, k) <= k)); }
+  return gs;
+}
 let optList = [], optIdx = -1;
 function matchExact(v){
   const q = norm(v); if (!q) return null;
@@ -391,19 +444,22 @@ function closeOpts(){ $("gOpts").hidden = true; $("gInput").setAttribute("aria-e
 function openOpts(){
   const q = norm($("gInput").value);
   if (!q){ closeOpts(); return; }
-  const used = new Set(S.guesses);
-  optList = KIESBAAR.filter(x => !used.has(x.id)).map(x => ({ x, score: zoekScore(q, x) }))
-    .filter(o => o.score >= 0).sort((p, q2) => p.score - q2.score || p.x.n.length - q2.x.n.length || p.x.n.localeCompare(q2.x.n, "nl")).slice(0, 30).map(o => o.x);   /* gelijke score: korte namen eerst (‘muis’ → muizen vóór vleermuizen); lijst scrollt */
+  const used = new Set(S.guesses), gs = zoekGroepen(q), inGroep = new Set(gs.flatMap(z => [...z.ids]));
+  const score = x => { const s = zoekScore(q, x); return inGroep.has(x.id) ? (s < 0 ? 1.5 : Math.min(s, 1.5)) : s; };
+  optList = KIESBAAR.filter(x => !used.has(x.id)).map(x => ({ x, score: score(x) }))
+    .filter(o => o.score >= 0).sort((p, q2) => p.score - q2.score || p.x.n.length - q2.x.n.length || p.x.n.localeCompare(q2.x.n, "nl")).slice(0, gs.length ? 80 : 30).map(o => o.x);   /* gelijke score: korte namen eerst (‘muis’ → muizen vóór vleermuizen); lijst scrollt */
   const ul = $("gOpts");
   if (!optList.length){ ul.innerHTML = `<li aria-disabled="true"><span>Geen soort gevonden</span></li>`; ul.hidden = false; optIdx = -1; return; }
   optIdx = 0;
-  ul.innerHTML = optList.map((x, i) => `<li role="option" id="opt${i}" data-n="${esc(x.id)}" aria-selected="${i === optIdx}"><span>${esc(x.n)}</span><i>${esc(x.s)}</i></li>`).join("");
+  const nGroep = optList.filter(x => inGroep.has(x.id)).length;
+  const kop = gs.length && nGroep ? `<li class="optgroep" role="presentation"><span>${esc(gs.map((z, i) => i ? z.naam.toLowerCase() : z.naam).join(" en "))}</span><i>${nGroep} ${nGroep === 1 ? "soort" : "soorten"}</i></li>` : "";
+  ul.innerHTML = kop + optList.map((x, i) => `<li role="option" id="opt${i}" data-n="${esc(x.id)}" aria-selected="${i === optIdx}"><span>${esc(x.n)}</span><i>${esc(x.s)}</i></li>`).join("");
   ul.hidden = false; $("gInput").setAttribute("aria-expanded","true"); $("gInput").setAttribute("aria-activedescendant","opt0");
 }
 function moveOpt(d){
   if (!optList.length) return;
   optIdx = (optIdx + d + optList.length) % optList.length;
-  [...$("gOpts").children].forEach((li, i) => li.setAttribute("aria-selected", i === optIdx));
+  [...$("gOpts").querySelectorAll('[role="option"]')].forEach((li, i) => li.setAttribute("aria-selected", i === optIdx));
   $("gInput").setAttribute("aria-activedescendant", "opt" + optIdx);
   $("opt" + optIdx).scrollIntoView({ block:"nearest" });
 }

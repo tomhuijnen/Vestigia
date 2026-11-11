@@ -34,10 +34,13 @@ Determinatiespel over beschermde fauna van Nederland: herken de soort aan habita
 | `data/dwaalgasten.js` | de tien dwaalgasten: naam, waar ze normaal leven en ‘Gezien in Nederland’ (update 9); vragen en antwoorden staan in Supabase |
 | `js/dwaalgast.js` | dwaalgast van de maand: rode pop-up, drie vragen, uitslag, en de verborgen pagina Dwaalgasten in het Vestiarium; voorbeeld met `?dwaalgast=demo&gast=lynx` (update 9) |
 | `js/levels.js` | levels en ervaringspunten (update 10, vanaf 16 november 2026): ring om je avatar met levelbolletje, ‘+XP’ na een spel, level-omhoog-pop-up, levelkaart in Mijn profiel; voorbeeld met `?levels=demo` |
+| `data/zoekgroepen.js` | zoeken op een groep: ‘uil’, ‘hert’, ‘vlinder’, ‘roofvogel’ … geven alle soorten uit die groep (update 12) |
+| `data/bronnen.js` | links na het determineren: soortpagina van de bron (Zoogdiervereniging, RAVON, Vogelbescherming, De Vlinderstichting) en foto's op Wikimedia Commons; afwijkende adressen in `BRON_LOS` (update 12) |
+| `js/statistiek.js` | statistieken via het menu: gespeeld, goed/fout, vaakst tegengekomen en ingevoerd, dwaalgasten, actieve maanden (update 12) |
 | `js/app.js` | spelregels, kop, installeren en opstarten |
 | `sw.js` | service worker (offline en updates) |
 
-De databasescripts (001 t/m 016) staan bewust niet in deze repo, maar in het Project Vestigia.
+De databasescripts (001 t/m 017) staan bewust niet in deze repo, maar in het Project Vestigia.
 
 ## Werkwijze bij een wijziging
 

@@ -55,8 +55,8 @@ const League = (() => {
     const l = huidige(); if (!l) return;
     const today = todayIndex(), w = weekStartDay(today);
     const rows = await online.rpc("league_board", args({ p_league: l.id, p_from: w, p_to: today }));
-    const pos = rows.findIndex(r => r.name === p().name);
-    zet(K.tile, { id: l.id, w, pos: pos + 1, n: rows.length, pts: pos >= 0 ? +rows[pos].points : 0 });
+    const pos = rows.findIndex(r => r.name === p().name), pl = plaatsen(rows, STAND_SLEUTEL);
+    zet(K.tile, { id: l.id, w, pos: pos >= 0 ? pl[pos].pos : 0, gedeeld: pos >= 0 && pl[pos].gedeeld, n: rows.length, pts: pos >= 0 ? +rows[pos].points : 0 });
     renderTiles();
   }
   async function bijwerken(){

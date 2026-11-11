@@ -3,7 +3,7 @@
 
 /* ---------- welk scherm staat open ---------- */
 let VIEW = "game";
-const VIEWS = { game: "gameView", dex: "dexView", rank: "rankView", league: "leagueView", profiel: "profielView", shop: "shopView" };
+const VIEWS = { game: "gameView", dex: "dexView", rank: "rankView", league: "leagueView", profiel: "profielView", shop: "shopView", stats: "statsView" };
 /* Bij een schermwissel schuift het nieuwe scherm zacht in beeld (niet bij ‘minder beweging’). */
 function inBeeld(el){
   if (!el || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -86,13 +86,13 @@ const TILES = [
     let pts = 0; for (let i = w; i <= today; i++) pts += dayPoints(st, i);
     let sub = "punten uit de dagcasus";
     if (online.enabled && !online.player()) sub = "kies een spelersnaam";
-    else { try { const c = JSON.parse(localStorage.getItem("vestigia:week")); if (c && c.w === w){ pts = Math.max(pts, c.pts || 0); if (c.pos > 0) sub = `${c.pos}e van ${c.n} ${c.n === 1 ? "speler" : "spelers"}`; } } catch(e){} }
+    else { try { const c = JSON.parse(localStorage.getItem("vestigia:week")); if (c && c.w === w){ pts = Math.max(pts, c.pts || 0); if (c.pos > 0) sub = `${c.gedeeld ? "gedeeld " : ""}${c.pos}e van ${c.n} ${c.n === 1 ? "speler" : "spelers"}`; } } catch(e){} }
     return { label: "Deze week", value: `${pts} ${pts === 1 ? "punt" : "punten"}`, sub };
   }},
   /* alleen als je in een league zit: je plaats deze week in de league die je het laatst bekeek */
   { id: "league", show: () => !!League.tegel(), go: () => { const t = League.tegel(); showRank("week", t && t.league.id); }, render(){
     const t = League.tegel(), s = t.stand;
-    return { label: t.league.name, value: s && s.pos > 0 ? `${s.pos}e van ${s.n}` : "–", sub: s ? `deze week · ${s.pts} ${s.pts === 1 ? "punt" : "punten"}` : "deze week" };
+    return { label: t.league.name, value: s && s.pos > 0 ? `${s.pos}e van ${s.n}` : "–", sub: s ? `${s.gedeeld ? "gedeeld · " : ""}deze week · ${s.pts} ${s.pts === 1 ? "punt" : "punten"}` : "deze week" };
   }},
   { id: "dex", go: () => showDex(), render(st){
     const dex = st.dex || {}, found = TARGETS.filter(t => dex[t.id] && dex[t.id].w > 0).length;
@@ -285,7 +285,8 @@ const MENU_GO = {
   install: () => { closeMenu(true); installApp(); },
   player: () => { if (online.enabled && online.player()) return showProfiel(); showRank(); setTimeout(() => $("pName") && $("pName").focus(), 60); },
   profiel: () => showProfiel(),
-  shop: () => showShop()
+  shop: () => showShop(),
+  stats: () => Statistiek.toon()
 };
 $("menu").addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b && MENU_GO[b.dataset.go]) MENU_GO[b.dataset.go](); });
 
