@@ -320,3 +320,29 @@ function tipsVoor(targetId, guesses){
   }
   return uit;
 }
+
+/* De hersteltoken (update 9): een munt van groene jade met een gouden rand en een vierkant gat. Elke tekening krijgt
+   eigen id's voor de verlopen, omdat er meer munten tegelijk op het scherm kunnen staan. */
+let _muntNr = 0;
+function herstelMunt(size, cls){
+  const i = "hm" + (++_muntNr);
+  return `<svg class="herstelmunt ${cls || ""}" aria-hidden="true" viewBox="0 0 48 48" width="${size}" height="${size}"><defs>`
+   + `<linearGradient id="${i}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset=".35" stop-color="#e2b64e"/><stop offset=".7" stop-color="#a87a26"/><stop offset="1" stop-color="#f0cf78"/></linearGradient>`
+   + `<radialGradient id="${i}j" cx="36%" cy="30%" r="78%"><stop offset="0" stop-color="#d8f3cf"/><stop offset=".4" stop-color="#79c193"/><stop offset=".8" stop-color="#2f7a55"/><stop offset="1" stop-color="#1f5a3e"/></radialGradient>`
+   + `<mask id="${i}m"><rect width="48" height="48" fill="#fff"/><rect x="19.5" y="19.5" width="9" height="9" fill="#000"/></mask></defs>`
+   + `<g mask="url(#${i}m)"><circle cx="24" cy="24" r="22.4" fill="url(#${i}g)" stroke="#7a5a1c" stroke-width=".8"/>`
+   + `<circle cx="24" cy="24" r="18.4" fill="url(#${i}j)" stroke="#7a5a1c" stroke-width=".7"/>`
+   + `<path d="M12 30c5-3 8-1 12-4s6-8 11-8" stroke="#e8fbe2" stroke-width=".7" fill="none" opacity=".35"/><path d="M15 14c3 2 4 5 8 5" stroke="#e8fbe2" stroke-width=".6" fill="none" opacity=".3"/>`
+   + `<rect x="16.8" y="16.8" width="14.4" height="14.4" fill="url(#${i}g)" stroke="#7a5a1c" stroke-width=".7"/><rect x="18.2" y="18.2" width="11.6" height="11.6" fill="none" stroke="#fff3c4" stroke-width=".5" opacity=".8"/>`
+   + `<ellipse cx="17" cy="13.5" rx="7" ry="3.2" transform="rotate(-35 17 13.5)" fill="#fff" opacity=".38"/>`
+   + `<path d="M3.5 21a20.8 20.8 0 0 1 10-15.5" stroke="#fffbe8" stroke-width="1.3" stroke-linecap="round" fill="none" opacity=".75"/></g></svg>`;
+}
+/* Het grote moment rond een zeldzame munt: gloed, draaiende stralen en twinkelende sterretjes (uit bij ‘minder beweging’) */
+function herstelMuntGroot(size){
+  const stralen = Array.from({ length: 12 }, (_, k) => { const a = k * Math.PI / 6, c = 85;
+    const p = d => `${(c + 90 * Math.cos(a + d)).toFixed(1)} ${(c + 90 * Math.sin(a + d)).toFixed(1)}`;
+    return `<path d="M85 85L${p(-.09)}L${p(.09)}Z"/>`; }).join("");
+  const ster = (x, y, s, d) => `<svg class="hm-ster" aria-hidden="true" viewBox="0 0 10 10" width="${s}" height="${s}" style="left:${x}%;top:${y}%;animation-delay:${d}s"><path d="M5 0l1.2 3.8L10 5 6.2 6.2 5 10 3.8 6.2 0 5l3.8-1.2Z" fill="#ffe9a3"/></svg>`;
+  return `<div class="hm-podium"><div class="hm-gloed"></div><svg class="hm-stralen" aria-hidden="true" viewBox="0 0 170 170"><g fill="#e8c766" opacity=".35">${stralen}</g></svg>`
+    + `<div class="hm-zweef">${herstelMunt(size || 104)}</div>${ster(10, 17, 14, 0)}${ster(82, 13, 10, .6)}${ster(86, 75, 15, 1.1)}${ster(13, 78, 9, 1.6)}${ster(47, 2, 8, .9)}</div>`;
+}

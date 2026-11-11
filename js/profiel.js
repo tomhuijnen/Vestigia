@@ -186,7 +186,7 @@ const Profiel = (() => {
   const TABS = [["avatar", "Avatar"], ["titel", "Ondertitel"], ["lijst", "Lijst"], ["kleur", "Kleur"]];
   const VELD = { avatar: "avatar", titel: "subtitle", lijst: "frame", kleur: "color" };
   const OPBOUW = [["dagcasus", "Dagcasussen"], ["reeksen", "Reeksen van 7 dagen"], ["veldweken", "Veldweken"], ["platen", `Platen in het ${NAAM.vestiarium}`],
-                  ["trofeeen", "Titels en medailles"], ["uitnodigingen", "Uitgenodigde spelers"], ["prestaties", "Prestaties"], ["mijlpalen", "Mijlpalen"], ["minispellen", "Minispellen"], ["advent", "Adventkalender"], ["dwaalgasten", "Dwaalgasten"]];
+                  ["trofeeen", "Titels en medailles"], ["uitnodigingen", "Uitgenodigde spelers"], ["prestaties", "Prestaties"], ["mijlpalen", "Mijlpalen"], ["minispellen", "Minigames"], ["advent", "Adventkalender"], ["dwaalgasten", "Dwaalgasten"]];
   const zonderNaam = (body, wat) => {
     body.innerHTML = `<div class="playerbox"><p><b>Kies eerst een spelersnaam.</b> ${wat}</p>
       <div class="row2"><button class="btn" id="pfNaam">Kies een spelersnaam</button></div></div>`;
@@ -320,7 +320,7 @@ const Profiel = (() => {
     body.innerHTML = `
       <div class="dexfilters" id="shopTabs">${TABS.map(([k, l]) => `<button class="chipbtn" data-t="${k}" aria-pressed="${shopTab === k}">${l === "Avatar" ? "Avatars" : l === "Ondertitel" ? "Ondertitels" : l === "Lijst" ? "Lijsten" : "Kleuren"}</button>`).join("")}</div>
       <div id="shopOpties" class="pfopties${shopTab === "titel" ? " pftitels" : ""}">${w && winkel ? shopOpties() : `<p class="fine">Laden…</p>`}</div>
-      <span class="msg" id="shopMsg"></span>`;
+      <span class="msg" id="shopMsg" aria-live="polite"></span>`;
     $("shopTabs").querySelectorAll(".chipbtn").forEach(b => b.onclick = () => { shopTab = b.dataset.t; tekenShop(); });
     $("shopOpties").querySelectorAll("button.pfopt:not(.dicht)").forEach(b => b.onclick = () => koop(b));
   }
@@ -354,9 +354,11 @@ const Profiel = (() => {
   async function koop(b){
     const item = b.dataset.item, prijs = +b.dataset.prijs || 0, w = wallet() || { saldo: 0 }, msg = $("shopMsg");
     if (prijs === 0 || bezit().has(item)) return kies(shopTab, b.dataset.v || null, msg);     // gratis of al in bezit: meteen gebruiken
-    if (w.saldo < prijs){                                            // klein, rood en na 3 seconden weer weg
-      msg.textContent = `Je hebt nog ${prijs - w.saldo} eikels nodig.`; msg.classList.add("tekort");
-      clearTimeout(koop.t); koop.t = setTimeout(() => { if (msg.isConnected){ msg.textContent = ""; msg.classList.remove("tekort"); } }, 3000); return; }
+    if (w.saldo < prijs){                                            // rood op de kaart zelf (daar kijk je al), na 3 seconden weer weg
+      const ps = b.querySelector(".ps"), oud = ps.innerHTML;
+      ps.textContent = `nog ${prijs - w.saldo} nodig`; b.classList.remove("tekort"); void b.offsetWidth; b.classList.add("tekort");
+      msg.textContent = `Je hebt nog ${prijs - w.saldo} eikels nodig.`; msg.classList.add("tekort", "alleenvoorlezen");
+      clearTimeout(b._t); b._t = setTimeout(() => { if (b.isConnected){ ps.innerHTML = oud; b.classList.remove("tekort"); } if (msg.isConnected){ msg.textContent = ""; msg.classList.remove("tekort", "alleenvoorlezen"); } }, 3000); return; }
     msg.classList.remove("tekort");
     if (!b.dataset.zeker){ b.dataset.zeker = "1"; b.querySelector(".ps").textContent = `kopen voor ${prijs}?`; setTimeout(() => { if (b.isConnected){ delete b.dataset.zeker; b.querySelector(".ps").innerHTML = `${EIKEL} ${prijs}`; } }, 4000); return; }
     b.disabled = true; msg.textContent = "Even geduld…";
@@ -368,11 +370,12 @@ const Profiel = (() => {
   function beloning(id){ const r = (lees(K.beloning) || []).find(x => x.id === id); return r ? [r.brons, r.zilver, r.goud] : null; }
   /* categorie per prestatie: uit de database (prestatie_meta), anders deze vaste indeling */
   const CAT_VAST = { eenkeer:"Determineren", expert1:"Determineren", tweeling:"Determineren", dagen:"Determineren",
-                     reeks:"Volharding", maanden:"Volharding", veldwerker:"Volharding",
-                     duel6:"Minispellen", raadsel1:"Minispellen", spelersduel:"Minispellen", uitnodiging:"Samen" };
-  const CAT_VOLG = ["Determineren", "Specialist", "Volharding", "Minispellen", "Samen", "Overig"];
+                     reeks:"Volhouden", maanden:"Volhouden", veldwerker:"Volhouden",
+                     duel6:"Minigames", raadsel1:"Minigames", spelersduel:"Minigames", uitnodiging:"Samen" };
+  const CAT_VOLG = ["Determineren", "Specialist", "Volhouden", "Minigames", "Samen", "Overig"];
+  const CAT_NIEUW = { Volharding: "Volhouden", Minispellen: "Minigames" };     // oude namen uit de database (vóór supabase-014)
   const categorie = id => { const r = (lees(K.beloning) || []).find(x => x.id === id);
-    return (r && r.categorie) || CAT_VAST[id] || (id.startsWith("spec_") ? "Specialist" : "Overig"); };
+    return (r && r.categorie && (CAT_NIEUW[r.categorie] || r.categorie)) || CAT_VAST[id] || (id.startsWith("spec_") ? "Specialist" : "Overig"); };
   function prestatieRij(r){
     const doel = r.niveau >= 3 ? r.goud : [r.brons, r.zilver, r.goud][r.niveau], frac = Math.min(1, r.waarde / doel);
     return `<div class="pr n${r.niveau}"><span class="prniv" aria-label="${NIV[r.niveau] || "nog niet behaald"}">${r.niveau ? NIV[r.niveau][0].toUpperCase() : ""}</span>

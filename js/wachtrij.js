@@ -3,13 +3,14 @@
    de vraag om een naam en een leaguelink) kijkt de wachtrij welke pop-ups nu iets te melden hebben, en toont alleen
    de belangrijkste. De rest schuift door naar de volgende keer dat je de app opent.
    Volgorde (laag = eerst): 1 dwaalgast (update 9), 2 adventkalender, 3 herinnering om een avatar te kiezen.
+   Uitleg bij een nieuw onderdeel (js/nieuw.js) komt net vóór dat onderdeel; daarna gaat de wachtrij door.
    Staat er al iets open (uitleg, een league-vraag, een melding), dan wacht alles tot de volgende keer. */
 "use strict";
 
 const Wachtrij = (() => {
   const kandidaten = [];
   let gedaan = false;
-  /** k = { id, prio, kan: () => boolean | Promise<boolean>, toon: () => void } */
+  /** k = { id, prio, kan: () => boolean | Promise<boolean>, toon: () => void | Promise, doorgaan?: true } */
   const voeg = k => { kandidaten.push(k); };
   const ietsOpen = () => !!document.querySelector(".uitleg") || !!document.querySelector("#opening")
     || [...document.querySelectorAll(".overlay, #speelKring")].some(el => !el.hidden);
@@ -24,6 +25,12 @@ const Wachtrij = (() => {
       try { ok = await k.kan(); } catch(e){ ok = false; }
       if (!ok) continue;
       if (ietsOpen()) return;                  // er kwam intussen iets anders in beeld: volgende keer
+      if (k.doorgaan){                          // uitleg bij iets nieuws: eerst wegklikken, dan gaat de wachtrij door
+        try { await k.toon(); } catch(e){}
+        await wacht(350);
+        if (ietsOpen()) return;
+        continue;
+      }
       try { k.toon(); } catch(e){}
       return;                                   // nooit twee tegelijk
     }

@@ -18,7 +18,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Karla:ital,wght@0,400;0,500;0,700;1,400&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
 <!-- thema: eigen keuze (licht/donker) of anders de instelling van het toestel; vóór de opmaak, dus geen witte flits -->
 <script>(function(){var t=null;try{t=localStorage.getItem("vestigia:thema")}catch(e){}var d=t?t==="donker":!!(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches);if(d)document.documentElement.classList.add("donker")})()</script>
-<link rel="stylesheet" href="css/vestigia.css?v=202611101522">
+<link rel="stylesheet" href="css/vestigia.css?v=202611111014">
 </head>
 <body>
 <!-- openingsanimatie: staat meteen in beeld (geen witte flits), en is in dezelfde sessie al gezien → niet tonen -->
@@ -297,6 +297,7 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
   <div class="sheet">
     <div class="top"><h2 id="helpH">Spelregels</h2><button class="closebtn" id="closeHelp">Sluiten</button></div>
     <p class="helpuitleg"><button class="btn line" id="helpUitleg" type="button">Bekijk de uitleg opnieuw</button> <span class="fine">Een korte rondleiding langs het spel in vijf stappen.</span></p>
+    <div class="helpnieuw"><span class="caps">Uitleg bij nieuwe onderdelen</span><div class="helpnieuwrij" id="helpNieuw"></div></div>
     <p>Elke casus is een waarneming in het veld. Je begint met de locatie en het seizoen. Bij elke foute determinatie komt er een waarneming bij. De waarnemingen zijn kaal: je krijgt alleen wat je ziet of hoort, de interpretatie is aan jou. Je hebt vijf pogingen, en het kan best dat je de soort niet vindt.</p>
     <h3>Tips</h3>
     <p>Na elke foute determinatie krijg je één tip over de gezochte soort: eerst iets wat jouw soort en de gezochte soort gemeen hebben, en als dat er niet meer is, iets waarin ze verschillen. Een tip komt nooit twee keer. Wie dezelfde gokken doet, krijgt dezelfde tips.</p>
@@ -318,10 +319,12 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
     <p>Heb je alle soorten van een diergroep gedetermineerd, dan verdien je de titel van die groep. Met alle <span data-tel="doelsoorten">100</span> soorten word je Veldheer van Vestigia. De <span data-tel="medailles">vijf</span> meest zeldzame soorten leveren een medaille op; welke dat zijn, zie je pas als je ze hebt gevonden.</p>
     <h3>Veldweek</h3>
     <p>Eén keer per maand, in de eerste volledige week (maandag tot en met zondag), hebben alle dagcasussen één thema, zoals ‘Nachtdieren’ of ‘Langs de waterkant’. Twee dagen vooraf zie je dat er een veldweek aankomt; het thema zie je pas op maandag. Elke gespeelde dagcasus levert een stempel op. Alle zeven: +25 eikels, vijf of zes: +10. De puntentelling voor de ranglijst verandert niet.</p>
+    <h3>Dwaalgasten</h3>
+    <p>Met een spelersnaam duikt er één keer per maand een dwaalgast bij je op: een zeldzaam dier dat normaal niet in Nederland leeft. De dag en het dier verschillen per speler. Beantwoord drie vragen over het dier goed, dan komt hij bij de dwaalgasten in je <span data-naam="vestiarium">Vestiarium</span>, met 50 eikels en zijn avatar. Is een antwoord fout, dan dwaalt hij weg en blijft er een vraagteken achter.</p>
     <h3>Ranglijst</h3>
     <p>Met een spelersnaam doe je mee aan de ranglijst. Alleen je eerste poging aan de dagcasus telt: 5 punten in één poging, 1 punt bij de vijfde. In de expertmodus krijg je 6 punten als je na één waarneming goed zit. Klassiek en expert hebben dezelfde casus; daarom telt alleen de modus die je die dag als eerste speelt.</p>
     <h3>Prestaties en mijlpalen</h3>
-    <p>Prestaties hebben drie niveaus (brons, zilver en goud) en staan per categorie, zoals Determineren, Specialist en Volharding. Goud levert een ondertitel op. Mijlpalen haal je maar één keer: bijvoorbeeld een week in de top 3 of als nummer 1 van de weekranglijst. Een week telt zodra hij voorbij is. Elke mijlpaal levert eenmalig eikels op, de grootste ook een ondertitel. Wat je eenmaal behaald hebt, raak je nooit meer kwijt.</p>
+    <p>Prestaties hebben drie niveaus (brons, zilver en goud) en staan per categorie, zoals Determineren, Specialist en Volhouden. Goud levert een ondertitel op. Mijlpalen haal je maar één keer: bijvoorbeeld een week in de top 3 of als nummer 1 van de weekranglijst. Een week telt zodra hij voorbij is. Elke mijlpaal levert eenmalig eikels op, de grootste ook een ondertitel. Wat je eenmaal behaald hebt, raak je nooit meer kwijt.</p>
     <h3>Installeren</h3>
     <ul>
       <li><b>iPhone:</b> open Vestigia in Safari, tik op Deel en kies ‘Zet op beginscherm’. Let op: de app op je beginscherm heeft een eigen geheugen, los van Safari. Had je in Safari al een spelersnaam? Kopieer dan eerst je spelerscode (Mijn profiel) en plak hem in de app. Kies daar geen nieuwe naam.</li>
@@ -379,29 +382,30 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
 </div>
 
 <script src="config.js"></script>
-<script src="data/teksten.js?v=202611101522"></script>
-<script src="data/soorten.js?v=202611101522"></script>
-<script src="data/sporen.js?v=202611101522"></script>
-<script src="data/dagschema.js?v=202611101522"></script>
-<script src="data/veldweken.js?v=202611101522"></script>
-<script src="data/toelichting.js?v=202611101522"></script>
-<script src="js/kern.js?v=202611101522"></script>
-<script src="js/spel.js?v=202611101522"></script>
-<script src="js/veldboek.js?v=202611101522"></script>
-<script src="js/melden.js?v=202611101522"></script>
-<script src="js/kop.js?v=202611101522"></script>
-<script src="js/spelen.js?v=202611101522"></script>
-<script src="js/opening.js?v=202611101522"></script>
-<script src="js/uitleg.js?v=202611101522"></script>
-<script src="js/online.js?v=202611101522"></script>
-<script src="js/league.js?v=202611101522"></script>
-<script src="data/avatars.js?v=202611101522"></script>
-<script src="js/profiel.js?v=202611101522"></script>
-<script src="data/advent.js?v=202611101522"></script>
-<script src="js/wachtrij.js?v=202611101522"></script>
-<script src="js/kerst.js?v=202611101522"></script>
-<script src="data/dwaalgasten.js?v=202611101522"></script>
-<script src="js/dwaalgast.js?v=202611101522"></script>
-<script src="js/app.js?v=202611101522"></script>
+<script src="data/teksten.js?v=202611111014"></script>
+<script src="data/soorten.js?v=202611111014"></script>
+<script src="data/sporen.js?v=202611111014"></script>
+<script src="data/dagschema.js?v=202611111014"></script>
+<script src="data/veldweken.js?v=202611111014"></script>
+<script src="data/toelichting.js?v=202611111014"></script>
+<script src="js/kern.js?v=202611111014"></script>
+<script src="js/spel.js?v=202611111014"></script>
+<script src="js/veldboek.js?v=202611111014"></script>
+<script src="js/melden.js?v=202611111014"></script>
+<script src="js/kop.js?v=202611111014"></script>
+<script src="js/spelen.js?v=202611111014"></script>
+<script src="js/opening.js?v=202611111014"></script>
+<script src="js/uitleg.js?v=202611111014"></script>
+<script src="js/online.js?v=202611111014"></script>
+<script src="js/league.js?v=202611111014"></script>
+<script src="data/avatars.js?v=202611111014"></script>
+<script src="js/profiel.js?v=202611111014"></script>
+<script src="data/advent.js?v=202611111014"></script>
+<script src="js/wachtrij.js?v=202611111014"></script>
+<script src="js/kerst.js?v=202611111014"></script>
+<script src="data/dwaalgasten.js?v=202611111014"></script>
+<script src="js/dwaalgast.js?v=202611111014"></script>
+<script src="js/nieuw.js?v=202611111014"></script>
+<script src="js/app.js?v=202611111014"></script>
 </body>
 </html>
