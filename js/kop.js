@@ -220,10 +220,13 @@ function renderMenu(){
     if ($(id).dataset.av === sleutel && $(id).firstChild) return;
     $(id).innerHTML = p ? avatarSVG(Profiel.mijn(), "avatar kop") : POPPETJE; $(id).dataset.av = sleutel;
   });
+  /* levels (update 10): de rand om je avatar is een voortgangsring met een levelbolletje */
+  if (typeof Levels !== "undefined") ["menuBtn", "slimMenu"].forEach(id => Levels.knop($(id)));
+  const lv = p && typeof Levels !== "undefined" && Levels.zichtbaar() ? Levels.stand().level : 0;
   const w = p && (() => { try { return JSON.parse(localStorage.getItem("vestigia:wallet")); } catch(e){ return null; } })();
   mp.toggleAttribute("aria-current", VIEW === "profiel");
   mp.innerHTML = p
-    ? `${avatarSVG(Profiel.mijn(), "avatar inmenu")}<span><b>${esc(p.name)}</b><small>Mijn profiel${w ? ` · ${w.saldo} eikels` : ""}</small></span>`
+    ? `${avatarSVG(Profiel.mijn(), "avatar inmenu")}<span><b>${esc(p.name)}</b><small>Mijn profiel${lv ? ` · level ${lv}` : ""}${w ? ` · ${w.saldo} eikels` : ""}</small></span>`
     : `<span class="av" aria-hidden="true">?</span><span><b>Kies een spelersnaam</b><small>en speel mee in de ranglijst</small></span>`;
 }
 const setInert = on => {

@@ -1281,3 +1281,116 @@ html.donker .oefenen .toelbtn[aria-expanded="true"]{background:#c19358; color:#2
 html.donker .nw-blokje{background:#3c6a4f}
 html.donker .nw-blokje.rood{background:#8a1a22}
 @media (prefers-reduced-motion:reduce){ .nw-blokje, .nw-blokje.weg{animation:none} }
+
+/* ---------- update 10: levels en ervaringspunten ---------- */
+:root{--lv-ring:#c6e98a; --lv-track:rgba(237,251,226,.38); --lv-nr:#c6e98a; --lv-nr-ink:#1f3a2a; --lv-rand:#3b6149; --lv-licht:#4b7a5e; --lv-spoor:#e7ece8}
+/* de knoppen rechtsboven: de rand wordt een voortgangsring met een levelbolletje linksonder */
+.avbtn.metlevel{position:relative; overflow:visible; border:0; padding:3px; width:48px; height:48px; flex-basis:48px;
+  background:conic-gradient(var(--lv-ring) 0 var(--p, 0%), var(--lv-track) var(--p, 0%) 100%)}
+.avbtn.metlevel svg.avatar.kop{border-radius:50%; box-shadow:0 0 0 2px var(--lv-rand); background:var(--mint)}
+.slimbar .avbtn.metlevel{width:40px; height:40px; flex-basis:40px}
+.lvnr{position:absolute; left:-5px; bottom:-3px; min-width:20px; height:19px; padding:0 5px; border-radius:10px; background:var(--lv-nr); color:var(--lv-nr-ink);
+  border:2px solid var(--lv-rand); font:700 11px/15px var(--display); text-align:center; font-variant-numeric:tabular-nums; pointer-events:none}
+.slimbar .lvnr{min-width:18px; height:17px; font-size:10px; line-height:13px; padding:0 4px}
+.oefenen .masthead, .oefenen .slimbar{--lv-rand:#6e4a1d}
+/* ring om een avatar in profiel en ranglijst */
+.lvring{position:relative; display:inline-grid; place-items:center; border-radius:50%; padding:4px; flex:0 0 auto;
+  background:conic-gradient(var(--lv-licht) 0 var(--p, 0%), var(--lv-spoor) var(--p, 0%) 100%)}
+.lvring > svg.avatar{box-shadow:0 0 0 3px var(--paper)}
+.lvring .lvnr{border-color:var(--paper); background:var(--lv-nr); left:-4px; bottom:-2px}
+.lvring.groot{padding:5px}
+.lvring.groot .lvnr{min-width:28px; height:25px; font-size:14px; line-height:21px; border-radius:13px}
+.lvring.klein{padding:2px; width:34px; height:34px}
+.lvring.klein > svg.avatar{width:30px; height:30px; box-shadow:0 0 0 1.5px var(--paper)}
+.lvring.klein .lvnr{min-width:15px; height:14px; font-size:8.5px; line-height:11px; padding:0 3px; border-width:1.5px; left:-4px; bottom:-3px}
+.ranklist .rav{position:relative}
+/* het XP-blok in het resultaat */
+.xpblok{border:1px solid var(--rule); border-radius:12px; padding:12px 14px; display:grid; gap:8px; background:var(--paper)}
+.xpkop{display:flex; justify-content:space-between; align-items:baseline; gap:10px}
+.xpkop h3{margin:0; font-size:.72rem}
+.xptot{font:700 1.08rem var(--display); color:var(--green-d)}
+.xptot small{font:600 .7rem var(--caps); text-transform:uppercase; letter-spacing:.05em; color:var(--ink-2); margin-left:4px}
+.xpchips{display:flex; flex-wrap:wrap; gap:6px; font-size:.82rem}
+.xpchip{background:var(--leaf); border-radius:999px; padding:3px 9px}
+.xpchip.herk{background:var(--mint); box-shadow:0 0 0 1px #c9e3c4 inset}
+.xpchip.herk b{color:var(--green-d)}
+.xpregel{display:flex; justify-content:space-between; gap:10px; font-size:.82rem; color:var(--ink-2)}
+.xpregel b{color:var(--ink)}
+.xptal{font-variant-numeric:tabular-nums; color:var(--ink-2)}
+.xpbalk{display:block; position:relative; height:7px; border-radius:4px; background:var(--lv-spoor); overflow:hidden}
+.xpbalk i{position:absolute; inset:0 auto 0 0; background:var(--green); border-radius:4px}
+.xpbalk i.erbij{background:var(--lv-ring)}
+.xpblok .fine{margin:0}
+.xpherk{color:var(--green-d)}
+/* '+N XP' onderweg naar de ring, en de kopie van de knop boven alles */
+.xpvlieg{position:fixed; left:0; top:0; z-index:10002; pointer-events:none; background:var(--lv-ring); color:#1f3a2a; border-radius:999px; padding:5px 11px;
+  font:700 14px var(--display); box-shadow:0 4px 14px rgba(31,58,42,.3); white-space:nowrap; will-change:transform}
+.xpspook{position:fixed!important; z-index:10001; pointer-events:none; margin:0; transition:opacity .3s}
+.xpspook.veer{animation:xpveer .5s ease-out}
+.xpspook.weg{opacity:0}
+@keyframes xpveer{0%{transform:scale(1)} 40%{transform:scale(1.18)} 100%{transform:scale(1)}}
+/* pop-ups: level omhoog en de start */
+#wachtPop.levelpop .sheet{border-top:6px solid var(--lv-ring); justify-items:center; text-align:center; gap:14px}
+.lvlabel{color:var(--green); letter-spacing:.1em}
+.lvcirkel{width:116px; height:116px; border-radius:50%; padding:7px; background:var(--lv-ring); display:grid}
+.lvcirkel{position:relative}
+.lvcirkel::before{content:""; position:absolute; inset:7px; border-radius:50%; background:var(--green-d)}
+.lvcirkel > *{position:relative}
+.lvcirkel{place-items:center; align-content:center; color:#fff}
+.lvcirkel .caps{font-size:.62rem; color:#edfbe2; letter-spacing:.1em}
+.lvcirkel b{font:800 2.9rem/1 var(--display)}
+.levelpop:not([hidden]) .lvcirkel{animation:lvin .7s cubic-bezier(.2,.8,.3,1.3)}
+@keyframes lvin{0%{transform:scale(.4); opacity:0} 100%{transform:scale(1); opacity:1}}
+.lvtekst h2{margin:0; font:700 1.5rem var(--display); color:var(--green-d)}
+.lvtekst p{margin:4px 0 0; color:var(--ink-2)}
+.lvbuitlijst{width:100%; display:grid; gap:8px; text-align:left}
+.lvbuit{display:flex; align-items:center; gap:12px; background:var(--leaf); border:1px solid var(--rule); border-radius:10px; padding:10px 12px; color:var(--green-d)}
+.lvbuit > svg{flex:0 0 auto}
+.lvbuit span{display:grid; color:var(--ink)}
+.lvbuit small{color:var(--ink-2); font-size:.82rem}
+.lvzo{width:100%; text-align:left; background:var(--leaf); border-radius:10px; padding:10px 12px}
+.lvzo dl{display:grid; grid-template-columns:auto 1fr; gap:2px 12px; margin:6px 0 0; font-size:.88rem}
+.lvzo dt{font-weight:700}
+.lvzo dd{margin:0; color:var(--ink-2)}
+.lvvolgende{margin:0}
+#wachtPop.levelpop .btn{width:100%}
+#wachtPop.lvstart .nw-blokje{text-align:left}
+/* Mijn profiel: de levelkaart */
+.lvkaart{border:1px solid var(--rule); border-radius:12px; padding:14px 16px; background:var(--leaf)}
+.lvkop{display:flex; justify-content:space-between; align-items:baseline; gap:10px}
+.lvkop h3{margin:0}
+.lvkop h3 span{font-weight:500; color:var(--ink-2); font-size:.8em}
+.lvkaart .xpbalk{height:8px}
+.lvtegels{display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:8px; text-align:center}
+.lvtegels div{background:var(--paper); border:1px solid var(--rule); border-radius:8px; padding:8px 4px; display:grid}
+.lvtegels b{font:700 1.15rem var(--display)}
+.lvtegels span{font-size:.75rem; color:var(--ink-2)}
+.lvkaart h4{margin:6px 0 0; font-size:.7rem; color:var(--green)}
+.lvherkomst{display:grid; grid-template-columns:minmax(0, 12rem) minmax(60px, 16rem) 3rem; justify-content:start; gap:6px 8px; align-items:center; font-size:.9rem}
+.lvherkomst .tb{display:block; height:6px; border-radius:3px; background:var(--lv-spoor); overflow:hidden}
+.lvherkomst .tb i{display:block; height:100%; background:var(--green); border-radius:3px}
+.lvherkomst b{text-align:right; font-variant-numeric:tabular-nums}
+.lvrangen{margin:0; padding:0; list-style:none}
+.lvrangen li{display:flex; justify-content:space-between; gap:10px; padding:6px 0; border-bottom:1px solid var(--rule); font-size:.9rem}
+.lvrangen li:last-child{border-bottom:0}
+.lvrangen li > span:last-child{color:var(--ink-2)}
+.lvrangen li.nu > span:first-child{font-weight:700; color:var(--green-d)}
+.lvkaart > .fine{margin:0}
+/* adventkalender: XP-vakje */
+.avk-xp{display:inline-grid; place-items:center; align-content:center; width:34px; height:34px; border-radius:50%; background:#3b6149; color:#c6e98a}
+.avk-xp svg{width:14px; height:14px}
+.avk-xp b{font:800 .62rem/1 var(--display); color:#fff}
+.avk-xp.groot{width:116px; height:116px; gap:2px; box-shadow:0 0 0 9px rgba(198,233,138,.28), 0 8px 18px rgba(0,0,0,.3)}
+.avk-xp.groot svg{width:40px; height:40px}
+.avk-xp.groot b{font-size:1.45rem}
+.avk-buitgroot.item .avk-xp.groot svg{width:40px; height:40px; filter:none}
+/* donker */
+html.donker{--lv-licht:#7fc79a; --lv-spoor:#34473b; --lv-nr:#b5dc7c}
+html.donker .masthead, html.donker .slimbar{--lv-rand:#152219; --lv-track:rgba(212,239,221,.3)}
+html.donker .xpblok{background:#18241d}
+html.donker .xpchip{background:#1d2a22}
+html.donker .xpchip.herk{background:#1f3427; box-shadow:0 0 0 1px #4f8a64 inset}
+html.donker .lvkaart, html.donker .lvbuit, html.donker .lvzo{background:#1d2a22}
+html.donker .lvtegels div{background:#18241d}
+html.donker .lvcirkel::before{background:#24452f}
+@media (prefers-reduced-motion:reduce){ .levelpop:not([hidden]) .lvcirkel, .xpspook.veer{animation:none} }

@@ -90,9 +90,13 @@ const Kerst = (() => {
   /* ---------- inhoud tonen ---------- */
   const EIK = (n, cls) => `<span class="avk-eik ${cls || ""}">${EIKEL}<b>+${n}</b></span>`;
   const ITEMNAAM = { "token:herstel": "Hersteltoken", "kleur:winter": "Achtergrondkleur Winter", "kleur:hulst": "Achtergrondkleur Hulst", "lijst:sneeuwvlokken": "Lijst Sneeuwvlokken", "lijst:kerst": "Kerstlijst" };
-  const itemNaam = item => item.startsWith("titel:") ? `Ondertitel ‘${item.slice(6)}’` : (ITEMNAAM[item] || item);
+  /* XP-vakje (update 10): item 'xp:150' = 150 ervaringspunten, telt meteen mee voor je level */
+  const isXp = item => !!item && item.startsWith("xp:");
+  const itemNaam = item => item.startsWith("titel:") ? `Ondertitel ‘${item.slice(6)}’` : isXp(item) ? `${item.slice(3)} ervaringspunten` : (ITEMNAAM[item] || item);
+  const XPSTER = `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9Z"/></svg>`;
   function itemBeeld(item, groot){
     const me = Profiel.mijn(), v = item.slice(item.indexOf(":") + 1);
+    if (isXp(item)) return `<span class="avk-xp${groot ? " groot" : ""}">${XPSTER}<b>${esc(v)}${groot ? " XP" : ""}</b></span>`;
     if (item === "token:herstel") return herstelMunt(groot ? 104 : 40, "avk-munt");
     if (item.startsWith("titel:")) return `<span class="avk-lint">${esc(v)}</span>`;
     return avatarSVG(Object.assign({}, me, item.startsWith("kleur:") ? { color: v } : { frame: v }), "avk-av");
@@ -131,7 +135,7 @@ const Kerst = (() => {
     const box = $("adventVak");
     if (!v){ box.hidden = true; return; }
     box.hidden = false; box.className = "adventvak";
-    box.innerHTML = `<div class="avk-buit">${EIK(v.eikels)}${v.item ? `<span class="avk-extra">${itemBeeld(v.item)}<span>${esc(itemNaam(v.item))}<small>${v.item === "token:herstel" ? "zeer zeldzaam" : "staat in Mijn profiel"}</small></span></span>` : ""}${v.spoor ? `<span class="avk-extra"><span>${v.goed ? "Spoor goed geraden" : "Spoor niet geraden"}<small>het spoor was van een ${esc(SPOREN[v.spoor].naam.toLowerCase())}</small></span></span>` : ""}</div>${weetjeHtml(v.dag)}`;
+    box.innerHTML = `<div class="avk-buit">${EIK(v.eikels)}${v.item ? `<span class="avk-extra">${itemBeeld(v.item)}<span>${esc(itemNaam(v.item))}<small>${v.item === "token:herstel" ? "zeer zeldzaam" : isXp(v.item) ? "telt mee voor je level" : "staat in Mijn profiel"}</small></span></span>` : ""}${v.spoor ? `<span class="avk-extra"><span>${v.goed ? "Spoor goed geraden" : "Spoor niet geraden"}<small>het spoor was van een ${esc(SPOREN[v.spoor].naam.toLowerCase())}</small></span></span>` : ""}</div>${weetjeHtml(v.dag)}`;
   }
 
   /* ---------- openen: het grote moment ---------- */
@@ -139,9 +143,11 @@ const Kerst = (() => {
   function cadeauMelding(v){
     const wat = v.item === "token:herstel" ? "een hersteltoken"
       : v.item && v.item.startsWith("titel:") ? `de ondertitel ‘${v.item.slice(6)}’`
+      : isXp(v.item) ? itemNaam(v.item)
       : v.item ? (itemNaam(v.item).charAt(0).toLowerCase() + itemNaam(v.item).slice(1))
       : `${v.eikels} eikels`;
-    const zin = v.item === "token:herstel"
+    const zin = isXp(v.item) ? `<p class="avk-zin">Zonder er ook maar iets voor te doen, dat is lekker levelen!</p>`
+      : v.item === "token:herstel"
       ? `<span class="hm-label">Zeer zeldzaam</span><p class="avk-zin">Deze is <b>erg waardevol</b> en zeldzaam. Bewaar hem goed. Waar hij voor dient, ontdek je vanzelf, op het moment dat je hem nodig hebt.</p>`
       : v.dag === 5 ? `<p class="avk-zin">Sinterklaas heeft goed opgelet dit jaar!</p>`
       : v.dag === 24 ? `<p class="avk-zin">Die krijg je nergens anders. Fijne kerst!</p>`
@@ -228,7 +234,7 @@ const Kerst = (() => {
     const melding = !spoor ? cadeauMelding(v) : v.goed
       ? `<p class="avk-melding goed"><b>Gefeliciteerd!</b> Je antwoord is juist, je hebt 20 eikels verdiend!</p>`
       : `<p class="avk-melding fout"><b>Helaas,</b> dit was niet het juiste antwoord. Het spoor was van een ${esc(SPOREN[v.spoor].naam.toLowerCase())}. Hier heb je 5 eikels voor de moeite.</p>`;
-    onder.innerHTML = `${melding}${v.item && v.item !== "token:herstel" ? `<p class="avk-wat">${esc(itemNaam(v.item))}<small>Nu te kiezen in Mijn profiel</small></p>` : ""}
+    onder.innerHTML = `${melding}${v.item && v.item !== "token:herstel" && !isXp(v.item) ? `<p class="avk-wat">${esc(itemNaam(v.item))}<small>Nu te kiezen in Mijn profiel</small></p>` : ""}
       ${v.kampioen ? `<p class="avk-wat kampioen"><span class="avk-lint">Adventkampioen</span><small>Alle 24 vakjes geopend!</small></p>` : ""}
       ${v.eikels ? `<div class="avk-eikrij">${EIK(v.eikels, "teller")}</div>` : ""}
       ${weetjeHtml(d)}
@@ -238,6 +244,8 @@ const Kerst = (() => {
     await wacht(500);
     /* 4. eikels vliegen naar het saldo */
     await vliegNaarSaldo(onder.querySelector(".avk-eikrij .avk-eik"), v.eikels);
+    /* XP-vakje: '+150 XP' vliegt de ring om je avatar in */
+    if (isXp(v.item) && !demo() && typeof Levels !== "undefined") await Levels.naAdvent(binnen.querySelector(".avk-xp"), +v.item.slice(3));
     if (!demo()) Profiel.haalAlles().then(() => Profiel.saldoInKop());
     const verder = laag.querySelector("#avkVerder");
     verder.focus();

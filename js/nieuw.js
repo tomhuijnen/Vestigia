@@ -18,6 +18,9 @@ const Nieuw = (() => {
     vraagteken: `<span class="nw-ic rood"><b>?</b></span>`,
     cadeau: `<span class="nw-ic kerst"><svg aria-hidden="true" viewBox="0 0 20 20" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="3" y="8" width="14" height="9" rx="1.2"/><path d="M2.5 5.2h15v2.8h-15zM10 5.2V17"/><path d="M10 5.2C8.6 2.4 5.6 2.4 6.1 4.3c.3 1 2.4.9 3.9.9ZM10 5.2c1.4-2.8 4.4-2.8 3.9-.9-.3 1-2.4.9-3.9.9Z"/></svg></span>`,
     spoor: `<span class="nw-ic kerst"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><ellipse cx="12" cy="15.5" rx="4.2" ry="3.6"/><ellipse cx="6.5" cy="9.5" rx="1.8" ry="2.3"/><ellipse cx="10" cy="6.5" rx="1.8" ry="2.3"/><ellipse cx="14" cy="6.5" rx="1.8" ry="2.3"/><ellipse cx="17.5" cy="9.5" rx="1.8" ry="2.3"/></svg></span>`,
+    level: `<span class="nw-ic"><b>7</b></span>`,
+    xp: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9Z"/></svg></span>`,
+    rang: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17V7h12l4 5-4 5H4Z"/><path d="M8 12h6"/></svg></span>`,
     kalender: `<span class="nw-ic kerst"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4M9 14.5l2 2 4-4"/></svg></span>`
   };
 
@@ -33,6 +36,12 @@ const Nieuw = (() => {
         { ic: "cadeau", kop: "De adventkalender is open", tekst: "Van 1 tot en met 24 december mag er elke dag één vakje open. Tik op het cadeautje rechtsboven, en daarna op ‘Open cadeau’." },
         { ic: "spoor", kop: "Wat zit erin?", tekst: "Eikels, sporen in de sneeuw om te raden, winterweetjes over beschermde soorten en een paar dingen die je nergens anders krijgt." },
         { ic: "kalender", kop: "Een gemist vakje is weg", tekst: "Je kunt alleen het vakje van vandaag openen. Open je ze alle 24, dan word je Adventkampioen." }
+      ] },
+    { id: "levels", titel: "Levels", verborgen: () => !(typeof Levels !== "undefined" && Levels.zichtbaar()),   // pas vanaf de startdatum
+      stappen: [
+        { ic: "level", kop: "Nieuw: levels", tekst: "Met ervaringspunten (XP) stijg je in level. Je level zie je in de ring om je avatar rechtsboven: hoe voller de ring, hoe dichter bij het volgende level." },
+        { ic: "xp", kop: "XP verdien je met leren", tekst: "Dagcasus 10 + 5 per punt, plus een dagbonus tot 35 voor je reeks. Oefencasus 10 (niet gevonden 3). Nieuwe soort +10, dwaalgast +50. Had je een soort eerder fout en heb je hem minstens een dag later goed? Dan krijg je 15 XP extra." },
+        { ic: "rang", kop: "Wat een level oplevert", tekst: "Elk level levert eikels op: 5 + het level. Bij level 5, 10, 20, 30, 40 en 50 krijg je een nieuwe rang als ondertitel, van Stagiair tot Meesterecoloog. Bij level 20, 40, 60 … krijg je een hersteltoken." }
       ] }
   ];
 
@@ -102,7 +111,7 @@ const Nieuw = (() => {
   /* terugkijken vanuit de spelregels */
   function knoppen(){
     const box = $("helpNieuw"); if (!box) return;
-    box.innerHTML = ONDERDELEN.map(o => `<button class="chipbtn" type="button" data-nw="${o.id}">${esc(o.titel)}</button>`).join("");
+    box.innerHTML = ONDERDELEN.filter(o => !(o.verborgen && o.verborgen())).map(o => `<button class="chipbtn" type="button" data-nw="${o.id}">${esc(o.titel)}</button>`).join("");
     box.querySelectorAll("[data-nw]").forEach(b => b.onclick = () => {
       const o = ONDERDELEN.find(x => x.id === b.dataset.nw);
       $("help").hidden = true;
@@ -110,5 +119,5 @@ const Nieuw = (() => {
     });
   }
   knoppen();
-  return { toon, blokjes, ONDERDELEN };
+  return { toon, blokjes, knoppen, ONDERDELEN };
 })();
