@@ -1433,7 +1433,7 @@ html.donker .nw-blokje.rood{background:#8a1a22}
 .lvrangen{margin:0; padding:0; list-style:none}
 .lvrangen li{display:flex; justify-content:space-between; gap:10px; padding:6px 0; border-bottom:1px solid var(--rule); font-size:.9rem}
 .lvrangen li:last-child{border-bottom:0}
-.lvrangen li > span:last-child{color:var(--ink-2)}
+.lvrangen li > span:last-child{color:var(--ink-2); white-space:nowrap}
 .lvrangen li.nu > span:first-child{font-weight:700; color:var(--green-d)}
 .lvkaart > .fine{margin:0}
 /* adventkalender: XP-vakje */
