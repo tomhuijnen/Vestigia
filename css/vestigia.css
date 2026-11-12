@@ -1817,3 +1817,79 @@ html.donker .wkdelta.op{background:#1f3a29; color:#9fd8b0}
 html.donker .wkdelta.af{background:#3a2620; color:#f0ab8e}
 html.donker .wkrij.p1{border-color:#c9a23a; box-shadow:0 0 0 1px #c9a23a inset}
 @media (prefers-reduced-motion:reduce){ .weekpop:not([hidden]) .wkbadge{animation:none} }
+
+/* ---------- update 31: de levelring van kleur per 20 levels ----------
+   Treden (lvt0 … lvt5): Blad 1–19 (de ring van update 10), Zeegroen 20, IJsvogel 40, Diepzee 60, Sterrenhemel 80,
+   Noorderlicht 100+ (stil verloop). Na level 100 elke 20 levels een sterretje, tot vijf op level 200.
+   --lv-ring = kleur op donker (kopbalk, pop-up, rand en gloed), --lv-licht = kleur op de pagina (profiel, ranglijst),
+   --lv-vulkop / --lv-vul = een verloop in plaats van één kleur. De vulling ligt in ::before met een conische masker,
+   zodat ook een verloop of sterrenhemel tot de voortgang loopt en het spoor (wat nog niet gevuld is) eronder blijft. */
+.avbtn.metlevel{background:var(--lv-track); isolation:isolate}
+.lvring{background:var(--lv-spoor); isolation:isolate}
+.avbtn.metlevel::before, .lvring::before{content:""; position:absolute; inset:0; border-radius:50%; z-index:-1; pointer-events:none;
+  background:var(--lv-vulkop, var(--lv-ring)); box-shadow:inset 0 0 0 1px var(--lv-rand4, transparent);
+  -webkit-mask:conic-gradient(#000 0 var(--p, 0%), transparent 0); mask:conic-gradient(#000 0 var(--p, 0%), transparent 0)}
+.lvring::before{background:var(--lv-vul, var(--lv-licht))}
+.avbtn.metlevel .lvnr, .lvring .lvnr{z-index:2}
+.lvt0{--lv-ring:#c6e98a; --lv-licht:#4b7a5e; --lv-nr:#c6e98a; --lv-nr-ink:#1f3a2a; --lv-vulkop:initial; --lv-vul:initial; --lv-rand4:initial}
+.lvt1{--lv-ring:#6fe0c2; --lv-licht:#1f8a72; --lv-nr:#6fe0c2; --lv-nr-ink:#12352c; --lv-vulkop:initial; --lv-vul:initial; --lv-rand4:initial}
+.lvt2{--lv-ring:#5cc6f5; --lv-licht:#1677b3; --lv-nr:#5cc6f5; --lv-nr-ink:#0f2c3d; --lv-vulkop:initial; --lv-vul:initial; --lv-rand4:initial}
+.lvt3{--lv-ring:#8199ff; --lv-licht:#2f4fc4; --lv-nr:#8199ff; --lv-nr-ink:#141d4a; --lv-vulkop:initial; --lv-vul:initial; --lv-rand4:initial}
+.lvt4{--lv-ring:#b9c7ff; --lv-licht:#1c2763; --lv-nr:#1c2763; --lv-nr-ink:#eef2ff; --lv-rand4:#b9c7ff;
+  --lv-vulkop:radial-gradient(circle at 56.4% 4.4%, #fff 0 0.9px, transparent 1.4px), radial-gradient(circle at 82.9% 19.3%, #dfe6ff 0 0.8px, transparent 1.3px), radial-gradient(circle at 96.6% 44.3%, #fff 0 0.9px, transparent 1.4px), radial-gradient(circle at 88.6% 73.2%, #dfe6ff 0 0.7px, transparent 1.2px), radial-gradient(circle at 67.2% 92.7%, #fff 0 0.9px, transparent 1.4px), radial-gradient(circle at 37.0% 95.2%, #dfe6ff 0 0.8px, transparent 1.3px), radial-gradient(circle at 14.5% 77.7%, #fff 0 0.9px, transparent 1.4px), radial-gradient(circle at 4.0% 51.6%, #dfe6ff 0 0.7px, transparent 1.2px), radial-gradient(circle at 11.5% 23.0%, #fff 0 0.9px, transparent 1.4px), radial-gradient(circle at 35.3% 7.5%, #dfe6ff 0 0.8px, transparent 1.3px), #1c2763; --lv-vul:var(--lv-vulkop)}
+.lvt5{--lv-ring:#4fe3d6; --lv-licht:#139eae; --lv-nr:linear-gradient(120deg,#8dffbf,#4fe3d6,#6fb4ff); --lv-nr-ink:#14302a; --lv-rand4:initial;
+  --lv-vulkop:conic-gradient(#8dffbf, #4fe3d6, #6fb4ff, #a3c6ff, #8dffbf); --lv-vul:conic-gradient(#24b37a, #139eae, #3a6be0, #24b37a)}
+html.donker .lvt0{--lv-licht:#7fc79a; --lv-nr:#b5dc7c}
+html.donker .lvt1{--lv-licht:#5ccdb0}
+html.donker .lvt2{--lv-licht:#57b6ec}
+html.donker .lvt3{--lv-licht:#8194ff}
+html.donker .lvt4{--lv-licht:#26347f; --lv-vul:radial-gradient(circle at 56.4% 4.4%, #fff 0 0.9px, transparent 1.4px), radial-gradient(circle at 82.9% 19.3%, #dfe6ff 0 0.8px, transparent 1.3px), radial-gradient(circle at 96.6% 44.3%, #fff 0 0.9px, transparent 1.4px), radial-gradient(circle at 88.6% 73.2%, #dfe6ff 0 0.7px, transparent 1.2px), radial-gradient(circle at 67.2% 92.7%, #fff 0 0.9px, transparent 1.4px), radial-gradient(circle at 37.0% 95.2%, #dfe6ff 0 0.8px, transparent 1.3px), radial-gradient(circle at 14.5% 77.7%, #fff 0 0.9px, transparent 1.4px), radial-gradient(circle at 4.0% 51.6%, #dfe6ff 0 0.7px, transparent 1.2px), radial-gradient(circle at 11.5% 23.0%, #fff 0 0.9px, transparent 1.4px), radial-gradient(circle at 35.3% 7.5%, #dfe6ff 0 0.8px, transparent 1.3px), #26347f}
+html.donker .lvt5{--lv-vul:var(--lv-vulkop)}
+/* de badge met het levelnummer krijgt de kleur van de trede */
+.lvring .lvnr{background:var(--lv-nr)}
+.lvring .lvnr, .avbtn.metlevel .lvnr{color:var(--lv-nr-ink)}
+html.donker .lvring.lvt0 .lvnr{color:#1f3a2a}
+/* sterretjes: midden op de ring (--band = dikte van de ring), rond 12 uur, iets uit elkaar (--stap) */
+.lvsterren{position:absolute; inset:0; pointer-events:none; z-index:1}
+.lvsterren i{position:absolute; inset:0; transform:rotate(calc(var(--i) * var(--stap))); filter:drop-shadow(0 0 .7px #0d1b3a) drop-shadow(0 0 .7px #0d1b3a)}
+.lvsterren i::before{content:""; position:absolute; left:50%; top:calc((var(--band) - var(--sg)) / 2); width:var(--sg); height:var(--sg); margin-left:calc(var(--sg) / -2);
+  background:#fff; clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%); transform:rotate(calc(var(--i) * var(--stap) * -1))}
+.avbtn.metlevel{--band:5px; --sg:8px; --stap:28deg}
+.slimbar .avbtn.metlevel{--band:4px; --sg:7px; --stap:28deg}
+.lvring{--band:6px; --sg:9px; --stap:22deg}
+.lvring.groot{--band:8px; --sg:11px; --stap:15deg}
+.lvring.klein, .dukies .lvring{--band:3px; --sg:6px; --stap:28deg}
+.lvsterren i.nieuw::before{animation:lvsterpop .9s .5s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes lvsterpop{0%{transform:rotate(calc(var(--i) * var(--stap) * -1)) scale(0) rotate(-120deg)} 100%{transform:rotate(calc(var(--i) * var(--stap) * -1)) scale(1)}}
+/* bolletje met de ringkleur (pop-up, profiel, rangenlijst) */
+.lvbol{width:26px; height:26px; border-radius:50%; flex:0 0 auto; display:inline-block; background:var(--lv-vulkop, var(--lv-ring)); box-shadow:inset 0 0 0 1px var(--lv-rand4, transparent);
+  -webkit-mask:radial-gradient(circle, transparent 7px, #000 7.5px); mask:radial-gradient(circle, transparent 7px, #000 7.5px)}
+.lvringnaam{display:flex; align-items:center; gap:8px; margin:6px 0 2px; font-size:.9rem; color:var(--ink-2)}
+.lvringnaam .lvbol{width:18px; height:18px; -webkit-mask:radial-gradient(circle, transparent 4.5px, #000 5px); mask:radial-gradient(circle, transparent 4.5px, #000 5px)}
+.lvringnaam b{color:var(--ink)}
+.lvrangen .lvbol{width:12px; height:12px; margin-right:7px; vertical-align:-1px; -webkit-mask:radial-gradient(circle, transparent 2.5px, #000 3px); mask:radial-gradient(circle, transparent 2.5px, #000 3px)}
+.lvrangen .lvbol.leeg{background:none; box-shadow:none}
+/* level-pop-up: de ring in de kleur van de trede, en bij een wissel de nieuwe kleur die rondloopt */
+#wachtPop.levelpop .sheet{transition:border-color .4s}
+.lvcirkel{background:var(--lv-vulkop, var(--lv-ring)); isolation:isolate; --band:7px; --sg:16px; --stap:19deg; transition:transform .45s cubic-bezier(.3,1.4,.5,1), box-shadow .5s}
+.lvcirkel::before{z-index:1}
+.lvcirkel > .caps, .lvcirkel > b{z-index:2}
+.lvcirkel > .lvsterren{position:absolute; z-index:3}
+.lvnieuw{position:absolute!important; inset:0; border-radius:50%; z-index:0; background:var(--lv-vulkop, var(--lv-ring));
+  -webkit-mask:conic-gradient(#000 0 var(--veeg, 0deg), transparent 0); mask:conic-gradient(#000 0 var(--veeg, 0deg), transparent 0)}
+@property --veeg{syntax:'<angle>'; inherits:true; initial-value:0deg}
+.lvkomeet{position:absolute!important; inset:0; z-index:3; transform:rotate(var(--veeg, 0deg)); opacity:0; transition:opacity .2s; pointer-events:none}
+.lvkomeet::after{content:""; position:absolute; left:50%; top:-2px; width:11px; height:11px; margin-left:-5.5px; border-radius:50%; background:#fff;
+  box-shadow:0 0 8px 4px var(--lv-ring), 0 0 2px 1px #fff}
+.lvcirkel.veegt .lvkomeet{opacity:1}
+.lvcirkel.licht{transform:scale(1.14); box-shadow:0 0 0 4px rgba(255,255,255,.12), 0 0 26px 6px color-mix(in srgb, var(--lvp, var(--lv-ring)) 45%, transparent)}
+.lvcirkel.puls{animation:lvpuls .7s ease-out}
+@keyframes lvpuls{0%{box-shadow:0 0 0 0 color-mix(in srgb, var(--lvp, var(--lv-ring)) 90%, transparent)} 100%{box-shadow:0 0 0 22px transparent}}
+#wachtPop.levelpop.lvdim{background:rgba(8,14,11,.82)}
+#wachtPop.levelpop.lvdim .sheet{border-top-color:transparent}
+#wachtPop.levelpop .sheet > *{transition:opacity .45s ease}
+#wachtPop.levelpop.lvdim .sheet > :not(.lvcirkel){opacity:.08}
+#wachtPop.levelpop.lvdim .sheet > .lvcirkel{opacity:1}
+.lvbuit.lvwacht{opacity:0; transform:translateY(6px)}
+.lvbuit{transition:opacity .45s, transform .45s}
+@media (prefers-reduced-motion:reduce){ .lvcirkel, .lvbuit, #wachtPop.levelpop .sheet > *{transition:none} .lvcirkel.puls{animation:none} .lvsterren i.nieuw::before{animation:none} }
