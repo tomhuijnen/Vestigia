@@ -53,6 +53,7 @@ const Uitleg = (() => {
   /* Het kaartje mag de lichtvlek nooit bedekken (12 november 2026). Volgorde: eronder, erboven, ernaast (breed scherm);
      past het nergens, dan schuift de pagina één keer zo dat het doel bovenin staat, en dan opnieuw proberen. */
   let geschoven = false;
+  const rustig = () => window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   function plaats(){
     if (!root || !doelEl) return;
     const r = rechthoek(doelEl), pad = 8, spot = root.querySelector(".ui-spot"), kaart = root.querySelector(".ui-kaart");
@@ -111,7 +112,9 @@ const Uitleg = (() => {
       e.preventDefault(); f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus();
     }
   }
-  function start(){
+  /* intro (optioneel): { rect, el } van de welkomstmelding. Dan groeit de lichtvlek vanuit die melding naar het
+     eerste onderdeel, en komt het kaartje er zacht achteraan; de melding zelf vervaagt intussen (12 november 2026). */
+  function start(intro){
     return new Promise(resolve => {
       if (root){ resolve(); return; }
       klaar = resolve;
@@ -123,7 +126,15 @@ const Uitleg = (() => {
           <span class="caps ui-teller"></span><h2 id="uitlegH"></h2><p id="uitlegT" class="ui-tekst"></p>
           <div class="ui-knoppen"><button class="linklike ui-overslaan">Overslaan</button><button class="btn ui-volgende">Volgende</button></div>
         </div>`;
+      if (intro && intro.rect && !rustig()){
+        const w = intro.rect;
+        root.classList.add("intro");
+        Object.assign(root.querySelector(".ui-spot").style, { left: w.left + "px", top: w.top + "px", width: w.width + "px", height: w.height + "px" });
+        setTimeout(() => root && root.classList.remove("intro"), 1100);
+      }
       document.body.appendChild(root);
+      /* de achtergrond van de welkomstmelding heeft dezelfde tint als de lichtvlek: meteen weg, dan wordt het nooit dubbel donker */
+      if (intro && intro.el){ intro.el.style.background = "transparent"; setTimeout(() => intro.el.remove(), 400); }
       setInert(true);
       root.querySelector(".ui-overslaan").onclick = stop;
       root.querySelector(".ui-volgende").onclick = () => stap < STAPPEN.length - 1 ? toon(stap + 1) : stop();
@@ -149,7 +160,16 @@ const Uitleg = (() => {
       document.body.appendChild(el);
       setInert(true);
       const knop = el.querySelector(".wk-door");
-      const door = () => { document.removeEventListener("keydown", toets_, true); el.remove(); setInert(false); klaar(); };
+      let weg = false;
+      const door = () => {
+        if (weg) return; weg = true;
+        document.removeEventListener("keydown", toets_, true);
+        const kaart = el.querySelector(".wk-kaart"), rect = kaart.getBoundingClientRect();
+        if (rustig()){ el.remove(); setInert(false); klaar(); return; }
+        kaart.classList.add("weg");
+        el.style.pointerEvents = "none";
+        setTimeout(() => { setInert(false); klaar({ rect, el }); }, 180);
+      };
       const toets_ = e => { if (e.key === "Escape" || e.key === "Tab"){ e.preventDefault(); e.stopPropagation(); if (e.key === "Escape") door(); } };
       knop.onclick = door;
       document.addEventListener("keydown", toets_, true);
@@ -165,7 +185,7 @@ const Uitleg = (() => {
     }
     if (nieuweSpeler()){
       if (VIEW !== "game" || S.mode !== "daily") startDaily();
-      return welkom().then(start);
+      return welkom().then(intro => start(intro));
     }
     markeer();
     toast("Nieuw: een korte uitleg van het spel staat in het menu (tik op je avatar rechtsboven).");

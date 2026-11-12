@@ -513,7 +513,12 @@ html.donker .wk-poot{background:#2a3d31; color:#8fd0a8}
 .wk-kaart .wk-fijn{color:var(--ink-2); font-size:.92rem}
 .wk-door{width:100%; margin-top:8px; padding:14px 18px; font-size:1.05rem; border-radius:12px}
 @keyframes wkin{from{opacity:0; transform:translateY(10px) scale(.97)}}
-@media (prefers-reduced-motion:reduce){ .ui-spot{transition:none; animation:none} .wk-kaart{animation:none} }
+/* overgang welkom → eerste uitlegstap: de melding vervaagt, de lichtvlek groeit vanuit die plek naar het onderdeel, het kaartje volgt */
+.wk-kaart.weg{opacity:0; transform:scale(.96); transition:opacity .28s ease, transform .28s ease}
+.uitleg.intro .ui-spot{transition:left .6s cubic-bezier(.45,0,.2,1), top .6s cubic-bezier(.45,0,.2,1), width .6s cubic-bezier(.45,0,.2,1), height .6s cubic-bezier(.45,0,.2,1)}
+.uitleg.intro .ui-kaart{animation:uiin .42s ease-out .45s both}
+@keyframes uiin{from{opacity:0; transform:translateY(10px)}}
+@media (prefers-reduced-motion:reduce){ .ui-spot{transition:none; animation:none} .wk-kaart{animation:none} .uitleg.intro .ui-kaart{animation:none} }
 
 /* ---------- stap 5: leagues en uitnodigen ---------- */
 .tiles.vijf{grid-template-columns:repeat(5, minmax(0,1fr))}
