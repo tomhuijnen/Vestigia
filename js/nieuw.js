@@ -101,7 +101,7 @@ const Nieuw = (() => {
       stappen: [
         { ic: "level", kop: "Nieuw: levels", tekst: "Met ervaringspunten (XP) stijg je in level. Je level zie je in de ring om je avatar rechtsboven: hoe voller de ring, hoe dichter bij het volgende level." },
         { ic: "xp", kop: "XP verdien je met leren", tekst: "Dagcasus 10 + 5 per punt, plus een dagbonus tot 35 voor je reeks. Oefencasus 10 (niet gevonden 3). Nieuwe soort +10, dwaalgast +50. Had je een soort eerder fout en heb je hem minstens een dag later goed? Dan krijg je 15 XP extra." },
-        { ic: "rang", kop: "Wat een level oplevert", tekst: "Elk level levert eikels op: 5 + het level. Bij level 5, 10, 20, 30, 40 en 50 krijg je een nieuwe rang als ondertitel, van Stagiair tot Meesterecoloog. Bij level 20, 40, 60 … krijg je een hersteltoken." }
+        { ic: "rang", kop: "Wat een level oplevert", tekst: "Elk level levert 10 eikels op. Bij level 5 en 10 krijg je je eerste rangen als ondertitel. Daarna is elke 20 levels een mijlpaal: 50 eikels extra, een nieuwe rang en een hersteltoken. Van Stagiair tot Levende legende op level 200." }
       ] }
   ];
 

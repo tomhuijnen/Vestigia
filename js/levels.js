@@ -20,10 +20,14 @@ const Levels = (() => {
   const rustig = () => window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   const wacht = ms => new Promise(r => setTimeout(r, ms));
 
-  /* ---------- regels (gelijk aan supabase-015) ---------- */
-  const RANGEN = [[1, "Stagiair"], [5, "Veldassistent"], [10, "Junior ecoloog"], [20, "Ecoloog"], [30, "Senior ecoloog"], [40, "Hoofdecoloog"], [50, "Meesterecoloog"]];
+  /* ---------- regels (gelijk aan supabase-023, update 28) ----------
+     Level 1–8 kosten 100, 120 … 240 XP, daarna elk level 250 XP. Elk level levert 10 eikels op, en elke 20 levels
+     50 extra, een nieuwe rang en een hersteltoken. */
+  const RANGEN = [[1, "Stagiair"], [5, "Veldassistent"], [10, "Junior ecoloog"], [20, "Ecoloog"], [40, "Projectecoloog"],
+                  [60, "Senior ecoloog"], [80, "Soortdeskundige"], [100, "Hoofdecoloog"], [120, "Expert-ecoloog"], [140, "Veldautoriteit"],
+                  [160, "Wandelende veldgids"], [180, "Meesterecoloog"], [200, "Levende legende"]];
   const rangVan = l => RANGEN.filter(([n]) => n <= l).pop()[1];
-  const eikelsVoor = l => 5 + l;                          // bij het bereiken van level l
+  const eikelsVoor = l => 10 + (l % 20 === 0 ? 50 : 0);   // bij het bereiken van level l (mijlpaal elke 20 levels)
   const SOORT = { dagcasus: "Dagcasus", dagbonus: "Dagbonus", oefenen: "Oefencasus", herkansing: "Herkansing", nieuw: "Nieuwe soort",
                   dwaalgast: "Dwaalgast", minigame: "Minigame", advent: "Adventkalender" };
   const VOLGORDE = ["dagcasus", "dagbonus", "oefenen", "herkansing", "nieuw", "dwaalgast", "minigame", "advent"];
@@ -224,9 +228,9 @@ const Levels = (() => {
       <span class="caps lvlabel">Level omhoog</span>
       ${cirkel(b)}
       <div class="lvtekst"><h2 id="wachtH">${nieuweRang ? `Je bent nu ${esc(nieuweRang)}` : `Je bent nu level ${b}`}</h2>
-        <p>${nieuweRang ? "Een nieuwe rang. De ondertitel staat klaar in je profiel." : b - a > 1 ? `Je bent ${b - a} levels gestegen.` : "Goed bezig! Elk level kost iets meer XP dan het vorige."}</p></div>
+        <p>${nieuweRang ? "Een nieuwe rang. De ondertitel staat klaar in je profiel." : b - a > 1 ? `Je bent ${b - a} levels gestegen.` : `Goed bezig! Op naar level ${b + 1}.`}</p></div>
       <div class="lvbuitlijst">
-        ${w.eikels ? rij(eik(), `${w.eikels} eikels`, `Elk level iets meer: level ${b + 1} levert ${eikelsVoor(b + 1)} op`, w.eikels) : ""}
+        ${w.eikels ? rij(eik(), `${w.eikels} eikels`, "10 per level, en 50 extra bij level 20, 40, 60 enzovoort", w.eikels) : ""}
         ${w.rangen.map(r => rij(LINT, `Ondertitel ${r}`, "Niet te koop: alleen via je level")).join("")}
         ${w.tokens ? rij(herstelMunt(28), `${w.tokens === 1 ? "1 hersteltoken" : w.tokens + " hersteltokens"}`, `Alleen bij level 20, 40, 60 enzovoort. Je hebt er nu ${tok} van maximaal 2.`) : ""}
         ${extra || ""}
@@ -253,7 +257,7 @@ const Levels = (() => {
     if (typeof Nieuw !== "undefined") Nieuw.blokjes("levels", [
       { na: $("wachtBody").querySelector(".lvcirkel"), tekst: "Met ervaringspunten (XP) stijg je in level. Je ziet je level voortaan in de ring om je avatar rechtsboven, en in de ranglijst." },
       { na: $("lvZo"), tekst: "Je verdient XP met leren: determineren, oefenen en nieuwe soorten ontdekken. Had je een soort eerder fout en heb je hem minstens een dag later goed? Dan krijg je 15 XP extra. Alleen spelen telt: alleen de app openen levert geen XP op." },
-      { na: $("lvBuit"), tekst: "Elk level levert eikels op, en elk volgend level iets meer. Bij level 5, 10, 20, 30, 40 en 50 krijg je een nieuwe rang als ondertitel, bij level 20, 40, 60 … een hersteltoken." }
+      { na: $("lvBuit"), tekst: "Elk level levert 10 eikels op. Bij level 5 en 10 krijg je je eerste rangen als ondertitel. Daarna is elke 20 levels een mijlpaal: 50 eikels extra, een nieuwe rang en een hersteltoken." }
     ], { altijd: demo(), wacht: 900 });
     return p;
   }
@@ -302,8 +306,8 @@ const Levels = (() => {
       ${!s.actief ? `<p class="fine">Voorbeeld: levels gaan op ${new Date(s.vanaf + "T12:00").toLocaleDateString("nl-NL", { weekday: "long", day: "numeric", month: "long" })} voor iedereen aan.</p>` : ""}
       ${wk.length ? `<h4 class="caps">Waar je XP deze week vandaan komt</h4><div class="lvherkomst">${wk.map(k => `<span>${WEEKNAAM[k]}</span><span class="tb"><i style="width:${Math.round(100 * week[k] / max)}%"></i></span><b>${week[k]}</b>`).join("")}</div>` : ""}
       <h4 class="caps">Rangen</h4>
-      <ol class="lvrangen">${RANGEN.map(([n, r]) => `<li class="${s.level >= n ? "ok" : ""}${rangVan(s.level) === r ? " nu" : ""}"><span>${esc(r)}</span><span>level ${n}${s.level >= n ? " ✓" : n % 20 === 0 ? " · + hersteltoken" : ""}</span></li>`).join("")}</ol>
-      <p class="fine">XP krijg je voor determineren, oefenen, het herstellen van eerdere fouten, nieuwe soorten en dwaalgasten. Elk level levert 5 + het level aan eikels op.</p>
+      <ol class="lvrangen">${RANGEN.map(([n, r]) => `<li class="${s.level >= n ? "ok" : ""}${rangVan(s.level) === r ? " nu" : ""}"><span>${esc(r)}</span><span>level ${n}${s.level >= n ? " ✓" : ""}</span></li>`).join("")}</ol>
+      <p class="fine">XP krijg je voor determineren, oefenen, het herstellen van eerdere fouten, nieuwe soorten en dwaalgasten. Elk level levert 10 eikels op. Elke 20 levels is een mijlpaal: een nieuwe rang, 50 eikels extra en een hersteltoken.</p>
     </section>`;
   }
   /* rangen die nog te verdienen zijn, voor de shop (rij Ondertitels) */
