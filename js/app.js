@@ -73,8 +73,9 @@ function start(){
   store.upgrade();
   startDaily();
   Profiel.start();
+  Duel.start();
   /* update 8: daarna hooguit één pop-up uit de wachtrij (adventkalender, avatar kiezen) en, in de kerstperiode, wat sneeuw */
-  Opening.run().then(() => Uitleg.automatisch()).then(toonWelkom).then(() => League.verwerk())
+  Opening.run().then(() => Uitleg.automatisch()).then(toonWelkom).then(() => League.verwerk()).then(() => Duel.verwerkLink())
     .then(() => { Kerst.sneeuw(); return Wachtrij.start(); });
 }
 /* ---------- melding in beeld ---------- */

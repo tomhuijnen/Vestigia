@@ -1489,3 +1489,98 @@ button.st-rij:hover, button.st-rij:focus-visible{background:var(--mint)}
 html.donker .belbadge{background:radial-gradient(circle at 50% 42%, #4a4128 0, #3a3320 60%, #2d2818 100%)}
 html.donker .lvbuit .beleik{color:#e6b866}
 @media (prefers-reduced-motion:reduce){ .belpop:not([hidden]) .belbadge{animation:none} }
+
+/* ── update 16: spelersduel ── */
+.bel.spelersduel:not(.later) .bol{background:linear-gradient(160deg,#2f5f7a 0%,#24485d 100%); color:#fff}
+.belstip, .duelstip{position:absolute; min-width:20px; height:20px; padding:0 5px; border-radius:10px; background:#c8553a; color:#fff; font:700 .72rem/20px var(--body); text-align:center; border:2px solid #fff; box-sizing:content-box}
+.belstip{right:-4px; top:-4px}
+.tabbar .ic{position:relative}
+.duelstip{right:2px; top:-6px; min-width:14px; height:16px; line-height:16px; font-size:.66rem; padding:0 4px}
+body.induel .modebar{display:none}
+.duelbalk{display:grid; grid-template-columns:1fr auto; gap:4px 14px; align-items:center; background:var(--leaf); border:1px solid var(--rule); border-left:5px solid #2f5f7a; border-radius:10px; padding:12px 16px; margin:0 0 18px}
+.duelbalk .caps{color:#2f5f7a}
+.duelbalk b{display:block; font-family:var(--display); font-size:1.2rem; font-weight:700}
+.duelbalk .fine{grid-column:1 / -1; margin:0}
+.dustip{display:inline-flex; gap:6px}
+.dustip i{width:12px; height:12px; border-radius:50%; border:2px solid #2f5f7a; box-sizing:border-box}
+.dustip i.klaar{background:#2f5f7a}
+.dustip i.nu{background:#a9c7d8}
+.duelvervolg{display:grid; gap:10px; background:#eef4f8; border-radius:8px; padding:14px 16px; border-left:5px solid #2f5f7a}
+.duelvervolg p{margin:0}
+.duelvervolg .dvkop{display:flex; justify-content:space-between; align-items:center; gap:10px}
+.duelvervolg .caps{color:#2f5f7a}
+.duelstart{margin:18px 0 6px}
+.duelstart .fine{margin:0}
+.duelpaneel{background:var(--leaf); border:1px solid var(--rule); border-radius:10px; padding:16px; display:grid; gap:10px; margin:10px 0 6px}
+.duelpaneel .fine{margin:0}
+.duelpaneel input#duTegen{width:100%; padding:9px 11px; border:1.5px solid var(--rule); border-radius:6px; background:var(--paper)}
+.duelpaneel input#duTegen:focus{border-color:var(--green); outline:none}
+.duelpaneel .duseg{max-width:340px}
+.dukeus{display:flex; flex-wrap:wrap; gap:8px}
+.dukeus .fine{margin:0}
+.dukies{all:unset; box-sizing:border-box; display:flex; align-items:center; gap:8px; padding:4px 12px 4px 4px; border:1.5px solid var(--rule); border-radius:999px; cursor:pointer; background:var(--paper); -webkit-tap-highlight-color:transparent}
+.dukies span{display:flex; flex-direction:column; line-height:1.1; font-weight:700}
+.dukies small{font-weight:400; font-size:.72rem; color:var(--ink-2)}
+.dukies[aria-pressed="true"]{border-color:var(--green); background:var(--mint)}
+.dukies:focus-visible{outline:2px solid var(--green); outline-offset:2px}
+.dukies .lvring{padding:3px}
+.dulink{display:flex; gap:8px; align-items:flex-start; font-size:.92rem}
+.dulink input{margin-top:4px}
+.duelsec{margin-top:22px}
+.duelsec h3{font-family:var(--caps); text-transform:uppercase; letter-spacing:.08em; font-size:.85rem; margin:0; color:var(--green)}
+.duelsec h3 small{color:var(--ink-2); font-weight:500}
+.duelsec .lglist{margin:10px 0 0}
+.duelkaart .dk-top{display:flex; gap:12px; align-items:center}
+.duelkaart h4{margin:0; font-family:var(--display); font-weight:700; font-size:1.12rem}
+.duelkaart .fine{margin:2px 0 0}
+.duelkaart.beurt, .duelkaart.uitslag{border-left:5px solid #2f5f7a}
+.duelkaart.gewonnen h4{color:var(--green-d)}
+.duelkaart.verloren h4{color:#9a4a33}
+.dustand{white-space:nowrap}
+.duav{display:inline-grid; flex:0 0 auto}
+.duav.leeg{width:40px; height:40px; border-radius:50%; border:2px dashed var(--rule); place-items:center; color:var(--ink-2); font-weight:700}
+/* de uitslag */
+.duelsheet{border-top-color:#2f5f7a}
+.duelsheet .top .caps{color:#2f5f7a}
+.duwie{display:grid; grid-template-columns:1fr auto 1fr; align-items:center; text-align:center; gap:8px}
+.duwie > div{display:grid; justify-items:center; gap:4px}
+.duwie b{font-family:var(--display); font-size:1.1rem}
+.duvs{font-family:var(--caps); text-transform:uppercase; letter-spacing:.08em; font-size:.75rem; color:var(--ink-2)}
+.durondes{list-style:none; margin:0; padding:0; display:grid; gap:8px}
+.duronde{display:grid; grid-template-columns:1fr 1fr; gap:6px 10px; background:var(--leaf); border-radius:8px; padding:10px 12px; animation:duRonde .45s cubic-bezier(.2,.7,.3,1) both; animation-delay:calc(.35s + var(--i) * .7s)}
+.drsoort{grid-column:1 / -1; display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 8px}
+.drsoort b{font-family:var(--display); font-size:1.05rem}
+.drsoort i{color:var(--ink-2); font-size:.88rem}
+.drspeler{display:flex; flex-wrap:wrap; align-items:baseline; gap:2px 8px; padding:6px 8px; border-radius:6px; background:var(--paper)}
+.drspeler small{flex-basis:100%; font-family:var(--caps); text-transform:uppercase; letter-spacing:.05em; font-size:.66rem; color:var(--ink-2)}
+.drspeler b{margin-left:auto; font-family:var(--display); font-size:1.2rem}
+.drspeler.beste{box-shadow:inset 0 0 0 2px var(--green)}
+.dr-goed{color:var(--green-d); font-size:.92rem}
+.dr-mis{color:#9a4a33; font-size:.92rem}
+.dr-niet{color:var(--ink-2); font-style:italic; font-size:.92rem}
+.dutotaal{display:grid; grid-template-columns:1fr auto 1fr; align-items:end; text-align:center; animation:duRonde .4s ease both; animation-delay:2.45s}
+.dutotaal small{display:block; font-family:var(--caps); text-transform:uppercase; letter-spacing:.05em; font-size:.66rem; color:var(--ink-2)}
+.dutotaal b{font-family:var(--display); font-weight:800; font-size:2.6rem; line-height:1; font-variant-numeric:tabular-nums}
+.dutotaal > span{font-family:var(--caps); text-transform:uppercase; letter-spacing:.08em; font-size:.72rem; color:var(--ink-2); padding-bottom:6px}
+.duoordeel{display:grid; gap:4px; text-align:center; justify-items:center; opacity:0; transform:scale(.9); transition:opacity .35s ease, transform .45s cubic-bezier(.3,1.4,.5,1)}
+.duelpop.af .duoordeel{opacity:1; transform:none}
+.duoordeel h2{font-size:2.1rem}
+.duoordeel.gewonnen h2{color:var(--green)}
+.duoordeel.verloren h2{color:#9a4a33}
+.duoordeel p{margin:0}
+.duuitdaging{display:grid; justify-items:center; text-align:center; gap:8px}
+.duuitdaging p{margin:0}
+@keyframes duRonde{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
+.duelpop.stil .duronde, .duelpop.stil .dutotaal{animation:none}
+.duelpop.stil .duoordeel{transition:none}
+@media (prefers-reduced-motion:reduce){ .duronde, .dutotaal{animation:none} .duoordeel{transition:none} }
+html.donker .duelvervolg{background:#18262e}
+html.donker .duelbalk, html.donker .duelvervolg, html.donker .duelkaart.beurt, html.donker .duelkaart.uitslag, html.donker .duelsheet{border-left-color:#7fb0cc; border-top-color:#7fb0cc}
+html.donker .duelbalk .caps, html.donker .duelvervolg .caps, html.donker .duelsheet .top .caps{color:#a9cde2}
+html.donker .dustip i{border-color:#7fb0cc}
+html.donker .dustip i.klaar{background:#7fb0cc}
+html.donker .dustip i.nu{background:#35556a}
+html.donker .dukies, html.donker .drspeler, html.donker .duelpaneel input#duTegen{background:#1d2a22}
+html.donker .duronde{background:#18241d}
+html.donker .dr-mis, html.donker .duoordeel.verloren h2, html.donker .duelkaart.verloren h4{color:#e39a82}
+html.donker .belstip, html.donker .duelstip{border-color:#141f19}

@@ -243,6 +243,7 @@ const online = (() => {
       /* eerst een uitnodiging en league uit een link: de server neemt een uitnodiging alleen aan vóór je eerste resultaat */
       const extra = await League.naNaam(true);
       Profiel.naNaam();
+      if (typeof Duel !== "undefined") Duel.naNaam();
       queueRecentDaily(); syncSoon(); flush().then(() => refreshWeek()).catch(() => {}); renderRank(); renderMenu(); toast(`Welkom, ${name}! Je doet nu mee aan de ranglijst.${extra}`);
     } catch(e){
       $("pJoin").disabled = false;
@@ -255,7 +256,7 @@ const online = (() => {
   async function login(){
     try {
       const name = await koppel($("pCode").value);
-      if (name){ $("welcome").hidden = true; renderRank(); renderMenu(); const extra = await League.naNaam(false); Profiel.naNaam(); toast(`Welkom terug, ${name}! Je ${NAAM.vestiarium} is bijgewerkt.${extra}`); }
+      if (name){ $("welcome").hidden = true; renderRank(); renderMenu(); const extra = await League.naNaam(false); Profiel.naNaam(); if (typeof Duel !== "undefined") Duel.naNaam(); toast(`Welkom terug, ${name}! Je ${NAAM.vestiarium} is bijgewerkt.${extra}`); }
       else { renderRank(); toast("Gekoppeld. Dit apparaat blijft nu gelijk met je andere apparaat."); }
     } catch(e){ $("pMsg").textContent = e.message === "code" ? "Deze code klopt niet. Kopieer hem opnieuw op je andere apparaat." : "Deze code wordt niet herkend."; }
   }
@@ -387,7 +388,7 @@ $("welcomeLater").addEventListener("click", () => { $("welcome").hidden = true; 
 function toonWelkom(){
   try {
     if (!online.enabled || online.player()) return;
-    const link = League.welkomTekst();
+    const link = (typeof Duel !== "undefined" && Duel.welkomTekst()) || League.welkomTekst();
     if (link) $("welcomeText").innerHTML = link;
     else if (online.appApart()){
       $("welcomeText").innerHTML = `<b>Speelde je al op de webpagina?</b> De app op je beginscherm heeft een eigen geheugen. Kies dan geen nieuwe naam, maar plak je spelerscode van de webpagina (Mijn profiel → Kopieer spelerscode). Dan houd je je naam en voortgang.`;

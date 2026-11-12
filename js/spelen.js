@@ -37,8 +37,11 @@ const Spelen = (() => {
     { id: "oefen", label: "Oefenen", go: () => { bewaar(ALLES); startFree(ALLES); } },
     { id: "dag", label: "Dagcasus", go: () => { goDaily(); window.scrollTo({ top: 0, behavior: "auto" }); } },
     { id: "soortenduel", label: "Soortenduel", later: true },
-    { id: "spelersduel", label: "Spelersduel", later: true }
+    /* update 16: aan vanaf 14 december (of eerder voor testers); tot dan grijs met ‘binnenkort’ */
+    { id: "spelersduel", label: "Spelersduel", later: () => !(typeof Duel !== "undefined" && Duel.zichtbaar()), go: () => Duel.open(),
+      sub: () => { const n = typeof Duel !== "undefined" ? Duel.aantal() : 0; return n ? `${n} voor jou` : ""; } }
   ];
+  const isLater = b => typeof b.later === "function" ? b.later() : !!b.later;
   let terug = null, dicht = null;
   const isOpen = () => !$("speelKring").hidden && $("speelKring").classList.contains("open");
   function open(){
@@ -51,16 +54,18 @@ const Spelen = (() => {
     const R = Math.min(160, innerWidth / 2 - 40), HOEK = [168, 125, 90, 55, 12];   // de buitenste iets lager, zodat geen naam een bolletje raakt
     const st = store.get(), i = todayIndex(), gespeeld = finished(st, i, false) || finished(st, i, true);
     $("kringBellen").innerHTML = BELLEN.map((b, k) => {
+      b = Object.assign({}, b, { later: isLater(b) });
       const hoek = HOEK[k] * Math.PI / 180;
       const x = Math.round(R * Math.cos(hoek)), y = Math.round(-R * Math.sin(hoek));
-      const sub = b.later ? "binnenkort" : b.id === "dag" ? (gespeeld ? "gespeeld" : `#${i + 1}`) : "";
+      const sub = b.later ? "binnenkort" : b.id === "dag" ? (gespeeld ? "gespeeld" : `#${i + 1}`) : b.sub ? b.sub() : "";
+      const stip = !b.later && b.id === "spelersduel" && typeof Duel !== "undefined" && Duel.aantal() ? `<span class="belstip" aria-hidden="true">${Duel.aantal()}</span>` : "";
       return `<button type="button" class="bel ${b.id}${b.later ? " later" : ""}" data-bel="${b.id}" style="left:${cx}px;top:${cy}px;--x:${x}px;--y:${y}px;--d:${Math.abs(k - 2) * 35}ms"${b.later ? ' aria-disabled="true"' : ""}>
-        <span class="bol">${IC[b.id]}${b.id === "dag" && gespeeld ? `<span class="belvink" aria-hidden="true">✓</span>` : ""}</span>
+        <span class="bol">${IC[b.id]}${b.id === "dag" && gespeeld ? `<span class="belvink" aria-hidden="true">✓</span>` : ""}${stip}</span>
         <span class="bl">${esc(b.label)}</span>${sub ? `<span class="bs">${esc(sub)}</span>` : ""}</button>`;
     }).join("");
     $("kringBellen").querySelectorAll(".bel").forEach(b => b.onclick = () => {
       const bel = BELLEN.find(x => x.id === b.dataset.bel);
-      if (bel.later){ toast(`${bel.label} komt binnenkort.`); return; }
+      if (isLater(bel)){ toast(`${bel.label} komt binnenkort.`); return; }
       sluit(true); bel.go();
     });
     knop.setAttribute("aria-expanded", "true"); knop.classList.add("open");
