@@ -39,9 +39,10 @@ Determinatiespel over beschermde fauna van Nederland: herken de soort aan habita
 | `js/statistiek.js` | statistieken via het menu: gespeeld, goed/fout, vaakst tegengekomen en ingevoerd, dwaalgasten, actieve maanden (update 12); ‘Vaakst verward’ met alleen soorten die op elkaar lijken en ‘Oefen deze soorten’ (update 19, regels in `lijktOp` in `js/veldboek.js`) |
 | `js/duel.js` | spelersduel (update 16, vanaf 23 november 2026; eerder voor de testers in Supabase): uitdagen op naam of met een link (`?duel=CODE`), drie casussen in het gewone spelscherm (`S.mode = "duel"`), lijst met je duels, pop-up bij een uitdaging en de uitslag casus voor casus; voorbeeld van de uitslag met `?duel=demo` |
 | `js/apparaat.js` | ‘Gebruik de app!’ en ‘Koppel je apparaten’ in Mijn profiel (update 21): installeren per apparaat, koppelen met een korte code van 6 tekens of een QR-code (10 minuten geldig, `#code=…`), anoniem apparaatnummer; voorbeeld met `?apparaat=demo` |
+| `js/push.js` | pushmeldingen (update 18): de vraag na 3 dagcasussen (via de wachtrij), de schakelaar ‘Seintje om 19:00’ in het menu, aan- en afmelden per apparaat; testen met `?push=demo` (dan ook ‘Stuur een testmelding’ in het menu). Het versturen gebeurt op de server: `supabase/functions/dagcasus-push` (Edge Function) en supabase-020; aan voor iedereen met `push_instellingen.actief` |
 | `js/qrcode.js` | QR-codes maken: qrcode-generator 1.4.4 van Kazuhiko Arase (MIT-licentie, ongewijzigd) |
 | `js/app.js` | spelregels, kop, installeren en opstarten |
-| `sw.js` | service worker (offline en updates) |
+| `sw.js` | service worker (offline, updates en het tonen van pushmeldingen) |
 
 Contrast van alle avatars op alle achtergrondkleuren nameten: `node tools/avatarcontrast.mjs --html overzicht.html` (heeft Playwright met Chrome nodig).
 

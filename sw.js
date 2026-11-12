@@ -1,10 +1,10 @@
 /* Vestigia service worker: de app werkt offline; de ranglijst gaat altijd via het netwerk. */
 /* VERSION niet met de hand aanpassen: node tools/versie.mjs zet hem, en zet hetzelfde nummer achter de bestanden in index.html (?v=…).
    Zo haalt een geïnstalleerde app na een update nooit een nieuwe pagina met oude scripts uit de cache. */
-const VERSION = "vestigia-202611121319";
+const VERSION = "vestigia-202611121326";
 const STAMP = VERSION.slice("vestigia-".length);
 const ASSETS = ["css/vestigia.css", "data/teksten.js", "data/soorten.js", "data/sporen.js", "data/dagschema.js", "data/veldweken.js", "data/toelichting.js", "data/zoekgroepen.js", "data/bronnen.js",
-  "js/kern.js", "js/spel.js", "js/veldboek.js", "js/melden.js", "js/kop.js", "js/spelen.js", "js/opening.js", "js/uitleg.js", "js/online.js", "js/league.js", "data/avatars.js", "js/profiel.js", "data/advent.js", "js/wachtrij.js", "js/kerst.js", "data/dwaalgasten.js", "js/dwaalgast.js", "js/nieuw.js", "js/levels.js", "js/statistiek.js", "js/duel.js", "js/qrcode.js", "js/apparaat.js", "js/app.js"];
+  "js/kern.js", "js/spel.js", "js/veldboek.js", "js/melden.js", "js/kop.js", "js/spelen.js", "js/opening.js", "js/uitleg.js", "js/online.js", "js/league.js", "data/avatars.js", "js/profiel.js", "data/advent.js", "js/wachtrij.js", "js/kerst.js", "data/dwaalgasten.js", "js/dwaalgast.js", "js/nieuw.js", "js/levels.js", "js/statistiek.js", "js/duel.js", "js/qrcode.js", "js/apparaat.js", "js/push.js", "js/app.js"];
 const SHELL = ["./", "index.html", "config.js", "app.webmanifest",
   "icons/app.svg", "icons/app-192.png", "icons/app-512.png", "icons/maskable-512.png", "icons/apple-touch-icon.png"]
   .concat(ASSETS.map(f => f + "?v=" + STAMP));
@@ -43,4 +43,23 @@ self.addEventListener("fetch", e => {
     return;
   }
   e.respondWith(caches.match(e.request).then(hit => hit || fetch(e.request)));
+});
+
+/* pushmeldingen (update 18): het seintje van 19:00. Een tik opent de app (of haalt hem naar voren) op de dagcasus. */
+self.addEventListener("push", e => {
+  let d = {}; try { d = e.data ? e.data.json() : {}; } catch(x){ d = { tekst: e.data ? e.data.text() : "" }; }
+  e.waitUntil(self.registration.showNotification(d.titel || "Vestigia", {
+    body: d.tekst || "De dagcasus van vandaag wacht nog op je.",
+    icon: "icons/app-192.png", badge: "icons/app-192.png",
+    tag: d.tag || "dagcasus", renotify: false, data: { url: d.url || "./" }
+  }));
+});
+self.addEventListener("notificationclick", e => {
+  e.notification.close();
+  const doel = new URL((e.notification.data && e.notification.data.url) || "./", self.registration.scope).href;
+  e.waitUntil(self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(lijst => {
+    const open = lijst.find(c => c.url.startsWith(self.registration.scope));
+    if (open){ open.focus(); try { open.postMessage("dagcasus"); } catch(x){} return; }
+    return self.clients.openWindow(doel);
+  }));
 });
