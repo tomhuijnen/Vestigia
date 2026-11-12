@@ -341,7 +341,8 @@ const Kerst = (() => {
      Een spook-saldo boven het donkere scherm, precies op de plek van de eikelknop. Elke eikel die aankomt, laat het
      saldo opveren en een stukje optellen; pas na de laatste staat het nieuwe saldo er. */
   function saldoPlek(){
-    const k = [$("eikelBtn"), $("slimEikel")].find(x => x && !x.hidden && x.getBoundingClientRect().width > 0 && x.getBoundingClientRect().bottom > 0);
+    const slim = $("slimbar") && $("slimbar").classList.contains("show");     // update 19b: smalle balk in beeld? dan daar
+    const k = (slim ? [$("slimEikel"), $("eikelBtn")] : [$("eikelBtn"), $("slimEikel")]).find(x => x && !x.hidden && x.getBoundingClientRect().width > 0 && x.getBoundingClientRect().bottom > 0);
     if (k) return { el: k, r: k.getBoundingClientRect() };
     const m = $("menuBtn").getBoundingClientRect();
     return { el: null, r: { left: m.left - 92, top: m.top + 2, width: 84, height: 36 } };

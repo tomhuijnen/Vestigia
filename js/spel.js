@@ -124,21 +124,55 @@ function submitGuess(id){
    met de uitslag (renderBalk), precies waar je al keek. Daarna schuift de pagina rustig omhoog naar de uitslag.
    Bij ‘minder beweging’ blijft de pagina staan en doet de knop ‘Bekijk uitslag’ het werk. */
 const rustigeBeweging = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
-function naarUitslag(gedrag){
-  const kaart = $("resultCard"); if (!kaart || $("resultWrap").hidden) return;
-  /* de smalle balk bovenin staat er na het scrollen; daar moet de uitslag onder vallen */
-  const boven = kaart.getBoundingClientRect().top, marge = ($("slimbar") ? $("slimbar").offsetHeight : 0) + 14;
-  window.scrollTo({ top: Math.max(0, window.scrollY + boven - marge), behavior: gedrag || (rustigeBeweging() ? "auto" : "smooth") });
+/* naar de uitslag; de smalle balk bovenin staat er na het scrollen, daar moet de uitslag onder vallen */
+function naarUitslag(){
+  if (!$("resultCard") || $("resultWrap").hidden) return;
+  if (rustigeBeweging()) window.scrollTo({ top: uitslagDoel(), behavior: "instant" }); else schuifRustig(uitslagDoel());
+}
+/* Update 19b: bij goed blijft de balk ‘Gedetermineerd’ staan; de pagina schuift pas als je op ‘Bekijk uitslag’ tikt.
+   Bij fout schuift de pagina na 1,4 s vanzelf naar de uitslag, want daar staat wat je kunt leren (Typisch, Verwar niet met).
+   Het schuiven gaat trager dan het standaard ‘smooth’ van de browser. Eikels en XP vliegen pas als de pagina stilstaat
+   (uitslagScroll), zodat het saldo rechtsboven niet verspringt terwijl ze vliegen. Tik of scrol je zelf, dan stopt het
+   schuiven meteen. */
+let uitslagScroll = Promise.resolve();
+const STA_FOUT = 1400;
+function schuifRustig(naar){
+  return new Promise(klaar => {
+    const van = window.scrollY, afstand = naar - van;
+    if (Math.abs(afstand) < 4){ klaar(); return; }
+    const duur = Math.min(2200, 1300 + Math.abs(afstand) * .4), t0 = performance.now();
+    const zacht = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+    let stop = false;
+    const zelf = () => { stop = true; };
+    const opties = { passive: true, once: true };
+    ["wheel", "touchstart", "keydown", "mousedown"].forEach(t => window.addEventListener(t, zelf, opties));
+    const stap = nu => {
+      const x = Math.min(1, (nu - t0) / duur);
+      if (!stop) window.scrollTo({ top: van + afstand * zacht(x), behavior: "instant" });
+      if (x < 1 && !stop) return requestAnimationFrame(stap);
+      ["wheel", "touchstart", "keydown", "mousedown"].forEach(t => window.removeEventListener(t, zelf, opties));
+      klaar();
+    };
+    requestAnimationFrame(stap);
+  });
+}
+function uitslagDoel(){
+  const kaart = $("resultCard");
+  return Math.max(0, window.scrollY + kaart.getBoundingClientRect().top - (($("slimbar") ? $("slimbar").offsetHeight : 0) + 14));
 }
 function naarUitslagStraks(){
-  if (rustigeBeweging()) return;
+  if (rustigeBeweging() || S.status === "won"){ uitslagScroll = Promise.resolve(); return; }   // goed: de knop doet het werk
   const spel = S;
-  setTimeout(() => {
-    if (S !== spel || VIEW !== "game" || document.querySelector(".overlay:not([hidden]), #awardPop:not([hidden])")) return;
-    const r = $("resultCard").getBoundingClientRect();
-    if (r.top > 40 && r.top < innerHeight * .35) return;          // staat al mooi in beeld (breed scherm)
-    naarUitslag("smooth");
-  }, 1100);
+  uitslagScroll = new Promise(klaar => {
+    setTimeout(async () => {
+      if (S !== spel || VIEW !== "game" || document.querySelector(".overlay:not([hidden]), #awardPop:not([hidden])")) return klaar();
+      const r = $("resultCard").getBoundingClientRect();
+      if (r.top > 40 && r.top < innerHeight * .35) return klaar();      // staat al mooi in beeld (breed scherm)
+      await schuifRustig(uitslagDoel());
+      klaar();
+    }, STA_FOUT);
+    setTimeout(klaar, STA_FOUT + 3000);              // vliegen wacht nooit langer dan dit
+  });
 }
 function renderBalk(){
   const balk = $("uitslagBalk"), rij = document.querySelector(".det-row");
@@ -153,7 +187,7 @@ function renderBalk(){
     <span class="ub-tekst"><small>${won ? "Gedetermineerd" : "Niet gedetermineerd, het was"}</small><b>${esc(t.n)}</b><i>${esc(t.s)}</i></span>
     <button class="btn" type="button" id="ubBekijk">Bekijk uitslag</button>`;
   balk.hidden = false;
-  $("ubBekijk").onclick = () => { naarUitslag(); setTimeout(() => { const h = $("resultCard").querySelector("h3"); if (h){ h.tabIndex = -1; h.focus({ preventScroll: true }); } }, rustigeBeweging() ? 0 : 450); };
+  $("ubBekijk").onclick = () => { naarUitslag(); setTimeout(() => { const h = $("resultCard").querySelector("h3"); if (h){ h.tabIndex = -1; h.focus({ preventScroll: true }); } }, rustigeBeweging() ? 0 : 1500); };
 }
 function moreClue(){
   if (!S.expert || S.status !== "playing" || S.revealed >= MAX) return;

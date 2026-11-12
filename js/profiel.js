@@ -233,6 +233,8 @@ const Profiel = (() => {
     const verdiend = oudW && w.verdiend > oudW.verdiend ? w.verdiend - oudW.verdiend : 0;
     const groot = nieuwBehaald(oudP, pr, oudM, nuM);
     vliegt = !!(oudW && verdiend);
+    /* update 19b: pas vliegen als de pagina na het spel klaar is met schuiven naar de uitslag */
+    if (typeof uitslagScroll !== "undefined") await uitslagScroll;
     try {
       renderMenu();
       if (verdiend){ winst = { k: key, n: verdiend }; toonWinst(); }

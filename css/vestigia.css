@@ -1083,7 +1083,7 @@ html.donker .avk.open, html.donker .adventvak{background:#18241d}
 /* eikels die naar je saldo vliegen */
 .avk-vlieg{position:fixed; left:0; top:0; width:22px; height:22px; z-index:80; pointer-events:none; filter:drop-shadow(0 2px 4px rgba(0,0,0,.35)); will-change:transform}
 .avk-vlieg svg{width:100%; height:100%}
-.avk-spook{position:fixed; z-index:79; display:flex; align-items:center; gap:6px; padding:0 12px 0 10px; border-radius:18px; border:1.5px solid #f6d77a; background:#2c4a37; color:#fff;
+.avk-spook{position:fixed; z-index:79; transition:left .3s ease, top .3s ease; display:flex; align-items:center; gap:6px; padding:0 12px 0 10px; border-radius:18px; border:1.5px solid #f6d77a; background:#2c4a37; color:#fff;
   font-family:var(--display); font-weight:700; font-size:.95rem; font-variant-numeric:tabular-nums; box-shadow:0 0 0 4px rgba(246,215,122,.25), 0 6px 18px rgba(0,0,0,.4); pointer-events:none; transition:opacity .5s ease}
 .avk-spook .eikel{width:16px; height:16px}
 .avk-spook.veer{animation:avkveer .28s cubic-bezier(.2,1.8,.4,1)}
@@ -1354,7 +1354,7 @@ html.donker .nw-blokje.rood{background:#8a1a22}
 /* '+N XP' onderweg naar de ring, en de kopie van de knop boven alles */
 .xpvlieg{position:fixed; left:0; top:0; z-index:10002; pointer-events:none; background:var(--lv-ring); color:#1f3a2a; border-radius:999px; padding:5px 11px;
   font:700 14px var(--display); box-shadow:0 4px 14px rgba(31,58,42,.3); white-space:nowrap; will-change:transform}
-.xpspook{position:fixed!important; z-index:10001; pointer-events:none; margin:0; transition:opacity .3s}
+.xpspook{position:fixed!important; z-index:10001; pointer-events:none; margin:0; transition:opacity .3s, left .3s ease, top .3s ease}
 .xpspook.veer{animation:xpveer .5s ease-out}
 .xpspook.weg{opacity:0}
 /* update 11: XP-sterretjes uit de adventkalender, en de ring die oplicht */
