@@ -3,7 +3,7 @@
 
 /* ---------- welk scherm staat open ---------- */
 let VIEW = "game";
-const VIEWS = { game: "gameView", dex: "dexView", rank: "rankView", league: "leagueView", profiel: "profielView", shop: "shopView", stats: "statsView" };
+const VIEWS = { game: "gameView", dex: "dexView", rank: "rankView", league: "leagueView", profiel: "profielView", shop: "shopView", stats: "statsView", duel: "duelView" };
 /* Bij een schermwissel schuift het nieuwe scherm zacht in beeld (niet bij ‘minder beweging’). */
 function inBeeld(el){
   if (!el || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -18,21 +18,26 @@ function setView(v){
 }
 /* Regel onder ‘Vestigia’ (update 19): volgt het scherm, niet de spelmodus. Bij een casus staat er alleen bij oefenen iets
    (welk nummer en welke dag het is, zie je al in de tegel); op de andere schermen de naam van het scherm. */
-const SCHERMNAAM = { rank: "Ranglijst", league: "League", dex: () => NAAM.vestiarium, profiel: "Mijn profiel", shop: "Shop", stats: "Statistieken" };
+const SCHERMNAAM = { rank: "Ranglijst", league: "League", dex: () => NAAM.vestiarium, profiel: "Mijn profiel", shop: "Shop", stats: "Statistieken", duel: "Spelersduel" };
 function kopLabel(){
   let groot = "", klein = "";
   if (VIEW === "game"){
-    if (S && S.mode === "free"){ groot = `Oefencasus${S.ids ? " · je verwarde soorten" : S.groep && GROUPS[S.groep] ? " · " + GROUPS[S.groep] : ""}`; klein = "oefenen"; }
+    if (S && S.mode === "duel"){ groot = `Spelersduel · casus ${S.duel.ronde + 1} van 3`; klein = "duel"; }
+    else if (S && S.mode === "free"){ groot = `Oefencasus${S.ids ? " · je verwarde soorten" : S.groep && GROUPS[S.groep] ? " · " + GROUPS[S.groep] : ""}`; klein = "oefenen"; }
     else if (S) klein = `#${S.caseNo}`;
   } else { const n = SCHERMNAAM[VIEW]; groot = typeof n === "function" ? n() : n || ""; klein = groot.toLowerCase(); }
   $("fSeries").textContent = groot; $("fSeries").hidden = !groot;
   $("slimSeries").textContent = klein;
 }
 /* Oefenen krijgt een bruine kop, zodat je altijd ziet dat het niet om de dagcasus gaat. */
-function kleurKop(){ document.body.classList.toggle("oefenen", VIEW === "game" && !!S && S.mode === "free"); }
+function kleurKop(){
+  document.body.classList.toggle("oefenen", VIEW === "game" && !!S && S.mode === "free");
+  /* update 16: blauw in een duel en op het scherm Spelersduel (zoals groen voor de dagcasus en bruin voor oefenen) */
+  document.body.classList.toggle("induel", (VIEW === "game" && !!S && S.mode === "duel") || VIEW === "duel");
+}
 /* ---------- tabbalk onderin: Ranglijst · Spelen · Vestiarium ---------- */
 function renderTabbar(){
-  const cur = VIEW === "game" ? "spelen" : VIEW === "league" ? "rank" : VIEW;
+  const cur = VIEW === "game" || VIEW === "duel" ? "spelen" : VIEW === "league" ? "rank" : VIEW;
   $("tabbar").querySelectorAll("[data-tab]").forEach(b => {
     b.classList.toggle("on", b.dataset.tab === cur);
     b.dataset.tab === cur ? b.setAttribute("aria-current", "page") : b.removeAttribute("aria-current");
@@ -151,6 +156,7 @@ function renderKop(){
     dicht ? b.setAttribute("aria-label", `${expert ? "Expert" : "Klassiek"}: vandaag op slot`) : b.removeAttribute("aria-label");
   }
   renderVeldweek(st, daily ? S.caseNo - 1 : i, daily);
+  if (typeof Duel !== "undefined") Duel.balk();
   renderTiles(); renderMenu();
 }
 

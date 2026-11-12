@@ -1489,3 +1489,189 @@ button.st-rij:hover, button.st-rij:focus-visible{background:var(--mint)}
 html.donker .belbadge{background:radial-gradient(circle at 50% 42%, #4a4128 0, #3a3320 60%, #2d2818 100%)}
 html.donker .lvbuit .beleik{color:#e6b866}
 @media (prefers-reduced-motion:reduce){ .belpop:not([hidden]) .belbadge{animation:none} }
+
+/* ── update 16: kleuren van het spelersduel op één plek: heidepaars (bloeiende struikhei), naast groen voor de dagcasus
+   en bruin voor oefenen. Een ander thema = alleen deze waarden. Het vorige voorstel, ijsvogelblauw, was:
+   --du:#2f5f7a --du-d:#1f4256 --du-l:#5ea3c9 --du-zacht:#8fb4c9 --du-mint:#d7e9f3 --du-wit:#e8f2f8 --du-leaf:#f1f6f9 --du-rule:#d3e1ea ── */
+:root{--du:#7a4f75; --du-d:#56344f; --du-l:#b07aa8; --du-zacht:#c6a6c1; --du-mint:#f0e1ee; --du-wit:#f6edf5; --du-leaf:#faf5f9; --du-rule:#e8d7e5;
+  --du-tegel:rgba(50,20,45,.5); --du-tegel2:rgba(50,20,45,.7); --du-tb:rgba(240,225,238,.3); --du-gloed:rgba(176,122,168,.22); --du-schaduw:rgba(86,52,79,.6);
+  --dn:#d3a6cc; --dn-l:#ecd0e6; --dn-vlak:#3a2637; --dn-bg:#241a23; --dn-bar:#4a2b46; --dn-kop:#643a5e; --dn-kop2:#3f2340; --dn-rand:#8a6584; --dn-tb:#6b4a66; --dn-rule:#4a3547; --dn-nu:#6b4a66; --dn-tegel:rgba(36,18,34,.55)}
+/* ── update 16: spelersduel ── */
+.bel.spelersduel:not(.later) .bol{background:linear-gradient(160deg,var(--du) 0%,var(--du-d) 100%); color:#fff}
+.belstip, .duelstip{position:absolute; min-width:20px; height:20px; padding:0 5px; border-radius:10px; background:#c8553a; color:#fff; font:700 .72rem/20px var(--body); text-align:center; border:2px solid #fff; box-sizing:content-box}
+.belstip{right:-4px; top:-4px}
+.tabbar .ic{position:relative}
+.duelstip{right:2px; top:-6px; min-width:14px; height:16px; line-height:16px; font-size:.66rem; padding:0 4px}
+body.induel .modebar{display:none}
+.duelbalk{display:grid; grid-template-columns:1fr auto; gap:4px 14px; align-items:center; background:var(--leaf); border:1px solid var(--rule); border-left:5px solid var(--du); border-radius:10px; padding:12px 16px; margin:0 0 18px}
+.duelbalk .caps{color:var(--du)}
+.duelbalk b{display:block; font-family:var(--display); font-size:1.2rem; font-weight:700}
+.duelbalk .fine{grid-column:1 / -1; margin:0}
+.dustip{display:inline-flex; gap:6px}
+.dustip i{width:12px; height:12px; border-radius:50%; border:2px solid var(--du); box-sizing:border-box}
+.dustip i.klaar{background:var(--du)}
+.dustip i.nu{background:var(--du-zacht)}
+.duelvervolg{display:grid; gap:10px; background:var(--du-wit); border-radius:8px; padding:14px 16px; border-left:5px solid var(--du)}
+.duelvervolg p{margin:0}
+.duelvervolg .dvkop{display:flex; justify-content:space-between; align-items:center; gap:10px}
+.duelvervolg .caps{color:var(--du)}
+.duelstart{margin:18px 0 6px}
+.duelstart .fine{margin:0}
+.duelpaneel{background:var(--leaf); border:1px solid var(--rule); border-radius:10px; padding:16px; display:grid; gap:10px; margin:10px 0 6px}
+.duelpaneel .fine{margin:0}
+.duelpaneel input#duTegen{width:100%; padding:9px 11px; border:1.5px solid var(--rule); border-radius:6px; background:var(--paper)}
+.duelpaneel input#duTegen:focus{border-color:var(--green); outline:none}
+.duelpaneel .duseg{max-width:340px}
+.dukeus{display:flex; flex-wrap:wrap; gap:8px}
+.dukeus .fine{margin:0}
+.dukies{all:unset; box-sizing:border-box; display:flex; align-items:center; gap:8px; padding:4px 12px 4px 4px; border:1.5px solid var(--rule); border-radius:999px; cursor:pointer; background:var(--paper); -webkit-tap-highlight-color:transparent}
+.dukies span{display:flex; flex-direction:column; line-height:1.1; font-weight:700}
+.dukies small{font-weight:400; font-size:.72rem; color:var(--ink-2)}
+.dukies[aria-pressed="true"]{border-color:var(--green); background:var(--mint)}
+.dukies:focus-visible{outline:2px solid var(--green); outline-offset:2px}
+.dukies .lvring{padding:3px}
+.dulink{display:flex; gap:8px; align-items:flex-start; font-size:.92rem}
+.dulink input{margin-top:4px}
+.duelsec{margin-top:22px}
+.duelsec h3{font-family:var(--caps); text-transform:uppercase; letter-spacing:.08em; font-size:.85rem; margin:0; color:var(--green)}
+.duelsec h3 small{color:var(--ink-2); font-weight:500}
+.duelsec .lglist{margin:10px 0 0}
+.duelkaart .dk-top{display:flex; gap:12px; align-items:center}
+.duelkaart h4{margin:0; font-family:var(--display); font-weight:700; font-size:1.12rem}
+.duelkaart .fine{margin:2px 0 0}
+.duelkaart.beurt, .duelkaart.uitslag{border-left:5px solid var(--du)}
+.duelkaart.gewonnen h4{color:var(--green-d)}
+.duelkaart.verloren h4{color:#9a4a33}
+.dustand{white-space:nowrap}
+.duav{display:inline-grid; flex:0 0 auto}
+.duav.leeg{width:40px; height:40px; border-radius:50%; border:2px dashed var(--rule); place-items:center; color:var(--ink-2); font-weight:700}
+/* de uitslag */
+.duelsheet{border-top-color:var(--du)}
+.duelsheet .top .caps{color:var(--du)}
+.duwie{display:grid; grid-template-columns:1fr auto 1fr; align-items:center; text-align:center; gap:8px}
+.duwie > div{display:grid; justify-items:center; gap:4px}
+.duwie b{font-family:var(--display); font-size:1.1rem}
+.duvs{font-family:var(--caps); text-transform:uppercase; letter-spacing:.08em; font-size:.75rem; color:var(--ink-2)}
+.durondes{list-style:none; margin:0; padding:0; display:grid; gap:8px}
+.duronde{display:grid; grid-template-columns:1fr 1fr; gap:6px 10px; background:var(--leaf); border-radius:8px; padding:10px 12px; animation:duRonde .45s cubic-bezier(.2,.7,.3,1) both; animation-delay:calc(.35s + var(--i) * .7s)}
+.drsoort{grid-column:1 / -1; display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 8px}
+.drsoort b{font-family:var(--display); font-size:1.05rem}
+.drsoort i{color:var(--ink-2); font-size:.88rem}
+.drspeler{display:flex; flex-wrap:wrap; align-items:baseline; gap:2px 8px; padding:6px 8px; border-radius:6px; background:var(--paper)}
+.drspeler small{flex-basis:100%; font-family:var(--caps); text-transform:uppercase; letter-spacing:.05em; font-size:.66rem; color:var(--ink-2)}
+.drspeler b{margin-left:auto; font-family:var(--display); font-size:1.2rem}
+.drspeler.beste{box-shadow:inset 0 0 0 2px var(--green)}
+.dr-goed{color:var(--green-d); font-size:.92rem}
+.dr-mis{color:#9a4a33; font-size:.92rem}
+.dr-niet{color:var(--ink-2); font-style:italic; font-size:.92rem}
+.dutotaal{display:grid; grid-template-columns:1fr auto 1fr; align-items:end; text-align:center; animation:duRonde .4s ease both; animation-delay:2.45s}
+.dutotaal small{display:block; font-family:var(--caps); text-transform:uppercase; letter-spacing:.05em; font-size:.66rem; color:var(--ink-2)}
+.dutotaal b{font-family:var(--display); font-weight:800; font-size:2.6rem; line-height:1; font-variant-numeric:tabular-nums}
+.dutotaal > span{font-family:var(--caps); text-transform:uppercase; letter-spacing:.08em; font-size:.72rem; color:var(--ink-2); padding-bottom:6px}
+.duoordeel{display:grid; gap:4px; text-align:center; justify-items:center; opacity:0; transform:scale(.9); transition:opacity .35s ease, transform .45s cubic-bezier(.3,1.4,.5,1)}
+.duelpop.af .duoordeel{opacity:1; transform:none}
+.duoordeel h2{font-size:2.1rem}
+.duoordeel.gewonnen h2{color:var(--green)}
+.duoordeel.verloren h2{color:#9a4a33}
+.duoordeel p{margin:0}
+.duuitdaging{display:grid; justify-items:center; text-align:center; gap:8px}
+.duuitdaging p{margin:0}
+@keyframes duRonde{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
+.duelpop.stil .duronde, .duelpop.stil .dutotaal{animation:none}
+.duelpop.stil .duoordeel{transition:none}
+@media (prefers-reduced-motion:reduce){ .duronde, .dutotaal{animation:none} .duoordeel{transition:none} }
+html.donker .duelvervolg{background:var(--dn-vlak)}
+html.donker .duelbalk, html.donker .duelvervolg, html.donker .duelkaart.beurt, html.donker .duelkaart.uitslag, html.donker .duelsheet{border-left-color:var(--dn); border-top-color:var(--dn)}
+html.donker .duelbalk .caps, html.donker .duelvervolg .caps, html.donker .duelsheet .top .caps{color:var(--dn-l)}
+html.donker .dustip i{border-color:var(--dn)}
+html.donker .dustip i.klaar{background:var(--dn)}
+html.donker .dustip i.nu{background:var(--dn-nu)}
+html.donker .dukies, html.donker .drspeler, html.donker .duelpaneel input#duTegen{background:#1d2a22}
+html.donker .duronde{background:#18241d}
+html.donker .dr-mis, html.donker .duoordeel.verloren h2, html.donker .duelkaart.verloren h4{color:#e39a82}
+html.donker .belstip, html.donker .duelstip{border-color:#141f19}
+.duelvoorbeeld{margin:16px 0 0; padding:10px 14px; border-radius:8px; background:#fff6dc; border:1px dashed #d9a441; font-size:.92rem}
+html.donker .duelvoorbeeld{background:#2a2414; border-color:#8a6a2a}
+
+/* ═════════════ update 16: blauw in het spelersduel, zoals groen (dagcasus) en bruin (oefenen) ═════════════ */
+.induel .masthead{background:linear-gradient(160deg, var(--du) 0%, var(--du-d) 100%)}
+.induel .slimbar{background:var(--du-d)}
+.induel .masthead, .induel .slimbar{--lv-rand:var(--du-d)}
+.induel .series{color:var(--du-mint)}
+.induel .tile{background:var(--du-tegel); border-color:var(--du-zacht)}
+.induel button.tile:hover{background:var(--du-tegel2)}
+.induel .tile .tl, .induel .tile .ts, .induel .tile .tv small{color:var(--du-mint)}
+.induel .tile .tb{background:var(--du-tb)}
+.induel .tabbar .mid .ic{background:var(--du)}
+.induel :is(#gameView, #duelView){--green:var(--du); --green-d:var(--du-d); --mint:var(--du-mint); --leaf:var(--du-leaf); --ochre:var(--du); --moss:var(--du); --rule:var(--du-rule)}
+.induel #gameView .seg button[aria-pressed="false"]:hover{background:var(--du-wit)}
+.induel .sleutelbox{border-left-color:var(--ochre)}
+.induel .clue.sleutel{box-shadow:0 0 0 1.5px var(--ochre) inset}
+.induel .toelbox{border-left-color:var(--ochre)}
+html.donker .induel .masthead{background:linear-gradient(160deg,var(--dn-kop) 0%,var(--dn-kop2) 100%)}
+html.donker .induel .slimbar{background:var(--dn-bar)}
+html.donker .induel .masthead, html.donker .induel .slimbar{--lv-rand:var(--dn-bar)}
+html.donker .induel :is(#gameView, #duelView){--green:var(--dn); --green-d:var(--dn-l); --mint:var(--dn-vlak); --leaf:var(--dn-bg); --ochre:var(--dn); --moss:var(--dn); --rule:var(--dn-rule)}
+html.donker .induel .tile{background:var(--dn-tegel); border-color:var(--dn-rand)}
+html.donker .induel .tile .tb{background:var(--dn-tb)}
+html.donker .induel .clue.sleutel, html.donker .induel .sleutelbox, html.donker .induel .confuse{background:var(--dn-vlak)}
+html.donker .induel .sleutelbox, html.donker .induel .confuse{border-left-color:var(--dn)}
+html.donker .induel .tabbar .mid .ic{background:var(--dn)}
+html.donker .induel .toelbtn{background:var(--dn-vlak); border-color:var(--dn-rand)}
+html.donker .induel .toelbtn[aria-expanded="true"]{background:var(--dn); color:var(--dn-bg); border-color:var(--dn)}
+
+/* de knoppen onder de uitslag in het midden */
+.duelsheet .actions.dumidden{justify-content:center}
+
+/* uitleg bij het spelersduel: midden in beeld, blauw en wat feestelijker */
+#wachtPop.duelnieuw{place-items:center; padding:18px}
+#wachtPop.duelnieuw .sheet{max-width:420px; width:100%; border-radius:20px; border-top:0; padding:22px 22px 20px; overflow:hidden; position:relative;
+  background:radial-gradient(120% 70% at 50% 0%, var(--du-wit) 0%, #fff 62%); box-shadow:0 24px 60px -18px rgba(12,32,46,.55); animation:duNieuwIn .45s cubic-bezier(.25,1.4,.5,1)}
+#wachtPop.duelnieuw .sheet::before{content:""; position:absolute; left:0; right:0; top:0; height:6px; background:linear-gradient(90deg,var(--du),var(--du-l),#e2b84e,var(--du)); background-size:200% 100%; animation:duBand 3s linear infinite}
+#wachtPop.duelnieuw .nw-kop .caps{color:var(--du); font-weight:700}
+#wachtPop.duelnieuw .nw-stip i.klaar{background:var(--du-zacht)}
+#wachtPop.duelnieuw .nw-stip i.nu{background:var(--du); box-shadow:0 0 0 3px var(--du-gloed)}
+#wachtPop.duelnieuw .nw-ic{width:80px; height:80px; background:linear-gradient(160deg,var(--du-l) 0%,var(--du-d) 100%); color:#fff; box-shadow:0 8px 20px -6px var(--du-schaduw), 0 0 0 6px var(--du-gloed); animation:duIcoon .6s cubic-bezier(.3,1.6,.5,1)}
+#wachtPop.duelnieuw .nw-ic b{color:#fff}
+#wachtPop.duelnieuw .nw-stap h2{color:var(--du-d); font-size:1.45rem}
+#wachtPop.duelnieuw .btn{background:var(--du)}
+#wachtPop.duelnieuw .btn:hover{background:var(--du-d)}
+#wachtPop.duelnieuw .linklike{color:var(--du)}
+@keyframes duNieuwIn{from{opacity:0; transform:scale(.85) translateY(14px)} to{opacity:1; transform:none}}
+@keyframes duIcoon{from{transform:scale(.4) rotate(-20deg)} to{transform:none}}
+@keyframes duBand{to{background-position:-200% 0}}
+html.donker #wachtPop.duelnieuw .sheet{background:radial-gradient(120% 70% at 50% 0%, var(--dn-kop) 0%, var(--dn-bg) 62%)}
+html.donker #wachtPop.duelnieuw .nw-stap h2{color:var(--dn-l)}
+html.donker #wachtPop.duelnieuw .nw-kop .caps{color:var(--dn-l)}
+html.donker #wachtPop.duelnieuw .btn{background:var(--dn); color:var(--dn-bg)}
+@media (prefers-reduced-motion:reduce){ #wachtPop.duelnieuw .sheet, #wachtPop.duelnieuw .sheet::before, #wachtPop.duelnieuw .nw-ic{animation:none} }
+
+/* de pop-ups van het duel (uitdaging en uitslag) in dezelfde kleur */
+#duelPop{--green:var(--du); --green-d:var(--du-d); --mint:var(--du-mint); --leaf:var(--du-leaf); --moss:var(--du); --rule:var(--du-rule)}
+html.donker #duelPop{--green:var(--dn); --green-d:var(--dn-l); --mint:var(--dn-vlak); --leaf:var(--dn-bg); --moss:var(--dn); --rule:var(--dn-rule)}
+html.donker #duelPop .btn:not(.line){color:var(--dn-bg)}
+html.donker #duelPop .sheet{background:var(--dn-bg)}
+html.donker #duelPop .duronde{background:var(--dn-vlak)}
+html.donker #duelPop .drspeler{background:var(--dn-bg)}
+
+/* donker: het duel moet duidelijk afsteken tegen de zwarte achtergrond (feedback Tom 12 november) */
+html.donker .duelbalk{background:var(--dn-vlak); border-color:var(--dn-rand); border-left-color:var(--dn)}
+html.donker .duelbalk b{color:#fff}
+html.donker .duelvervolg{background:var(--dn-vlak)}
+html.donker body.induel .lgcard.duelkaart{background:#2e1f2c; border-color:var(--dn-rand)}
+html.donker .induel .tile{border-color:var(--dn-rand)}
+/* donker: ook de achtergrond van het duel krijgt een paarse zweem, zodat het echt een eigen plek is */
+html.donker body.induel{--paper:#1a1219; background:#1a1219}
+/* zwaarden in het bolletje Spelersduel: de rand van het voorste zwaard in de kleur van het bolletje */
+.bel.spelersduel .bol{--zwaardrand:var(--du-d)}
+.bel.spelersduel.later .bol{--zwaardrand:#eef0ec}
+html.donker .bel.spelersduel.later .bol{--zwaardrand:#18221c}
+html.donker body.induel .tabbar{background:#20151f}
+/* de knop ‘Bekijk uitslag’ volgt de kleur van de uitslagbalk (groen bij goed, rood bij fout), ook in oefenen, het duel
+   en de donkere modus, waar .btn anders de kleur van de omgeving krijgt */
+#gameView .uitslagbalk .btn, html.donker #gameView .uitslagbalk .btn{background:#2f6a44; border-color:#2f6a44; color:#fff}
+#gameView .uitslagbalk .btn:hover, html.donker #gameView .uitslagbalk .btn:hover{background:#245236}
+#gameView .uitslagbalk.mis .btn, html.donker #gameView .uitslagbalk.mis .btn{background:#8f3f2b; border-color:#8f3f2b; color:#fff}
+#gameView .uitslagbalk.mis .btn:hover, html.donker #gameView .uitslagbalk.mis .btn:hover{background:#73311f}
+html.donker #gameView .uitslagbalk .btn{background:#3f8455; border-color:#3f8455}
+html.donker #gameView .uitslagbalk.mis .btn{background:#a64a33; border-color:#a64a33}

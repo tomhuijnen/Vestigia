@@ -301,7 +301,7 @@ const Profiel = (() => {
   const TABS = [["avatar", "Avatar"], ["titel", "Ondertitel"], ["lijst", "Lijst"], ["kleur", "Kleur"]];
   const VELD = { avatar: "avatar", titel: "subtitle", lijst: "frame", kleur: "color" };
   const OPBOUW = [["dagcasus", "Dagcasussen"], ["reeksen", "Reeksen van 7 dagen"], ["veldweken", "Veldweken"], ["platen", `Platen in het ${NAAM.vestiarium}`],
-                  ["trofeeen", "Titels en medailles"], ["uitnodigingen", "Uitgenodigde spelers"], ["prestaties", "Prestaties"], ["mijlpalen", "Mijlpalen"], ["minispellen", "Minigames"], ["advent", "Adventkalender"], ["dwaalgasten", "Dwaalgasten"], ["levels", "Levels"]];
+                  ["trofeeen", "Titels en medailles"], ["uitnodigingen", "Uitgenodigde spelers"], ["prestaties", "Prestaties"], ["mijlpalen", "Mijlpalen"], ["minispellen", "Minigames"], ["spelersduels", "Spelersduels"], ["advent", "Adventkalender"], ["dwaalgasten", "Dwaalgasten"], ["levels", "Levels"]];
   const zonderNaam = (body, wat) => {
     body.innerHTML = `<div class="playerbox"><p><b>Kies eerst een spelersnaam.</b> ${wat}</p>
       <div class="row2"><button class="btn" id="pfNaam">Kies een spelersnaam</button></div></div>`;
@@ -485,7 +485,8 @@ const Profiel = (() => {
   /* categorie per prestatie: uit de database (prestatie_meta), anders deze vaste indeling */
   const CAT_VAST = { eenkeer:"Determineren", expert1:"Determineren", tweeling:"Determineren", dagen:"Determineren",
                      reeks:"Volhouden", maanden:"Volhouden", veldwerker:"Volhouden",
-                     duel6:"Minigames", raadsel1:"Minigames", spelersduel:"Minigames", uitnodiging:"Samen" };
+                     duel6:"Minigames", raadsel1:"Minigames", spelersduel:"Minigames", uitnodiging:"Samen",
+                     duelgespeeld:"Minigames", duelperfect:"Minigames", duelspelers:"Minigames" };     // update 16
   const CAT_VOLG = ["Determineren", "Specialist", "Volhouden", "Minigames", "Samen", "Overig"];
   const CAT_NIEUW = { Volharding: "Volhouden", Minispellen: "Minigames" };     // oude namen uit de database (vóór supabase-014)
   const categorie = id => { const r = (lees(K.beloning) || []).find(x => x.id === id);

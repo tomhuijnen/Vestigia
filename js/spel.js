@@ -23,6 +23,7 @@ function loadDaily(expert){
   return g;
 }
 function saveDaily(){
+  if (S.mode === "duel"){ Duel.bewaar(); return; }     // update 16: een duelcasus bewaart zijn eigen stand (js/duel.js)
   if (S.mode !== "daily") return;
   const st = store.get(); st.games = st.games || {};
   st.games[dailyKey(S.caseNo - 1, S.expert)] = { target:S.target, k:S.k, guesses:S.guesses, revealed:S.revealed, status:S.status };
@@ -106,9 +107,10 @@ function submitGuess(id){
   /* update 19: waar stond het invoerveld op het scherm? De balk met de uitslag komt precies daar */
   const invoerOpScherm = S.status !== "playing" ? $("gInput").getBoundingClientRect().top : null;
   if (S.status !== "playing"){
-    recordStats(); recordDex(); recordLog(); freshResult = true;
+    /* update 16: een duelcasus levert geen plaat op in het Vestiarium; het duel zelf regelt eikels en XP */
+    recordStats(); if (S.mode !== "duel") recordDex(); if (!(S.mode === "duel" && Duel.demo)) recordLog(); freshResult = true;
     if (S.status === "won") try { navigator.vibrate && navigator.vibrate([30, 50, 70]); } catch(e){}
-    online.afterGame();
+    if (S.mode === "duel") Duel.naCasus(); else online.afterGame();
   }
   saveDaily(); render();
   /* de uitslag verschijnt boven het invoerveld en duwt alles omlaag: schuif mee, zodat de balk blijft waar je keek */
@@ -367,7 +369,7 @@ function renderResult(){
     <h3>${esc(t.n)}<i>${esc(t.s)}</i></h3>
     ${!won && S.mode === "daily" ? `<p class="jammer">Jammer, niet gelukt vandaag. Kom morgen terug voor een nieuwe dagcasus!</p>` : ""}
     <p class="eikelline" id="eikelGain" hidden></p>
-    <p>${score}${S.mode === "daily" ? ` <span class="ptsline">${eersteModus(store.get(), S.caseNo - 1) === !!S.expert
+    <p>${score}${S.mode === "duel" ? ` <span class="ptsline">${points() ? "+" + points() + " punt" + (points() > 1 ? "en" : "") : "0 punten"} in het duel</span>` : ""}${S.mode === "daily" ? ` <span class="ptsline">${eersteModus(store.get(), S.caseNo - 1) === !!S.expert
       ? `${points() ? "+" + points() + " punt" + (points() > 1 ? "en" : "") : "0 punten"} voor de ranglijst`
       : `telt niet voor de ranglijst: je speelde deze casus vandaag al in ${S.expert ? "klassiek" : "expert"}`}</span>` : ""}</p>
     ${toelichting() ? `<div class="toelrij"><button class="toelbtn" id="toelBtn" aria-expanded="false" aria-controls="toelBox"><svg aria-hidden="true" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="8" cy="8" r="6.4"/><path d="M8 7.3v4M8 4.9v.1"/></svg><span>Toelichting</span><i class="pijl" aria-hidden="true"></i></button></div>
@@ -378,7 +380,8 @@ function renderResult(){
     <div class="confuse"><span class="caps">Verwar niet met</span><p><b>${esc(xs.n)}.</b> ${S.guesses.includes(t.x) ? "Die soort heb je in deze casus ook geprobeerd. " : ""}${esc(t.t)}</p></div>
     ${bronRij(t)}
     ${(S.newAwards || []).map(k => { const [kind, name] = awardLabel(k); return `<div class="awardnote"><span class="caps">Nieuwe ${kind.toLowerCase()}</span><b>${esc(name)}</b></div>`; }).join("")}
-    ${ontdek ? ontdekPlaat(t) : `<p class="dexnote">${won ? `Plaat <b>nº ${dexNo(t.id)}</b> staat nu in je ${NAAM.vestiarium}.` : `Genoteerd als waargenomen in je ${NAAM.vestiarium} (nº ${dexNo(t.id)}).`} <button class="linklike" id="toDex">Open het ${NAAM.vestiarium}</button></p>`}
+    ${S.mode === "duel" ? `<p class="dexnote">Een duelcasus komt niet in je ${NAAM.vestiarium}. ${(store.get().dex || {})[t.id] && store.get().dex[t.id].w > 0 ? `Plaat nº ${dexNo(t.id)} heb je al.` : "Oefen deze soort om hem erin te krijgen."} <button class="linklike" id="toDex">Open het ${NAAM.vestiarium}</button></p>`
+      : ontdek ? ontdekPlaat(t) : `<p class="dexnote">${won ? `Plaat <b>nº ${dexNo(t.id)}</b> staat nu in je ${NAAM.vestiarium}.` : `Genoteerd als waargenomen in je ${NAAM.vestiarium} (nº ${dexNo(t.id)}).`} <button class="linklike" id="toDex">Open het ${NAAM.vestiarium}</button></p>`}
     <button class="reportbtn" id="repFromResult">Klopt er iets niet in deze casus? Meld een fout</button>`;
   const vw = S.mode === "daily" ? veldweek(S.caseNo - 1) : null;
   const vwKaart = vw ? stempelkaart(store.get(), vw) : null;
@@ -395,7 +398,20 @@ function renderResult(){
     <p class="inviteline statsline">Benieuwd hoe je het tot nu toe doet? <button class="linklike" id="toStats">Bekijk je statistieken</button></p>
     ${S.mode === "daily" && online.enabled ? `<p class="inviteline">Samen spelen is leuker. <button class="linklike" id="inviteFromResult">Nodig een speler uit</button></p>` : ""}
 `;
+  /* update 16: bij een duel staat hier wat er nu komt (volgende casus, of het duel afronden) */
+  if (S.mode === "duel") card2.innerHTML = `<section class="xpblok" id="xpBlok" aria-label="Ervaringspunten" hidden></section>${Duel.vervolg()}`;
   wrap.hidden = false;
+  if (S.mode === "duel"){
+    Duel.bindVervolg();
+    $("toDex").onclick = () => showDex();
+    $("repFromResult").onclick = e => openReport(t.id, e.currentTarget, S.k);
+    if ($("toelBtn")) $("toelBtn").onclick = () => {
+      const box = $("toelBox"), open = box.hidden;
+      box.hidden = !open; $("toelBtn").setAttribute("aria-expanded", String(open));
+      if (open) box.classList.remove("toelin"), void box.offsetWidth, box.classList.add("toelin");
+    };
+    return;
+  }
   $("copyBtn").onclick = () => shareOut(resultShare(), $("copyMsg"), card);
   $("nextBtn").onclick = () => startFree();
   if ($("oefenWijzig")) $("oefenWijzig").onclick = () => Spelen.wijzig();
@@ -622,6 +638,7 @@ function goDaily(){ if (S.mode === "daily") showGame(); else startDaily(); }
 function goFree(){ if (S.mode !== "free" || S.status !== "playing") startFree(); else showGame(); }
 /* Wisselen tussen klassiek en expert. Een oefencasus waarin nog niets geprobeerd is, wisselt ter plekke. */
 function setMode(expert){
+  if (S.mode === "duel") return;                    // update 16: de uitdager koos de modus
   if (S.mode === "daily"){
     const eerst = eersteModus(store.get(), todayIndex());
     if (eerst !== null && eerst !== expert){

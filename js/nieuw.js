@@ -21,6 +21,12 @@ const Nieuw = (() => {
     level: `<span class="nw-ic"><b>7</b></span>`,
     xp: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9Z"/></svg></span>`,
     rang: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17V7h12l4 5-4 5H4Z"/><path d="M8 12h6"/></svg></span>`,
+    duel: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 22 22" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="8" r="2.6"/><circle cx="15" cy="8" r="2.6"/><path d="M2.5 17c.5-2.6 2.3-4 4.5-4s4 1.4 4.5 4M10.5 17c.5-2.6 2.3-4 4.5-4s4 1.4 4.5 4"/></svg></span>`,
+    /* twee gekruiste zwaarden, elk met kling, pareerstang, greep en knop; het voorste zwaard heeft een rand in de achtergrondkleur,
+       zodat je ziet dat het twee aparte zwaarden zijn */
+    zwaarden: `<span class="nw-ic zwaard"><svg aria-hidden="true" viewBox="-16 -16 32 32" width="56" height="56" fill="currentColor">
+      <g transform="rotate(-45)"><path d="M0-14.5L1.9-11V4.2h-3.8V-11Z"/><path d="M0-11V2.8" stroke="var(--du-d,#56344f)" stroke-width=".7" opacity=".55"/><rect x="-5.6" y="4" width="11.2" height="2.4" rx="1.2"/><rect x="-1.2" y="6.4" width="2.4" height="5.2" rx=".8"/><circle cy="13.2" r="1.9"/></g>
+      <g transform="rotate(45)" stroke="var(--du-d,#56344f)" stroke-width="1.4" paint-order="stroke" stroke-linejoin="round"><path d="M0-14.5L1.9-11V4.2h-3.8V-11Z"/><path d="M0-11V2.8" stroke="var(--du-d,#56344f)" stroke-width=".7" opacity=".55"/><rect x="-5.6" y="4" width="11.2" height="2.4" rx="1.2"/><rect x="-1.2" y="6.4" width="2.4" height="5.2" rx=".8"/><circle cy="13.2" r="1.9"/></g></svg></span>`,
     kalender: `<span class="nw-ic kerst"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4M9 14.5l2 2 4-4"/></svg></span>`
   };
 
@@ -37,6 +43,12 @@ const Nieuw = (() => {
         { ic: "spoor", kop: "Wat zit erin?", tekst: "Eikels, sporen in de sneeuw om te raden, winterweetjes over beschermde soorten en een paar dingen die je nergens anders krijgt." },
         { ic: "kalender", kop: "Een gemist vakje is weg", tekst: "Je kunt alleen het vakje van vandaag openen. Open je ze alle 24, dan word je Adventkampioen." }
       ] },
+    { id: "spelersduel", titel: "Spelersduel", klasse: "duelnieuw", verborgen: () => !(typeof Duel !== "undefined" && Duel.zichtbaar()),   // update 16, vanaf 23 november
+      stappen: [
+        { ic: "duel", kop: "Nieuw: het spelersduel!", tekst: "Daag een andere speler uit, op naam of met een link. Jullie spelen dezelfde drie casussen, in de modus die de uitdager kiest." },
+        { ic: "zwaarden", kop: "Wie verslaat de ander?", tekst: "Jij speelt je drie casussen meteen; daarna heeft de ander 48 uur. Wat de ander deed, zie je pas als jullie allebei klaar zijn. Dan gaan de casussen één voor één open." },
+        { ic: "xp", kop: "Wie wint?", tekst: "Per casus krijg je punten zoals bij de dagcasus. Meeste punten wint; gelijke punten is gelijkspel. Ook hier zijn eikels te verdienen! En er zijn eigen prestaties en ondertitels. Een duel telt niet voor de ranglijst." }
+      ] },
     { id: "levels", titel: "Levels", verborgen: () => !(typeof Levels !== "undefined" && Levels.zichtbaar()),   // pas vanaf de startdatum
       stappen: [
         { ic: "level", kop: "Nieuw: levels", tekst: "Met ervaringspunten (XP) stijg je in level. Je level zie je in de ring om je avatar rechtsboven: hoe voller de ring, hoe dichter bij het volgende level." },
@@ -50,7 +62,7 @@ const Nieuw = (() => {
     return new Promise(klaar => {
       const pop = $("wachtPop"), body = $("wachtBody");
       let i = 0;
-      const dicht = () => { pop.hidden = true; pop.classList.remove("nieuw"); document.removeEventListener("keydown", esc_, true); klaar(); };
+      const dicht = () => { pop.hidden = true; pop.classList.remove("nieuw"); if (o.klasse) pop.classList.remove(o.klasse); document.removeEventListener("keydown", esc_, true); klaar(); };
       const esc_ = e => { if (e.key === "Escape"){ e.preventDefault(); e.stopPropagation(); dicht(); } };
       function stap(){
         const s = o.stappen[i], laatste = i === o.stappen.length - 1;
@@ -63,6 +75,7 @@ const Nieuw = (() => {
         $("nwVolg").focus();
       }
       pop.classList.add("nieuw");
+      if (o.klasse) pop.classList.add(o.klasse);       // eigen opmaak, bijvoorbeeld het spelersduel (update 16)
       pop.hidden = false;
       document.addEventListener("keydown", esc_, true);
       stap();
