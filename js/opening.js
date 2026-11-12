@@ -2,7 +2,8 @@
    1. Effen groen, in de kleur van het opstartscherm van de telefoon.
    2. Twee of drie dieren lopen tegelijk over het scherm: hun sporen verschijnen prent voor prent, elk in een eigen richting.
    3. ‘Vestigia’ komt groot in het midden op. De sporen vervagen en het woord schuift en krimpt naar zijn plek in de kop.
-   4. Het groen vloeit weg en de app is er; die laadde al onder de animatie door.
+   4. Het groen vloeit weg en de app is er; die laadde al onder de animatie door, maar bleef onzichtbaar (html.opent,
+      zie de kop van index.html), zodat er niets van de app door het groen heen schemert.
    Prenten die achter de grote letters van ‘Vestigia’ zouden vallen, worden overgeslagen; het spoor loopt erna gewoon door.
    Een tik of toets slaat de animatie over. Bij ‘minder beweging’ alleen een korte overvloeiing.
    Een spoor is nooit van de soort van de dagcasus van vandaag of de komende acht dagen, anders is het een hint. */
@@ -41,7 +42,8 @@ const Opening = (() => {
   function run(){
     return new Promise(resolve => {
       const el = $("opening");
-      if (!el || document.documentElement.classList.contains("geen-opening")){ if (el) el.remove(); resolve(); return; }
+      const html = document.documentElement;
+      if (!el || html.classList.contains("geen-opening")){ if (el) el.remove(); html.classList.remove("opent"); resolve(); return; }
       const timers = [];
       let klaar = false;
       const later = (ms, fn) => timers.push(setTimeout(fn, ms));
@@ -51,6 +53,7 @@ const Opening = (() => {
         timers.forEach(clearTimeout);
         el.style.transition = `opacity ${snel ? 0.15 : 0.35}s ease`;
         el.classList.add("weg");
+        html.classList.remove("opent");     // update 26: pas nu wordt de app zichtbaar, onder het wegvagende groen
         setTimeout(() => { el.remove(); resolve(); }, snel ? 160 : 360);
       }
       el.addEventListener("pointerdown", () => einde(true), { once: true });
