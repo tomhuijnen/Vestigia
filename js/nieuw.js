@@ -44,7 +44,7 @@ const Nieuw = (() => {
       stappen: [
         { ic: "duel", kop: "Nieuw: het spelersduel", tekst: "Daag een speler uit, op naam of met een link. Jullie spelen dezelfde drie casussen, in de modus die de uitdager kiest." },
         { ic: "rondes", kop: "Niet tegelijk", tekst: "Jij speelt je drie casussen meteen; daarna heeft de ander 48 uur. Wat de ander deed, zie je pas als jullie allebei klaar zijn. Dan gaan de casussen één voor één open." },
-        { ic: "tijd", kop: "Wie wint?", tekst: "Per casus krijg je punten zoals bij de dagcasus. Meeste punten wint; gelijke punten is gelijkspel. Je krijgt 3 eikels plus 1 per punt, en 10 extra als je wint (5 bij gelijkspel). Er zijn ook prestaties en ondertitels voor duels. Een duel telt niet voor de ranglijst." }
+        { ic: "xp", kop: "Wie wint?", tekst: "Per casus krijg je punten zoals bij de dagcasus. Meeste punten wint; gelijke punten is gelijkspel. Je krijgt 3 eikels plus 1 per punt, en 10 extra als je wint (5 bij gelijkspel). Er zijn ook prestaties en ondertitels voor duels. Een duel telt niet voor de ranglijst." }
       ] },
     { id: "levels", titel: "Levels", verborgen: () => !(typeof Levels !== "undefined" && Levels.zichtbaar()),   // pas vanaf de startdatum
       stappen: [

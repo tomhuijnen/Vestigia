@@ -28,7 +28,7 @@ const Duel = (() => {
   const zet = (k, v) => { try { v === null || v === undefined ? localStorage.removeItem(k) : localStorage.setItem(k, JSON.stringify(v)); } catch(e){} };
   const p = () => demo ? (online.player() || { id: "demo", key: "demo", name: "Jij" }) : online.enabled ? online.player() : null;
   const args = extra => Object.assign({ p_id: p().id, p_key: p().key }, extra || {});
-  const rpc = (fn, a) => demo ? NEP.rpc(fn, a) : rpc(fn, a);
+  const rpc = (fn, a) => demo ? NEP.rpc(fn, a) : online.rpc(fn, a);
   const reduce = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
   const wacht = ms => new Promise(r => setTimeout(r, ms));
   const fout = e => e && e.status && e.status < 500 ? e.message : "Dat lukte niet. Controleer je internetverbinding.";
