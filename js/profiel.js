@@ -103,13 +103,17 @@ const Profiel = (() => {
       zet(K.mijl, r);
       if (melden && oud && oud.length) for (const m of r){
         const was = oud.find(o => o.id === m.id);
-        if (m.behaald && was && !was.behaald)
+        if (m.behaald && was && !was.behaald){
+          /* update 25: podium en weekwinst komen in de pop-up ‘Je week in Vestigia’ (als die nog komt) */
+          if (typeof Week !== "undefined" && Week.vang(m)) continue;
           toast(`Mijlpaal behaald: ${m.label}${m.eikels ? ` · +${m.eikels} eikels` : ""}${m.titel ? ` · ondertitel ${m.titel}` : ""}`, { duur: 6000 });
+        }
       }
       inVestiarium(); if (VIEW === "profiel") teken();
       return r;
     } catch(e){ return null; }                          // supabase-011 is nog niet gedraaid: geen mijlpalen
   }
+  let mijlBelofte = null;           // de eerste ronde mijlpalen bij het opstarten (de weekpop-up wacht erop)
   async function haalPrestaties(){ const r = await online.rpc("my_prestaties", args()); zet(K.prest, r); return r; }
   async function haalAlles(){
     if (!p()) return false;
@@ -123,7 +127,7 @@ const Profiel = (() => {
       /* categorie en eikels per niveau (prestatie_meta, sinds supabase-011; anders prestatie_eikels uit 003) */
       online.rpc("prestatie_meta").catch(() => online.rpc("prestatie_eikels"))
         .then(r => { zet(K.beloning, r || []); inVestiarium(); if (VIEW === "profiel") teken(); }).catch(() => {});
-      haalMijlpalen(true);
+      mijlBelofte = haalMijlpalen(true);
       Levels.haal().catch(() => {});
       const me = (prof || [])[0]; if (me) { zet(K.mij, { avatar: me.avatar, subtitle: me.subtitle, frame: me.frame, color: me.color }); anderen.set(me.name.toLowerCase(), me); }
       saldoInKop(); renderMenu();
@@ -535,10 +539,29 @@ const Profiel = (() => {
     if (!sec.hidden && $("dexMijlList")) $("dexMijlList").innerHTML = mijlpalenHtml();
   }
 
+  /* update 25: rij voor een mijlpaal in een andere pop-up, en de eikels uit die pop-up naar het saldo laten vliegen.
+     Eerst het saldo opnieuw ophalen; het getal bovenin gaat even terug en telt dan mee terwijl de eikels landen. */
+  const mijlRij = m => eikRij(LINT(true).replace('class="mplint"', 'class="mplint" width="30" height="38"'), m.label,
+    `Mijlpaal${m.titel ? ` · ondertitel ${m.titel}` : ""}`, m.eikels || 0);
+  async function vliegUit(body){
+    const rijen = [...body.querySelectorAll("[data-eik]")], tot = rijen.reduce((a, r) => a + (+r.dataset.eik || 0), 0);
+    if (!tot || !p()) return;
+    vliegt = true;
+    try {
+      const w = await haalWallet().catch(() => wallet());
+      if (w) kopSaldo(Math.max(0, w.saldo - tot));
+      await wachtMs(rustigNu() ? 0 : 750);
+      for (const r of rijen){
+        if ($("wachtPop").hidden) break;
+        await vliegNaarKop(r.querySelector(".beleik") || r.querySelector("svg"), +r.dataset.eik, true);
+      }
+    } finally { vliegt = false; saldoInKop(); renderMenu(); }
+  }
+
   /* bij het opstarten: saldo en profiel ophalen (stil als het niet lukt) */
   function start(){ saldoInKop(); codeTip(); if (p()) haalAlles().then(() => { codeTip(); inVestiarium(); }); }
 
-  return { render, renderShop, naSpel, toonWinst, versier, saldoInKop, codeTip, start, mijn, inVestiarium, haalAlles, herteken: () => teken(),
+  return { mijlRij, vliegUit, mijlpalenKlaar: () => mijlBelofte || Promise.resolve(null), render, renderShop, naSpel, toonWinst, versier, saldoInKop, codeTip, start, mijn, inVestiarium, haalAlles, herteken: () => teken(),
            naNaam(){ codeTip(); haalAlles(); } };
 })();
 
