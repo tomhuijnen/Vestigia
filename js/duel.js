@@ -361,7 +361,14 @@ const Duel = (() => {
     const kies = naam => { gekozen = naam; inp.value = naam; link.checked = false; zoek(naam); };
     inp.oninput = () => { gekozen = inp.value.trim(); if (gekozen) link.checked = false; clearTimeout(zoekT); zoekT = setTimeout(() => zoek(inp.value), 250); };
     link.onchange = () => { if (link.checked){ gekozen = ""; inp.value = ""; } else gekozen = null; zoek(""); };
-    const zetModus = x => { kiesExpert = x; paneel(); };
+    /* niet opnieuw tekenen: dan schuift de groene keuze niet (zelfde animatie als in de dagcasus) */
+    const zetModus = x => {
+      kiesExpert = x;
+      const seg = el.querySelector(".duseg");
+      seg.classList.toggle("expert", x);
+      $("duKl").setAttribute("aria-pressed", String(!x)); $("duEx").setAttribute("aria-pressed", String(x));
+      $("duModusUitleg").textContent = x ? "Expert: één determinatie per casus; hoe minder waarnemingen je opent, hoe meer punten." : "Klassiek: vijf pogingen per casus; hoe eerder goed, hoe meer punten.";
+    };
     $("duKl").onclick = () => zetModus(false); $("duEx").onclick = () => zetModus(true);
     $("duAnnuleer").onclick = () => { paneelOpen = false; revanche = null; gekozen = null; teken(cache(), false); };
     $("duStart").onclick = () => begin(link.checked ? "" : inp.value.trim(), kiesExpert === null ? pref.expert : kiesExpert);
@@ -444,9 +451,10 @@ const Duel = (() => {
     if ($("duRevanche")) $("duRevanche").onclick = () => { sluitPop(); open({ uitdaag: true, tegen: d.tegen, revanche: d.id, expert: d.expert }); };
     $("duPopSluit").focus({ preventScroll: true });
     const nieuw = !d.gezien;
-    if (nieuw){
+    /* pas als ‘gezien’ bewaren als je de uitslag zelf sluit: wie meteen op ‘Vernieuwen’ tikt (nieuwe versie), krijgt hem opnieuw */
+    sluitHaak = nieuw ? () => {
       rpc("duel_gezien", args({ p_duel: d.id })).then(() => { d.gezien = true; werkBij(d); return haalStatus(); }).then(() => { if (VIEW === "duel") render(); }).catch(() => {});
-    }
+    } : null;
     /* casussen één voor één, dan de totalen tellen, dan het oordeel */
     const telOp = () => body.querySelectorAll("[data-tel]").forEach(b => { b.textContent = b.dataset.tel; });
     if (reduce()){ telOp(); pop.classList.add("af"); }
@@ -472,14 +480,22 @@ const Duel = (() => {
     const lijst = BERICHT[uitslag === "gelijk" && !punten ? "nul" : uitslag] || BERICHT.gelijk;
     return lijst[Math.floor(Math.random() * lijst.length)].replace("{x}", tegen || "je tegenstander");
   }
-  function sluitPop(){ const pop = $("duelPop"); if (pop && !pop.hidden){ pop.hidden = true; pop.classList.remove("af"); } }
+  /* sluitHaak: wat er moet gebeuren zodra de speler de pop-up zelf sluit of een keuze maakt */
+  let sluitHaak = null;
+  function sluitPop(){
+    const pop = $("duelPop"), h = sluitHaak; sluitHaak = null;
+    if (pop && !pop.hidden){ pop.hidden = true; pop.classList.remove("af"); }
+    if (h) h();
+  }
   $("duelPop").addEventListener("click", e => { if (e.target === $("duelPop")) sluitPop(); });
   document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("duelPop").hidden) sluitPop(); });
 
   /* ---------- pop-up: je bent uitgedaagd ---------- */
-  function uitdagingPop(d, vrij){
+  function uitdagingPop(d, vrij, gezien){
     const pop = $("duelPop"), body = $("duelPopBody");
     return new Promise(klaar => {
+      let gekozen = false;
+      const keuze = () => { if (gekozen) return; gekozen = true; if (gezien) gezien(); };
       body.innerHTML = `
         <div class="top"><span class="caps">Spelersduel</span><button class="iconbtn" id="duPopX" aria-label="Sluiten"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l10 10M13 3L3 13"/></svg></button></div>
         <div class="duuitdaging">${av(d.tegen, "mid")}<h2 id="duelPopH">${esc(d.tegen)} daagt je uit!</h2>
@@ -488,12 +504,14 @@ const Duel = (() => {
           ${!vrij ? `<button class="linklike" id="duNee">Nee, bedankt</button>` : ""}<span class="msg" id="duPopMsg"></span></div>
         <p class="fine">Je speelt de drie casussen achter elkaar. Een duel telt niet voor de ranglijst.</p>`;
       pop.hidden = false; $("duJa").focus({ preventScroll: true });
-      const dicht = () => { sluitPop(); klaar(); };
+      /* ook sluiten via de achtergrond of Escape telt als een keuze (‘later’) */
+      sluitHaak = () => { keuze(); klaar(); };
+      const dicht = () => sluitPop();
       $("duPopX").onclick = $("duLater").onclick = dicht;
       $("duJa").onclick = async () => {
-        if (!vrij){ klaar(); return speel(d); }
+        if (!vrij){ keuze(); sluitHaak = null; klaar(); return speel(d); }
         $("duJa").disabled = true; $("duPopMsg").textContent = "Even geduld…";
-        try { const n = await rpc("duel_neem", args({ p_code: d.code })); werkBij(n); klaar(); speel(n); haalStatus().catch(() => {}); }
+        try { const n = await rpc("duel_neem", args({ p_code: d.code })); werkBij(n); keuze(); sluitHaak = null; klaar(); speel(n); haalStatus().catch(() => {}); }
         catch(e){ $("duJa").disabled = false; $("duPopMsg").textContent = fout(e); }
       };
       if ($("duNee")){
@@ -549,8 +567,10 @@ const Duel = (() => {
     },
     toon(){
       if (kandidaat.status === "klaar") return onthul(kandidaat);
-      const g = lees(K.pop) || {}; g[kandidaat.id] = todayIndex(); zet(K.pop, g);
-      return uitdagingPop(kandidaat, false);
+      /* pas als ‘getoond’ bewaren als de speler iets kiest (spelen, later, nee, sluiten).
+         Zo komt de uitnodiging terug als je meteen op ‘Vernieuwen’ tikt bij een nieuwe versie. */
+      const d = kandidaat;
+      return uitdagingPop(d, false, () => { const g = lees(K.pop) || {}; g[d.id] = todayIndex(); zet(K.pop, g); });
     } });
 
   /* ---------- opstarten ---------- */

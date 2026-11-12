@@ -18,7 +18,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Karla:ital,wght@0,400;0,500;0,700;1,400&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
 <!-- thema: eigen keuze (licht/donker) of anders de instelling van het toestel; vóór de opmaak, dus geen witte flits -->
 <script>(function(){var t=null;try{t=localStorage.getItem("vestigia:thema")}catch(e){}var d=t?t==="donker":!!(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches);if(d)document.documentElement.classList.add("donker")})()</script>
-<link rel="stylesheet" href="css/vestigia.css?v=202611120953">
+<link rel="stylesheet" href="css/vestigia.css?v=202611121302">
 </head>
 <body>
 <!-- openingsanimatie: staat meteen in beeld (geen witte flits), en is in dezelfde sessie al gezien → niet tonen -->
@@ -374,6 +374,10 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
   <div class="sheet modesheet" id="wachtBody"></div>
 </div>
 <!-- update 16: spelersduel: uitdaging en uitslag -->
+<div class="overlay bottom appop" id="appPop" hidden role="dialog" aria-modal="true" aria-labelledby="appPopH">
+  <div class="sheet modesheet apsheet" id="appPopBody"></div>
+</div>
+
 <div class="overlay bottom duelpop" id="duelPop" hidden role="dialog" aria-modal="true" aria-labelledby="duelPopH">
   <div class="sheet modesheet duelsheet" id="duelPopBody"></div>
 </div>
@@ -403,35 +407,37 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
 </div>
 
 <script src="config.js"></script>
-<script src="data/teksten.js?v=202611120953"></script>
-<script src="data/soorten.js?v=202611120953"></script>
-<script src="data/sporen.js?v=202611120953"></script>
-<script src="data/dagschema.js?v=202611120953"></script>
-<script src="data/veldweken.js?v=202611120953"></script>
-<script src="data/toelichting.js?v=202611120953"></script>
-<script src="data/zoekgroepen.js?v=202611120953"></script>
-<script src="data/bronnen.js?v=202611120953"></script>
-<script src="js/kern.js?v=202611120953"></script>
-<script src="js/spel.js?v=202611120953"></script>
-<script src="js/veldboek.js?v=202611120953"></script>
-<script src="js/melden.js?v=202611120953"></script>
-<script src="js/kop.js?v=202611120953"></script>
-<script src="js/spelen.js?v=202611120953"></script>
-<script src="js/opening.js?v=202611120953"></script>
-<script src="js/uitleg.js?v=202611120953"></script>
-<script src="js/online.js?v=202611120953"></script>
-<script src="js/league.js?v=202611120953"></script>
-<script src="data/avatars.js?v=202611120953"></script>
-<script src="js/profiel.js?v=202611120953"></script>
-<script src="data/advent.js?v=202611120953"></script>
-<script src="js/wachtrij.js?v=202611120953"></script>
-<script src="js/kerst.js?v=202611120953"></script>
-<script src="data/dwaalgasten.js?v=202611120953"></script>
-<script src="js/dwaalgast.js?v=202611120953"></script>
-<script src="js/nieuw.js?v=202611120953"></script>
-<script src="js/levels.js?v=202611120953"></script>
-<script src="js/statistiek.js?v=202611120953"></script>
-<script src="js/duel.js?v=202611120953"></script>
-<script src="js/app.js?v=202611120953"></script>
+<script src="data/teksten.js?v=202611121302"></script>
+<script src="data/soorten.js?v=202611121302"></script>
+<script src="data/sporen.js?v=202611121302"></script>
+<script src="data/dagschema.js?v=202611121302"></script>
+<script src="data/veldweken.js?v=202611121302"></script>
+<script src="data/toelichting.js?v=202611121302"></script>
+<script src="data/zoekgroepen.js?v=202611121302"></script>
+<script src="data/bronnen.js?v=202611121302"></script>
+<script src="js/kern.js?v=202611121302"></script>
+<script src="js/spel.js?v=202611121302"></script>
+<script src="js/veldboek.js?v=202611121302"></script>
+<script src="js/melden.js?v=202611121302"></script>
+<script src="js/kop.js?v=202611121302"></script>
+<script src="js/spelen.js?v=202611121302"></script>
+<script src="js/opening.js?v=202611121302"></script>
+<script src="js/uitleg.js?v=202611121302"></script>
+<script src="js/online.js?v=202611121302"></script>
+<script src="js/league.js?v=202611121302"></script>
+<script src="data/avatars.js?v=202611121302"></script>
+<script src="js/profiel.js?v=202611121302"></script>
+<script src="data/advent.js?v=202611121302"></script>
+<script src="js/wachtrij.js?v=202611121302"></script>
+<script src="js/kerst.js?v=202611121302"></script>
+<script src="data/dwaalgasten.js?v=202611121302"></script>
+<script src="js/dwaalgast.js?v=202611121302"></script>
+<script src="js/nieuw.js?v=202611121302"></script>
+<script src="js/levels.js?v=202611121302"></script>
+<script src="js/statistiek.js?v=202611121302"></script>
+<script src="js/duel.js?v=202611121302"></script>
+<script src="js/qrcode.js?v=202611121302"></script>
+<script src="js/apparaat.js?v=202611121302"></script>
+<script src="js/app.js?v=202611121302"></script>
 </body>
 </html>

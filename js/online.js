@@ -221,8 +221,8 @@ const online = (() => {
         <div class="row2"><input id="pName" maxlength="20" placeholder="Bijvoorbeeld Tom of Dassenjager" autocomplete="nickname"><button class="btn" id="pJoin">Meedoen</button></div>
         <span class="msg" id="pMsg"></span>
         <details id="pCodeBox"${appApart() ? " open" : ""}><summary>Ik heb al een spelers- of koppelcode</summary>
-          <p style="margin:8px 0 0;font-size:.9em;opacity:.85">${appApart() ? "Speelde je eerder op de webpagina? De app op je beginscherm heeft een eigen geheugen. Open Vestigia op de webpagina, ga naar Mijn profiel, kopieer je spelerscode en plak hem hier. Kies dus geen nieuwe naam." : "Je spelerscode staat in Mijn profiel op je andere apparaat."}</p>
-          <div class="row2" style="margin-top:8px"><input id="pCode" placeholder="VSP-…"><button class="btn line" id="pLogin">Verder spelen</button></div>
+          <p style="margin:8px 0 0;font-size:.9em;opacity:.85">${appApart() ? "Speelde je eerder op de webpagina? De app op je beginscherm heeft een eigen geheugen. Open Vestigia op de webpagina, ga naar Mijn profiel → Koppel je apparaten → Koppel een nieuw apparaat, en typ de code van 6 tekens hier in. Kies dus geen nieuwe naam." : "Maak op je andere apparaat een koppelcode: Mijn profiel → Koppel je apparaten. Typ de 6 tekens hier in, of plak je lange spelerscode."}</p>
+          <div class="row2" style="margin-top:8px"><input id="pCode" placeholder="ABC 234 of VSP-…" autocapitalize="characters" spellcheck="false"><button class="btn line" id="pLogin">Verder spelen</button></div>
         </details>`;
       $("pJoin").onclick = join;
       $("pName").addEventListener("keydown", e => { if (e.key === "Enter") join(); });
@@ -254,11 +254,23 @@ const online = (() => {
     }
   }
   async function login(){
-    try {
-      const name = await koppel($("pCode").value);
-      if (name){ $("welcome").hidden = true; renderRank(); renderMenu(); const extra = await League.naNaam(false); Profiel.naNaam(); if (typeof Duel !== "undefined") Duel.naNaam(); toast(`Welkom terug, ${name}! Je ${NAAM.vestiarium} is bijgewerkt.${extra}`); }
-      else { renderRank(); toast("Gekoppeld. Dit apparaat blijft nu gelijk met je andere apparaat."); }
-    } catch(e){ $("pMsg").textContent = e.message === "code" ? "Deze code klopt niet. Kopieer hem opnieuw op je andere apparaat." : "Deze code wordt niet herkend."; }
+    const waarde = $("pCode").value.trim();
+    /* update 21: ook de korte koppelcode van 6 tekens (Mijn profiel → Koppel je apparaten) */
+    if (/^[A-Za-z0-9]{3}[\s-]?[A-Za-z0-9]{3}$/.test(waarde)){
+      try {
+        const r = await rpc("koppel_gebruik", { p_code: waarde });
+        if (!r || !r.ok){ $("pMsg").textContent = r && r.reden === "druk" ? "Er werd net te vaak een foute code geprobeerd. Wacht een paar minuten." : "Deze koppelcode klopt niet of is verlopen. Maak op je andere apparaat een nieuwe."; return; }
+        naKoppel(await koppel("VSP-" + r.id + "." + r.key));
+      } catch(e){ $("pMsg").textContent = e.status === 404 ? "Koppelen met een korte code werkt binnenkort. Gebruik tot dan je spelerscode." : "Koppelen lukte niet. Controleer je internetverbinding."; }
+      return;
+    }
+    try { naKoppel(await koppel(waarde)); }
+    catch(e){ $("pMsg").textContent = e.message === "code" ? "Deze code klopt niet. Kopieer hem opnieuw op je andere apparaat." : "Deze code wordt niet herkend."; }
+  }
+  /* na het koppelen met een code: welkom, en alles wat op een naam wacht */
+  async function naKoppel(name){
+    if (name){ $("welcome").hidden = true; renderRank(); renderMenu(); const extra = await League.naNaam(false); Profiel.naNaam(); if (typeof Duel !== "undefined") Duel.naNaam(); toast(`Welkom terug, ${name}! Je ${NAAM.vestiarium} is bijgewerkt.${extra}`); }
+    else { renderRank(); toast("Gekoppeld. Dit apparaat blijft nu gelijk met je andere apparaat."); }
   }
 
   /* Voortgang van je andere apparaten ophalen en samenvoegen (platen, trofeeën, statistieken, logboek).
@@ -319,7 +331,7 @@ const online = (() => {
     setPlayer(Object.assign({}, p, { name: naam })); renderRank(); renderMenu();
     return rest;
   }
-  return { enabled, rpc, player, appApart, hernoem, account, koppeling, koppelcode, koppel, afterGame, haalVoortgang, flush, syncSoon, renderRank, refreshWeek, renderScope, setScope,
+  return { enabled, rpc, player, appApart, hernoem, account, koppeling, koppelcode, koppel, naKoppel, afterGame, haalVoortgang, flush, syncSoon, renderRank, refreshWeek, renderScope, setScope,
            setMode: (m, s) => { rankMode = m; if (s !== undefined) setScope(s); else renderRank(); } };
 })();
 
@@ -391,7 +403,7 @@ function toonWelkom(){
     const link = (typeof Duel !== "undefined" && Duel.welkomTekst()) || League.welkomTekst();
     if (link) $("welcomeText").innerHTML = link;
     else if (online.appApart()){
-      $("welcomeText").innerHTML = `<b>Speelde je al op de webpagina?</b> De app op je beginscherm heeft een eigen geheugen. Kies dan geen nieuwe naam, maar plak je spelerscode van de webpagina (Mijn profiel → Kopieer spelerscode). Dan houd je je naam en voortgang.`;
+      $("welcomeText").innerHTML = `<b>Speelde je al op de webpagina?</b> De app op je beginscherm heeft een eigen geheugen. Kies dan geen nieuwe naam. Maak op de webpagina een koppelcode (Mijn profiel → Koppel je apparaten) en typ hem hieronder in. Dan houd je je naam en voortgang.`;
       $("welcomeGo").textContent = "Spelerscode plakken";
       $("welcomeGo").dataset.code = "1";
       if (!localStorage.getItem("vestigia:welcomeLater:app")) $("welcome").hidden = false;

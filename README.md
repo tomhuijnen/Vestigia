@@ -38,12 +38,14 @@ Determinatiespel over beschermde fauna van Nederland: herken de soort aan habita
 | `data/bronnen.js` | links na het determineren: soortpagina van de bron (Zodion, RAVON, Vogelbescherming, De Vlinderstichting) en de fotopagina op waarneming.nl (soortnummers in `WAARNEMING`); afwijkende adressen in `BRON_LOS` (update 12) |
 | `js/statistiek.js` | statistieken via het menu: gespeeld, goed/fout, vaakst tegengekomen en ingevoerd, dwaalgasten, actieve maanden (update 12); ‘Vaakst verward’ met alleen soorten die op elkaar lijken en ‘Oefen deze soorten’ (update 19, regels in `lijktOp` in `js/veldboek.js`) |
 | `js/duel.js` | spelersduel (update 16, vanaf 23 november 2026; eerder voor de testers in Supabase): uitdagen op naam of met een link (`?duel=CODE`), drie casussen in het gewone spelscherm (`S.mode = "duel"`), lijst met je duels, pop-up bij een uitdaging en de uitslag casus voor casus; voorbeeld van de uitslag met `?duel=demo` |
+| `js/apparaat.js` | ‘Gebruik de app!’ en ‘Koppel je apparaten’ in Mijn profiel (update 21): installeren per apparaat, koppelen met een korte code van 6 tekens of een QR-code (10 minuten geldig, `#code=…`), anoniem apparaatnummer; voorbeeld met `?apparaat=demo` |
+| `js/qrcode.js` | QR-codes maken: qrcode-generator 1.4.4 van Kazuhiko Arase (MIT-licentie, ongewijzigd) |
 | `js/app.js` | spelregels, kop, installeren en opstarten |
 | `sw.js` | service worker (offline en updates) |
 
 Contrast van alle avatars op alle achtergrondkleuren nameten: `node tools/avatarcontrast.mjs --html overzicht.html` (heeft Playwright met Chrome nodig).
 
-De databasescripts (001 t/m 018) staan bewust niet in deze repo, maar in het Project Vestigia.
+De databasescripts (001 t/m 019) staan bewust niet in deze repo, maar in het Project Vestigia.
 
 Casussen voor het spelersduel: de server kiest ze uit de tabel `duel_casussen`. Komen er soorten of casussen bij, draai dan `node tools/duelcasussen.mjs` en plak de uitvoer in Supabase (SQL Editor), anders kunnen die casussen nog niet in een duel komen.
 

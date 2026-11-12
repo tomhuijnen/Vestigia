@@ -187,8 +187,10 @@ function renderBalk(){
       ? `<svg viewBox="0 0 16 16" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg>`
       : `<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg>`}</span>
     <span class="ub-tekst"><small>${won ? "Gedetermineerd" : "Niet gedetermineerd, het was"}</small><b>${esc(t.n)}</b><i>${esc(t.s)}</i></span>
-    <button class="btn" type="button" id="ubBekijk">Bekijk uitslag</button>`;
+    <span class="ub-knoppen"><button class="btn" type="button" id="ubBekijk">Bekijk uitslag</button>${S.mode === "free" ? `<button class="btn line ubnieuw" type="button" id="ubNieuw">Nieuwe casus <span aria-hidden="true">→</span></button>` : ""}</span>`;
   balk.hidden = false;
+  /* update 21: bij oefenen meteen door, zonder eerst naar beneden te scrollen */
+  if ($("ubNieuw")) $("ubNieuw").onclick = () => startFree();
   $("ubBekijk").onclick = () => { naarUitslag(); setTimeout(() => { const h = $("resultCard").querySelector("h3"); if (h){ h.tabIndex = -1; h.focus({ preventScroll: true }); } }, rustigeBeweging() ? 0 : 1500); };
 }
 function moreClue(){

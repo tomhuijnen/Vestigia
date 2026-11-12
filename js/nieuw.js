@@ -27,6 +27,8 @@ const Nieuw = (() => {
     zwaarden: `<span class="nw-ic zwaard"><svg aria-hidden="true" viewBox="-16 -16 32 32" width="56" height="56" fill="currentColor">
       <g transform="rotate(-45)"><path d="M0-14.5L1.9-11V4.2h-3.8V-11Z"/><path d="M0-11V2.8" stroke="var(--du-d,#56344f)" stroke-width=".7" opacity=".55"/><rect x="-5.6" y="4" width="11.2" height="2.4" rx="1.2"/><rect x="-1.2" y="6.4" width="2.4" height="5.2" rx=".8"/><circle cy="13.2" r="1.9"/></g>
       <g transform="rotate(45)" stroke="var(--du-d,#56344f)" stroke-width="1.4" paint-order="stroke" stroke-linejoin="round"><path d="M0-14.5L1.9-11V4.2h-3.8V-11Z"/><path d="M0-11V2.8" stroke="var(--du-d,#56344f)" stroke-width=".7" opacity=".55"/><rect x="-5.6" y="4" width="11.2" height="2.4" rx="1.2"/><rect x="-1.2" y="6.4" width="2.4" height="5.2" rx=".8"/><circle cy="13.2" r="1.9"/></g></svg></span>`,
+    app: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.6"/><path d="M10.5 18.5h3"/><path d="M12 6.5v7M9 10.5l3 3 3-3"/></svg></span>`,
+    koppel: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4.5" width="11" height="8" rx="1.4"/><path d="M1 15.5h13"/><rect x="16" y="7" width="6.5" height="12" rx="1.6"/><path d="M8 18.5c0 1.6 1.3 2.5 3.2 2.5H14"/><path d="M12.6 19.4 14.3 21l-1.7 1.6"/></svg></span>`,
     kalender: `<span class="nw-ic kerst"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4M9 14.5l2 2 4-4"/></svg></span>`
   };
 
@@ -49,6 +51,13 @@ const Nieuw = (() => {
         { ic: "zwaarden", kop: "Wie verslaat de ander?", tekst: "Jij speelt je drie casussen meteen; daarna heeft de ander 48 uur. Wat de ander deed, zie je pas als jullie allebei klaar zijn. Dan gaan de casussen één voor één open." },
         { ic: "xp", kop: "Wie wint?", tekst: "Per casus krijg je punten zoals bij de dagcasus. Meeste punten wint; gelijke punten is gelijkspel. Ook hier zijn eikels te verdienen! En er zijn eigen prestaties en ondertitels. Een duel telt niet voor de ranglijst." }
       ] },
+    /* update 21: voor iedereen één keer, via de wachtrij (js/apparaat.js); stappen met wat: "app" of "koppel" vallen weg
+       als je de app al gebruikt of al op twee apparaten speelt */
+    { id: "apparaten", titel: "App en koppelen", actie: { label: "Naar Mijn profiel", run: () => showProfiel() },
+      stappen: [
+        { ic: "app", wat: "app", kop: "Speel Vestigia als app", tekst: "Zet Vestigia op het beginscherm van je telefoon. Dan open je hem met één tik, schermvullend, en werkt hij ook zonder internet. Kijk in Mijn profiel bij ‘Gebruik de app!’." },
+        { ic: "koppel", wat: "koppel", kop: "Koppel je apparaten", tekst: `Speel je op je telefoon én op een laptop of tablet? Koppel ze met een korte code of een QR-code. Dan blijven je naam, eikels en ${NAAM.vestiarium} overal gelijk. Kijk in Mijn profiel bij ‘Koppel je apparaten’.` }
+      ] },
     { id: "levels", titel: "Levels", verborgen: () => !(typeof Levels !== "undefined" && Levels.zichtbaar()),   // pas vanaf de startdatum
       stappen: [
         { ic: "level", kop: "Nieuw: levels", tekst: "Met ervaringspunten (XP) stijg je in level. Je level zie je in de ring om je avatar rechtsboven: hoe voller de ring, hoe dichter bij het volgende level." },
@@ -69,8 +78,9 @@ const Nieuw = (() => {
         body.innerHTML = `
           <div class="nw-kop"><span class="caps">${i === 0 ? "Nieuw in Vestigia" : esc(o.titel)}</span><span class="nw-stip">${o.stappen.map((_, k) => `<i class="${k === i ? "nu" : k < i ? "klaar" : ""}"></i>`).join("")}</span></div>
           <div class="nw-stap">${ICOON[s.ic] || ""}<h2 id="wachtH">${esc(s.kop)}</h2><p>${esc(s.tekst)}</p></div>
-          <div class="nw-knoppen">${laatste ? "" : `<button class="linklike" id="nwSkip">Overslaan</button>`}<button class="btn" id="nwVolg">${laatste ? "Begrepen" : "Volgende"}</button></div>`;
+          <div class="nw-knoppen">${laatste ? (o.actie ? `<button class="btn line" id="nwActie">${esc(o.actie.label)}</button>` : "") : `<button class="linklike" id="nwSkip">Overslaan</button>`}<button class="btn" id="nwVolg">${laatste ? "Begrepen" : "Volgende"}</button></div>`;
         $("nwVolg").onclick = () => { if (laatste) dicht(); else { i++; stap(); } };
+        if (laatste && o.actie) $("nwActie").onclick = () => { dicht(); o.actie.run(); };
         if (!laatste) $("nwSkip").onclick = dicht;
         $("nwVolg").focus();
       }

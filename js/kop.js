@@ -297,7 +297,7 @@ const MENU_GO = {
   invite: () => { closeMenu(true); League.openUitnodigen(); },
   help: () => { closeMenu(true); openHelp(); },
   uitleg: () => { closeMenu(true); Uitleg.start(); },
-  install: () => { closeMenu(true); installApp(); },
+  install: () => { closeMenu(true); Apparaat.app(); },
   player: () => { if (online.enabled && online.player()) return showProfiel(); showRank(); setTimeout(() => $("pName") && $("pName").focus(), 60); },
   profiel: () => showProfiel(),
   shop: () => showShop(),
