@@ -1658,7 +1658,12 @@ html.donker #duelPop .drspeler{background:var(--dn-bg)}
 html.donker .duelbalk{background:var(--dn-vlak); border-color:var(--dn-rand); border-left-color:var(--dn)}
 html.donker .duelbalk b{color:#fff}
 html.donker .duelvervolg{background:var(--dn-vlak)}
-html.donker .induel .duelkaart{background:#2e1f2c; border-color:var(--dn-rand)}
+html.donker body.induel .lgcard.duelkaart{background:#2e1f2c; border-color:var(--dn-rand)}
 html.donker .induel .tile{border-color:var(--dn-rand)}
 /* donker: ook de achtergrond van het duel krijgt een paarse zweem, zodat het echt een eigen plek is */
 html.donker body.induel{--paper:#1a1219; background:#1a1219}
+/* zwaarden in het bolletje Spelersduel: de rand van het voorste zwaard in de kleur van het bolletje */
+.bel.spelersduel .bol{--zwaardrand:var(--du-d)}
+.bel.spelersduel.later .bol{--zwaardrand:#eef0ec}
+html.donker .bel.spelersduel.later .bol{--zwaardrand:#18221c}
+html.donker body.induel .tabbar{background:#20151f}
