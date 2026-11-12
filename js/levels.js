@@ -27,6 +27,26 @@ const Levels = (() => {
                   [60, "Senior ecoloog"], [80, "Soortdeskundige"], [100, "Hoofdecoloog"], [120, "Expert-ecoloog"], [140, "Veldautoriteit"],
                   [160, "Wandelende veldgids"], [180, "Meesterecoloog"], [200, "Levende legende"]];
   const rangVan = l => RANGEN.filter(([n]) => n <= l).pop()[1];
+  /* update 31: de ring krijgt elke 20 levels een nieuwe kleur, tot Noorderlicht op level 100. Daarna komt er elke
+     20 levels een sterretje op de ring, tot vijf op level 200. Kleuren staan in css (lvt0 … lvt5). */
+  const RINGEN = [[1, "Blad"], [20, "Zeegroen"], [40, "IJsvogel"], [60, "Diepzee"], [80, "Sterrenhemel"], [100, "Noorderlicht"]];
+  const trede = l => Math.max(0, Math.min(RINGEN.length - 1, Math.floor((l || 0) / 20)));
+  const ringNaam = l => RINGEN[trede(l)][1];
+  const MAX_STERREN = 5;
+  const sterren = l => l >= 120 ? Math.min(MAX_STERREN, Math.floor((l - 100) / 20)) : 0;
+  /* sterretjes bovenop de ring, rond 12 uur, midden op de ring (css: --band, --sg, --stap per maat) */
+  function sterrenHtml(l, nieuw){
+    const n = sterren(l); if (!n) return "";
+    return `<span class="lvsterren" aria-hidden="true">${Array.from({ length: n }, (_, i) => `<i style="--i:${i - (n - 1) / 2}"${nieuw && i === n - 1 ? ` class="nieuw"` : ""}></i>`).join("")}</span>`;
+  }
+  /* kleur en sterretjes op een bestaand element zetten (de knoppen rechtsboven en hun kopie) */
+  function zetRing(el, l){
+    for (let i = 0; i < RINGEN.length; i++) el.classList.toggle("lvt" + i, i === trede(l));
+    const oud = el.querySelector(":scope > .lvsterren"), html = sterrenHtml(l);
+    if (oud && oud.dataset.n === String(sterren(l))) return;
+    if (oud) oud.remove();
+    if (html){ el.insertAdjacentHTML("beforeend", html); el.lastElementChild.dataset.n = sterren(l); }
+  }
   const eikelsVoor = l => 10 + (l % 20 === 0 ? 50 : 0);   // bij het bereiken van level l (mijlpaal elke 20 levels)
   const SOORT = { dagcasus: "Dagcasus", dagbonus: "Dagbonus", oefenen: "Oefencasus", herkansing: "Herkansing", nieuw: "Nieuwe soort",
                   dwaalgast: "Dwaalgast", minigame: "Minigame", advent: "Adventkalender" };
@@ -56,7 +76,7 @@ const Levels = (() => {
   /* rond een avatar (html van avatarSVG): ring met voortgang en een levelbolletje; cls = maat (groot, klein) */
   function ring(html, level, pct, cls){
     if (!level) return html;
-    return `<span class="lvring ${cls || ""}" style="--p:${Math.round(pct)}%" aria-label="Level ${level}">${html}<span class="lvnr" aria-hidden="true">${level}</span></span>`;
+    return `<span class="lvring lvt${trede(level)} ${cls || ""}" style="--p:${Math.round(pct)}%" role="img" aria-label="Level ${level}, ring ${ringNaam(level)}" title="Level ${level} · ring ${ringNaam(level)}">${html}${sterrenHtml(level)}<span class="lvnr" aria-hidden="true">${level}</span></span>`;
   }
   const mijnRing = (html, cls) => zichtbaar() ? ring(html, stand.level, 100 * frac(stand), cls) : html;
   /* de knoppen rechtsboven (menu en smalle kop) */
@@ -65,7 +85,8 @@ const Levels = (() => {
     const aan = zichtbaar();
     b.classList.toggle("metlevel", aan);
     let nr = b.querySelector(".lvnr");
-    if (!aan){ if (nr) nr.remove(); b.style.removeProperty("--p"); return; }
+    if (!aan){ if (nr) nr.remove(); b.style.removeProperty("--p"); zetRing(b, 0); b.classList.remove("lvt0"); return; }
+    zetRing(b, stand.level);
     b.style.setProperty("--p", Math.round(100 * frac(stand)) + "%");
     if (!nr){ nr = document.createElement("span"); nr.className = "lvnr"; nr.setAttribute("aria-hidden", "true"); b.appendChild(nr); }
     nr.textContent = stand.level;
@@ -210,8 +231,9 @@ const Levels = (() => {
     return new Promise(klaar => {
       const pop = $("wachtPop"), body = $("wachtBody");
       body.innerHTML = html;
-      pop.classList.add("levelpop"); if (cls) pop.classList.add(cls);
-      const dicht = () => { pop.hidden = true; pop.classList.remove("levelpop", "lvstart", ...(cls ? [cls] : [])); document.removeEventListener("keydown", esc_, true); pop.removeEventListener("click", bg); klaar(); };
+      const kl = (cls || "").split(" ").filter(Boolean);
+      pop.classList.add("levelpop", ...kl);
+      const dicht = () => { pop.hidden = true; pop.classList.remove("levelpop", "lvstart", "lvdim", ...kl, ...RINGEN.map((_, i) => "lvt" + i)); document.removeEventListener("keydown", esc_, true); pop.removeEventListener("click", bg); klaar(); };
       const esc_ = e => { if (e.key === "Escape"){ e.preventDefault(); e.stopPropagation(); dicht(); } };
       const bg = e => { if (e.target === pop) dicht(); };
       document.addEventListener("keydown", esc_, true); pop.addEventListener("click", bg);
@@ -220,23 +242,60 @@ const Levels = (() => {
       body.querySelector("#lvVerder").focus({ preventScroll: true });
     });
   }
-  const cirkel = l => `<div class="lvcirkel"><span class="caps">Level</span><b>${l}</b></div>`;
+  /* oud = het level waar je vandaan komt: wisselt de kleur, dan ligt de nieuwe kleur klaar om rond te lopen */
+  const cirkel = (l, oud) => {
+    const van = oud == null ? l : oud, wissel = trede(l) !== trede(van), ster = !wissel && sterren(l) > sterren(van);
+    return `<div class="lvcirkel lvt${trede(van)}${wissel ? " wissel" : ""}">${wissel ? `<span class="lvnieuw lvt${trede(l)}" aria-hidden="true"></span><span class="lvkomeet lvt${trede(l)}" aria-hidden="true"></span>` : ""}<span class="caps">Level</span><b>${l}</b>${sterrenHtml(wissel ? 0 : l, ster)}</div>`;
+  };
+  const ringBol = l => `<span class="lvbol lvt${trede(l)}" aria-hidden="true"></span>`;
   function levelOmhoog(a, s, extra){
     const b = s.level, w = buit(a, b), nieuweRang = w.rangen.length ? w.rangen[w.rangen.length - 1] : null;
-    const tok = s.tokens;
-    return popup(`
+    const tok = s.tokens, wissel = trede(b) !== trede(a), ster = !wissel && sterren(b) > sterren(a);
+    const ringRij = wissel ? rij(ringBol(b), `Je ring is nu ${ringNaam(b)}`, trede(b) === RINGEN.length - 1 ? "De laatste kleur. Vanaf nu komt er elke 20 levels een sterretje bij." : "Te zien om je avatar, in je profiel en in de ranglijsten")
+      : ster ? rij(ringBol(b), sterren(b) === MAX_STERREN ? "Je vijfde sterretje" : "Een nieuw sterretje op je ring", sterren(b) === MAX_STERREN ? "Je ring is nu helemaal af" : "Elke 20 levels komt er één bij, tot vijf") : "";
+    const p = popup(`
       <span class="caps lvlabel">Level omhoog</span>
-      ${cirkel(b)}
+      ${cirkel(b, a)}
       <div class="lvtekst"><h2 id="wachtH">${nieuweRang ? `Je bent nu ${esc(nieuweRang)}` : `Je bent nu level ${b}`}</h2>
         <p>${nieuweRang ? "Een nieuwe rang. De ondertitel staat klaar in je profiel." : b - a > 1 ? `Je bent ${b - a} levels gestegen.` : `Goed bezig! Op naar level ${b + 1}.`}</p></div>
       <div class="lvbuitlijst">
         ${w.eikels ? rij(eik(), `${w.eikels} eikels`, "10 per level, en 50 extra bij level 20, 40, 60 enzovoort", w.eikels) : ""}
         ${w.rangen.map(r => rij(LINT, `Ondertitel ${r}`, "Niet te koop: alleen via je level")).join("")}
         ${w.tokens ? rij(herstelMunt(28), `${w.tokens === 1 ? "1 hersteltoken" : w.tokens + " hersteltokens"}`, `Alleen bij level 20, 40, 60 enzovoort. Je hebt er nu ${tok} van maximaal 2.`) : ""}
+        ${ringRij}
         ${extra || ""}
       </div>
       ${s.volgende_rang ? `<p class="fine lvvolgende">Volgende rang: ${esc(s.volgende_rang)} op level ${s.volgende_rang_level}</p>` : ""}
-      <button class="btn" id="lvVerder">Verder</button>`);
+      <button class="btn" id="lvVerder">Verder</button>`, "lvt" + trede(wissel ? a : b));
+    if (wissel) ringWissel(a, b, p);
+    return p;
+  }
+  /* update 31: de nieuwe kleur loopt de ring rond. De rest van de pop-up dimt, de ring licht op, de kleur start
+     bovenaan en loopt in 1,2 s met de klok mee rond (met een lichtpuntje voorop), een puls, en dan de rest terug
+     met de regel ‘Je ring is nu …’. Bij ‘minder beweging’: meteen de nieuwe kleur. */
+  function ringWissel(a, b, klaar){
+    const pop = $("wachtPop"), c = pop.querySelector(".lvcirkel.wissel"), rij_ = pop.querySelector(".lvbuit .lvbol");
+    const regel = rij_ ? rij_.closest(".lvbuit") : null;
+    if (!c) return;
+    const nieuw = () => { pop.classList.remove("lvt" + trede(a)); pop.classList.add("lvt" + trede(b)); };
+    const nw = c.querySelector(".lvnieuw");
+    if (nw) c.style.setProperty("--lvp", getComputedStyle(nw).getPropertyValue("--lv-ring").trim());
+    if (rustig()){ c.style.setProperty("--veeg", "360deg"); nieuw(); return; }
+    if (regel) regel.classList.add("lvwacht");
+    const timers = [], t = (ms, f) => timers.push(setTimeout(f, ms));
+    let raf = 0, weg = false;
+    klaar.then(() => { weg = true; timers.forEach(clearTimeout); cancelAnimationFrame(raf); pop.classList.remove("lvdim"); });
+    t(800, () => { pop.classList.add("lvdim"); c.classList.add("licht"); });
+    t(1300, () => {
+      c.classList.add("veegt");
+      const t0 = performance.now(), duur = 1200, z = x => x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+      const stap = nu => { if (weg) return; const x = Math.min(1, (nu - t0) / duur); c.style.setProperty("--veeg", (z(x) * 360).toFixed(1) + "deg"); if (x < 1) raf = requestAnimationFrame(stap); };
+      raf = requestAnimationFrame(stap);
+    });
+    t(2500, () => { c.classList.remove("veegt"); c.classList.add("puls"); });
+    t(2700, () => c.classList.remove("licht"));
+    t(3050, () => { pop.classList.remove("lvdim"); nieuw(); });
+    t(3300, () => { if (regel) regel.classList.remove("lvwacht"); c.classList.remove("puls"); });
   }
   function levelStart(s){
     const w = buit(1, s.level);
@@ -301,13 +360,14 @@ const Levels = (() => {
     const weekTot = wk.reduce((a, k) => a + week[k], 0);
     return `<section class="pfsec lvkaart" aria-labelledby="pfLvH">
       <div class="lvkop"><h3 id="pfLvH">Level ${s.level} <span>· ${esc(s.rang)}</span></h3><span class="xptal">${s.in_level} / ${s.stap} XP</span></div>
+      <p class="lvringnaam">${ringBol(s.level)}<span>Ring <b>${ringNaam(s.level)}</b>${sterren(s.level) ? ` met ${sterren(s.level) === 1 ? "1 sterretje" : sterren(s.level) + " sterretjes"}` : ""}${trede(s.level) < RINGEN.length - 1 ? ` · ${RINGEN[trede(s.level) + 1][1]} op level ${RINGEN[trede(s.level) + 1][0]}` : sterren(s.level) < MAX_STERREN ? ` · volgend sterretje op level ${100 + 20 * (sterren(s.level) + 1)}` : ""}</span></p>
       <span class="xpbalk" aria-hidden="true"><i style="width:${Math.round(100 * frac(s))}%"></i></span>
       <div class="lvtegels"><div><b>${s.xp.toLocaleString("nl-NL")}</b><span>XP in totaal</span></div><div><b>${weekTot.toLocaleString("nl-NL")}</b><span>deze week</span></div><div><b>${s.tokens} / 2</b><span>hersteltokens</span></div></div>
       ${!s.actief ? `<p class="fine">Voorbeeld: levels gaan op ${new Date(s.vanaf + "T12:00").toLocaleDateString("nl-NL", { weekday: "long", day: "numeric", month: "long" })} voor iedereen aan.</p>` : ""}
       ${wk.length ? `<h4 class="caps">Waar je XP deze week vandaan komt</h4><div class="lvherkomst">${wk.map(k => `<span>${WEEKNAAM[k]}</span><span class="tb"><i style="width:${Math.round(100 * week[k] / max)}%"></i></span><b>${week[k]}</b>`).join("")}</div>` : ""}
       <h4 class="caps">Rangen</h4>
-      <ol class="lvrangen">${RANGEN.map(([n, r]) => `<li class="${s.level >= n ? "ok" : ""}${rangVan(s.level) === r ? " nu" : ""}"><span>${esc(r)}</span><span>level ${n}${s.level >= n ? " ✓" : ""}</span></li>`).join("")}</ol>
-      <p class="fine">XP krijg je voor determineren, oefenen, het herstellen van eerdere fouten, nieuwe soorten en dwaalgasten. Elk level levert 10 eikels op. Elke 20 levels is een mijlpaal: een nieuwe rang, 50 eikels extra en een hersteltoken.</p>
+      <ol class="lvrangen">${RANGEN.map(([n, r]) => `<li class="${s.level >= n ? "ok" : ""}${rangVan(s.level) === r ? " nu" : ""}"><span>${n >= 20 && n % 20 === 0 ? `<span class="lvbol lvt${trede(n)}" title="Ring ${ringNaam(n)}${sterren(n) ? " + sterretje" : ""}" aria-hidden="true"></span>` : `<span class="lvbol leeg" aria-hidden="true"></span>`}${esc(r)}</span><span>level ${n}${s.level >= n ? " ✓" : ""}</span></li>`).join("")}</ol>
+      <p class="fine">XP krijg je voor determineren, oefenen, het herstellen van eerdere fouten, nieuwe soorten en dwaalgasten. Elk level levert 10 eikels op. Elke 20 levels is een mijlpaal: een nieuwe rang, een nieuwe ringkleur (na level 100 een sterretje), 50 eikels extra en een hersteltoken.</p>
     </section>`;
   }
   /* rangen die nog te verdienen zijn, voor de shop (rij Ondertitels) */
@@ -327,7 +387,7 @@ const Levels = (() => {
     let nr = spook.querySelector(".lvnr");
     if (!nr){ nr = document.createElement("span"); nr.className = "lvnr"; nr.setAttribute("aria-hidden", "true"); spook.appendChild(nr); }
     const p0 = plek(voor), p1 = Math.max(p0, plek(na));
-    const zetStand = v => { const l = Math.floor(v + 1e-6); spook.style.setProperty("--p", Math.round(100 * (v - l)) + "%"); nr.textContent = l; };
+    const zetStand = v => { const l = Math.floor(v + 1e-6); spook.style.setProperty("--p", Math.round(100 * (v - l)) + "%"); nr.textContent = l; zetRing(spook, l); };
     zetStand(p0);
     document.body.appendChild(spook);
     if (rustig() || !van){ zetStand(p1); await wacht(900); spook.remove(); return; }
@@ -388,5 +448,5 @@ const Levels = (() => {
 
   if (speler()) setTimeout(tekenOveral, 0);
   return { haal, ring, mijnRing, knop, tekenOveral, naSpel, toonInResultaat, kaartHtml, teVerdienen, naAdvent, naAdventDemo, zichtbaar,
-           stand: () => stand, RANGEN, levelOmhoog, popup, rij };
+           stand: () => stand, RANGEN, RINGEN, ringNaam, zetRing, levelOmhoog, popup, rij };
 })();
