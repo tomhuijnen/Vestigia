@@ -22,9 +22,10 @@ const Nieuw = (() => {
   const VANAF = {
     dwaalgast: "2026-11-10", zoekgroepen: "2026-11-11", bronnen: "2026-11-11", statistiek: "2026-11-11",
     "statistiek-na-casus": "2026-11-11", "verward-statistiek": "2026-11-12", apparaten: "2026-11-12",
-    levels: "2026-11-16", spelersduel: "2026-11-23", advent: "2026-12-01"
+    levels: "2026-11-16", spelersduel: "2026-11-23", advent: "2026-12-01",
+    soorten14: "2026-11-13"            // update 14: libellen en kevers; de dag dat ze live gaan
   };
-  const WIJZIGING = new Set(["zoekgroepen", "bronnen", "statistiek-na-casus", "verward-statistiek"]);
+  const WIJZIGING = new Set(["zoekgroepen", "bronnen", "statistiek-na-casus", "verward-statistiek", "soorten14"]);
   /* speelde je al een dagcasus vóór die dag? (het logboek gaat via Supabase mee naar je andere apparaten) */
   function veteraan(id){
     const d = VANAF[id]; if (!d) return true;
@@ -56,6 +57,10 @@ const Nieuw = (() => {
       <g transform="rotate(45)" stroke="var(--du-d,#56344f)" stroke-width="1.4" paint-order="stroke" stroke-linejoin="round"><path d="M0-14.5L1.9-11V4.2h-3.8V-11Z"/><path d="M0-11V2.8" stroke="var(--du-d,#56344f)" stroke-width=".7" opacity=".55"/><rect x="-5.6" y="4" width="11.2" height="2.4" rx="1.2"/><rect x="-1.2" y="6.4" width="2.4" height="5.2" rx=".8"/><circle cy="13.2" r="1.9"/></g></svg></span>`,
     app: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.6"/><path d="M10.5 18.5h3"/><path d="M12 6.5v7M9 10.5l3 3 3-3"/></svg></span>`,
     koppel: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4.5" width="11" height="8" rx="1.4"/><path d="M1 15.5h13"/><rect x="16" y="7" width="6.5" height="12" rx="1.6"/><path d="M8 18.5c0 1.6 1.3 2.5 3.2 2.5H14"/><path d="M12.6 19.4 14.3 21l-1.7 1.6"/></svg></span>`,
+    /* update 14: een libel van boven en een kever van boven, en een pop (voor ‘Als ei, larve of pop’) */
+    libel: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.4" r="1.7"/><path d="M12 6.4v15"/><path d="M12 8C9 5.8 4 5.6 2.7 7.5c-.8 1.3 1.6 2.6 9.3 1.7ZM12 8c3-2.2 8-2.4 9.3-.5.8 1.3-1.6 2.6-9.3 1.7Z"/><path d="M12 10.6c-2.7-.9-7 .2-7.6 2-.4 1.4 1.9 1.7 7.6-.5ZM12 10.6c2.7-.9 7 .2 7.6 2 .4 1.4-1.9 1.7-7.6-.5Z"/></svg></span>`,
+    kever: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="14.2" rx="5.2" ry="6.4"/><path d="M12 8.6v12"/><path d="M9.2 8.2a2.8 2.8 0 0 1 5.6 0"/><path d="M10.6 5.8 8.8 3.2M13.4 5.8l1.8-2.6"/><path d="M7 11.2 3.6 9.6M6.8 14.6H3.2M7.4 17.8l-3 1.9M17 11.2l3.4-1.6M17.2 14.6h3.6M16.6 17.8l3 1.9"/></svg></span>`,
+    pop: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v3"/><path d="M12 5c2.6 0 4.1 3.1 4.1 7.2S14.2 21 12 21s-4.1-4.7-4.1-8.8S9.4 5 12 5Z"/><path d="M8.3 9.8h7.4M8 13.4h8M8.8 17h6.4"/></svg></span>`,
     kalender: `<span class="nw-ic kerst"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4M9 14.5l2 2 4-4"/></svg></span>`
   };
 
@@ -84,6 +89,13 @@ const Nieuw = (() => {
       stappen: [
         { ic: "app", wat: "app", kop: "Speel Vestigia als app", tekst: "Zet Vestigia op het beginscherm van je telefoon. Dan open je hem met één tik, schermvullend, en werkt hij ook zonder internet. Kijk in Mijn profiel bij ‘Gebruik de app!’." },
         { ic: "koppel", wat: "koppel", kop: "Koppel je apparaten", tekst: `Speel je op je telefoon én op een laptop of tablet? Koppel ze met een korte code of een QR-code. Dan blijven je naam, eikels en ${NAAM.vestiarium} overal gelijk. Kijk in Mijn profiel bij ‘Koppel je apparaten’.` }
+      ] },
+    /* update 14: alleen voor wie al speelde voordat de nieuwe soorten er waren (via de wachtrij, hieronder) */
+    { id: "soorten14", titel: "Libellen en kevers", actie: { label: "Oefen een libel", run: () => startFree({ g: "L", nieuw: false }) },
+      stappen: [
+        { ic: "libel", kop: "Nieuw: libellen en kevers", tekst: "Er zijn twee nieuwe diergroepen. Vijf beschermde libellen: de gevlekte en de sierlijke witsnuitlibel, de rivierrombout, de beekrombout en de bosbeekjuffer. En twee kevers: de vermiljoenkever en het vliegend hert." },
+        { ic: "kever", kop: "Zeven nieuwe platen", tekst: `Ze staan in je ${NAAM.vestiarium} als nº 146 tot en met 152, elk met twee casussen. Heb je alle libellen, dan ben je Vleugelvorst; met alle kevers word je Schildknaap. Oefen ze nu, of wacht tot ze als dagcasus langskomen.` },
+        { ic: "pop", kop: "Nieuw bij Winter", tekst: "In de kolom Winter staat nu ook ‘Als ei, larve of pop’. Dat geldt voor de libellen en kevers, maar ook voor de vlinders die als rups of pop overwinteren." }
       ] },
     { id: "levels", titel: "Levels", verborgen: () => !(typeof Levels !== "undefined" && Levels.zichtbaar()),   // pas vanaf de startdatum
       stappen: [
@@ -178,3 +190,15 @@ const Nieuw = (() => {
   knoppen();
   return { toon, blokjes, knoppen, veteraan, ONDERDELEN };
 })();
+
+/* update 14: één keer ‘Nieuw: libellen en kevers’, na de dwaalgast, het duel, de levels, de adventkalender en de uitleg
+   over de app; vóór de herinnering om een avatar te kiezen. Alleen voor wie al een dagcasus speelde vóór VANAF. */
+Wachtrij.voeg({ id: "soorten14", prio: 2.6,
+  kan(){
+    try { if (localStorage.getItem("vestigia:nieuw:soorten14")) return false; } catch(e){ return false; }
+    return Nieuw.veteraan("soorten14");
+  },
+  toon(){
+    try { localStorage.setItem("vestigia:nieuw:soorten14", "1"); } catch(e){}
+    return Nieuw.toon(Nieuw.ONDERDELEN.find(o => o.id === "soorten14"));
+  } });

@@ -17,6 +17,11 @@ const ZOEKGROEPEN = [
   { naam: "Vissen",     w: ["vis", "vissen"], g: "F" },
   { naam: "Vogels",     w: ["vogel", "vogels"], g: "B" },
   { naam: "Vlinders",   w: ["vlinder", "vlinders"], g: "V" },
+  { naam: "Libellen",   w: ["libel", "libellen", "odonata"], g: "L" },
+  { naam: "Kevers",     w: ["kever", "kevers", "coleoptera"], g: "K" },
+  { naam: "Insecten",   w: ["insect", "insecten"], ids: ["pimpernelblauwtje", "donker-pimpernelblauwtje", "teunisbloempijlstaart", "grote-vos",
+      "grote-weerschijnvlinder", "kleine-ijsvogelvlinder", "gevlekte-witsnuitlibel", "sierlijke-witsnuitlibel", "rivierrombout", "beekrombout",
+      "bosbeekjuffer", "vermiljoenkever", "vliegend-hert"] },
 
   /* zoogdieren */
   { naam: "Vleermuizen", w: ["vleermuis", "vleermuizen"], ids: ["watervleermuis", "laatvlieger", "gewone-dwergvleermuis", "ruige-dwergvleermuis",
@@ -94,5 +99,11 @@ const ZOEKGROEPEN = [
       "kleine-ijsvogelvlinder", "kleine-vos"] },
   { naam: "Nachtvlinders", w: ["nachtvlinder", "nachtvlinders", "mot", "motten"], ids: ["teunisbloempijlstaart", "groot-avondrood"] },
   { naam: "Pijlstaarten", w: ["pijlstaarten"], ids: ["teunisbloempijlstaart", "groot-avondrood"] },
-  { naam: "Blauwtjes", w: ["blauwtjes"], ids: ["pimpernelblauwtje", "donker-pimpernelblauwtje"] }
+  { naam: "Blauwtjes", w: ["blauwtjes"], ids: ["pimpernelblauwtje", "donker-pimpernelblauwtje"] },
+
+  /* libellen en kevers (update 14) */
+  { naam: "Juffers", w: ["juffer", "juffers", "beekjuffer", "beekjuffers", "waterjuffer", "waterjuffers"], ids: ["bosbeekjuffer", "weidebeekjuffer"] },
+  { naam: "Rombouten", w: ["rombout", "rombouten"], ids: ["rivierrombout", "beekrombout", "plasrombout"] },
+  { naam: "Witsnuitlibellen", w: ["witsnuit", "witsnuitlibel", "witsnuitlibellen"], ids: ["gevlekte-witsnuitlibel", "sierlijke-witsnuitlibel", "noordse-witsnuitlibel"] },
+  { naam: "Vliegende herten", w: ["vliegende herten", "hertkever", "hertkevers"], ids: ["vliegend-hert", "klein-vliegend-hert"] }
 ];

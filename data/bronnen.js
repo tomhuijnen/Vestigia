@@ -1,7 +1,7 @@
 /* Vestigia – links naar bronnen en foto's na het determineren (update 12)
    Per soort twee links: de soortpagina van de organisatie die we als bron gebruiken, en foto's.
    - Zoogdieren: Zodion (voorheen Zoogdiervereniging) · reptielen, amfibieën en vissen: RAVON ·
-     vogels: Vogelbescherming · vlinders: De Vlinderstichting.
+     vogels: Vogelbescherming · vlinders en libellen: De Vlinderstichting · kevers: EIS Kenniscentrum Insecten (update 14).
    - Foto's: de fotopagina van de soort op waarneming.nl, waar validatoren de determinatie van foto's controleren.
      We linken alleen; de foto's blijven van de fotografen en worden niet in de app getoond. Het soortnummer staat in
      WAARNEMING (opgezocht op 11 november 2026). Ontbreekt een nummer, dan valt de link terug op Wikimedia Commons.
@@ -15,7 +15,9 @@ const BRON_SITES = {
   A: { naam: "RAVON",               url: "https://www.ravon.nl/amfibieen/", eind: "/" },
   F: { naam: "RAVON",               url: "https://www.ravon.nl/vissen/", eind: "/" },
   B: { naam: "Vogelbescherming",    url: "https://www.vogelbescherming.nl/ontdek-vogels/kennis-over-vogels/vogelgids/vogel/" },
-  V: { naam: "De Vlinderstichting", url: "https://vlinderstichting.nl/vlinder/", eind: "/" }
+  V: { naam: "De Vlinderstichting", url: "https://vlinderstichting.nl/vlinder/", eind: "/" },
+  L: { naam: "De Vlinderstichting", url: "https://vlinderstichting.nl/libel/", eind: "/" },
+  K: { naam: "EIS Kenniscentrum Insecten", url: "https://www.eis-nederland.nl/" }      // geen vaste soortpagina’s: zie BRON_LOS
 };
 /* soortnummers op waarneming.nl (waarneming.nl/species/<nummer>/). Let op: waarneming.nl gebruikt soms een andere
    wetenschappelijke naam (laatvlieger Cnephaeus serotinus, noordse woelmuis Alexandromys oeconomus, kauw Coloeus monedula,
@@ -51,7 +53,10 @@ const BRON_LOS = {
   "tuimelaar":               "https://www.zodion.nl/zoogdiersoorten/walvisachtigen",   // geen eigen soortpagina
   "middelste-groene-kikker": "https://www.ravon.nl/amfibieen/bastaardkikker/",         // RAVON noemt hem bastaardkikker
   "eidereend":               "https://www.vogelbescherming.nl/ontdek-vogels/kennis-over-vogels/vogelgids/vogel/eider",
-  "ruigpootuil":             { naam: "Sovon", url: "https://stats.sovon.nl/ruigpootuil" }  // niet in de vogelgids van Vogelbescherming
+  "ruigpootuil":             { naam: "Sovon", url: "https://stats.sovon.nl/ruigpootuil" },  // niet in de vogelgids van Vogelbescherming
+  /* kevers (update 14): EIS heeft alleen voor het vliegend hert een eigen pagina; voor de vermiljoenkever het artikel van EIS-medewerkers */
+  "vliegend-hert":           { naam: "EIS Kenniscentrum Insecten", url: "https://www.eis-nederland.nl/vliegendhert" },
+  "vermiljoenkever":         { naam: "EIS Kenniscentrum Insecten", url: "https://natuurtijdschriften.nl/pub/1002849/NAHM2015104006004.pdf" }
 };
 
 const slugVan = n => n.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");

@@ -302,7 +302,7 @@ details.register[open] summary .caps::after{content:" ↑"}
 .dexnote a, .linklike{font:inherit; color:var(--ink); font-style:normal; font-weight:700; text-align:left; text-decoration:underline; text-decoration-color:var(--green); text-decoration-thickness:1.5px; text-underline-offset:3px; cursor:pointer; background:none; border:0; padding:0}
 
 /* veldboek */
-:root{--g-Z:#7a4e34; --g-R:#6b7629; --g-A:#2e7267; --g-F:#2f5884; --g-B:#a8731b; --g-V:#7a4a86}
+:root{--g-Z:#7a4e34; --g-R:#6b7629; --g-A:#2e7267; --g-F:#2f5884; --g-B:#a8731b; --g-V:#7a4a86; --g-L:#4c5ea6; --g-K:#a13d2d}
 .dexhead{display:grid; grid-template-columns:1fr auto; gap:18px 30px; align-items:end; border-bottom:2px solid var(--green); padding-bottom:16px}
 .dexhead h2{font-family:var(--display);  font-weight:800; font-size:clamp(2.2rem,5vw,3.2rem); line-height:1; margin:0}
 .dexhead p{margin:6px 0 0; color:var(--ink-2); max-width:56ch}
