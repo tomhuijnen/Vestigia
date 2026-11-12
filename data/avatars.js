@@ -324,7 +324,8 @@ const AVATARS = {
 <circle cx="41.2" cy="57.8" r="1.1" fill="#fff"/><circle cx="61.2" cy="57.8" r="1.1" fill="#fff"/>
 <path fill="#d8c38f" d="M47.6 63H52.4L50 70Z"/>
 <path d="M30 86C34 82 40 84 42 88M58 88C60 84 66 82 70 86" fill="none" stroke="#e8dcc6" stroke-width="2.4" stroke-linecap="round"/>`,
-  /* update 14: vliegend hert (mannetje van boven, met gewei), bosbeekjuffer (van boven, vleugels open) en grote vos */
+  /* update 14: vliegend hert (mannetje van boven, met gewei), bosbeekjuffer (van boven, vleugels open) en grote vos
+     (gecentreerd op 90%, zodat de vleugelpunten binnen de cirkel blijven) */
   "vliegend-hert": `<path fill="currentColor" fill-opacity=".9" d="M45 31C42 26 37 22 33 16C31 12 31 8 34 6C34 10 36 13 39 16L40 12C41 15 41 18 41 21C43 24 46 27 47 30Z"/>
 <path fill="currentColor" fill-opacity=".9" d="M55 31C58 26 63 22 67 16C69 12 69 8 66 6C66 10 64 13 61 16L60 12C59 15 59 18 59 21C57 24 54 27 53 30Z"/>
 <path d="M32 49L18 44L12 36M31 57L15 58L9 66M33 66L20 76L18 86M68 49L82 44L88 36M69 57L85 58L91 66M67 66L80 76L82 86" fill="none" stroke="#1f3428" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -349,7 +350,8 @@ const AVATARS = {
 <path d="M48.6 60H51.4M48.7 67H51.3M48.8 74H51.2M48.8 81H51.2M48.9 88H51.1" stroke="#1f3428" stroke-opacity=".45" stroke-width=".9"/>
 <path fill="currentColor" fill-opacity=".6" d="M48.8 92H51.2L51.1 96C51 97.6 49 97.6 48.9 96Z"/>
 </g>`,
-  "grote-vos": `<path fill="currentColor" fill-opacity=".8" d="M48 40C42 28 30 18 16 16C9 15 6 19 8 26C10 34 13 43 18 48C28 50 40 48 48 46Z"/>
+  "grote-vos": `<g transform="translate(50 50) scale(.9) translate(-49.9 -45.5)">
+<path fill="currentColor" fill-opacity=".8" d="M48 40C42 28 30 18 16 16C9 15 6 19 8 26C10 34 13 43 18 48C28 50 40 48 48 46Z"/>
 <path fill="currentColor" fill-opacity=".8" d="M52 40C58 28 70 18 84 16C91 15 94 19 92 26C90 34 87 43 82 48C72 50 60 48 52 46Z"/>
 <path fill="currentColor" fill-opacity=".8" d="M48 48C40 50 28 52 22 58C17 64 18 74 24 79C30 83 39 80 44 72C47 66 48 58 48 48Z"/>
 <path fill="currentColor" fill-opacity=".8" d="M52 48C60 50 72 52 78 58C83 64 82 74 76 79C70 83 61 80 56 72C53 66 52 58 52 48Z"/>
@@ -366,7 +368,8 @@ const AVATARS = {
 <path fill="#1f3428" d="M50 30C52.5 30 53.5 33 53.5 36V64C53.5 68 52 71 50 71C48 71 46.5 68 46.5 64V36C46.5 33 47.5 30 50 30Z"/>
 <circle cx="50" cy="28.5" r="3.2" fill="#1f3428"/>
 <path d="M49 26C47 20 44 15 41 12M51 26C53 20 56 15 59 12" fill="none" stroke="#1f3428" stroke-width="1.2" stroke-linecap="round"/>
-<circle cx="41" cy="12" r="1.4" fill="#1f3428"/><circle cx="59" cy="12" r="1.4" fill="#1f3428"/>`
+<circle cx="41" cy="12" r="1.4" fill="#1f3428"/><circle cx="59" cy="12" r="1.4" fill="#1f3428"/>
+</g>`
 };
 /* dwaalgasten (update 9): alleen te verdienen, in kleur, met een eigen achtergrond */
 AVATARS["dg-lynx"] = `<defs><linearGradient id="{id}k" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c79459"/><stop offset=".5" stop-color="#d9b07a"/><stop offset=".78" stop-color="#ead5b0"/><stop offset="1" stop-color="#f3e8d2"/></linearGradient></defs>

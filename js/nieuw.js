@@ -95,7 +95,7 @@ const Nieuw = (() => {
       stappen: [
         { ic: "libel", kop: "Nieuw: libellen en kevers", tekst: "Er zijn twee nieuwe diergroepen. Vijf beschermde libellen: de gevlekte en de sierlijke witsnuitlibel, de rivierrombout, de beekrombout en de bosbeekjuffer. En twee kevers: de vermiljoenkever en het vliegend hert." },
         { ic: "kever", kop: "Zeven nieuwe platen", tekst: `Ze staan in je ${NAAM.vestiarium} als nº 146 tot en met 152, elk met twee casussen. Heb je alle libellen, dan ben je Vleugelvorst; met alle kevers word je Schildknaap. Oefen ze nu, of wacht tot ze als dagcasus langskomen.` },
-        { ic: "pop", kop: "Nieuw bij Winter", tekst: "In de kolom Winter staat nu ook ‘Als ei, larve of pop’. Dat geldt voor de libellen en kevers, maar ook voor de vlinders die als rups of pop overwinteren." }
+        { ic: "pop", kop: "Nieuw bij Winter", tekst: "Na elke determinatie vergelijkt Vestigia jouw soort met de gezochte soort in een tabel. De kolom Winter in die tabel kent nu ook ‘Als ei, larve of pop’. Dat geldt voor de libellen en kevers, en voor de vlinders die als rups of pop overwinteren." }
       ] },
     { id: "levels", titel: "Levels", verborgen: () => !(typeof Levels !== "undefined" && Levels.zichtbaar()),   // pas vanaf de startdatum
       stappen: [
