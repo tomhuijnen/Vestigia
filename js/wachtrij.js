@@ -19,15 +19,19 @@ const Wachtrij = (() => {
     || [...document.querySelectorAll(".overlay, #speelKring")].some(el => !el.hidden);
   const wacht = ms => new Promise(r => setTimeout(r, ms));
 
+  /* Staat er een nieuwe versie klaar (melding ‘Vernieuwen’), dan geen pop-ups: die komen na het vernieuwen.
+     Eerst even wachten tot de controle op een nieuwe versie klaar is (js/app.js, window.__swKlaar). */
+  const update = () => !!window.__nieuweVersie;
   async function start(){
     if (gedaan) return; gedaan = true;
     await wacht(500);
-    if (ietsOpen()) return;
+    try { if (window.__swKlaar) await window.__swKlaar; } catch(e){}
+    if (ietsOpen() || update()) return;
     for (const k of kandidaten.slice().sort((a, b) => a.prio - b.prio)){
       let ok = false;
       try { ok = await k.kan(); } catch(e){ ok = false; }
       if (!ok) continue;
-      if (ietsOpen()) return;                  // er kwam intussen iets anders in beeld: volgende keer
+      if (ietsOpen() || update()) return;      // er kwam intussen iets anders in beeld: volgende keer
       if (k.doorgaan){                          // uitleg bij iets nieuws: eerst wegklikken, dan gaat de wachtrij door
         try { await k.toon(); } catch(e){}
         await wacht(350);
