@@ -12,6 +12,33 @@ const Nieuw = (() => {
   const gezien = id => { try { return !!localStorage.getItem(KEY(id)); } catch(e){ return true; } };
   const markeer = id => { try { localStorage.setItem(KEY(id), "1"); } catch(e){} };
 
+  /* ---------- wie krijgt ‘Nieuw’? (12 november 2026) ----------
+     Meldingen over iets wat veranderd is (‘staat nu hier’, ‘Nieuw: zoeken op groep’) zijn alleen voor spelers die
+     al een dagcasus speelden vóórdat dat onderdeel kwam of veranderde. Een nieuwe speler kent de oude situatie niet;
+     wat hij moet weten, staat in de uitleg bij de eerste keer (js/uitleg.js).
+     VANAF = de dag dat het onderdeel live ging of gaat. Bij een nieuw onderdeel hier een regel toevoegen.
+     WIJZIGING = meldingen die nieuwe spelers helemaal niet krijgen. De andere (hoe de dwaalgast, de adventkalender,
+     het duel werken) krijgen ze wel, maar zonder ‘Nieuw’: dan heten ze ‘Zo werkt het’ of ‘Uitleg’. */
+  const VANAF = {
+    dwaalgast: "2026-11-10", zoekgroepen: "2026-11-11", bronnen: "2026-11-11", statistiek: "2026-11-11",
+    "statistiek-na-casus": "2026-11-11", "verward-statistiek": "2026-11-12", apparaten: "2026-11-12",
+    levels: "2026-11-16", spelersduel: "2026-11-23", advent: "2026-12-01"
+  };
+  const WIJZIGING = new Set(["zoekgroepen", "bronnen", "statistiek-na-casus", "verward-statistiek"]);
+  /* speelde je al een dagcasus vóór die dag? (het logboek gaat via Supabase mee naar je andere apparaten) */
+  function veteraan(id){
+    const d = VANAF[id]; if (!d) return true;
+    const grens = Date.parse(d + "T00:00:00+01:00");
+    const st = store.get();
+    if ((st.log || []).some(e => e && e.m === "daily" && e.t && e.t < grens)) return true;
+    /* oude opslag zonder logboek: een dagcasus van ruim vóór die dag (inhalen kan tot 3 dagen terug) */
+    const dag = Math.round((grens - START) / DAY);
+    for (let i = 0; i < dag - 3; i++) if (finished(st, i, false) || finished(st, i, true)) return true;
+    return false;
+  }
+  /* ‘Nieuw: het spelersduel!’ → ‘Het spelersduel!’ */
+  const zonderNieuw = t => { const r = String(t).replace(/^Nieuw:\s*/, ""); return r.charAt(0).toUpperCase() + r.slice(1); };
+
   const ICOON = {
     dwaalgast: `<span class="nw-ic rood"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="15.5" r="4"/><circle cx="17.5" cy="15.5" r="4"/><path d="M10.5 15.5h3M4 12l2.5-7h3l1 4M20 12l-2.5-7h-3l-1 4"/></svg></span>`,
     vragen: `<span class="nw-ic rood"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h10M4 18h7"/><path d="M16 16l2 2 4-4"/></svg></span>`,
@@ -53,7 +80,7 @@ const Nieuw = (() => {
       ] },
     /* update 21: voor iedereen één keer, via de wachtrij (js/apparaat.js); stappen met wat: "app" of "koppel" vallen weg
        als je de app al gebruikt of al op twee apparaten speelt */
-    { id: "apparaten", titel: "App en koppelen", actie: { label: "Naar Mijn profiel", run: () => showProfiel() },
+    { id: "apparaten", titel: "App en koppelen", tip: true, actie: { label: "Naar Mijn profiel", run: () => showProfiel() },
       stappen: [
         { ic: "app", wat: "app", kop: "Speel Vestigia als app", tekst: "Zet Vestigia op het beginscherm van je telefoon. Dan open je hem met één tik, schermvullend, en werkt hij ook zonder internet. Kijk in Mijn profiel bij ‘Gebruik de app!’." },
         { ic: "koppel", wat: "koppel", kop: "Koppel je apparaten", tekst: `Speel je op je telefoon én op een laptop of tablet? Koppel ze met een korte code of een QR-code. Dan blijven je naam, eikels en ${NAAM.vestiarium} overal gelijk. Kijk in Mijn profiel bij ‘Koppel je apparaten’.` }
@@ -67,7 +94,9 @@ const Nieuw = (() => {
   ];
 
   /* de pop-up: stap voor stap, met Volgende en Overslaan */
-  function toon(o){
+  function toon(o, opties){
+    opties = opties || {};
+    const nieuw = opties.terug || veteraan(o.id);      // terugkijken via de spelregels: zoals het was
     return new Promise(klaar => {
       const pop = $("wachtPop"), body = $("wachtBody");
       let i = 0;
@@ -76,8 +105,8 @@ const Nieuw = (() => {
       function stap(){
         const s = o.stappen[i], laatste = i === o.stappen.length - 1;
         body.innerHTML = `
-          <div class="nw-kop"><span class="caps">${i === 0 ? "Nieuw in Vestigia" : esc(o.titel)}</span><span class="nw-stip">${o.stappen.map((_, k) => `<i class="${k === i ? "nu" : k < i ? "klaar" : ""}"></i>`).join("")}</span></div>
-          <div class="nw-stap">${ICOON[s.ic] || ""}<h2 id="wachtH">${esc(s.kop)}</h2><p>${esc(s.tekst)}</p></div>
+          <div class="nw-kop"><span class="caps">${i === 0 ? (nieuw ? "Nieuw in Vestigia" : o.tip ? "Tip" : "Zo werkt het") : esc(o.titel)}</span><span class="nw-stip">${o.stappen.map((_, k) => `<i class="${k === i ? "nu" : k < i ? "klaar" : ""}"></i>`).join("")}</span></div>
+          <div class="nw-stap">${ICOON[s.ic] || ""}<h2 id="wachtH">${esc(nieuw ? s.kop : zonderNieuw(s.kop))}</h2><p>${esc(s.tekst)}</p></div>
           <div class="nw-knoppen">${laatste ? (o.actie ? `<button class="btn line" id="nwActie">${esc(o.actie.label)}</button>` : "") : `<button class="linklike" id="nwSkip">Overslaan</button>`}<button class="btn" id="nwVolg">${laatste ? "Begrepen" : "Volgende"}</button></div>`;
         $("nwVolg").onclick = () => { if (laatste) dicht(); else { i++; stap(); } };
         if (laatste && o.actie) $("nwActie").onclick = () => { dicht(); o.actie.run(); };
@@ -98,7 +127,12 @@ const Nieuw = (() => {
   async function blokjes(id, stappen, opties){
     opties = opties || {};
     if ((gezien(id) && !opties.altijd) || bezig.has(id)) return;   // ook niet twee keer tegelijk
-    markeer(id); bezig.add(id);
+    markeer(id);
+    const nieuw = opties.altijd || veteraan(id);
+    if (!nieuw && WIJZIGING.has(id)) return;          // nieuwe speler: geen ‘dit is veranderd’
+    if (!nieuw) stappen = stappen.map(s => Object.assign({}, s, { tekst: zonderNieuw(s.tekst) }));
+    opties = Object.assign({ nieuw }, opties);
+    bezig.add(id);
     try { await reeks(stappen, opties); } finally { bezig.delete(id); }
   }
   const bezig = new Set();
@@ -112,7 +146,7 @@ const Nieuw = (() => {
       const el = document.createElement("div");
       el.className = "nw-blokje" + (opties.rood ? " rood" : "");
       el.setAttribute("role", "note");
-      el.innerHTML = `<span class="nw-pijl" aria-hidden="true"></span><span class="caps">${i === 0 ? "Nieuw" : "Uitleg"} · ${i + 1} van ${stappen.length}</span><p>${esc(s.tekst)}</p>
+      el.innerHTML = `<span class="nw-pijl" aria-hidden="true"></span><span class="caps">${i === 0 && opties.nieuw ? "Nieuw" : "Uitleg"} · ${i + 1} van ${stappen.length}</span><p>${esc(s.tekst)}</p>
         <div class="nw-bk"><button class="linklike" type="button" data-x>${laatste ? "" : "Overslaan"}</button><button class="nw-volg" type="button">${laatste ? "Begrepen" : "Volgende"}</button></div>`;
       if (laatste) el.querySelector("[data-x]").remove();
       s.na.insertAdjacentElement("afterend", el);
@@ -138,9 +172,9 @@ const Nieuw = (() => {
     box.querySelectorAll("[data-nw]").forEach(b => b.onclick = () => {
       const o = ONDERDELEN.find(x => x.id === b.dataset.nw);
       $("help").hidden = true;
-      toon(o);
+      toon(o, { terug: true });
     });
   }
   knoppen();
-  return { toon, blokjes, knoppen, ONDERDELEN };
+  return { toon, blokjes, knoppen, veteraan, ONDERDELEN };
 })();

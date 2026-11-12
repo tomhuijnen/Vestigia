@@ -75,6 +75,7 @@ function start(){
   Profiel.start();
   Duel.start();
   Apparaat.start();
+  Push.start();
   /* update 8: daarna hooguit één pop-up uit de wachtrij (adventkalender, avatar kiezen) en, in de kerstperiode, wat sneeuw */
   Opening.run().then(() => Uitleg.automatisch()).then(toonWelkom).then(() => League.verwerk()).then(() => Apparaat.verwerkLink()).then(() => Duel.verwerkLink())
     .then(() => { Kerst.sneeuw(); return Wachtrij.start(); });
@@ -187,6 +188,8 @@ if ("serviceWorker" in navigator && (location.protocol === "https:" || location.
      (controllerchange), maar dan is er niets te vernieuwen; herladen brak toen de openingsanimatie af. */
   const hadController = !!navigator.serviceWorker.controller;
   let reloaded = false;
+  /* update 18: tik op het seintje terwijl de app al open is → naar de dagcasus */
+  navigator.serviceWorker.addEventListener("message", e => { if (e.data === "dagcasus" && typeof MENU_GO !== "undefined" && MENU_GO.daily) MENU_GO.daily(); });
   navigator.serviceWorker.addEventListener("controllerchange", () => { if (hadController && !reloaded){ reloaded = true; location.reload(); } });
 }
 

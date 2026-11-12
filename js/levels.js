@@ -277,6 +277,9 @@ const Levels = (() => {
       try { await haal(); } catch(e){}
       if (!zichtbaar()) return false;
       const gezien = lees(K.gezien);
+      /* ‘Je start op level N’ is voor wie al speelde vóór de levels kwamen; een nieuwe speler kreeg de ring al
+         in de uitleg bij de eerste keer en begint gewoon (12 november 2026) */
+      if (gezien == null && !demo() && typeof Nieuw !== "undefined" && !Nieuw.veteraan("levels")){ zet(K.gezien, stand.level); return false; }
       return demo() || gezien == null || stand.level > gezien;
     },
     toon(){

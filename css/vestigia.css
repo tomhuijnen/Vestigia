@@ -495,7 +495,30 @@ footer{margin-top:44px; padding-top:12px; border-top:1px solid var(--rule); font
 .ui-kaart p{margin:0; font-size:.98rem; line-height:1.45}
 .ui-knoppen{display:flex; justify-content:space-between; align-items:center; margin-top:6px}
 .ui-knoppen .btn{border-radius:10px}
-@media (prefers-reduced-motion:reduce){ .ui-spot{transition:none} }
+/* de lichtvlek duidelijk laten zien waar het kaartje over gaat: een witte rand met een rustig kloppende gloed (12 november 2026) */
+.ui-spot{border:2.5px solid #fff; box-shadow:0 0 0 200vmax rgba(20,36,27,.62), 0 0 0 5px rgba(143,208,168,.55), 0 0 18px 6px rgba(143,208,168,.45); animation:uiklop 1.8s ease-in-out infinite}
+@keyframes uiklop{50%{box-shadow:0 0 0 200vmax rgba(20,36,27,.62), 0 0 0 8px rgba(143,208,168,.35), 0 0 26px 10px rgba(143,208,168,.3)}}
+html.donker .ui-spot{border-color:#8fd0a8; box-shadow:0 0 0 200vmax rgba(5,12,8,.72), 0 0 0 5px rgba(143,208,168,.35), 0 0 18px 6px rgba(143,208,168,.35)}
+html.donker .ui-spot{animation-name:uiklopd}
+@keyframes uiklopd{50%{box-shadow:0 0 0 200vmax rgba(5,12,8,.72), 0 0 0 8px rgba(143,208,168,.25), 0 0 26px 10px rgba(143,208,168,.22)}}
+/* welkom: de allereerste melding, midden in beeld */
+.uitleg.welkom{display:grid; place-items:center; padding:16px; background:rgba(20,36,27,.62)}
+html.donker .uitleg.welkom{background:rgba(5,12,8,.72)}
+.wk-kaart{width:min(400px, 100%); background:#fff; border-radius:18px; padding:26px 22px 20px; display:grid; justify-items:center; gap:10px; text-align:center; box-shadow:0 14px 40px rgba(20,36,27,.35); animation:wkin .4s ease-out}
+html.donker .wk-kaart{background:#1d2a22; color:var(--ink)}
+.wk-poot{display:grid; place-items:center; width:62px; height:62px; border-radius:50%; background:var(--mint); color:var(--green)}
+html.donker .wk-poot{background:#2a3d31; color:#8fd0a8}
+.wk-kaart h2{margin:2px 0 0; font-family:var(--display); font-weight:600; font-size:1.55rem}
+.wk-kaart p{margin:0; font-size:1rem; line-height:1.5; max-width:36ch}
+.wk-kaart .wk-fijn{color:var(--ink-2); font-size:.92rem}
+.wk-door{width:100%; margin-top:8px; padding:14px 18px; font-size:1.05rem; border-radius:12px}
+@keyframes wkin{from{opacity:0; transform:translateY(10px) scale(.97)}}
+/* overgang welkom → eerste uitlegstap: de melding vervaagt, de lichtvlek groeit vanuit die plek naar het onderdeel, het kaartje volgt */
+.wk-kaart.weg{opacity:0; transform:scale(.96); transition:opacity .28s ease, transform .28s ease}
+.uitleg.intro .ui-spot{transition:left .6s cubic-bezier(.45,0,.2,1), top .6s cubic-bezier(.45,0,.2,1), width .6s cubic-bezier(.45,0,.2,1), height .6s cubic-bezier(.45,0,.2,1)}
+.uitleg.intro .ui-kaart{animation:uiin .42s ease-out .45s both}
+@keyframes uiin{from{opacity:0; transform:translateY(10px)}}
+@media (prefers-reduced-motion:reduce){ .ui-spot{transition:none; animation:none} .wk-kaart{animation:none} .uitleg.intro .ui-kaart{animation:none} }
 
 /* ---------- stap 5: leagues en uitnodigen ---------- */
 .tiles.vijf{grid-template-columns:repeat(5, minmax(0,1fr))}
