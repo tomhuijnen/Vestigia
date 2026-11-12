@@ -103,14 +103,57 @@ function submitGuess(id){
   else if (isTwin(id)){ S.revealed = MAX; freshClue = MAX - 1; setTimeout(() => Spelen.tweelingEersteKeer(BY_ID.get(id)), 650); }
   else if (S.expert || usedTries() >= MAX){ S.status = "lost"; }
   else { S.revealed = Math.min(MAX, S.revealed + 1); freshClue = S.revealed - 1; }
+  /* update 19: waar stond het invoerveld op het scherm? De balk met de uitslag komt precies daar */
+  const invoerOpScherm = S.status !== "playing" ? $("gInput").getBoundingClientRect().top : null;
   if (S.status !== "playing"){
     recordStats(); recordDex(); recordLog(); freshResult = true;
     if (S.status === "won") try { navigator.vibrate && navigator.vibrate([30, 50, 70]); } catch(e){}
     online.afterGame();
   }
   saveDaily(); render();
+  /* de uitslag verschijnt boven het invoerveld en duwt alles omlaag: schuif mee, zodat de balk blijft waar je keek */
+  if (invoerOpScherm !== null && !$("uitslagBalk").hidden){
+    const b = $("uitslagBalk").getBoundingClientRect(), tab = $("tabbar") ? $("tabbar").offsetHeight : 0;
+    const doel = Math.max(70, Math.min(invoerOpScherm, innerHeight - tab - b.height - 12));     // helemaal in beeld
+    window.scrollTo({ top: Math.max(0, window.scrollY + b.top - doel), behavior: "instant" });
+  }
   if (S.newAwards && S.newAwards.length){ const a = S.newAwards; S.newAwards = []; setTimeout(() => showAwards(a), 700); }
-  if (S.status !== "playing") document.getElementById("resultCard").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"nearest"});
+  if (S.status !== "playing") naarUitslagStraks();
+}
+/* Uitslag in één oogopslag (update 19, optie B met A erachteraan). Na de laatste gok wordt het invoerveld een balk
+   met de uitslag (renderBalk), precies waar je al keek. Daarna schuift de pagina rustig omhoog naar de uitslag.
+   Bij ‘minder beweging’ blijft de pagina staan en doet de knop ‘Bekijk uitslag’ het werk. */
+const rustigeBeweging = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+function naarUitslag(gedrag){
+  const kaart = $("resultCard"); if (!kaart || $("resultWrap").hidden) return;
+  /* de smalle balk bovenin staat er na het scrollen; daar moet de uitslag onder vallen */
+  const boven = kaart.getBoundingClientRect().top, marge = ($("slimbar") ? $("slimbar").offsetHeight : 0) + 14;
+  window.scrollTo({ top: Math.max(0, window.scrollY + boven - marge), behavior: gedrag || (rustigeBeweging() ? "auto" : "smooth") });
+}
+function naarUitslagStraks(){
+  if (rustigeBeweging()) return;
+  const spel = S;
+  setTimeout(() => {
+    if (S !== spel || VIEW !== "game" || document.querySelector(".overlay:not([hidden]), #awardPop:not([hidden])")) return;
+    const r = $("resultCard").getBoundingClientRect();
+    if (r.top > 40 && r.top < innerHeight * .35) return;          // staat al mooi in beeld (breed scherm)
+    naarUitslag("smooth");
+  }, 1100);
+}
+function renderBalk(){
+  const balk = $("uitslagBalk"), rij = document.querySelector(".det-row");
+  const klaar = S.status !== "playing";
+  rij.hidden = klaar;
+  if (!klaar){ balk.hidden = true; balk.innerHTML = ""; return; }
+  const t = BY_ID.get(S.target), won = S.status === "won", vers = !balk.hidden ? false : freshResult;
+  balk.className = "uitslagbalk" + (won ? "" : " mis") + (vers && !rustigeBeweging() ? " in" : "");
+  balk.innerHTML = `<span class="ub-ic" aria-hidden="true">${won
+      ? `<svg viewBox="0 0 16 16" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg>`
+      : `<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg>`}</span>
+    <span class="ub-tekst"><small>${won ? "Gedetermineerd" : "Niet gedetermineerd, het was"}</small><b>${esc(t.n)}</b><i>${esc(t.s)}</i></span>
+    <button class="btn" type="button" id="ubBekijk">Bekijk uitslag</button>`;
+  balk.hidden = false;
+  $("ubBekijk").onclick = () => { naarUitslag(); setTimeout(() => { const h = $("resultCard").querySelector("h3"); if (h){ h.tabIndex = -1; h.focus({ preventScroll: true }); } }, rustigeBeweging() ? 0 : 450); };
 }
 function moreClue(){
   if (!S.expert || S.status !== "playing" || S.revealed >= MAX) return;
@@ -378,7 +421,7 @@ function renderHead(){
   $("gBtn").disabled = !matchExact(inp.value) || S.status !== "playing";
 }
 
-function render(){ renderHead(); renderClues(); renderGrid(); renderPips(); renderResult(); tipZoekgroepen(); }
+function render(){ renderHead(); renderBalk(); renderClues(); renderGrid(); renderPips(); renderResult(); tipZoekgroepen(); }
 /* Eenmalige uitleg bij zoeken op een groep (update 12): bij de eerstvolgende casus die je speelt (dag of oefen), zodra er
    geen pop-up, uitleg of openingsanimatie meer in beeld is. Daarna nooit meer (Nieuw.blokjes onthoudt het). */
 let zoekTipBezig = false;
@@ -476,9 +519,15 @@ function openOpts(){
   const ul = $("gOpts");
   if (!optList.length){ ul.innerHTML = `<li aria-disabled="true"><span>Geen soort gevonden</span></li>`; ul.hidden = false; optIdx = -1; return; }
   optIdx = 0;
-  const nGroep = optList.filter(x => inGroep.has(x.id)).length;
-  const kop = gs.length && nGroep ? `<li class="optgroep" role="presentation"><span>${esc(gs.map((z, i) => i ? z.naam.toLowerCase() : z.naam).join(" en "))}</span><i>${nGroep} ${nGroep === 1 ? "soort" : "soorten"}</i></li>` : "";
-  ul.innerHTML = kop + optList.map((x, i) => `<li role="option" id="opt${i}" data-n="${esc(x.id)}" aria-selected="${i === optIdx}"><span>${esc(x.n)}</span><i>${esc(x.s)}</i></li>`).join("");
+  /* Update 19: onder de groepskop alleen soorten die echt in de groep horen. Soorten die er alleen via hun naam bij komen
+     (de kleine ijsvogelvlinder bij ‘vogel’, de bruinvis bij ‘vis’, de vroedmeesterpad bij ‘mees’) en soorten die
+     alleen met een tikfout passen, staan los eronder, onder ‘Andere soorten’. */
+  const leden = gs.length ? optList.filter(x => inGroep.has(x.id)) : [], los = gs.length ? optList.filter(x => !inGroep.has(x.id)) : optList;
+  optList = leden.concat(los);
+  const li = (x, i) => `<li role="option" id="opt${i}" data-n="${esc(x.id)}" aria-selected="${i === optIdx}"><span>${esc(x.n)}</span><i>${esc(x.s)}</i></li>`;
+  const kop = leden.length ? `<li class="optgroep" role="presentation"><span>${esc(gs.map((z, i) => i ? z.naam.toLowerCase() : z.naam).join(" en "))}</span><i>${leden.length} ${leden.length === 1 ? "soort" : "soorten"}</i></li>` : "";
+  const kop2 = leden.length && los.length ? `<li class="optgroep los" role="presentation"><span>Andere soorten</span></li>` : "";
+  ul.innerHTML = kop + leden.map(li).join("") + kop2 + los.map((x, i) => li(x, leden.length + i)).join("");
   ul.hidden = false; $("gInput").setAttribute("aria-expanded","true"); $("gInput").setAttribute("aria-activedescendant","opt0");
 }
 function moveOpt(d){

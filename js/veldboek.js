@@ -237,7 +237,22 @@ function lichtUitEl(el){
 }
 /* ---------- vaakst verward ----------
    Uit het logboek: welke soort gokte je fout, en wat was het echt? Paren tellen in beide richtingen samen
-   (boomkruiper voor kortsnavelboomkruiper is hetzelfde paar als andersom). Foute gokken worden bijgehouden sinds update 1. */
+   (boomkruiper voor taigaboomkruiper is hetzelfde paar als andersom). Foute gokken worden bijgehouden sinds update 1.
+   Update 19: alleen paren die echt op elkaar lijken tellen. Een paar lijkt als het
+   - tweelingsoorten zijn, of
+   - de ene soort bij de andere in ‘Verwar niet met’ staat, of
+   - ze in dezelfde diergroep zitten en in de vergelijkingstabel op bijna alle kenmerken gelijk zijn: leefgebied,
+     activiteit, voedsel, verblijfplaats, winter en lengte; gelijk telt 1, deels gelijk een half, en LIJKT_DREMPEL is
+     het minimum (5,5 van de 6). Zo valt een vleermuis gokken bij een vogel weg, ook als het vaker gebeurt.
+   De lijst staat sinds update 19 in Statistieken (js/statistiek.js), niet meer in het Vestiarium. */
+const LIJKT_DREMPEL = 5.5;
+function lijktOp(a, b){
+  if (!a || !b) return false;
+  if (a.twin === b.id || b.twin === a.id || a.x === b.id || b.x === a.id) return true;
+  if (a.g !== b.g) return false;
+  const c = compare(a, b);
+  return ["h", "a", "v", "b", "w", "l"].reduce((s, k) => s + (c[k].cls === "ok" ? 1 : c[k].cls === "part" ? .5 : 0), 0) >= LIJKT_DREMPEL;
+}
 function verwarringen(st){
   const tel = new Map();
   for (const e of st.log || []){
@@ -245,25 +260,11 @@ function verwarringen(st){
     for (const g of e.f){
       if (!BY_ID.get(g) || g === e.s) continue;
       const [a, b] = [e.s, g].sort(), k = a + "|" + b;
-      const r = tel.get(k) || { a, b, n: 0, zelfdeGroep: BY_ID.get(a).g === BY_ID.get(b).g, laatst: 0 };
-      r.n++; r.laatst = Math.max(r.laatst, e.t); tel.set(k, r);
+      const r = tel.get(k) || { a, b, n: 0, lijkt: lijktOp(BY_ID.get(a), BY_ID.get(b)), laatst: 0 };
+      r.n++; r.laatst = Math.max(r.laatst, e.t || 0); tel.set(k, r);
     }
   }
-  /* paren binnen één diergroep eerst: dat zijn de echte verwarringen; een vleermuis gokken bij een vogel is eerder zoeken */
-  return [...tel.values()].sort((p, q) => q.n - p.n || q.zelfdeGroep - p.zelfdeGroep || q.laatst - p.laatst);
-}
-function renderFouten(st){
-  const el = $("foutenBody"); if (!el) return;
-  const paren = verwarringen(st).filter(p => p.zelfdeGroep || p.n >= 2).slice(0, 6);
-  if (!paren.length){
-    el.innerHTML = `<p class="fine">Hier zie je straks welke soorten je het vaakst door elkaar haalt, met een knop om juist die te oefenen. Foute gokken worden bijgehouden vanaf 9 november 2026.</p>`;
-    return;
-  }
-  const ids = [...new Set(paren.flatMap(p => [p.a, p.b]))].filter(id => TARGETS.some(t => t.id === id));
-  el.innerHTML = `<ul class="foutlijst">${paren.map(p => { const a = BY_ID.get(p.a), b = BY_ID.get(p.b);
-      return `<li><span class="paar"><b>${esc(a.n)}</b><span class="tussen" aria-label="en">⇄</span><b>${esc(b.n)}</b></span><span class="keer">${p.n}× verward</span></li>`; }).join("")}</ul>
-    ${ids.length ? `<button class="btn line" id="oefenFouten">Oefen deze ${ids.length} soorten</button>` : ""}`;
-  if ($("oefenFouten")) $("oefenFouten").onclick = () => startFree({ g: null, nieuw: false, ids });
+  return [...tel.values()].filter(p => p.lijkt).sort((p, q) => q.n - p.n || q.laatst - p.laatst);
 }
 /* stempelkaarten van alle veldweken tot nu toe, nieuwste eerst */
 function renderVeldweken(st){
@@ -278,7 +279,7 @@ function renderVeldweken(st){
 }
 function renderDex(){
   const st = store.get(), dex = st.dex || {};
-  renderFouten(st); renderVeldweken(st); if (typeof Dwaalgast !== "undefined") Dwaalgast.vestiarium();
+  renderVeldweken(st); if (typeof Dwaalgast !== "undefined") Dwaalgast.vestiarium();
   const found = DEX.filter(t => dex[t.id] && dex[t.id].w > 0).length;
   $("dexCount").innerHTML = `${found}<small>van ${DEX.length} gedetermineerd</small>`;
   renderTrophies(st);

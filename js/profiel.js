@@ -5,20 +5,21 @@
    eikels en winkel onzichtbaar en werkt de rest van de app gewoon. */
 "use strict";
 
-/* ---------- tekenen: avatar met achtergrondkleur en lijst ---------- */
+/* ---------- tekenen: avatar met achtergrondkleur en lijst ----------
+   bg = achtergrond, fg = de tekening (currentColor); det, licht en grens: tinten voor de details, zie avatarTekening (update 19) */
 const KLEUREN = {
   groen: { bg: "#4b7a5e", fg: "#edfbe2", naam: "Groen" },
-  mint:  { bg: "#d6eccb", fg: "#2c4a37", naam: "Mint" },
+  mint:  { bg: "#d6eccb", fg: "#2c4a37", licht: "#ebf6e5", naam: "Mint" },
   oker:  { bg: "#a9792b", fg: "#fbf1d9", naam: "Oker" },
-  heide: { bg: "#76506f", fg: "#f7eaf4", naam: "Heide" },
-  nacht: { bg: "#1e2c3b", fg: "#dfe9f2", naam: "Nacht" },
+  heide: { bg: "#76506f", fg: "#f7eaf4", det: "#1e141c", naam: "Heide" },
+  nacht: { bg: "#1e2c3b", fg: "#dfe9f2", licht: "#6d7680", naam: "Nacht" },
   wad:      { bg: "#7f98a1", fg: "#f2f6f7", naam: "Wad" },
-  veen:     { bg: "#4a3426", fg: "#f0e2cf", naam: "Veen" },
+  veen:     { bg: "#4a3426", fg: "#f0e2cf", licht: "#8f8178", naam: "Veen" },
   ijsvogel: { bg: "#0f7fa8", fg: "#ffd2a6", naam: "IJsvogel" },
-  klaproos: { bg: "#b8352b", fg: "#fde6df", naam: "Klaproos" },
+  klaproos: { bg: "#b8352b", fg: "#fde6df", det: "#2e0d0b", naam: "Klaproos" },
   /* alleen uit de adventkalender (update 8) */
-  winter:   { bg: "#cfe2ec", fg: "#24485c", naam: "Winter" },
-  hulst:    { bg: "#1d4a32", fg: "#f6d9dc", naam: "Hulst" }
+  winter:   { bg: "#cfe2ec", fg: "#24485c", licht: "#e7f1f6", naam: "Winter" },
+  hulst:    { bg: "#1d4a32", fg: "#f6d9dc", licht: "#7a9486", naam: "Hulst" }
 };
 const LIJSTEN = {
   hout: `<circle cx="50" cy="50" r="47" fill="none" stroke="#7d5330" stroke-width="6"/><circle cx="50" cy="50" r="47" fill="none" stroke="#b07a46" stroke-width="1.6" stroke-dasharray="7 10" stroke-linecap="round"/>`,
@@ -49,13 +50,31 @@ const MEDAILLE_EMBLEEM = `<g transform="translate(78 78) scale(1.25)"><path d="M
 const MEDAILLE_GLANS = id => `<defs><linearGradient id="${id}gl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><g clip-path="url(#${id})" class="av-glans" style="--d:-${(Math.random() * 5).toFixed(2)}s"><rect class="av-glans-streep" x="-40" y="-20" width="26" height="140" fill="url(#${id}gl)" transform="rotate(20 50 50)"/></g><path class="av-fonkel" style="--d:-${(Math.random() * 5).toFixed(2)}s" d="M24 20L25.6 25.4L31 27L25.6 28.6L24 34L22.4 28.6L17 27L22.4 25.4Z" fill="#fffbe6"/>`;
 const EIKEL = `<svg class="eikel" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path d="M8 2.6V1.2" stroke="#7d5330" stroke-width="1.4" stroke-linecap="round"/><path d="M2.8 6.6C2.8 4.1 5.1 2.6 8 2.6s5.2 1.5 5.2 4Z" fill="#7d5330"/><path d="M3.9 7.1h8.2c0 3.6-1.8 6.6-4.1 6.6S3.9 10.7 3.9 7.1Z" fill="#d9a441"/></svg>`;
 let avNr = 0;
+/* Contrast per achtergrondkleur (update 19). De details van een tekening (#1f3428: ogen, neus, oren, poten) liggen deels
+   op het dier en deels op de achtergrond. Per kleur:
+   det    = een andere donkere tint voor alle details (één laag);
+   licht  = lichte tint voor details op een donkere ondergrond: waar wat eronder ligt donkerder is dan grens (0–1, standaard
+            0,45), krijgt het detail deze tint, elders blijft het donker. Zo blijft een vossenoor zichtbaar op Nacht en een
+            uilenoog op Mint. De tekening komt dan twee keer in beeld; een masker kiest per plek de juiste laag.
+   Nameten met: node tools/avatarcontrast.mjs --html overzicht.html */
+const AV_DETAIL = "#1f3428";
+function avatarTekening(avatar, k, id){
+  const src = AVATARS[avatar].replaceAll("{id}", id), donker = k.det || AV_DETAIL;
+  const met = c => c === AV_DETAIL ? src : src.replaceAll(AV_DETAIL, c);
+  if (!k.licht || !src.includes(AV_DETAIL)) return `<g clip-path="url(#${id})" color="${k.fg}">${met(donker)}</g>`;
+  /* masker: de tekening zonder details op de achtergrond, omgezet naar ‘donkerder dan de grens’ (wit) of niet (leeg) */
+  const g = Math.round((k.grens || .45) * 20), tabel = Array.from({ length: 20 }, (_, i) => i < g ? 1 : 0).join(" ");
+  return `<defs><filter id="${id}f" x="0" y="0" width="100" height="100" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feColorMatrix type="luminanceToAlpha"/><feComponentTransfer><feFuncA type="discrete" tableValues="${tabel}"/></feComponentTransfer><feColorMatrix values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0"/></filter>
+    <mask id="${id}m" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100" style="mask-type:alpha"><g filter="url(#${id}f)"><circle cx="50" cy="50" r="50" fill="${k.bg}"/><g color="${k.fg}">${met("none")}</g></g></mask></defs>
+    <g clip-path="url(#${id})" color="${k.fg}">${met(donker)}<g mask="url(#${id}m)">${met(k.licht)}</g></g>`;
+}
 /* p = { avatar, frame, color, name }; medaille-avatars krijgen altijd het medaille-embleem rechtsonder */
 function avatarSVG(p, cls){
   p = p || {};
   const k = KLEUREN[p.color] || KLEUREN.groen, id = "av" + (++avNr), teken = p.avatar && AVATARS[p.avatar];
   const medaille = teken && MEDALS.some(t => t.id === p.avatar);
   const binnen = teken
-    ? `<g clip-path="url(#${id})" color="${k.fg}">${AVATARS[p.avatar].replaceAll("{id}", id)}</g>`
+    ? avatarTekening(p.avatar, k, id)
     : `<text x="50" y="50" dy=".35em" text-anchor="middle" font-size="46" font-family="Rubik, sans-serif" font-weight="600" fill="${k.fg}">${esc(((p.name || "?").trim()[0] || "?").toUpperCase())}</text>`;
   return `<svg class="${cls || "avatar"}" viewBox="0 0 100 100" aria-hidden="true" style="--av-bg:${k.bg}"><defs><clipPath id="${id}"><circle cx="50" cy="50" r="50"/></clipPath></defs>
     <circle cx="50" cy="50" r="50" fill="${k.bg}"/>${binnen}${medaille ? MEDAILLE_GLANS(id) : ""}${p.frame && LIJSTEN[p.frame] ? LIJSTEN[p.frame].replaceAll("{id}", id) : ""}${medaille ? MEDAILLE_EMBLEEM : ""}</svg>`;

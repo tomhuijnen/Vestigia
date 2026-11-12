@@ -17,6 +17,18 @@ const DAY = 864e5;
 const $ = id => document.getElementById(id);
 const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+/* Een vliegend doel volgt de pagina (update 19). Eikels, XP en adventvakjes vliegen naar het saldo of de levelring
+   rechtsboven; scrol je tijdens de vlucht (of schuift de pagina zelf naar de uitslag), dan verschuift dat doel. Deze lus
+   meet het doel elke frame opnieuw en zet het spook (de kopie van de knop) erop. zoek() geeft een DOMRect of null,
+   punt(r) het landingspunt. Geeft { xy(): [x, y], stop() }; stop() aanroepen zodra het spook weg is. */
+function volgDoel(spook, zoek, punt){
+  let xy = null, aan = true;
+  const meet = () => { if (typeof document === "undefined") return; const r = zoek(); if (!r) return; spook.style.left = r.left + "px"; spook.style.top = r.top + "px"; xy = punt(r); };
+  meet();
+  const lus = () => { if (!aan || !spook.isConnected) return; meet(); requestAnimationFrame(lus); };
+  requestAnimationFrame(lus);
+  return { xy: () => xy, stop: () => { aan = false; } };
+}
 function rng(seed){ return function(){ seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed>>>15, 1|seed); t = t + Math.imul(t ^ t>>>7, 61|t) ^ t; return ((t ^ t>>>14) >>> 0) / 4294967296; }; }
 function shuffled(arr, seed){ const r = rng(seed), a = arr.slice(); for(let i=a.length-1;i>0;i--){ const j = Math.floor(r()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; }
 const MONTHS = ["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"];
