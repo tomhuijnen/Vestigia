@@ -45,6 +45,8 @@ Determinatiespel over beschermde fauna van Nederland: herken de soort aan habita
 | `js/app.js` | spelregels, kop, installeren en opstarten |
 | `sw.js` | service worker (offline, updates en het tonen van pushmeldingen) |
 
+Groene opstartbeelden voor iPhone en iPad (in plaats van het zwarte scherm bij het openen) opnieuw maken, bijvoorbeeld als er een nieuw iPhone-formaat bij komt: `node tools/opstartbeelden.mjs` (schermmaten in `SCHERMEN`; schrijft `icons/opstart/` en de regels in `index.html`).
+
 Contrast van alle avatars op alle achtergrondkleuren nameten: `node tools/avatarcontrast.mjs --html overzicht.html` (heeft Playwright met Chrome nodig).
 
 De databasescripts (001 t/m 019) staan bewust niet in deze repo, maar in het Project Vestigia.
