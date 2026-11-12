@@ -1,4 +1,4 @@
-/* Vestigia – spelersduel (update 16, aan vanaf maandag 14 december 2026).
+/* Vestigia – spelersduel (update 16, aan vanaf maandag 23 november 2026).
    Twee spelers spelen dezelfde drie casussen, niet tegelijk. De uitdager kiest klassiek of expert en speelt zijn drie
    casussen meteen; daarna heeft de ander 48 uur. De uitslag zie je pas als jullie allebei klaar zijn: dan gaan de
    casussen één voor één open. Per casus punten zoals bij de dagcasus; meeste punten wint, gelijke punten is gelijkspel.
@@ -23,7 +23,7 @@ const Duel = (() => {
   const D = demo ? "vestigia:demo:" : "vestigia:";        // het voorbeeld heeft zijn eigen opslag
   const K = { st: D + "duelstatus", lijst: D + "duellijst", spel: D + "duels", link: "vestigia:duel-link",
               pop: D + "duel-pop", van: "vestigia:van" };
-  const START_DAG = "2026-12-14";
+  const START_DAG = "2026-11-23";
   const lees = k => { try { return JSON.parse(localStorage.getItem(k)); } catch(e){ return null; } };
   const zet = (k, v) => { try { v === null || v === undefined ? localStorage.removeItem(k) : localStorage.setItem(k, JSON.stringify(v)); } catch(e){} };
   const p = () => demo ? (online.player() || { id: "demo", key: "demo", name: "Jij" }) : online.enabled ? online.player() : null;
@@ -48,7 +48,7 @@ const Duel = (() => {
   /* ---------- stand ---------- */
   const status = () => lees(K.st) || {};
   const cache = () => (p() && lees(K.lijst)) || [];
-  /* zichtbaar: vanaf 14 december, eerder voor testers (de server zegt het), of als er al een duel voor jou is */
+  /* zichtbaar: vanaf 23 november, eerder voor testers (de server zegt het), of als er al een duel voor jou is */
   function zichtbaar(){
     if (demo) return true;
     const s = status();
@@ -280,7 +280,7 @@ const Duel = (() => {
       ${demo ? `<p class="duelvoorbeeld"><b>Voorbeeld.</b> Niets wordt opgeslagen of verstuurd. De andere spelers zijn nep en spelen hun casussen vanzelf, een paar seconden nadat jij klaar bent.</p>` : ""}
       <div class="duelstart">
         ${kan ? `<button class="btn" id="duUitdagen" aria-expanded="${paneelOpen}">Daag iemand uit</button>`
-              : `<p class="fine"><b>Het spelersduel begint op maandag 14 december.</b> Word je eerder uitgedaagd door een tester, dan kun je wel al meespelen.</p>`}
+              : `<p class="fine"><b>Het spelersduel begint op maandag 23 november.</b> Word je eerder uitgedaagd door een tester, dan kun je wel al meespelen.</p>`}
       </div>
       <section class="duelpaneel" id="duPaneel"${paneelOpen && kan ? "" : " hidden"}></section>
       ${sectie("Jouw beurt", g.beurt, kaartBeurt)}
@@ -625,7 +625,7 @@ const Duel = (() => {
     }
     const r = {
       duel_status(){ const v = db(), me = ik();
-        return [{ actief: true, vanaf: "2026-12-14",
+        return [{ actief: true, vanaf: "2026-11-23",
           voor_jou: v.duels.filter(d => d.tegenstander === me && d.status === "open" && (d.spel[me] || []).length < 3).length,
           uitslagen: v.duels.filter(d => d.status === "klaar" && ((d.uitdager === me && !d.gezien_u) || (d.tegenstander === me && !d.gezien_t))).length,
           lopend: v.duels.filter(d => ["bezig", "open"].includes(d.status)).length }]; },

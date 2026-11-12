@@ -43,7 +43,7 @@ const Nieuw = (() => {
         { ic: "spoor", kop: "Wat zit erin?", tekst: "Eikels, sporen in de sneeuw om te raden, winterweetjes over beschermde soorten en een paar dingen die je nergens anders krijgt." },
         { ic: "kalender", kop: "Een gemist vakje is weg", tekst: "Je kunt alleen het vakje van vandaag openen. Open je ze alle 24, dan word je Adventkampioen." }
       ] },
-    { id: "spelersduel", titel: "Spelersduel", klasse: "duelnieuw", verborgen: () => !(typeof Duel !== "undefined" && Duel.zichtbaar()),   // update 16, vanaf 14 december
+    { id: "spelersduel", titel: "Spelersduel", klasse: "duelnieuw", verborgen: () => !(typeof Duel !== "undefined" && Duel.zichtbaar()),   // update 16, vanaf 23 november
       stappen: [
         { ic: "duel", kop: "Nieuw: het spelersduel!", tekst: "Daag een andere speler uit, op naam of met een link. Jullie spelen dezelfde drie casussen, in de modus die de uitdager kiest." },
         { ic: "zwaarden", kop: "Wie verslaat de ander?", tekst: "Jij speelt je drie casussen meteen; daarna heeft de ander 48 uur. Wat de ander deed, zie je pas als jullie allebei klaar zijn. Dan gaan de casussen één voor één open." },

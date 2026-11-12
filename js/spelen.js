@@ -37,7 +37,7 @@ const Spelen = (() => {
     { id: "raadsel", label: "Raadsel", later: true },
     { id: "oefen", label: "Oefenen", go: () => { bewaar(ALLES); startFree(ALLES); } },
     { id: "dag", label: "Dagcasus", go: () => { goDaily(); window.scrollTo({ top: 0, behavior: "auto" }); } },
-    /* update 16: aan vanaf 14 december (of eerder voor testers); tot dan grijs met ‘binnenkort’. Rechts naast de dagcasus. */
+    /* update 16: aan vanaf 23 november (of eerder voor testers); tot dan grijs met ‘binnenkort’. Rechts naast de dagcasus. */
     { id: "spelersduel", label: "Spelersduel", later: () => !(typeof Duel !== "undefined" && Duel.zichtbaar()), go: () => Duel.open(),
       sub: () => { const n = typeof Duel !== "undefined" ? Duel.aantal() : 0; return n ? `${n} voor jou` : ""; } },
     { id: "soortenduel", label: "Soortenduel", later: true }
