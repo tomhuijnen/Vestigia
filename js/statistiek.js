@@ -6,7 +6,8 @@
    - Vaakst ingevoerd: elke soort die je als determinatie invoerde, goed of fout. Foute gokken staan pas sinds update 2
      in het logboek; van oudere verloren casussen weten we alleen het antwoord.
    - Dwaalgasten: uit de verzameling die de server bijhoudt (één beurt per maand).
-   - Actieve maanden: kalendermaanden waarin je minstens één casus afrondde. */
+   - Actieve maanden: kalendermaanden waarin je minstens één casus afrondde.
+   - Vaakst verward (update 19): paren die op elkaar lijken en die je door elkaar haalde, met ‘Oefen deze soorten’. */
 "use strict";
 
 const Statistiek = (() => {
@@ -57,6 +58,19 @@ const Statistiek = (() => {
       <span class="st-vn">${a.n ? `${a.w} van ${a.n} · ${pct(a.w, a.n)}%` : "nog niet gespeeld"}</span></div>`;
   }
 
+  /* Vaakst verward (update 19, eerder in het Vestiarium): alleen soorten die echt op elkaar lijken, zie lijktOp in
+     js/veldboek.js. Met een knop om juist die soorten te oefenen. */
+  function verward(){
+    const paren = verwarringen(store.get()).slice(0, 6);
+    const kop = `<h3 id="stVerwH">Vaakst verward</h3><p class="fine">Soorten die op elkaar lijken en die je door elkaar haalde: tweelingsoorten, soorten uit ‘Verwar niet met’ en soorten met bijna hetzelfde profiel.</p>`;
+    if (!paren.length) return `<section class="st-blok fouten" id="stVerward" aria-labelledby="stVerwH">${kop}<p class="fine">Nog niets. Haal je twee soorten door elkaar die op elkaar lijken, dan zie je ze hier, met een knop om juist die te oefenen.</p></section>`;
+    const ids = [...new Set(paren.flatMap(p => [p.a, p.b]))].filter(id => TARGETS.some(t => t.id === id));
+    return `<section class="st-blok fouten" id="stVerward" aria-labelledby="stVerwH">${kop}
+      <ul class="foutlijst">${paren.map(p => { const a = BY_ID.get(p.a), b = BY_ID.get(p.b);
+        return `<li><span class="paar"><b>${esc(a.n)}</b><span class="tussen" aria-label="en">⇄</span><b>${esc(b.n)}</b></span><span class="keer">${p.n}× verward</span></li>`; }).join("")}</ul>
+      ${ids.length ? `<button class="btn line" id="oefenFouten" data-ids='${esc(JSON.stringify(ids))}'>Oefen deze ${ids.length} soorten</button>` : ""}</section>`;
+  }
+
   function render(){
     const s = bereken(), body = $("statsBody");
     $("stTotaal").innerHTML = `${s.n}<small>${s.n === 1 ? "determinatie" : "determinaties"}</small>`;
@@ -83,18 +97,25 @@ const Statistiek = (() => {
       <div class="st-twee" id="stLijsten">
         <section class="st-blok" aria-labelledby="stDoelH"><h3 id="stDoelH">Vaakst tegengekomen</h3><p class="fine">De soort die het antwoord was.</p>${lijst(s.topDoel, "doel")}</section>
         <section class="st-blok" aria-labelledby="stInvH"><h3 id="stInvH">Vaakst ingevoerd</h3><p class="fine">Elke soort die je als determinatie invoerde, goed of fout.</p>${lijst(s.topInvoer, "invoer")}</section>
-      </div>`;
+      </div>
+      ${verward()}`;
     body.querySelectorAll(".st-rij[data-id]").forEach(b => b.onclick = () => openPlate(b.dataset.id, b));
+    if ($("oefenFouten")) $("oefenFouten").onclick = () => startFree({ g: null, nieuw: false, ids: JSON.parse($("oefenFouten").dataset.ids) });
   }
 
   function toon(){
     setView("stats");
     render();
     window.scrollTo({ top: 0, behavior: "auto" });
-    if (typeof Nieuw !== "undefined" && $("stKern") && $("stLijsten")) Nieuw.blokjes("statistiek", [
+    if (typeof Nieuw === "undefined") return;
+    const eerst = $("stKern") && $("stLijsten") ? Nieuw.blokjes("statistiek", [
       { na: $("stKern"), tekst: "Nieuw: je statistieken. Hier tellen alle casussen mee, ook oefencasussen en ingehaalde dagen, en niet alleen de dagcasus zoals bij de reeks." },
       { na: $("stLijsten"), tekst: "Welke soorten kwam je het vaakst tegen, en welke voerde je het vaakst in? Tik op een soort om zijn plaat te openen." }
-    ], { wacht: 500 });
+    ], { wacht: 500 }) : Promise.resolve();
+    /* update 19: ‘Vaakst verward’ verhuisde van het Vestiarium naar hier */
+    eerst.then(() => { if ($("stVerward") && VIEW === "stats") Nieuw.blokjes("verward-statistiek", [
+      { na: $("stVerward").querySelector("h3"), tekst: `‘Vaakst verward’ staat nu hier in plaats van in het ${NAAM.vestiarium}. Er tellen alleen nog soorten die echt op elkaar lijken: een vleermuis gokken bij een vogel telt niet meer. Met de knop eronder oefen je juist die soorten.` }
+    ], { wacht: 400 }); });
   }
   return { toon, render, bereken };
 })();

@@ -1,6 +1,6 @@
 {
  "uitleg": "Wat live staat. Het controlescript bewaakt dat id's, platennummers, casussen en het dagschema nooit verschuiven. Bijwerken met: node tools/controle.mjs --vastleggen",
- "vastgelegd": "2026-11-11",
+ "vastgelegd": "2026-11-12",
  "soorten": {
   "das": {
    "n": "Das",

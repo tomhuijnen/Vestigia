@@ -14,7 +14,19 @@ function setView(v){
   for (const [k, id] of Object.entries(VIEWS)) $(id).hidden = v !== k;
   if (vorig !== v) inBeeld($(VIEWS[v]));
   closeMenu(true);
-  renderMenu(); renderTabbar(); kleurKop();
+  renderMenu(); renderTabbar(); kleurKop(); kopLabel();
+}
+/* Regel onder ‘Vestigia’ (update 19): volgt het scherm, niet de spelmodus. Bij een casus staat er alleen bij oefenen iets
+   (welk nummer en welke dag het is, zie je al in de tegel); op de andere schermen de naam van het scherm. */
+const SCHERMNAAM = { rank: "Ranglijst", league: "League", dex: () => NAAM.vestiarium, profiel: "Mijn profiel", shop: "Shop", stats: "Statistieken" };
+function kopLabel(){
+  let groot = "", klein = "";
+  if (VIEW === "game"){
+    if (S && S.mode === "free"){ groot = `Oefencasus${S.ids ? " · je verwarde soorten" : S.groep && GROUPS[S.groep] ? " · " + GROUPS[S.groep] : ""}`; klein = "oefenen"; }
+    else if (S) klein = `#${S.caseNo}`;
+  } else { const n = SCHERMNAAM[VIEW]; groot = typeof n === "function" ? n() : n || ""; klein = groot.toLowerCase(); }
+  $("fSeries").textContent = groot; $("fSeries").hidden = !groot;
+  $("slimSeries").textContent = klein;
 }
 /* Oefenen krijgt een bruine kop, zodat je altijd ziet dat het niet om de dagcasus gaat. */
 function kleurKop(){ document.body.classList.toggle("oefenen", VIEW === "game" && !!S && S.mode === "free"); }
@@ -116,10 +128,7 @@ function renderTiles(){
 /* ---------- regel boven de naam, schakelaar en vinkjes ---------- */
 const SLOTJE = `<svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6.2" width="9" height="6.3" rx="1.4"/><path d="M4.6 6.2V4.6a2.4 2.4 0 0 1 4.8 0v1.6"/></svg>`;
 function renderKop(){
-  /* boven de naam staat alleen bij oefenen iets: welk nummer en welke dag het is, zie je al in de tegel */
-  $("fSeries").textContent = S.mode === "daily" ? "" : `Oefencasus${S.ids ? " · je verwarde soorten" : S.groep && GROUPS[S.groep] ? " · " + GROUPS[S.groep] : ""}`;
-  $("fSeries").hidden = S.mode === "daily";
-  $("slimSeries").textContent = S.mode === "daily" ? `#${S.caseNo}` : "oefenen";
+  kopLabel();
   kleurKop();
   if (typeof Spelen !== "undefined") Spelen.oefenKader();
   const seg = document.querySelector(".modebar .seg");

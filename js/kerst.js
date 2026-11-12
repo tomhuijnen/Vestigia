@@ -358,8 +358,10 @@ const Kerst = (() => {
     spook.innerHTML = `${EIKEL}<span>${start}</span>`;
     document.body.appendChild(spook);
     const tel = spook.querySelector("span");
-    const a = van.getBoundingClientRect(), doel = spook.getBoundingClientRect();
-    const x0 = a.left + a.width / 2, y0 = a.top + a.height / 2, x1 = doel.left + 18, y1 = doel.top + doel.height / 2;
+    const a = van.getBoundingClientRect();
+    /* het doel volgt het saldo, ook als de pagina tijdens de vlucht schuift (update 19) */
+    const volg = volgDoel(spook, () => saldoPlek().r, r => [r.left + 18, r.top + r.height / 2]);
+    const x0 = a.left + a.width / 2, y0 = a.top + a.height / 2, [x1, y1] = volg.xy();
     const aantal = Math.min(12, Math.max(5, Math.round(n / 4)));
     van.classList.add("leeg");
     let aangekomen = 0;
@@ -373,6 +375,7 @@ const Kerst = (() => {
           const draai = (Math.random() < .5 ? -1 : 1) * (240 + Math.random() * 300), duur = 720 + Math.random() * 260, t0 = performance.now();
           const stap = nu => {
             const t = Math.min(1, (nu - t0) / duur), u = 1 - t, z = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+            const [x1, y1] = volg.xy();
             const x = u * u * sx + 2 * u * t * cx + t * t * x1, y = u * u * sy + 2 * u * t * cy + t * t * y1;
             const sc = t < .2 ? .6 + t * 3 : 1.2 - z * .55;
             e.style.transform = `translate(${x - 11}px, ${y - 11}px) rotate(${draai * z}deg) scale(${sc})`;
@@ -388,7 +391,7 @@ const Kerst = (() => {
     });
     if (span) span.textContent = eind;
     spook.classList.add("klaar");
-    const weg = wacht(700).then(() => spook.remove());
+    const weg = wacht(700).then(() => { volg.stop(); spook.remove(); });
     if (!snel) await weg;
   }
 

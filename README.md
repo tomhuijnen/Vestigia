@@ -27,18 +27,20 @@ Determinatiespel over beschermde fauna van Nederland: herken de soort aan habita
 | `js/online.js` | ranglijst en synchronisatie met Supabase |
 | `js/league.js` | uitnodigen en leagues, en de links `?van=` en `?league=` |
 | `data/avatars.js` | de 29 avatartekeningen, waarvan 10 medaille-avatars in kleur (prijzen staan in Supabase) |
-| `js/profiel.js` | eikels, avatars, Mijn profiel (kiezen uit wat je hebt), shop (kopen, goedkoop naar duur) en prestaties met eikels |
+| `js/profiel.js` | eikels, avatars, Mijn profiel (kiezen uit wat je hebt), shop (kopen, goedkoop naar duur) en prestaties met eikels; per achtergrondkleur een eigen tint voor de details van een avatar (update 19, `KLEUREN` en `avatarTekening`) |
 | `js/wachtrij.js` | wachtrij voor pop-ups: nooit twee tegelijk; herinnering om een avatar te kiezen (update 8) |
 | `data/advent.js` | winterweetjes voor de adventkalender (update 8) |
 | `js/kerst.js` | kerstmuts, sneeuw en adventkalender van 1 december t/m 6 januari; testen met `?kerst=demo&dag=12` (update 8) |
 | `data/dwaalgasten.js` | de tien dwaalgasten: naam, waar ze normaal leven en ‘Gezien in Nederland’ (update 9); vragen en antwoorden staan in Supabase |
 | `js/dwaalgast.js` | dwaalgast van de maand: rode pop-up, drie vragen, uitslag, en de verborgen pagina Dwaalgasten in het Vestiarium; voorbeeld met `?dwaalgast=demo&gast=lynx` (update 9) |
 | `js/levels.js` | levels en ervaringspunten (update 10, vanaf 16 november 2026): ring om je avatar met levelbolletje, ‘+XP’ na een spel, level-omhoog-pop-up, levelkaart in Mijn profiel; voorbeeld met `?levels=demo` |
-| `data/zoekgroepen.js` | zoeken op een groep: ‘uil’, ‘hert’, ‘vlinder’, ‘roofvogel’ … geven alle soorten uit die groep (update 12) |
+| `data/zoekgroepen.js` | zoeken op een groep: ‘uil’, ‘hert’, ‘vlinder’, ‘roofvogel’ … geven alle soorten uit die groep (update 12); soorten die alleen via hun naam passen (‘vogel’ → kleine ijsvogelvlinder) staan los eronder onder ‘Andere soorten’ (update 19) |
 | `data/bronnen.js` | links na het determineren: soortpagina van de bron (Zodion, RAVON, Vogelbescherming, De Vlinderstichting) en de fotopagina op waarneming.nl (soortnummers in `WAARNEMING`); afwijkende adressen in `BRON_LOS` (update 12) |
-| `js/statistiek.js` | statistieken via het menu: gespeeld, goed/fout, vaakst tegengekomen en ingevoerd, dwaalgasten, actieve maanden (update 12) |
+| `js/statistiek.js` | statistieken via het menu: gespeeld, goed/fout, vaakst tegengekomen en ingevoerd, dwaalgasten, actieve maanden (update 12); ‘Vaakst verward’ met alleen soorten die op elkaar lijken en ‘Oefen deze soorten’ (update 19, regels in `lijktOp` in `js/veldboek.js`) |
 | `js/app.js` | spelregels, kop, installeren en opstarten |
 | `sw.js` | service worker (offline en updates) |
+
+Contrast van alle avatars op alle achtergrondkleuren nameten: `node tools/avatarcontrast.mjs --html overzicht.html` (heeft Playwright met Chrome nodig).
 
 De databasescripts (001 t/m 017) staan bewust niet in deze repo, maar in het Project Vestigia.
 

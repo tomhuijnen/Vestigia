@@ -161,11 +161,14 @@ const Levels = (() => {
     /* vanaf het XP-blok als dat in beeld is, anders vanuit het midden van het scherm */
     let a = van ? van.getBoundingClientRect() : null;
     if (!a || a.top < 0 || a.bottom > innerHeight) a = { left: innerWidth / 2 - 40, top: innerHeight * .45, width: 80, height: 30 };
-    const x0 = a.left + a.width / 2, y0 = a.top + a.height / 2, x1 = r.left + r.width / 2, y1 = r.top + r.height / 2;
-    const cx = (x0 + x1) / 2 - 60, cy = Math.min(y0, y1) - 80, duur = 950, t0 = performance.now();
+    /* de ring volgt de pagina, ook als die tijdens de vlucht schuift (update 19) */
+    const volg = volgDoel(spook, () => ringKnop().getBoundingClientRect(), q => [q.left + q.width / 2, q.top + q.height / 2]);
+    const x0 = a.left + a.width / 2, y0 = a.top + a.height / 2, [x1s, y1s] = volg.xy();
+    const cx = (x0 + x1s) / 2 - 60, cy = Math.min(y0, y1s) - 80, duur = 950, t0 = performance.now();
     await new Promise(klaar => {
       const stap = nu => {
         const t = Math.min(1, (nu - t0) / duur), u = 1 - t, z = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+        const [x1, y1] = volg.xy();
         const x = u * u * x0 + 2 * u * t * cx + t * t * x1, y = u * u * y0 + 2 * u * t * cy + t * t * y1;
         lab.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%) scale(${t < .15 ? .8 + t * 4 : 1.4 - z * .9})`;
         lab.style.opacity = t > .9 ? String((1 - t) * 10) : "1";
@@ -182,7 +185,7 @@ const Levels = (() => {
     await wacht(900);
     spook.classList.add("weg");
     await wacht(300);
-    spook.remove();
+    volg.stop(); spook.remove();
   }
 
   /* ---------- pop-ups: de start en level omhoog ---------- */
@@ -321,7 +324,8 @@ const Levels = (() => {
     document.body.appendChild(spook);
     if (rustig() || !van){ zetStand(p1); await wacht(900); spook.remove(); return; }
     const a = van.getBoundingClientRect();
-    const x0 = a.left + a.width / 2, y0 = a.top + a.height / 2, x1 = r.left + r.width / 2, y1 = r.top + r.height / 2;
+    const volg = volgDoel(spook, () => ringKnop().getBoundingClientRect(), q => [q.left + q.width / 2, q.top + q.height / 2]);
+    const x0 = a.left + a.width / 2, y0 = a.top + a.height / 2, [x1, y1] = volg.xy();
     const aantal = Math.min(12, Math.max(6, Math.round(n / 15)));
     van.classList.add("leeg");
     let aangekomen = 0;
@@ -335,6 +339,7 @@ const Levels = (() => {
           const draai = (Math.random() < .5 ? -1 : 1) * (200 + Math.random() * 260), duur = 720 + Math.random() * 260, t0 = performance.now();
           const stap = nu => {
             const t = Math.min(1, (nu - t0) / duur), u = 1 - t, z = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+            const [x1, y1] = volg.xy();
             const x = u * u * sx + 2 * u * t * cx + t * t * x1, y = u * u * sy + 2 * u * t * cy + t * t * y1;
             const sc = t < .2 ? .6 + t * 3 : 1.2 - z * .55;
             e.style.transform = `translate(${x - 11}px, ${y - 11}px) rotate(${draai * z}deg) scale(${sc})`;
@@ -352,7 +357,7 @@ const Levels = (() => {
     await wacht(1100);
     spook.classList.add("weg");
     await wacht(300);
-    spook.remove();
+    volg.stop(); spook.remove();
   }
   /* adventkalender: een XP-vakje is open */
   let demoAdvent = false;
