@@ -9,7 +9,8 @@ const Uitleg = (() => {
   /* Vijf stappen, een korte maar volledige rondleiding voor iemand die Vestigia nog nooit zag (12 november 2026).
      Werkregel: bij elk nieuw onderdeel hier kijken of het erin hoort en of het geheel nog te volgen is. Langer dan
      vijf stappen wordt het niet: iets nieuws krijgt een bijzin in een bestaande stap, of uitleg op het moment zelf
-     (js/nieuw.js). Wat nog niet aan staat (levels, spelersduel), noemt de uitleg ook niet.
+     (js/nieuw.js). Wat nog niet aan staat (levels, spelersduel), noemt de uitleg ook niet. De dwaalgast noemt hij
+     bewust niet: die moet een verrassing blijven tot je hem voor het eerst ziet.
      tekst mag een functie zijn; doel mag een lijst elementen geven (de lichtvlek omvat ze dan allemaal). */
   const levelsAan = () => typeof Levels !== "undefined" && Levels.zichtbaar && Levels.zichtbaar();
   const duelAan = () => typeof Duel !== "undefined" && Duel.zichtbaar && Duel.zichtbaar();
@@ -27,7 +28,7 @@ const Uitleg = (() => {
       tekst: () => (naam()
         ? `Rechtsboven staan je eikels en je avatar${levelsAan() ? ", met je level in de ring eromheen" : ""}. Eikels verdien je met spelen en besteed je in de shop.`
         : `Kies je straks een spelersnaam, dan verdien je met spelen eikels${levelsAan() ? " en ervaringspunten" : ""}, en verschijnt je saldo naast je avatar. Eikels besteed je in de shop.`)
-        + " Tik op je avatar voor je profiel, de shop, je statistieken en de spelregels, waar je deze uitleg terugvindt. Af en toe duikt er een verrassing op, zoals een dwaalgast; dan krijg je ter plekke uitleg." }
+       + " Tik op je avatar voor je profiel, de shop, je statistieken en de spelregels, waar je deze uitleg terugvindt." }
   ];
   const NAV = "vestigia:nav-b";
   const gezien = () => { try { return !!localStorage.getItem(KEY); } catch(e){ return true; } };
@@ -49,21 +50,36 @@ const Uitleg = (() => {
     const left = Math.min(...rs.map(x => x.left)), top = Math.min(...rs.map(x => x.top)), right = Math.max(...rs.map(x => x.right)), bottom = Math.max(...rs.map(x => x.bottom));
     return { left, top, right, bottom, width: right - left, height: bottom - top };
   }
+  /* Het kaartje mag de lichtvlek nooit bedekken (12 november 2026). Volgorde: eronder, erboven, ernaast (breed scherm);
+     past het nergens, dan schuift de pagina één keer zo dat het doel bovenin staat, en dan opnieuw proberen. */
+  let geschoven = false;
   function plaats(){
     if (!root || !doelEl) return;
     const r = rechthoek(doelEl), pad = 8, spot = root.querySelector(".ui-spot"), kaart = root.querySelector(".ui-kaart");
     Object.assign(spot.style, { left: r.left - pad + "px", top: r.top - pad + "px", width: r.width + pad * 2 + "px", height: r.height + pad * 2 + "px" });
-    const kw = kaart.offsetWidth, kh = kaart.offsetHeight, gap = 14;
-    const onder = r.bottom + pad + gap + kh <= innerHeight - 8;
-    const top = onder ? r.bottom + pad + gap : Math.max(8, r.top - pad - gap - kh);
-    const left = Math.min(Math.max(12, r.left + r.width / 2 - kw / 2), innerWidth - kw - 12);
+    const kw = kaart.offsetWidth, kh = kaart.offsetHeight, gap = 14, rand = 8;
+    const midX = Math.min(Math.max(12, r.left + r.width / 2 - kw / 2), innerWidth - kw - 12);
+    const midY = Math.min(Math.max(rand, r.top - pad), innerHeight - kh - rand);
+    let top, left, kant;
+    if (r.bottom + pad + gap + kh <= innerHeight - rand){ kant = "onder"; top = r.bottom + pad + gap; left = midX; }
+    else if (r.top - pad - gap - kh >= rand){ kant = "boven"; top = r.top - pad - gap - kh; left = midX; }
+    else if (r.right + pad + gap + kw <= innerWidth - 12){ kant = "rechts"; top = midY; left = r.right + pad + gap; }
+    else if (r.left - pad - gap - kw >= 12){ kant = "links"; top = midY; left = r.left - pad - gap - kw; }
+    else if (!geschoven){
+      geschoven = true;
+      const voor = scrollY;
+      window.scrollBy({ top: r.top - 72, behavior: "auto" });   // onder de smalle balk bovenin
+      if (scrollY !== voor){ requestAnimationFrame(plaats); return; }
+    }
+    if (!kant){ kant = "onder"; top = Math.max(rand, innerHeight - kh - rand); left = midX; }   // laatste uitweg
     Object.assign(kaart.style, { top: top + "px", left: left + "px" });
-    kaart.classList.toggle("boven", !onder);
+    kaart.classList.toggle("boven", kant === "boven");
   }
   function toon(i){
     stap = i;
     const s = STAPPEN[i];
     doelEl = s.doel();
+    geschoven = false;
     const eerste = (Array.isArray(doelEl) ? doelEl : [doelEl]).find(zichtbaar);
     if (eerste) eerste.scrollIntoView({ block: "center", behavior: "auto" });
     root.querySelector(".ui-teller").textContent = `Stap ${i + 1} van ${STAPPEN.length}`;
