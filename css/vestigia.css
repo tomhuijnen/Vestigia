@@ -1667,3 +1667,11 @@ html.donker body.induel{--paper:#1a1219; background:#1a1219}
 .bel.spelersduel.later .bol{--zwaardrand:#eef0ec}
 html.donker .bel.spelersduel.later .bol{--zwaardrand:#18221c}
 html.donker body.induel .tabbar{background:#20151f}
+/* de knop ‘Bekijk uitslag’ volgt de kleur van de uitslagbalk (groen bij goed, rood bij fout), ook in oefenen, het duel
+   en de donkere modus, waar .btn anders de kleur van de omgeving krijgt */
+#gameView .uitslagbalk .btn, html.donker #gameView .uitslagbalk .btn{background:#2f6a44; border-color:#2f6a44; color:#fff}
+#gameView .uitslagbalk .btn:hover, html.donker #gameView .uitslagbalk .btn:hover{background:#245236}
+#gameView .uitslagbalk.mis .btn, html.donker #gameView .uitslagbalk.mis .btn{background:#8f3f2b; border-color:#8f3f2b; color:#fff}
+#gameView .uitslagbalk.mis .btn:hover, html.donker #gameView .uitslagbalk.mis .btn:hover{background:#73311f}
+html.donker #gameView .uitslagbalk .btn{background:#3f8455; border-color:#3f8455}
+html.donker #gameView .uitslagbalk.mis .btn{background:#a64a33; border-color:#a64a33}
