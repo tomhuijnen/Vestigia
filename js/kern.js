@@ -86,6 +86,11 @@ function veldweek(d){
 }
 /* begint er over 1 of 2 dagen een veldweek? Dan de startdag, anders null */
 function veldweekOpkomst(d){ for (const n of [1, 2]){ const v = veldweek(d + n); if (v && v.start === d + n) return v.start; } return null; }
+/* Dagschema-regels vanaf dag 14 (vrijdag 20 november 2026); de dagen daarvoor staan vast in data/dagschema.js. */
+const SEIZOEN_LOS_VANAF = 14, SEIZOEN_LOS_KANS = 0.3;
+const INSTROOM = [
+  { van: 14, tot: 50, ids: ["gevlekte-witsnuitlibel", "sierlijke-witsnuitlibel", "rivierrombout", "beekrombout", "bosbeekjuffer", "vermiljoenkever", "vliegend-hert"] }
+];
 function pickDaily(d, history){
   const m = new Date(START + d * DAY).getUTCMonth();
   const recent = new Set(history.slice(Math.max(0, d - 21), d).map(x => x.id));
@@ -99,7 +104,24 @@ function pickDaily(d, history){
     const pool = pools.find(p => p.length);
     if (pool){ const c = pool[Math.floor(rng(20261106 + d * 7919)() * pool.length)]; return { id: c.id, k: c.k }; }
   }
-  let pool = near.filter(c => !recent.has(c.id));
+  /* Instroom (update 14): nieuwe soorten komen binnen een paar weken een keer langs. Per dag is de kans twee keer
+     ‘nog niet geweest / dagen die nog over zijn’ (zo verspreid over het venster), nooit twee dagen op rij. */
+  if (d >= SEIZOEN_LOS_VANAF){
+    const ins = INSTROOM.find(x => d >= x.van && d <= x.tot);
+    if (ins){
+      const geweest = new Set(history.slice(ins.van, d).map(x => x.id));
+      const open = ins.ids.filter(id => !geweest.has(id) && !recent.has(id));
+      const gisteren = history[d - 1] && ins.ids.includes(history[d - 1].id);       // niet twee dagen op rij een nieuwe soort
+      if (open.length && !gisteren && rng(20261106 + d * 7919 + 2)() < 2 * open.length / (ins.tot - d + 1)){
+        const id = open[Math.floor(rng(20261106 + d * 7919 + 3)() * open.length)], t = BY_ID.get(id);
+        return { id, k: Math.floor(rng(20261106 + d * 7919 + 4)() * t.cs.length) };
+      }
+    }
+  }
+  /* Seizoen (vanaf dag 14): meestal een casus uit deze maand (± 1), maar op ruim een kwart van de dagen uit het hele jaar,
+     zodat het niet eentonig wordt. */
+  const los = d >= SEIZOEN_LOS_VANAF && rng(20261106 + d * 7919 + 1)() < SEIZOEN_LOS_KANS;
+  let pool = (los ? cand : near).filter(c => !recent.has(c.id));
   if (!pool.length) pool = cand.filter(c => !recent.has(c.id));
   if (!pool.length) pool = cand;
   const c = pool[Math.floor(rng(20261106 + d * 7919)() * pool.length)];
@@ -207,7 +229,8 @@ function migrate(st){
 
 /* ---------- titels en medailles ----------
    Een behaalde titel of medaille wordt bewaard en nooit meer afgenomen, ook niet als er later soorten bijkomen. */
-const TITLES = { Z:"Keutelkoning", R:"Slangenbezweerder", A:"Poelenprofessor", F:"Kieuwenkenner", B:"Braakbalbaron", V:"Rupsenridder" };
+const TITLES = { Z:"Keutelkoning", R:"Slangenbezweerder", A:"Poelenprofessor", F:"Kieuwenkenner", B:"Braakbalbaron", V:"Rupsenridder",
+                 L:"Vleugelvorst", K:"Schildknaap" };   // libellen en kevers: update 14
 const TITLE_ALL = "Veldheer van Vestigia";
 function earnedNow(dex){
   const got = id => dex[id] && dex[id].w > 0, out = [];
@@ -285,11 +308,12 @@ const TIP = {
   v: { PLANT:"plantaardig voedsel", ONG:"ongewervelden", VIS:"vis", GEW:"gewervelde dieren" },
   b: { HOL:"in een hol of burcht", BOOM:"in bomen of boomholtes", GEB:"in gebouwen of bouwwerken", VEG:"in de vegetatie",
        GROND:"op of in de bodem en het strooisel", WATER:"in het water", STEEN:"in muren of rotsen" },
-  w: { ACT:"zijn in de winter actief", SLAAP:"houden een winterslaap of winterrust", TREK:"trekken in de winter weg" }
+  w: { ACT:"zijn in de winter actief", SLAAP:"houden een winterslaap of winterrust", TREK:"trekken in de winter weg", LARVE:"overwinteren als ei, larve of pop" }
 };
-const TIP_W_EEN = { ACT:"is in de winter actief", SLAAP:"houdt een winterslaap of winterrust", TREK:"trekt in de winter weg" };
-const TIP_W_SOMS = { ACT:"De gezochte soort is in de winter soms actief.", SLAAP:"De gezochte soort houdt soms een winterslaap of winterrust.", TREK:"Een deel van de gezochte soort trekt in de winter weg." };
-const TIP_W_NIET = { ACT:"is in de winter niet actief", SLAAP:"houdt geen winterslaap of winterrust", TREK:"trekt in de winter niet weg" };
+const TIP_W_EEN = { ACT:"is in de winter actief", SLAAP:"houdt een winterslaap of winterrust", TREK:"trekt in de winter weg", LARVE:"overwintert als ei, larve of pop" };
+const TIP_W_SOMS = { ACT:"De gezochte soort is in de winter soms actief.", SLAAP:"De gezochte soort houdt soms een winterslaap of winterrust.", TREK:"Een deel van de gezochte soort trekt in de winter weg.",
+                     LARVE:"De gezochte soort overwintert ook als ei, larve of pop." };
+const TIP_W_NIET = { ACT:"is in de winter niet actief", SLAAP:"houdt geen winterslaap of winterrust", TREK:"trekt in de winter niet weg", LARVE:"overwintert niet als ei, larve of pop" };
 const deSoort = g => "de " + g.n.toLowerCase();
 /* gelijk: beide hebben dezelfde hoofdwaarde */
 function tipGelijk(k, g, t){

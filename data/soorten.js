@@ -4,7 +4,7 @@
    Velden per soort
    id    vaste sleutel. Verandert nooit, ook niet als de naam verandert (zet de oude naam dan in ALIASES).
    no    vast platennummer in het Vestiarium. Alleen soorten met een casus hebben er een; nieuwe nummers komen achteraan.
-   g     diergroep (GROUPS) · n Nederlandse naam · s wetenschappelijke naam · r regime (LABELS.r) · l lengte in cm (vlinders: spanwijdte)
+   g     diergroep (GROUPS) · n Nederlandse naam · s wetenschappelijke naam · r regime (LABELS.r) · l lengte in cm (vlinders: spanwijdte; libellen en kevers: lichaamslengte)
    zz    zeldzaamheidsklasse (RARITY), op basis van de bronnen. De klasse ZZ levert een medaille op. null = nog niet bepaald.
    twin  id van de tweelingsoort (gokken telt niet als poging). Geldt alleen in de richting waarin het hier staat.
    h a v b w   kenmerken (LABELS); de eerste waarde is de hoofdwaarde
@@ -21,7 +21,7 @@ const LABELS = {
   v: { PLANT:"Plantaardig", ONG:"Ongewervelden", VIS:"Vis", GEW:"Gewervelden" },
   b: { HOL:"Hol of burcht", BOOM:"Boom(holte)", GEB:"Gebouw of bouwwerk", VEG:"Nest in vegetatie",
        GROND:"Bodem of strooisel", WATER:"In het water", STEEN:"Muur of rots" },
-  w: { ACT:"Actief", SLAAP:"Winterslaap/-rust", TREK:"Trekt weg" },
+  w: { ACT:"Actief", SLAAP:"Winterslaap/-rust", TREK:"Trekt weg", LARVE:"Als ei, larve of pop" },
   r: { HR:"Habitatrichtlijn IV", BAL:"Bal bijlage IX", VRJ:"Vogelrichtlijn · nest jaarrond", VR:"Vogelrichtlijn", NB:"Niet beschermd" }
 };
 
@@ -35,7 +35,7 @@ const REGIME_INFO = {
 
 const CLUE_TYPES = ["Locatie & seizoen","Habitat","Microhabitat","Spoor of geluid","Kenmerk"];
 
-const GROUPS = { Z:"Zoogdieren", R:"Reptielen", A:"Amfibieën", F:"Vissen", B:"Vogels", V:"Vlinders" };
+const GROUPS = { Z:"Zoogdieren", R:"Reptielen", A:"Amfibieën", F:"Vissen", B:"Vogels", V:"Vlinders", L:"Libellen", K:"Kevers" };
 
 const RARITY = { A:"Algemeen", MA:"Minder algemeen", Z:"Zeldzaam", ZZ:"Zeer zeldzaam" };
 
@@ -2856,7 +2856,7 @@ const SPECIES = [
     ] }
   ] },
 { id:"pimpernelblauwtje", no:140, g:"V", n:"Pimpernelblauwtje", s:"Phengaris teleius", r:"HR", l:3.5, zz:"Z", twin:"donker-pimpernelblauwtje",
-  h:["OPEN","MOER"], a:["DAG"], v:["PLANT","ONG"], b:["VEG","GROND"], w:["SLAAP"],
+  h:["OPEN","MOER"], a:["DAG"], v:["PLANT","ONG"], b:["VEG","GROND"], w:["LARVE"],
   x:"donker-pimpernelblauwtje",
   t:"Het donker pimpernelblauwtje is van onderen egaal donker chocoladebruin met maar één rij stippen, en de rups wordt sneller door de gewone steekmier geadopteerd. Deze soort is van onderen lichtbruin met twee rijen zwarte stippen en leeft samen met de moerassteekmier.",
   cs:[
@@ -2876,7 +2876,7 @@ const SPECIES = [
     ] }
   ] },
 { id:"teunisbloempijlstaart", no:141, g:"V", n:"Teunisbloempijlstaart", s:"Proserpinus proserpina", r:"HR", l:4.5, zz:"Z", twin:null,
-  h:["OPEN","STROOM","HALF"], a:["SCHEMER","NACHT"], v:["PLANT"], b:["VEG","GROND"], w:["SLAAP"],
+  h:["OPEN","STROOM","HALF"], a:["SCHEMER","NACHT"], v:["PLANT"], b:["VEG","GROND"], w:["LARVE"],
   x:"groot-avondrood",
   t:"De rups van groot avondrood heeft een echte ‘pijl’ op het achterlijf en grote oogvlekken achter de kop. Deze rups mist de pijl en heeft op die plek een bultje met een oogvlek; de vlinder is groen in plaats van roze.",
   cs:[
@@ -2916,7 +2916,7 @@ const SPECIES = [
     ] }
   ] },
 { id:"donker-pimpernelblauwtje", no:145, g:"V", n:"Donker pimpernelblauwtje", s:"Phengaris nausithous", r:"HR", l:3.5, zz:"Z", twin:"pimpernelblauwtje",
-  h:["OPEN","MOER"], a:["DAG"], v:["PLANT","ONG"], b:["VEG","GROND"], w:["SLAAP"],
+  h:["OPEN","MOER"], a:["DAG"], v:["PLANT","ONG"], b:["VEG","GROND"], w:["LARVE"],
   x:"pimpernelblauwtje",
   t:"Het pimpernelblauwtje is van onderen lichter grijsbruin met twee rijen zwarte stippen, vliegt iets eerder en legt één eitje per klein bloemhoofdje. Het donker pimpernelblauwtje zoekt juist de grote, nog gesloten hoofdjes in ruigere vegetatie en leeft met de gewone steekmier.",
   cs:[
@@ -2938,9 +2938,9 @@ const SPECIES = [
 { id:"kleine-vos", no:null, g:"V", n:"Kleine vos", s:"Aglais urticae", r:"NB", l:5, zz:null, twin:null,
   h:["HALF","BEB","OPEN"], a:["DAG"], v:["PLANT"], b:["VEG"], w:["SLAAP"] },
 { id:"groot-avondrood", no:null, g:"V", n:"Groot avondrood", s:"Deilephila elpenor", r:"NB", l:6, zz:null, twin:null,
-  h:["HALF","STROOM","BEB"], a:["SCHEMER","NACHT"], v:["PLANT"], b:["VEG","GROND"], w:["SLAAP"] },
+  h:["HALF","STROOM","BEB"], a:["SCHEMER","NACHT"], v:["PLANT"], b:["VEG","GROND"], w:["LARVE"] },
 { id:"grote-weerschijnvlinder", no:143, g:"V", n:"Grote weerschijnvlinder", s:"Apatura iris", r:"BAL", l:6.5, zz:"Z", twin:null,
-  h:["BOS"], a:["DAG"], v:["PLANT","ONG"], b:["BOOM"], w:["SLAAP"],
+  h:["BOS"], a:["DAG"], v:["PLANT","ONG"], b:["BOOM"], w:["LARVE"],
   x:"kleine-ijsvogelvlinder",
   t:"De kleine ijsvogelvlinder is kleiner, zwart met een witte band maar zonder paarse glans en zonder oogvlek op de achtervleugel, en zweeft laag langs bosranden met kamperfoelie. Deze soort glanst (bij het mannetje) paars en heeft een oranje omrande oogvlek op de achtervleugel.",
   cs:[
@@ -2960,7 +2960,7 @@ const SPECIES = [
     ] }
   ] },
 { id:"kleine-ijsvogelvlinder", no:144, g:"V", n:"Kleine ijsvogelvlinder", s:"Limenitis camilla", r:"BAL", l:5.5, zz:"MA", twin:null,
-  h:["BOS","HALF"], a:["DAG"], v:["PLANT"], b:["VEG"], w:["SLAAP"],
+  h:["BOS","HALF"], a:["DAG"], v:["PLANT"], b:["VEG"], w:["LARVE"],
   x:"grote-weerschijnvlinder",
   t:"De grote weerschijnvlinder is groter, glanst (bij het mannetje) paars en heeft een oogvlek op de achtervleugel; hij vliegt vooral hoog in de boomkruinen. Deze soort zweeft laag en sierlijk langs schaduwrijke bosranden en zet eitjes af op kamperfoelie.",
   cs:[
@@ -2978,5 +2978,161 @@ const SPECIES = [
       "Iets zwarts met een witte band zweeft met een paar vleugelslagen tussen de bomen en landt op braambloesem.",
       "Onderkant oranjebruin met een witte band; geen paarse glans aan de bovenkant."
     ] }
-  ] }
+  ] },
+/* ---------- libellen (update 14, november 2026). Bron: De Vlinderstichting (soortpagina's), Natura 2000-profielen.
+   Lengte = lichaamslengte. Libellen overwinteren als ei of larve in het water (Winter: Als ei, larve of pop). ---------- */
+{ id:"gevlekte-witsnuitlibel", no:146, g:"L", n:"Gevlekte witsnuitlibel", s:"Leucorrhinia pectoralis", r:"HR", l:3.6, zz:"Z", twin:null,
+  h:["MOER","STIL","HEI"], a:["DAG"], v:["ONG"], b:["WATER","VEG"], w:["LARVE"],
+  x:"noordse-witsnuitlibel",
+  t:"Bij de noordse witsnuitlibel zijn de vlekken op het achterlijf kleiner en smaller, en ze blijven eenkleurig; een uitgekleurd mannetje heeft geen gele vlek op segment 7. Deze soort is de grootste en forste witsnuitlibel, en de vlek op segment 7 blijft altijd helder geel, ook als de andere vlekken bij het mannetje donkerrood zijn.",
+  cs:[
+    { bron:"De Vlinderstichting, soortpagina gevlekte witsnuitlibel; Natura 2000-profiel H1042", sl:{ i:2, t:"Zijn optimale voortplantingswater is verlandend laagveen met dichte krabbenscheer en nog een kwart tot de helft open water. De larve jaagt daar overdag tussen de planten." }, wn:[
+      "Noordwest-Overijssel, eind mei. Een zonnige, windstille ochtend.",
+      "Een uitgestrekt laagveenmoeras met riet, lisdodde, elzenstruweel en veel ondiep water.",
+      "Een beschutte, heldere plas vol krabbenscheer, met tussen de rozetten nog een kwart tot de helft open water.",
+      "Een paar decimeter boven het water hangt een leeg larvenhuidje aan een rietstengel; vanaf een uitkijkpost verjaagt een mannetje alles wat voorbijkomt, zelfs een viervlek.",
+      "Zo'n 3,6 cm, met een witte snuit; het achterlijf is zwart met grote donkerrode vlekken en één helder gele vlek op segment 7."
+    ] },
+    { bron:"De Vlinderstichting, soortpagina gevlekte witsnuitlibel", sl:{ i:4, t:"De vlek op segment 7 blijft altijd helder geel, ook als de andere vlekken met de leeftijd oranje of donkerrood worden. Zo is zelfs een oud mannetje nauwelijks te verwarren." }, wn:[
+      "Duinen van Noord-Holland, begin juni. Laat in de middag; het wordt bewolkt en de schemering valt vroeg in.",
+      "Een duinplas met helder water, beschut door struweel en omringd door riet.",
+      "Een ondiepe oeverzone met drijvende bladeren en ondergedoken waterplanten.",
+      "Een vrouwtje slaat met haar achterlijf eitjes af op het wateroppervlak, ook nu het schemert, terwijl een mannetje boven haar andere mannetjes wegjaagt.",
+      "Robuust, ruim 3,5 cm; zwart achterlijf met grote lichte vlekken, de vlek op segment 7 het helderst geel; achterlijfsaanhangsels en vleugelvlekjes zwart."
+    ] }
+  ] },
+{ id:"sierlijke-witsnuitlibel", no:147, g:"L", n:"Sierlijke witsnuitlibel", s:"Leucorrhinia caudalis", r:"HR", l:3.5, zz:"Z", twin:null,
+  h:["STIL","MOER"], a:["DAG"], v:["ONG"], b:["WATER","VEG"], w:["LARVE"],
+  x:"gevlekte-witsnuitlibel",
+  t:"De gevlekte witsnuitlibel is forser, heeft zwarte achterlijfsaanhangsels en een achterlijf met grote vlekken, zonder knots. Deze soort heeft bij beide geslachten witte achterlijfsaanhangsels; het mannetje heeft een duidelijk knotsvormig achterlijf met een scherp afgetekende lichtgrijze basis.",
+  cs:[
+    { bron:"De Vlinderstichting, soortpagina sierlijke witsnuitlibel", sl:{ i:3, t:"Het mannetje zit op een waterlelieblad een paar meter uit de kant en houdt zijn knotsvormige achterlijf recht omhoog. Dan vallen de lichtgrijze basis en de witte uiteinden op." }, wn:[
+      "Noordwest-Overijssel, half juni. Een warme, zonnige middag.",
+      "Heldere, vegetatierijke plassen in een laagveengebied met riet en elzenstruweel.",
+      "Waterlelies en gele plomp liggen een paar meter uit de kant op het water.",
+      "Een mannetje zit op een drijvend blad en steekt zijn achterlijf steeds recht omhoog; daarna patrouilleert hij ver boven het open water en verjaagt hij alles van zijn eigen grootte.",
+      "Zo'n 3,5 cm; een knotsvormig achterlijf, de basis lichtgrijs berijpt, de rest zwart met witte aanhangsels; witte vleugelvlekjes en een witte snuit."
+    ] },
+    { bron:"De Vlinderstichting, soortpagina sierlijke witsnuitlibel; Vlinders 2020 (1), De Vlinderstichting", sl:{ i:4, t:"Bij beide geslachten zijn de achterlijfsaanhangsels wit. Daaraan herken je ook het vrouwtje, met haar gele vlekjes, tussen de andere witsnuitlibellen." }, wn:[
+      "Het Utrechtse Vechtplassengebied, eind mei. Een windstille ochtend na een warme nacht.",
+      "Een plas die na een flinke verbetering van de waterkwaliteit helder is geworden, met uitgebreide water- en oevervegetatie.",
+      "Boven ondergedoken waterplanten, niet ver uit de oever, met drijfbladplanten verderop.",
+      "Een vrouwtje vliegt alleen en tikt ritmisch met haar achterlijfspunt in het water; jonge exemplaren houden zich op in de bomen langs de bosrand.",
+      "Vrouwtje: donker achterlijf met gele vlekjes op segment 2 tot 6, nooit roodbruin, met witte achterlijfsaanhangsels en zwarte vleugelvlekjes."
+    ] }
+  ] },
+{ id:"rivierrombout", no:148, g:"L", n:"Rivierrombout", s:"Stylurus flavipes", r:"HR", l:5.2, zz:"Z", twin:null,
+  h:["STROOM","OPEN"], a:["DAG"], v:["ONG"], b:["WATER","VEG"], w:["LARVE"],
+  x:"plasrombout",
+  t:"De plasrombout heeft duidelijk smallere zwarte strepen op het borststuk, een doorlopende eerste zijnaadstreep en bij het mannetje maar een zwakke knots; hij leeft vooral bij stilstaand water. Deze soort oogt erg geel, ook op de poten, en heeft op elke schouder een scherp afgetekende gele ovale vlek.",
+  cs:[
+    { bron:"De Vlinderstichting, soortpagina rivierrombout", sl:{ i:3, t:"De larvenhuidjes liggen meestal plat op het zand van een strandje, soms tientallen meters van de waterlijn. Daar worden ze ook geteld." }, wn:[
+      "Langs de Waal bij Nijmegen, juni. Een warme ochtend bij laag water.",
+      "Een grote rivier met kribben, zandige oevers en brede uiterwaarden.",
+      "Een vlak zandstrandje waar zand en slib zijn afgezet, met een vloedlijn van aangespoeld materiaal.",
+      "Lege larvenhuidjes liggen plat op het zand, sommige tientallen meters van de waterlijn; andere zijn in de vloedlijn aangespoeld.",
+      "Zo'n 5 cm, slank en opvallend geel, ook de poten; op elke schouder een scherp afgetekende gele ovale vlek."
+    ] },
+    { bron:"De Vlinderstichting, soortpagina rivierrombout", sl:{ i:4, t:"Van boven loopt er een vrijwel ononderbroken gele streep over het zwarte achterlijf, en zelfs de poten zijn geel. De beekrombout heeft bijna zwarte poten." }, wn:[
+      "Uiterwaarden van de IJssel, eind juli. Een warme, zonnige dag.",
+      "Een uiterwaard met ruig grasland, oude rivierarmen en struweel, een eind van de rivier.",
+      "Een zonnige, beschutte ruigte langs een oude rivierarm, waar veel kleine vliegjes zwermen.",
+      "Iets snels en geels jaagt laag boven de ruigte en gaat op een kale tak zitten; aan het rivierwater zelf is bijna niets van hem te zien.",
+      "Van boven een vrijwel doorlopende gele lengtestreep op een zwart achterlijf; het mannetje heeft een duidelijke knots aan het eind en de poten zijn geel."
+    ] }
+  ] },
+{ id:"beekrombout", no:149, g:"L", n:"Beekrombout", s:"Gomphus vulgatissimus", r:"BAL", l:4.7, zz:"MA", twin:null,
+  h:["STROOM","HALF"], a:["DAG"], v:["ONG"], b:["WATER","VEG"], w:["LARVE"],
+  x:"rivierrombout",
+  t:"De rivierrombout is slanker en veel geler, met gele poten, een doorlopende gele rugstreep en een gele ovale schoudervlek, en vliegt later in de zomer. Deze soort is plomper en donkerder, met vrijwel zwarte poten; de gele rugstreep houdt op bij segment 7.",
+  cs:[
+    { bron:"De Vlinderstichting, soortpagina beekrombout", sl:{ i:4, t:"De poten zijn vrijwel helemaal zwart en de gele rugstreep stopt bij segment 7. Andere rombouten hebben meer geel op de poten en het achterlijf." }, wn:[
+      "Langs de Overijsselse Vecht, half mei. Een zonnige ochtend, een van de eerste warme dagen.",
+      "Een kleine, meanderende rivier met zandige bochten, holle oevers en bomen langs de kant.",
+      "Een holle oever waar boomwortels uit het zand steken, vlak boven de waterlijn.",
+      "Op de boomwortels, op stenen en tussen de oeverplanten zitten lege larvenhuidjes, allemaal binnen een paar meter van het water.",
+      "Plomp en donker getekend, zo'n 4,7 cm; de poten bijna helemaal zwart, de gele rugstreep houdt halverwege op en de laatste drie segmenten zijn in het midden zwart."
+    ] },
+    { bron:"De Vlinderstichting, soortpagina beekrombout", sl:{ i:3, t:"Na het uitsluipen verspreiden de jonge dieren zich en jagen ze boven ruigte en langs bosranden, soms kilometers van het water. Pas als ze geslachtsrijp zijn, keren de mannetjes terug naar de beek." }, wn:[
+      "Oostelijk Noord-Brabant, begin mei. Een zachte, zonnige middag.",
+      "Een grotere beek met een natuurlijk zandbed, in een beekdal met bosjes en ruige graslanden.",
+      "Een beschutte, zonnige bosrand een paar honderd meter van de beek.",
+      "Pas uitgeslopen exemplaren jagen boven de ruigte en langs de bosrand; bij de beek zelf zie je ze de eerste weken nauwelijks.",
+      "Geelgroen en zwart, met vrijwel zwarte poten; het mannetje heeft een duidelijke knots aan het eind van het achterlijf."
+    ] }
+  ] },
+{ id:"bosbeekjuffer", no:150, g:"L", n:"Bosbeekjuffer", s:"Calopteryx virgo", r:"BAL", l:4.7, zz:"MA", twin:null,
+  h:["STROOM","BOS"], a:["DAG"], v:["ONG"], b:["WATER","VEG"], w:["LARVE"],
+  x:"weidebeekjuffer",
+  t:"Bij de weidebeekjuffer zijn de vleugels iets smaller en minder donker, en de onderkant van de achterlijfspunt van het mannetje is vuilwit. Deze soort heeft zeer brede, bijna geheel donkere vleugels met een blauwe glans, en bij het mannetje is de onderkant van de achterlijfspunt roodbruin.",
+  cs:[
+    { bron:"De Vlinderstichting, soortpagina bosbeekjuffer", sl:{ i:4, t:"Zeer brede vleugels die bijna helemaal donker zijn, met een blauwe glans; alleen de uiterste top en basis zijn lichter. Bij de weidebeekjuffer zijn ze smaller en minder donker." }, wn:[
+      "Zuid-Limburg, juni. Een warme middag in het heuvelland.",
+      "De beschaduwde, koele bovenloop van een beek met bochten, omgevallen takken en snel stromend, helder water.",
+      "Een plek waar de zon door het bladerdak valt, met overhangende takken en ruigtekruiden op de oever.",
+      "Een mannetje zit op een uitkijkpost in de oeverbegroeiing en verjaagt een indringer na een schijngevecht van minuten in de lucht; een vrouwtje wordt meteen achtervolgd.",
+      "Zo'n 4,7 cm; het mannetje is metaalblauw, met zeer brede, bijna geheel donkere vleugels die blauw glanzen."
+    ] },
+    { bron:"De Vlinderstichting, soortpagina bosbeekjuffer", sl:{ i:3, t:"Larven van beekjuffers hebben een ruitvormige opening in de onderlip. Bij deze soort is die ruit meestal halsvormig versmald." }, wn:[
+      "De Achterhoek, februari. Een koude, heldere ochtend; het waterschap bemonstert de beek.",
+      "Een grotendeels beschaduwde, koele en zuurstofrijke beek met natuurlijke bochten, door een oud bos.",
+      "Tussen de wortels langs de oever en de schaarse waterplanten op een zonnig plekje.",
+      "In het schepnet een slanke larve met lange staartaanhangsels; de onderlip heeft een ruitvormige opening die naar achteren halsvormig versmalt.",
+      "Zo'n 3 cm, waarvan bijna een derde staartaanhangsels; tussen de ogen een duidelijke bult en opzij op de achterhoofdsplaat spitse bulten."
+    ] }
+  ] },
+/* lijkers van de libellen: niet beschermd, dus niet te kiezen, wel in ‘Verwar niet met’ */
+{ id:"noordse-witsnuitlibel", no:null, g:"L", n:"Noordse witsnuitlibel", s:"Leucorrhinia rubicunda", r:"NB", l:3.4, zz:null, twin:null,
+  h:["HEI","STIL"], a:["DAG"], v:["ONG"], b:["WATER","VEG"], w:["LARVE"] },
+{ id:"plasrombout", no:null, g:"L", n:"Plasrombout", s:"Gomphus pulchellus", r:"NB", l:4.8, zz:null, twin:null,
+  h:["STIL","STROOM"], a:["DAG"], v:["ONG"], b:["WATER","VEG"], w:["LARVE"] },
+{ id:"weidebeekjuffer", no:null, g:"L", n:"Weidebeekjuffer", s:"Calopteryx splendens", r:"NB", l:4.7, zz:null, twin:null,
+  h:["STROOM","OPEN"], a:["DAG"], v:["ONG"], b:["WATER","VEG"], w:["LARVE"] },
+/* ---------- kevers (update 14). Bron: EIS Kenniscentrum Insecten (en publicaties van EIS-medewerkers), Natura 2000-profiel H1083. ---------- */
+{ id:"vermiljoenkever", no:151, g:"K", n:"Vermiljoenkever", s:"Cucujus cinnaberinus", r:"HR", l:1.3, zz:"Z", twin:null,
+  h:["BOS","MOER"], a:["DAG"], v:["PLANT","ONG"], b:["BOOM"], w:["SLAAP","LARVE"],
+  x:"roodkopvuurkever",
+  t:"De larve van de roodkopvuurkever leeft in hetzelfde dode hout, maar is lichter van kleur en het laatste segment is duidelijk langer dan het voorlaatste. Bij deze soort is het laatste segment ongeveer even lang als de voorgaande, en de kever zelf is sterk afgeplat, met een glanzend helderrood halsschild met smalle, getande zwarte zijranden.",
+  cs:[
+    { bron:"EIS Kenniscentrum Insecten: Colijn 2015 (Natuurhistorisch Maandblad); Noordijk e.a. 2013 (De Levende Natuur)", sl:{ i:3, t:"De platte, oranje larven leven tussen hout en schors van recent gestorven, vochtige bomen. Ze worden vaker en makkelijker gevonden dan de kevers zelf." }, wn:[
+      "Midden-Limburg bij Weert, maart. Een koude, vochtige ochtend.",
+      "Een vochtig, recent vernat broekbos met veel dode bomen en open plekken.",
+      "Een liggende populier die een à twee jaar geleden is gestorven; de schors zit nog vast, laat hier en daar los en is vochtig en beschimmeld.",
+      "Onder een losgetrokken stuk schors zitten platte, oranje larven van ruim 2 cm, dicht tegen het hout aan.",
+      "De larve is sterk afgeplat; naast de basis van de twee staartuitsteeksels zit een klein extra uitsteeksel, en het laatste segment is ongeveer even lang als het voorgaande."
+    ] },
+    { bron:"EIS Kenniscentrum Insecten: Noordijk e.a. 2013 (De Levende Natuur); Colijn 2015 (Natuurhistorisch Maandblad)", sl:{ i:4, t:"Extreem plat, met een glanzend rode kop en halsschild en mat rode dekschilden. Zo past hij in de smalle ruimte achter de schors, waar hij ook overwintert." }, wn:[
+      "Noord-Brabant bij Eindhoven, april. Een zonnige namiddag.",
+      "Een vochtig bos in een beekdal, waar de laatste jaren veel populieren en wilgen zijn doodgegaan.",
+      "Een dikke, staande dode populier met nog vastzittende schors die net begint los te laten.",
+      "Iets fel rood en plat loopt over de buitenkant van de schors en verdwijnt snel in een spleet; onder de schors alleen nog wat grote, platte larven.",
+      "11 tot 15 mm en extreem plat; kop en halsschild glanzend helderrood met smalle, getande zwarte zijranden, dekschilden mat rood, poten en sprieten zwart."
+    ] }
+  ] },
+{ id:"vliegend-hert", no:152, g:"K", n:"Vliegend hert", s:"Lucanus cervus", r:"BAL", l:6, zz:"Z", twin:null,
+  h:["BOS","HALF","BEB"], a:["SCHEMER"], v:["PLANT"], b:["GROND","BOOM"], w:["LARVE"],
+  x:"klein-vliegend-hert",
+  t:"Het klein vliegend hert is veel kleiner en dof zwart, en het mannetje heeft geen gewei, alleen iets grotere kaken. Bij deze soort heeft het mannetje een groot, roodbruin gewei van kaken; het vrouwtje is kleiner en mist dat gewei.",
+  cs:[
+    { bron:"Natura 2000-profiel H1083; EIS Kenniscentrum Insecten (vliegend hert)", sl:{ i:3, t:"Op zwoele zomeravonden vliegen de mannetjes in de schemering rond. De volwassen dieren drinken sap uit bloedende wondjes in bomen." }, wn:[
+      "Veluwe bij Apeldoorn, juni. Een zwoele, windstille avond.",
+      "Een oud eikenbos met lanen, houtwallen en een villawijk aan de rand.",
+      "Een oude eik met een bloedende wond waar sap uit loopt, aan een zonnige bosrand.",
+      "In de schemering vliegt iets groots en zwaars brommend rond de boom; aan het sap zitten er een paar te drinken.",
+      "Tot zo'n 8 cm; het mannetje heeft enorme roodbruine kaken in de vorm van een gewei, het vrouwtje is kleiner en mist ze."
+    ] },
+    { bron:"Natura 2000-profiel H1083; EIS Kenniscentrum Insecten (vliegend hert)", sl:{ i:2, t:"De larve leeft vier tot acht jaar in door witrot aangetast eikenhout van grote stronken en ondergrondse wortels. Zonder dat dode, vochtige eikenhout is er geen populatie." }, wn:[
+      "Zuid-Limburg, eind juni. Een warme avond in het heuvelland.",
+      "Een holle weg met hellingbos en houtwallen tussen akkers en boomgaarden.",
+      "Een paar grote, oude eikenstronken die al jaren wegrotten, deels onder de grond, in een warme, halfopen hoek.",
+      "Wilde zwijnen hebben de grond rond de stronken omgewoeld en een paar grote, witte larven met een opgezwollen achterlijf blootgelegd.",
+      "Het volwassen mannetje heeft een gewei van kaken waarmee het tegen rivalen vecht; het vrouwtje is onopvallend en heeft gewone kaken."
+    ] }
+  ] },
+/* lijkers van de kevers: niet beschermd */
+{ id:"roodkopvuurkever", no:null, g:"K", n:"Roodkopvuurkever", s:"Pyrochroa serraticornis", r:"NB", l:1.2, zz:null, twin:null,
+  h:["BOS","HALF"], a:["DAG"], v:["ONG","PLANT"], b:["BOOM"], w:["LARVE"] },
+{ id:"klein-vliegend-hert", no:null, g:"K", n:"Klein vliegend hert", s:"Dorcus parallelipipedus", r:"NB", l:2.5, zz:null, twin:null,
+  h:["BOS","HALF","BEB"], a:["SCHEMER","NACHT"], v:["PLANT"], b:["BOOM","GROND"], w:["LARVE"] }
+
 ];

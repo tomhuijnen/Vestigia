@@ -56,7 +56,8 @@ for (const t of SPECIES){
     /* waarneming 1–4 mag de eigen diergroep niet noemen ("een vogel", "een vis"): dat geeft de soortgroep cadeau.
        Nesten, rupsen en sporen mogen wel: dat zijn echte veldsporen. Prooien en andere soorten in de tekst tellen niet mee. */
     const GROEPWOORD = { Z:/\b(vleermuis\w*|myotis|knaagdier\w*|roofdier\w*|zoogdier\w*)\b/i, B:/\b(vogel\w*|roofvogel\w*|zangertje)\b/i,
-      F:/\b(vis|vissen|visje\w*|bodemvis|trekvis)\b/i, V:/\b(vlinder\w*|insect\w*)\b/i, A:/\b(kikker\w*|salamander\w*|amfibie\w*)\b/i, R:/\b(slang\w*|hagedis\w*|reptiel\w*)\b/i };
+      F:/\b(vis|vissen|visje\w*|bodemvis|trekvis)\b/i, V:/\b(vlinder\w*|insect\w*)\b/i, A:/\b(kikker\w*|salamander\w*|amfibie\w*)\b/i, R:/\b(slang\w*|hagedis\w*|reptiel\w*)\b/i,
+      L:/\b(libel\w*|\w*juffer\w*|insect\w*)\b/i, K:/\b(\w*kever\w*|insect\w*)\b/i };   // update 14: libellen en kevers
     c.wn.slice(0, 4).forEach((w, i) => { const m = GROEPWOORD[t.g] && w.match(GROEPWOORD[t.g]); if (m) FOUT(`${cn}: waarneming ${i + 1} noemt de diergroep ("${m[0]}")`); });
     /* onbekende gebiedsnamen en vakjargon: omschrijf liever (update 6). Bekend genoeg: Veluwe, Oostvaardersplassen, Biesbosch,
        Utrechtse Heuvelrug, Waddenzee, Oosterschelde, de grote regio's en steden. */
@@ -105,7 +106,7 @@ V.DAGSCHEMA.slice(0, V.DAILY_FIXED).forEach((e, i) => {
   const [id, k] = e.split("#"), m = V.caseMonth(BY_ID.get(id).cs[(+k || 1) - 1]), dm = new Date(V.START + i * V.DAY).getUTCMonth();
   if (Math.min((m - dm + 12) % 12, (dm - m + 12) % 12) > 1) buiten++;
 });
-if (buiten) INFO(`Dagschema: ${buiten} dagen hebben een casus buiten het seizoen (er waren toen te weinig casussen voor die maand)`);
+if (buiten) INFO(`Dagschema: ${buiten} dagen hebben een casus buiten het seizoen (bewust: sinds update 14 komt ongeveer 30% uit het hele jaar; daarvoor waren er soms te weinig casussen voor die maand)`);
 const perMaand = V.MONTHS.map((mn, m) => [mn, TARGETS.filter(t => t.cs.some(c => { const cm = V.caseMonth(c); return cm >= 0 && Math.min((cm - m + 12) % 12, (m - cm + 12) % 12) <= 1; })).length]);
 const krap = perMaand.filter(([, n]) => n < 22);
 if (krap.length) LETOP(`Te weinig soorten voor een seizoensdagcasus zonder herhaling binnen drie weken (minstens 22 nodig) in: ${krap.map(([m, n]) => `${m} (${n})`).join(", ")}`);

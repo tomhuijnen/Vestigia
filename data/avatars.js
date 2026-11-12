@@ -323,7 +323,53 @@ const AVATARS = {
 <circle cx="40" cy="59" r="3.3" fill="#111"/><circle cx="60" cy="59" r="3.3" fill="#111"/>
 <circle cx="41.2" cy="57.8" r="1.1" fill="#fff"/><circle cx="61.2" cy="57.8" r="1.1" fill="#fff"/>
 <path fill="#d8c38f" d="M47.6 63H52.4L50 70Z"/>
-<path d="M30 86C34 82 40 84 42 88M58 88C60 84 66 82 70 86" fill="none" stroke="#e8dcc6" stroke-width="2.4" stroke-linecap="round"/>`
+<path d="M30 86C34 82 40 84 42 88M58 88C60 84 66 82 70 86" fill="none" stroke="#e8dcc6" stroke-width="2.4" stroke-linecap="round"/>`,
+  /* update 14: vliegend hert (mannetje van boven, met gewei), bosbeekjuffer (van boven, vleugels open) en grote vos
+     (gecentreerd op 90%, zodat de vleugelpunten binnen de cirkel blijven) */
+  "vliegend-hert": `<path fill="currentColor" fill-opacity=".9" d="M45 31C42 26 37 22 33 16C31 12 31 8 34 6C34 10 36 13 39 16L40 12C41 15 41 18 41 21C43 24 46 27 47 30Z"/>
+<path fill="currentColor" fill-opacity=".9" d="M55 31C58 26 63 22 67 16C69 12 69 8 66 6C66 10 64 13 61 16L60 12C59 15 59 18 59 21C57 24 54 27 53 30Z"/>
+<path d="M32 49L18 44L12 36M31 57L15 58L9 66M33 66L20 76L18 86M68 49L82 44L88 36M69 57L85 58L91 66M67 66L80 76L82 86" fill="none" stroke="#1f3428" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M39 34L30 31L25 26M61 34L70 31L75 26" fill="none" stroke="#1f3428" stroke-width="1.8" stroke-linecap="round"/>
+<path fill="currentColor" d="M38 30C42 28 58 28 62 30C64 33 64 38 61 40H39C36 38 36 33 38 30Z"/>
+<circle cx="39.5" cy="35" r="2" fill="#1f3428"/><circle cx="60.5" cy="35" r="2" fill="#1f3428"/>
+<path fill="#1f3428" d="M35 41C40 39 60 39 65 41C68 44 68 50 65 53H35C32 50 32 44 35 41Z"/>
+<path fill="currentColor" fill-opacity=".72" d="M50 54C40 54 33 57 33 66C33 80 40 93 50 95C60 93 67 80 67 66C67 57 60 54 50 54Z"/>
+<path d="M50 55V94" stroke="#1f3428" stroke-width="1.6"/>
+<path d="M40 60C38 68 39 78 43 86M60 60C62 68 61 78 57 86" fill="none" stroke="currentColor" stroke-opacity=".5" stroke-width="1.2" stroke-linecap="round"/>`,
+  "bosbeekjuffer": `<g transform="rotate(-38 50 50)">
+<path fill="#1f3428" fill-opacity=".86" d="M48 40C38 30 20 23 9 25C5 27 7 33 13 36C22 40 37 42 48 43Z"/>
+<path fill="#1f3428" fill-opacity=".86" d="M52 40C62 30 80 23 91 25C95 27 93 33 87 36C78 40 63 42 52 43Z"/>
+<path fill="#1f3428" fill-opacity=".86" d="M48 46C38 50 21 54 11 52C6 51 7 46 12 44C21 41 37 43 48 44Z"/>
+<path fill="#1f3428" fill-opacity=".86" d="M52 46C62 50 79 54 89 52C94 51 93 46 88 44C79 41 63 43 52 44Z"/>
+<path d="M14 29C24 28 36 33 46 40M86 29C76 28 64 33 54 40M14 48C24 47 36 45 46 45M86 48C76 47 64 45 54 45" fill="none" stroke="currentColor" stroke-opacity=".35" stroke-width="1.1" stroke-linecap="round"/>
+<path fill="currentColor" fill-opacity=".55" d="M10 25.6C7 27 8 31 11 33C9 30 9 27 10 25.6ZM90 25.6C93 27 92 31 89 33C91 30 91 27 90 25.6Z"/>
+<path fill="currentColor" d="M50 30C53 30 54 33 54 36V50C54 53 52 54 50 54C48 54 46 53 46 50V36C46 33 47 30 50 30Z"/>
+<circle cx="45.5" cy="28.5" r="3.4" fill="currentColor"/><circle cx="54.5" cy="28.5" r="3.4" fill="currentColor"/>
+<circle cx="45.5" cy="28" r="1.6" fill="#1f3428"/><circle cx="54.5" cy="28" r="1.6" fill="#1f3428"/>
+<path fill="currentColor" d="M48.3 53H51.7L51.2 96C51.1 98 48.9 98 48.8 96Z"/>
+<path d="M48.6 60H51.4M48.7 67H51.3M48.8 74H51.2M48.8 81H51.2M48.9 88H51.1" stroke="#1f3428" stroke-opacity=".45" stroke-width=".9"/>
+<path fill="currentColor" fill-opacity=".6" d="M48.8 92H51.2L51.1 96C51 97.6 49 97.6 48.9 96Z"/>
+</g>`,
+  "grote-vos": `<g transform="translate(50 50) scale(.9) translate(-49.9 -45.5)">
+<path fill="currentColor" fill-opacity=".8" d="M48 40C42 28 30 18 16 16C9 15 6 19 8 26C10 34 13 43 18 48C28 50 40 48 48 46Z"/>
+<path fill="currentColor" fill-opacity=".8" d="M52 40C58 28 70 18 84 16C91 15 94 19 92 26C90 34 87 43 82 48C72 50 60 48 52 46Z"/>
+<path fill="currentColor" fill-opacity=".8" d="M48 48C40 50 28 52 22 58C17 64 18 74 24 79C30 83 39 80 44 72C47 66 48 58 48 48Z"/>
+<path fill="currentColor" fill-opacity=".8" d="M52 48C60 50 72 52 78 58C83 64 82 74 76 79C70 83 61 80 56 72C53 66 52 58 52 48Z"/>
+<path fill="#1f3428" d="M9 23C14 21 22 22 28 25C22 23 15 24 10 27ZM91 23C86 21 78 22 72 25C78 23 85 24 90 27Z"/>
+<path fill="#1f3428" d="M8 25C6 20 9 15 16 16C11 17 9 20 9.5 24ZM92 25C94 20 91 15 84 16C89 17 91 20 90.5 24Z"/>
+<path fill="#1f3428" d="M17 48C13 43 10 35 8 27L11 27C13 35 16 42 19 47ZM83 48C87 43 90 35 92 27L89 27C87 35 84 42 81 47Z"/>
+<ellipse cx="27" cy="28" rx="4.2" ry="3.4" fill="#1f3428" transform="rotate(-20 27 28)"/><ellipse cx="73" cy="28" rx="4.2" ry="3.4" fill="#1f3428" transform="rotate(20 73 28)"/>
+<ellipse cx="35" cy="36" rx="3.6" ry="3" fill="#1f3428"/><ellipse cx="65" cy="36" rx="3.6" ry="3" fill="#1f3428"/>
+<ellipse cx="22" cy="39" rx="3.2" ry="2.6" fill="#1f3428"/><ellipse cx="78" cy="39" rx="3.2" ry="2.6" fill="#1f3428"/>
+<path fill="#1f3428" d="M38 23C41 20 45 22 45 27C43 30 39 29 38 23ZM62 23C59 20 55 22 55 27C57 30 61 29 62 23Z"/>
+<ellipse cx="38" cy="54" rx="4" ry="3" fill="#1f3428"/><ellipse cx="62" cy="54" rx="4" ry="3" fill="#1f3428"/>
+<path fill="#1f3428" d="M23 79C18 74 17 65 22 58C20 65 21 72 26 77ZM77 79C82 74 83 65 78 58C80 65 79 72 74 77Z"/>
+<path d="M21.5 62.5L21 66M21.8 70.5L22.6 73.6M25 77.2L27.4 78.6M78.5 62.5L79 66M78.2 70.5L77.4 73.6M75 77.2L72.6 78.6" stroke="currentColor" stroke-opacity=".85" stroke-width="2.2" stroke-linecap="round"/>
+<path fill="#1f3428" d="M50 30C52.5 30 53.5 33 53.5 36V64C53.5 68 52 71 50 71C48 71 46.5 68 46.5 64V36C46.5 33 47.5 30 50 30Z"/>
+<circle cx="50" cy="28.5" r="3.2" fill="#1f3428"/>
+<path d="M49 26C47 20 44 15 41 12M51 26C53 20 56 15 59 12" fill="none" stroke="#1f3428" stroke-width="1.2" stroke-linecap="round"/>
+<circle cx="41" cy="12" r="1.4" fill="#1f3428"/><circle cx="59" cy="12" r="1.4" fill="#1f3428"/>
+</g>`
 };
 /* dwaalgasten (update 9): alleen te verdienen, in kleur, met een eigen achtergrond */
 AVATARS["dg-lynx"] = `<defs><linearGradient id="{id}k" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c79459"/><stop offset=".5" stop-color="#d9b07a"/><stop offset=".78" stop-color="#ead5b0"/><stop offset="1" stop-color="#f3e8d2"/></linearGradient></defs>
