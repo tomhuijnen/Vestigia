@@ -174,16 +174,26 @@ async function installApp(){
   installEvt.prompt(); await installEvt.userChoice.catch(() => {}); installEvt = window.__installEvt = null;
 }
 window.addEventListener("appinstalled", () => { $("installBtn").hidden = true; toast("Vestigia is geïnstalleerd. Je vindt hem bij je apps."); });
+/* Nieuwe versie: nooit tegelijk met een pop-up (12 november 2026). De wachtrij wacht op deze controle (window.__swKlaar)
+   en toont niets als er een nieuwe versie klaarstaat; staat er toch al iets open, dan komt ‘Vernieuwen’ pas als dat dicht is. */
+let swKlaar; window.__swKlaar = new Promise(r => { swKlaar = r; setTimeout(r, 4000); });
+function meldNieuweVersie(nw){
+  window.__nieuweVersie = true;
+  const open = () => typeof Wachtrij !== "undefined" && Wachtrij.ietsOpen();
+  const toon = () => open() ? setTimeout(toon, 800) : toast("Er is een nieuwe versie van Vestigia.", { label: "Vernieuwen", run: () => nw.postMessage("skipWaiting") });
+  toon();
+}
 if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")){
   navigator.serviceWorker.register("sw.js").then(reg => {
-    reg.addEventListener("updatefound", () => {
-      const nw = reg.installing;
-      nw && nw.addEventListener("statechange", () => {
-        if (nw.state === "installed" && navigator.serviceWorker.controller)
-          toast("Er is een nieuwe versie van Vestigia.", { label: "Vernieuwen", run: () => nw.postMessage("skipWaiting") });
-      });
+    const volg = nw => nw && nw.addEventListener("statechange", () => {
+      if (nw.state === "installed" && navigator.serviceWorker.controller){ meldNieuweVersie(nw); swKlaar(); }
+      else if (nw.state === "redundant" || nw.state === "activated") swKlaar();
     });
-  }).catch(() => {});
+    if (reg.waiting && navigator.serviceWorker.controller){ meldNieuweVersie(reg.waiting); swKlaar(); }
+    else if (reg.installing) volg(reg.installing);
+    reg.addEventListener("updatefound", () => volg(reg.installing));
+    if (!reg.installing && !reg.waiting) setTimeout(swKlaar, 2500);   // geen update gevonden: de wachtrij mag
+  }).catch(() => swKlaar());
   /* Alleen herladen bij een update. Bij het allereerste bezoek neemt de service worker de pagina ook over
      (controllerchange), maar dan is er niets te vernieuwen; herladen brak toen de openingsanimatie af. */
   const hadController = !!navigator.serviceWorker.controller;
@@ -193,6 +203,7 @@ if ("serviceWorker" in navigator && (location.protocol === "https:" || location.
   navigator.serviceWorker.addEventListener("controllerchange", () => { if (hadController && !reloaded){ reloaded = true; location.reload(); } });
 }
 
+if (!("serviceWorker" in navigator)) swKlaar();
 start();
 koppelUitLink();
 window.__veld = { compare, BY_ID, TARGETS, daily, todayIndex, store, online };   /* voor testen en foutzoeken */

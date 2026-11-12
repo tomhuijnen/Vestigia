@@ -11,8 +11,6 @@
 "use strict";
 
 const Push = (() => {
-  const CFG = window.VESTIGIA_CONFIG || {};
-  const URL_F = (CFG.supabaseUrl || "").replace(/\/$/, "") + "/functions/v1/dagcasus-push";
   const K = { sleutel: "vestigia:pushSleutel", gevraagd: "vestigia:pushGevraagd", stand: "vestigia:pushStand", vers: "vestigia:pushVers" };
   const lees = k => { try { return JSON.parse(localStorage.getItem(k)); } catch(e){ return null; } };
   const zet = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, JSON.stringify(v)); } catch(e){} };
@@ -37,12 +35,13 @@ const Push = (() => {
     } catch(e){ return null; }                        // supabase-020 nog niet gedraaid, of geen internet
   }
 
+  /* de openbare sleutel via de database (supabase-021), niet rechtstreeks bij de Edge Function: zo is er geen
+     CORS-vraag van de browser die mis kan gaan (in Edge op een laptop ging dat op 12 november mis) */
   async function sleutel(){
     const s = lees(K.sleutel); if (s) return s;
-    const r = await fetch(URL_F, { method: "POST", headers: { "Content-Type": "application/json", apikey: CFG.supabaseKey }, body: JSON.stringify({ soort: "sleutel" }) });
-    const d = await r.json();
-    if (!d.publiek) throw new Error("Geen sleutel");
-    zet(K.sleutel, d.publiek); return d.publiek;
+    const k = await online.rpc("push_sleutel", {});
+    if (!k || typeof k !== "string") throw Object.assign(new Error("Geen sleutel"), { stap: "sleutel" });
+    zet(K.sleutel, k); return k;
   }
   const bytes = b64 => { const p = "=".repeat((4 - b64.length % 4) % 4), s = atob((b64 + p).replace(/-/g, "+").replace(/_/g, "/")); return Uint8Array.from(s, c => c.charCodeAt(0)); };
   const reg = () => navigator.serviceWorker.ready;
@@ -60,16 +59,27 @@ const Push = (() => {
     let ok = Notification.permission;
     if (ok === "default") ok = await Notification.requestPermission();
     if (ok !== "granted"){ toast("Je browser blokkeert meldingen voor Vestigia. Zet ze aan bij de instellingen van je browser of telefoon.", { duur: 7000 }); teken(); return false; }
+    let stap = "sleutel";
     try {
+      const k = await sleutel();
+      stap = "browser";
       const r = await reg();
       let sub = await r.pushManager.getSubscription();
-      if (!sub) sub = await r.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: bytes(await sleutel()) });
+      /* een oude aanmelding met een andere sleutel eerst opzeggen, anders weigert de browser */
+      if (sub && sub.options && sub.options.applicationServerKey){
+        const oud = btoa(String.fromCharCode(...new Uint8Array(sub.options.applicationServerKey))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+        if (oud !== k){ await sub.unsubscribe(); sub = null; }
+      }
+      if (!sub) sub = await r.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: bytes(k) });
+      stap = "vestigia";
       await meldAan(sub);
       teken();
       toast("Top! Speelde je de dagcasus om 19:00 nog niet, dan krijg je een seintje.");
       return true;
     } catch(e){
-      toast("Aanzetten lukte niet. Heb je internet? Probeer het later nog eens via het menu.");
+      console.warn("Vestigia push: aanzetten mislukt bij stap", stap, e);
+      const waar = { sleutel: "geen verbinding met de server", browser: "de browser weigerde de aanmelding", vestigia: "opslaan bij Vestigia lukte niet" }[stap];
+      toast(`Aanzetten lukte niet (${waar}${e && e.name && e.name !== "Error" ? ", " + e.name : ""}). Probeer het later nog eens via het menu.`, { duur: 8000 });
       teken(); return false;
     }
   }
@@ -101,9 +111,8 @@ const Push = (() => {
   if ($("pushTest")) $("pushTest").onclick = async () => {
     const a = acc(); if (!a) return;
     try {
-      const r = await fetch(URL_F, { method: "POST", headers: { "Content-Type": "application/json", apikey: CFG.supabaseKey }, body: JSON.stringify({ soort: "test", p_id: a.id, p_key: a.key }) });
-      const d = await r.json();
-      toast(d.verstuurd ? `Testmelding verstuurd naar ${d.verstuurd === 1 ? "1 apparaat" : d.verstuurd + " apparaten"}.` : "Er ging geen testmelding uit. Staat het seintje aan?");
+      const n = await online.rpc("push_test", { p_id: a.id, p_key: a.key });
+      toast(n > 0 ? `Testmelding onderweg naar ${n === 1 ? "1 apparaat" : n + " apparaten"}. Hij komt binnen een paar seconden binnen.` : "Er ging geen testmelding uit. Staat het seintje aan?");
     } catch(e){ toast("Testmelding lukte niet (geen verbinding)."); }
   };
 
@@ -119,7 +128,8 @@ const Push = (() => {
       return !!(s && s.actief && !s.aan && s.dagen >= 3);
     },
     toon(){
-      zet(K.gevraagd, todayIndex());
+      /* pas als ‘gevraagd’ bewaren als je zelf kiest: verdwijnt de vraag door iets anders (zoals ‘Vernieuwen’),
+         dan komt hij de volgende keer terug (zelfde les als de duel-uitnodiging in update 21) */
       const pop = $("wachtPop");
       $("wachtBody").innerHTML = `
         <div class="nw-stap pushvraag">${BEL}<h2 id="wachtH">Een seintje om 19:00?</h2>
@@ -127,8 +137,8 @@ const Push = (() => {
         <div class="nw-knoppen"><button class="linklike" id="pushNee">Nee, liever niet</button><button class="btn" id="pushJa">Ja, graag</button></div>
         <p class="fine">Aan- of uitzetten kan altijd in het menu, per apparaat.</p>`;
       const dicht = () => { pop.hidden = true; pop.classList.remove("nieuw"); };
-      $("pushNee").onclick = () => { dicht(); toast("Prima. Wil je het later toch? Je vindt het seintje in het menu."); };
-      $("pushJa").onclick = () => { dicht(); aan(); };
+      $("pushNee").onclick = () => { zet(K.gevraagd, todayIndex()); dicht(); toast("Prima. Wil je het later toch? Je vindt het seintje in het menu."); };
+      $("pushJa").onclick = () => { zet(K.gevraagd, todayIndex()); dicht(); aan(); };
       pop.classList.add("nieuw");
       pop.hidden = false;
       $("pushJa").focus();
