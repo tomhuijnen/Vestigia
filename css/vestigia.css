@@ -1584,3 +1584,5 @@ html.donker .dukies, html.donker .drspeler, html.donker .duelpaneel input#duTege
 html.donker .duronde{background:#18241d}
 html.donker .dr-mis, html.donker .duoordeel.verloren h2, html.donker .duelkaart.verloren h4{color:#e39a82}
 html.donker .belstip, html.donker .duelstip{border-color:#141f19}
+.duelvoorbeeld{margin:16px 0 0; padding:10px 14px; border-radius:8px; background:#fff6dc; border:1px dashed #d9a441; font-size:.92rem}
+html.donker .duelvoorbeeld{background:#2a2414; border-color:#8a6a2a}

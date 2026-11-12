@@ -108,7 +108,7 @@ function submitGuess(id){
   const invoerOpScherm = S.status !== "playing" ? $("gInput").getBoundingClientRect().top : null;
   if (S.status !== "playing"){
     /* update 16: een duelcasus levert geen plaat op in het Vestiarium; het duel zelf regelt eikels en XP */
-    recordStats(); if (S.mode !== "duel") recordDex(); recordLog(); freshResult = true;
+    recordStats(); if (S.mode !== "duel") recordDex(); if (!(S.mode === "duel" && Duel.demo)) recordLog(); freshResult = true;
     if (S.status === "won") try { navigator.vibrate && navigator.vibrate([30, 50, 70]); } catch(e){}
     if (S.mode === "duel") Duel.naCasus(); else online.afterGame();
   }

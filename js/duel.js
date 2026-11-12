@@ -1,8 +1,8 @@
 /* Vestigia – spelersduel (update 16, aan vanaf maandag 14 december 2026).
    Twee spelers spelen dezelfde drie casussen, niet tegelijk. De uitdager kiest klassiek of expert en speelt zijn drie
    casussen meteen; daarna heeft de ander 48 uur. De uitslag zie je pas als jullie allebei klaar zijn: dan gaan de
-   casussen één voor één open. Per casus punten zoals bij de dagcasus; meeste punten wint, bij gelijke punten wint wie
-   samen het snelst was. De server kiest de casussen en beslist (techniek/supabase-018-spelersduel.sql).
+   casussen één voor één open. Per casus punten zoals bij de dagcasus; meeste punten wint, gelijke punten is gelijkspel.
+   Beloning per duel: 3 eikels + 1 per punt + 10 bij winst of 5 bij gelijkspel (hooguit 60 per dag). De server kiest de casussen en beslist (techniek/supabase-018-spelersduel.sql).
 
    Uitdagen kan op naam (zoeken, je leaguegenoten en recente tegenstanders staan bovenaan) of met een link
    (?duel=CODE&van=Naam) voor wie hem als eerste opent. Wie via een link nog geen naam heeft, kiest er eerst een;
@@ -13,30 +13,33 @@
    meteen naar de server, en zonder verbinding later alsnog. Een duelcasus levert geen plaat op en telt niet voor de
    ranglijst; eikels en XP komen pas als het duel beslist is.
 
-   Voorbeeld van de uitslag zonder server: ?duel=demo */
+   Voorbeeld zonder server: ?duel=demo. Dan praat het duel met een nepserver in deze browser (NEP, onderaan): je kunt
+   uitdagen, spelen en de uitslag zien; nepspelers spelen hun casussen vanzelf. Er gaat niets naar Supabase, en eikels,
+   XP, prestaties en je statistieken veranderen niet. */
 "use strict";
 
 const Duel = (() => {
-  const K = { st: "vestigia:duelstatus", lijst: "vestigia:duellijst", spel: "vestigia:duels", link: "vestigia:duel-link",
-              pop: "vestigia:duel-pop", van: "vestigia:van" };
+  const demo = (() => { try { return (new URL(location.href).searchParams.get("duel") || "").toLowerCase() === "demo"; } catch(e){ return false; } })();
+  const D = demo ? "vestigia:demo:" : "vestigia:";        // het voorbeeld heeft zijn eigen opslag
+  const K = { st: D + "duelstatus", lijst: D + "duellijst", spel: D + "duels", link: "vestigia:duel-link",
+              pop: D + "duel-pop", van: "vestigia:van" };
   const START_DAG = "2026-12-14";
   const lees = k => { try { return JSON.parse(localStorage.getItem(k)); } catch(e){ return null; } };
   const zet = (k, v) => { try { v === null || v === undefined ? localStorage.removeItem(k) : localStorage.setItem(k, JSON.stringify(v)); } catch(e){} };
-  const p = () => online.enabled ? online.player() : null;
+  const p = () => demo ? (online.player() || { id: "demo", key: "demo", name: "Jij" }) : online.enabled ? online.player() : null;
   const args = extra => Object.assign({ p_id: p().id, p_key: p().key }, extra || {});
+  const rpc = (fn, a) => demo ? NEP.rpc(fn, a) : rpc(fn, a);
   const reduce = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
   const wacht = ms => new Promise(r => setTimeout(r, ms));
   const fout = e => e && e.status && e.status < 500 ? e.message : "Dat lukte niet. Controleer je internetverbinding.";
   const modus = d => d.expert ? "expert" : "klassiek";
   const vandaagLokaal = () => { const d = new Date(), p2 = n => String(n).padStart(2, "0"); return `${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())}`; };
 
-  /* ---------- link lezen: ?duel=CODE (of ?duel=demo) ---------- */
-  let demo = false;
+  /* ---------- link lezen: ?duel=CODE (?duel=demo blijft in de adresbalk, zoals de andere voorbeelden) ---------- */
   (function leesLink(){
     let url; try { url = new URL(location.href); } catch(e){ return; }
     const c = (url.searchParams.get("duel") || "").trim();
-    if (!c) return;
-    if (c.toLowerCase() === "demo") { demo = true; return; }       // blijft in de adresbalk, zoals de andere voorbeelden
+    if (!c || demo) return;
     if (/^[A-Z2-9]{6}$/i.test(c)) zet(K.link, c.toUpperCase());
     url.searchParams.delete("duel");
     try { history.replaceState(history.state, "", url.pathname + (url.search || "") + url.hash); } catch(e){}
@@ -56,12 +59,12 @@ const Duel = (() => {
   const aantal = () => { const s = status(); return (s.voor_jou || 0) + (s.uitslagen || 0); };
   async function haalStatus(){
     if (!p()) return null;
-    const r = await online.rpc("duel_status", args()), s = Array.isArray(r) ? r[0] : r;
+    const r = await rpc("duel_status", args()), s = Array.isArray(r) ? r[0] : r;
     zet(K.st, s || {}); badge();
     return s;
   }
   async function haalLijst(){
-    const r = await online.rpc("duel_lijst", args());
+    const r = await rpc("duel_lijst", args());
     zet(K.lijst, r || []);
     return r || [];
   }
@@ -81,7 +84,7 @@ const Duel = (() => {
   async function haalProfielen(namen){
     const nodig = [...new Set(namen.filter(Boolean))].filter(n => !profielen.has(n.toLowerCase()));
     if (!nodig.length) return;
-    try { (await online.rpc("player_profiles", { p_names: nodig.slice(0, 100) }) || []).forEach(r => profielen.set(r.name.toLowerCase(), r)); } catch(e){ return; }
+    try { (await rpc("player_profiles", { p_names: nodig.slice(0, 100) }) || []).forEach(r => profielen.set(r.name.toLowerCase(), r)); } catch(e){ return; }
     nodig.forEach(n => { if (!profielen.has(n.toLowerCase())) profielen.set(n.toLowerCase(), { name: n }); });
   }
   function av(naam, cls){
@@ -97,12 +100,6 @@ const Duel = (() => {
     if (m >= 120) return `nog ${Math.floor(m / 60)} uur`;
     if (m >= 60) return `nog 1 uur en ${m - 60} min`;
     return m <= 1 ? "nog even" : `nog ${m} min`;
-  }
-  function duur(ms){
-    const s = Math.round(ms / 1000);
-    if (s < 60) return `${s} s`;
-    const m = Math.floor(s / 60), r = s % 60;
-    return r ? `${m} min ${r} s` : `${m} min`;
   }
   const NIET_GESPEELD = 3600000;
 
@@ -153,7 +150,7 @@ const Duel = (() => {
     lok.stuur = (lok.stuur || []).filter(x => x.r !== r).concat({ r, won, tries: won ? tries : MAX, clues: S.revealed, ms: lok.ms || NIET_GESPEELD });
     lok.klaar = r + 1;
     spelZet(id, lok);
-    online.syncSoon();        // het logboek (statistieken) gaat mee naar je andere apparaten
+    if (!demo) online.syncSoon();        // het logboek (statistieken) gaat mee naar je andere apparaten
     tekenVervolg();
     await stuur(id);
     tekenVervolg();
@@ -165,7 +162,7 @@ const Duel = (() => {
     let d = null;
     try {
       for (const x of lok.stuur.slice().sort((a, b) => a.r - b.r)){
-        d = await online.rpc("duel_ronde", args({ p_duel: id, p_ronde: x.r, p_won: x.won, p_tries: x.tries, p_clues: x.clues, p_ms: Math.round(x.ms) }));
+        d = await rpc("duel_ronde", args({ p_duel: id, p_ronde: x.r, p_won: x.won, p_tries: x.tries, p_clues: x.clues, p_ms: Math.round(x.ms) }));
         const nu = spel(id); nu.stuur = (nu.stuur || []).filter(y => y.r !== x.r); spelZet(id, nu);
       }
     } catch(e){
@@ -226,7 +223,7 @@ const Duel = (() => {
     el.innerHTML = `<div class="dbtekst"><span class="caps">Spelersduel · ${esc(modus(d))}</span>
         <b>${d.tegen ? `Tegen ${esc(d.tegen)}` : "Duel met een link"}</b></div>
       <span class="dustip" aria-label="casus ${r + 1} van 3">${stip}</span>
-      <p class="fine">${d.expert ? "Je hebt één determinatie; elke extra waarneming kost een punt." : "Vijf pogingen, net als bij de dagcasus."} De tijd telt alleen bij gelijke punten.</p>`;
+      <p class="fine">${d.expert ? "Je hebt één determinatie; elke extra waarneming kost een punt." : "Vijf pogingen, net als bij de dagcasus."} Elk punt telt: meeste punten na drie casussen wint.</p>`;
   }
 
   /* ---------- het scherm Spelersduel ---------- */
@@ -243,7 +240,7 @@ const Duel = (() => {
   let laden = 0;
   async function render(){
     const body = $("duelBody");
-    if (!online.enabled){ body.innerHTML = `<p class="rankempty">Het spelersduel werkt alleen met de online ranglijst, en die is nog niet ingesteld voor deze versie.</p>`; return; }
+    if (!online.enabled && !demo){ body.innerHTML = `<p class="rankempty">Het spelersduel werkt alleen met de online ranglijst, en die is nog niet ingesteld voor deze versie.</p>`; return; }
     if (!p()){
       body.innerHTML = `<div class="playerbox"><p><b>Kies eerst een spelersnaam.</b> Dan weet je tegenstander tegen wie hij speelt.</p>
         <div class="row2"><button class="btn" id="duNaam">Kies een spelersnaam</button></div></div>`;
@@ -278,6 +275,7 @@ const Duel = (() => {
     const kan = actief();
     body.innerHTML = `
       ${melding ? `<p class="rankempty">${esc(melding)}</p>` : ""}
+      ${demo ? `<p class="duelvoorbeeld"><b>Voorbeeld.</b> Niets wordt opgeslagen of verstuurd. De andere spelers zijn nep en spelen hun casussen vanzelf, een paar seconden nadat jij klaar bent.</p>` : ""}
       <div class="duelstart">
         ${kan ? `<button class="btn" id="duUitdagen" aria-expanded="${paneelOpen}">Daag iemand uit</button>`
               : `<p class="fine"><b>Het spelersduel begint op maandag 14 december.</b> Word je eerder uitgedaagd door een tester, dan kun je wel al meespelen.</p>`}
@@ -288,7 +286,7 @@ const Duel = (() => {
       ${sectie("Wacht op de ander", g.wacht, kaartWacht)}
       ${sectie("Afgelopen", g.klaar.slice(0, 15), kaartKlaar)}
       ${!ls.length ? `<p class="rankempty">${bezig ? "Duels laden…" : "Je hebt nog geen duels gespeeld. Daag een leaguegenoot uit, of deel een link in de groepsapp."}</p>` : ""}
-      <p class="fine">Een duel telt niet voor de ranglijst en levert geen plaat op. Winnen levert 5 eikels op, verliezen 1 (hooguit 15 per dag), plus XP. Je kunt vijf duels tegelijk uit hebben staan, en één tegelijk met dezelfde speler.</p>`;
+      <p class="fine">Een duel telt niet voor de ranglijst en levert geen plaat op. Je krijgt 3 eikels plus 1 per punt dat je haalt, en 10 extra als je wint of 5 bij gelijkspel (hooguit 60 per dag), plus XP. Je kunt vijf duels tegelijk uit hebben staan, en één tegelijk met dezelfde speler.</p>`;
     if ($("duUitdagen")) $("duUitdagen").onclick = () => { paneelOpen = !paneelOpen; revanche = null; teken(cache(), false); if (paneelOpen) setTimeout(() => $("duTegen") && $("duTegen").focus(), 50); };
     if (paneelOpen && kan) paneel();
     body.querySelectorAll("[data-du]").forEach(b => b.onclick = () => actie(b.dataset.du, b.dataset.id, b));
@@ -336,7 +334,7 @@ const Duel = (() => {
     if (soort === "revanche") return open({ uitdaag: true, tegen: d.tegen, revanche: d.status === "klaar" ? d.id : null, expert: d.expert });
     if (soort === "weiger"){
       if (!knop.dataset.zeker){ knop.dataset.zeker = "1"; knop.textContent = "Zeker weten?"; setTimeout(() => { delete knop.dataset.zeker; knop.textContent = "Nee, bedankt"; }, 4000); return; }
-      try { await online.rpc("duel_weiger", args({ p_duel: d.id })); toast(`Je hebt het duel van ${d.tegen} afgeslagen.`); render(); }
+      try { await rpc("duel_weiger", args({ p_duel: d.id })); toast(`Je hebt het duel van ${d.tegen} afgeslagen.`); render(); }
       catch(e){ if (msg) msg.textContent = fout(e); }
     }
   }
@@ -373,7 +371,7 @@ const Duel = (() => {
     const box = $("duKeus"); if (!box) return;
     const nr = ++zoekNr;
     try {
-      const rows = await online.rpc("duel_zoek", args({ p_q: String(q || "").trim() }));
+      const rows = await rpc("duel_zoek", args({ p_q: String(q || "").trim() }));
       if (nr !== zoekNr || !$("duKeus")) return;
       await haalProfielen(rows.map(r => r.name));
       if (nr !== zoekNr || !$("duKeus")) return;
@@ -395,7 +393,7 @@ const Duel = (() => {
     knop.disabled = true; msg.textContent = "De casussen worden gekozen…";
     try {
       await stuurAlles();
-      const d = await online.rpc("duel_maak", args({ p_tegen: tegen || null, p_expert: !!expert, p_skip: overslaan(), p_revanche: revanche }));
+      const d = await rpc("duel_maak", args({ p_tegen: tegen || null, p_expert: !!expert, p_skip: overslaan(), p_revanche: revanche }));
       paneelOpen = false; revanche = null; gekozen = null;
       werkBij(d);
       speel(d);
@@ -414,12 +412,11 @@ const Duel = (() => {
     if (!d.rondes || !kent(d)) return teOud();
     await haalProfielen([d.tegen]);
     const pop = $("duelPop"), body = $("duelPopBody"), mijn = d.mijn || [], hun = d.hun || [];
-    const pu = som(mijn), ph = som(hun), mu = mijn.reduce((a, r) => a + r.ms, 0) + (3 - mijn.length) * NIET_GESPEELD, mh = hun.reduce((a, r) => a + r.ms, 0) + (3 - hun.length) * NIET_GESPEELD;
+    const pu = som(mijn), ph = som(hun);
     const naam = esc(d.tegen);
     const oordeel = d.uitslag === "gewonnen" ? "Je wint!" : d.uitslag === "verloren" ? `${naam} wint` : "Gelijkspel";
-    const waarom = pu !== ph ? `${pu} tegen ${ph} punten.`
-      : pu === 0 ? "Jullie vonden geen van de drie casussen."
-      : `Gelijk op punten. ${d.uitslag === "gewonnen" ? `Jij was ${duur(mh - mu)} sneller.` : d.uitslag === "verloren" ? `${naam} was ${duur(mu - mh)} sneller.` : "En precies even snel."}`;
+    const waarom = pu !== ph ? `${pu} tegen ${ph} punten.` : pu === 0 ? "Jullie vonden geen van de drie casussen." : `Jullie haalden allebei ${pu} punten.`;
+    const eik = d.eikels !== undefined && d.eikels !== null ? +d.eikels : 3 + pu + (d.uitslag === "gewonnen" ? 10 : d.uitslag === "gelijk" ? 5 : 0);
     const rondes = d.rondes.map((ro, i) => {
       const t = BY_ID.get(ro.s), a = mijn.find(x => x.r === i), b = hun.find(x => x.r === i);
       const beste = a && b ? (a.punten > b.punten ? "a" : b.punten > a.punten ? "b" : "") : "";
@@ -430,23 +427,23 @@ const Duel = (() => {
     const st = d.stand || { w: 0, v: 0, g: 0 };
     const kls = d.uitslag === "gewonnen" ? "gewonnen" : d.uitslag === "verloren" ? "verloren" : "gelijk";
     body.innerHTML = `
-      <div class="top"><span class="caps">Spelersduel · ${esc(modus(d))}${demo && d.id === "demo" ? " · voorbeeld" : ""}</span><button class="iconbtn" id="duPopX" aria-label="Sluiten"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l10 10M13 3L3 13"/></svg></button></div>
+      <div class="top"><span class="caps">Spelersduel · ${esc(modus(d))}${demo ? " · voorbeeld" : ""}</span><button class="iconbtn" id="duPopX" aria-label="Sluiten"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l10 10M13 3L3 13"/></svg></button></div>
       <div class="duwie"><div>${av(true, "mid")}<b>Jij</b></div><span class="duvs">tegen</span><div>${av(d.tegen, "mid")}<b>${naam}</b></div></div>
       <ol class="durondes">${rondes}</ol>
       <div class="dutotaal"><div><small>Jij</small><b data-tel="${pu}">0</b></div><span>punten</span><div><small>${naam}</small><b data-tel="${ph}">0</b></div></div>
       <div class="duoordeel ${kls}"><h2 id="duelPopH">${oordeel}</h2><p>${esc(waarom)}</p>
-        <p class="eikelline" id="duEikels"${!d.gezien || d.id === "demo" ? "" : " hidden"}>${EIKEL} +${d.uitslag === "gewonnen" ? 5 : 1} ${d.uitslag === "gewonnen" ? "eikels" : "eikel"} · +${d.uitslag === "gewonnen" ? 20 : 10} XP</p>
+        <p class="eikelline" id="duEikels"${!d.gezien ? "" : " hidden"}>${EIKEL} +${eik} ${eik === 1 ? "eikel" : "eikels"} · +${d.uitslag === "gewonnen" ? 20 : 10} XP</p>
         <p class="fine">Onderling: jij ${st.w}, ${naam} ${st.v}${st.g ? `, ${st.g} gelijk` : ""}.</p></div>
       <div class="actions">${actief() ? `<button class="btn" id="duRevanche">Revanche</button>` : ""}<button class="btn line" id="duPopSluit">Sluiten</button></div>`;
     pop.classList.toggle("stil", reduce());
     pop.classList.remove("af");
     pop.hidden = false;
     $("duPopX").onclick = $("duPopSluit").onclick = sluitPop;
-    if ($("duRevanche")) $("duRevanche").onclick = () => { sluitPop(); open({ uitdaag: true, tegen: d.tegen, revanche: d.id === "demo" ? null : d.id, expert: d.expert }); };
+    if ($("duRevanche")) $("duRevanche").onclick = () => { sluitPop(); open({ uitdaag: true, tegen: d.tegen, revanche: d.id, expert: d.expert }); };
     $("duPopSluit").focus({ preventScroll: true });
     const nieuw = !d.gezien;
-    if (d.id !== "demo" && nieuw){
-      online.rpc("duel_gezien", args({ p_duel: d.id })).then(() => { d.gezien = true; werkBij(d); return haalStatus(); }).then(() => { if (VIEW === "duel") render(); }).catch(() => {});
+    if (nieuw){
+      rpc("duel_gezien", args({ p_duel: d.id })).then(() => { d.gezien = true; werkBij(d); return haalStatus(); }).then(() => { if (VIEW === "duel") render(); }).catch(() => {});
     }
     /* casussen één voor één, dan de totalen tellen, dan het oordeel */
     const telOp = () => body.querySelectorAll("[data-tel]").forEach(b => { b.textContent = b.dataset.tel; });
@@ -458,7 +455,7 @@ const Duel = (() => {
       await wacht(250);
       if (!pop.hidden) pop.classList.add("af");
     }
-    if (nieuw && d.id !== "demo"){ await wacht(reduce() ? 0 : 600); Profiel.naSpel().catch(() => {}); }
+    if (nieuw && !demo){ await wacht(reduce() ? 0 : 600); Profiel.naSpel().catch(() => {}); }
   }
   function sluitPop(){ const pop = $("duelPop"); if (pop && !pop.hidden){ pop.hidden = true; pop.classList.remove("af"); } }
   $("duelPop").addEventListener("click", e => { if (e.target === $("duelPop")) sluitPop(); });
@@ -481,14 +478,14 @@ const Duel = (() => {
       $("duJa").onclick = async () => {
         if (!vrij){ klaar(); return speel(d); }
         $("duJa").disabled = true; $("duPopMsg").textContent = "Even geduld…";
-        try { const n = await online.rpc("duel_neem", args({ p_code: d.code })); werkBij(n); klaar(); speel(n); haalStatus().catch(() => {}); }
+        try { const n = await rpc("duel_neem", args({ p_code: d.code })); werkBij(n); klaar(); speel(n); haalStatus().catch(() => {}); }
         catch(e){ $("duJa").disabled = false; $("duPopMsg").textContent = fout(e); }
       };
       if ($("duNee")){
         const nee = $("duNee");
         nee.onclick = async () => {
           if (!nee.dataset.zeker){ nee.dataset.zeker = "1"; nee.textContent = "Zeker weten?"; return; }
-          try { await online.rpc("duel_weiger", args({ p_duel: d.id })); toast(`Je hebt het duel van ${d.tegen} afgeslagen.`); dicht(); haalStatus().catch(() => {}); }
+          try { await rpc("duel_weiger", args({ p_duel: d.id })); toast(`Je hebt het duel van ${d.tegen} afgeslagen.`); dicht(); haalStatus().catch(() => {}); }
           catch(e){ $("duPopMsg").textContent = fout(e); }
         };
       }
@@ -498,11 +495,11 @@ const Duel = (() => {
   /* ---------- een duellink openen ---------- */
   async function verwerkLink(){
     const code = lees(K.link);
-    if (!code || !online.enabled) return;
+    if (!code || !online.enabled || demo) return;
     if (!p()) return;                                  // eerst een naam (welkomstbalk); daarna naNaam()
     zet(K.link, null);
     try {
-      const d = await online.rpc("duel_haal", args({ p_code: code }));
+      const d = await rpc("duel_haal", args({ p_code: code }));
       await haalProfielen([d.tegen]);
       /* niet wachten op de pop-up: zo ziet de wachtrij dat er al iets open staat en toont hij niets anders */
       if (d.ik === "vrij"){ uitdagingPop(d, true); return; }
@@ -526,7 +523,6 @@ const Duel = (() => {
   Wachtrij.voeg({ id: "duel", prio: 1.5,
     async kan(){
       kandidaat = null;
-      if (demo){ kandidaat = { demo: true }; return true; }
       if (!p() || lees(K.link) || (S && S.mode === "duel")) return false;     // niet midden in een duel
       const s = await haalStatus().catch(() => null);
       if (!s || !(s.voor_jou || s.uitslagen)) return false;
@@ -537,29 +533,119 @@ const Duel = (() => {
       return !!kandidaat;
     },
     toon(){
-      if (kandidaat.demo) return onthul(DEMO);
       if (kandidaat.status === "klaar") return onthul(kandidaat);
       const g = lees(K.pop) || {}; g[kandidaat.id] = todayIndex(); zet(K.pop, g);
       return uitdagingPop(kandidaat, false);
     } });
 
-  /* voorbeeld van de uitslag (?duel=demo); verandert niets */
-  const DEMO = (() => {
-    const ids = TARGETS.filter(t => ["Z", "B", "A"].includes(t.g)), kies = g => ids.find(t => t.g === g);
-    return { id: "demo", code: "DEMO00", ik: "uitdager", tegen: "Sanne", expert: false, status: "klaar", uitslag: "gewonnen", gezien: true,
-      rondes: ["Z", "B", "A"].map(g => ({ s: kies(g).id, k: 0 })),
-      mijn: [{ r: 0, won: true, tries: 2, clues: 2, punten: 4, ms: 61000 }, { r: 1, won: true, tries: 1, clues: 1, punten: 5, ms: 42000 }, { r: 2, won: false, tries: 5, clues: 5, punten: 0, ms: 140000 }],
-      hun: [{ r: 0, won: true, tries: 1, clues: 1, punten: 5, ms: 30000 }, { r: 1, won: true, tries: 3, clues: 3, punten: 3, ms: 95000 }, { r: 2, won: true, tries: 5, clues: 5, punten: 1, ms: 210000 }],
-      stand: { w: 3, v: 2, g: 0 } };
-  })();
-
   /* ---------- opstarten ---------- */
   function start(){
     badge();
+    if (demo) NEP.begin();
     if (!p()) return;
     stuurAlles().then(() => haalStatus()).catch(() => {});
   }
-  window.addEventListener("online", () => { if (p()) stuurAlles().catch(() => {}); });
+  window.addEventListener("online", () => { if (p() && !demo) stuurAlles().catch(() => {}); });
 
-  return { zichtbaar, aantal, open, render, speel, bewaar, naCasus, vervolg, bindVervolg, balk, onthul, verwerkLink, naNaam, welkomTekst, start, badge };
+  /* ---------- nepserver voor het voorbeeld (?duel=demo) ----------
+     Doet wat supabase-018 doet, maar in deze browser (sessionStorage): casussen kiezen, rondes opslaan, beslissen.
+     Bij het openen staat er een uitdaging van Joris klaar. Daag je iemand uit, dan speelt die zijn casussen een paar
+     seconden nadat jij klaar bent; een linkduel wordt aangenomen door Bram. */
+  const NEP = (() => {
+    const KEY = "vestigia:demo:server", NAMEN = ["Sanne", "Joris", "Ilse", "Bram", "Femke", "Daan"];
+    const PROF = { Sanne: ["ree", "mint", 7, 40], Joris: ["das", "oker", 12, 70], Ilse: ["kerkuil", "nacht", 4, 20], Bram: ["boomkikker", "groen", 9, 55], Femke: ["ijsvogel", "wad", 3, 80], Daan: ["vos", "heide", 15, 10] };
+    const lees_ = () => { try { return JSON.parse(sessionStorage.getItem(KEY)); } catch(e){ return null; } };
+    const zet_ = v => { try { sessionStorage.setItem(KEY, JSON.stringify(v)); } catch(e){} };
+    const ik = () => (online.player() || { name: "Jij" }).name;
+    const punten = (ex, r) => !r.won ? 0 : ex ? Math.max(1, 7 - r.clues) : Math.max(1, 6 - r.tries);
+    const fout = (msg, status) => { throw Object.assign(new Error(msg), { status: status || 400 }); };
+    const nu = () => Date.now();
+    function kies(skip){
+      const groepen = [...new Set(TARGETS.map(t => t.g))].sort(() => Math.random() - .5), out = [];
+      for (const g of groepen){ if (out.length === 3) break;
+        const pool = TARGETS.filter(t => t.g === g && !skip.includes(t.id)); if (!pool.length) continue;
+        const t = pool[Math.floor(Math.random() * pool.length)]; out.push({ s: t.id, k: Math.floor(Math.random() * t.cs.length) }); }
+      return out;
+    }
+    /* een nepspeler speelt: meestal goed, soms niet */
+    function nepSpel(d){
+      return d.rondes.map((x, r) => { const won = Math.random() < .8, tries = won ? 1 + Math.floor(Math.random() * 4) : 5, clues = won ? 1 + Math.floor(Math.random() * 4) : 5;
+        const o = { r, won, tries: d.expert ? 1 : tries, clues: d.expert ? clues : tries, ms: 20000 + Math.floor(Math.random() * 120000) }; o.punten = punten(d.expert, o); return o; });
+    }
+    function db(){
+      let v = lees_();
+      if (!v){
+        v = { duels: [] };
+        const d = { id: "nep-joris", code: "JORIS1", uitdager: "Joris", tegenstander: ik(), expert: false, rondes: kies([]), status: "open",
+          gemaakt: nu() - 3 * 3600e3, open_op: nu() - 3 * 3600e3, spel: {}, revanche_van: null };
+        d.spel.Joris = nepSpel(d);
+        v.duels.push(d); zet_(v);
+      }
+      return v;
+    }
+    function json(d){
+      const me = ik(), ikU = d.uitdager === me, ander = ikU ? d.tegenstander : d.uitdager, mijn = d.spel[me] || [], hun = ander ? (d.spel[ander] || []) : [];
+      const tegen = db().duels.filter(x => x.status === "klaar" && [x.uitdager, x.tegenstander].includes(ander) && [x.uitdager, x.tegenstander].includes(me));
+      const uitslag = d.status !== "klaar" ? null : !d.winnaar ? "gelijk" : d.winnaar === me ? "gewonnen" : "verloren";
+      const pu = mijn.reduce((a, r) => a + r.punten, 0);
+      return { id: d.id, code: d.code, ik: ikU ? "uitdager" : "tegenstander", tegen: ander, expert: d.expert, rondes: d.rondes, status: d.status,
+        gemaakt: d.gemaakt, verloopt: d.status === "bezig" ? d.gemaakt + 864e5 : d.status === "open" ? d.open_op + 1728e5 : null, klaar: d.klaar || null,
+        mijn, hun_aantal: hun.length, hun: d.status === "klaar" ? hun : [], uitslag, gezien: ikU ? !!d.gezien_u : !!d.gezien_t, revanche_van: d.revanche_van,
+        stand: { w: tegen.filter(x => x.winnaar === me).length, v: tegen.filter(x => x.winnaar === ander).length, g: tegen.filter(x => !x.winnaar).length },
+        eikels: d.status === "klaar" ? 3 + pu + (uitslag === "gewonnen" ? 10 : uitslag === "gelijk" ? 5 : 0) : null };
+    }
+    function afronden(d){
+      const som = n => (d.spel[n] || []).reduce((a, r) => a + r.punten, 0), pu = som(d.uitdager), pt = som(d.tegenstander);
+      d.status = "klaar"; d.klaar = nu(); d.winnaar = pu > pt ? d.uitdager : pt > pu ? d.tegenstander : null;
+    }
+    /* de tegenstander speelt een paar seconden nadat jij klaar bent */
+    function laatSpelen(id){
+      setTimeout(() => {
+        const v = db(), d = v.duels.find(x => x.id === id); if (!d || d.status !== "open") return;
+        if (!d.tegenstander) d.tegenstander = "Bram";
+        d.spel[d.tegenstander] = nepSpel(d); afronden(d); zet_(v);
+        haalStatus().then(() => { if (VIEW === "duel") render(); }).catch(() => {});
+        toast(`Voorbeeld: ${d.tegenstander} heeft de drie casussen gespeeld. De uitslag is binnen.`, { label: "Bekijk", duur: 8000, run: () => { $("toast").hidden = true; onthul(json(d)); } });
+      }, 7000);
+    }
+    const r = {
+      duel_status(){ const v = db(), me = ik();
+        return [{ actief: true, vanaf: "2026-12-14",
+          voor_jou: v.duels.filter(d => d.tegenstander === me && d.status === "open" && (d.spel[me] || []).length < 3).length,
+          uitslagen: v.duels.filter(d => d.status === "klaar" && ((d.uitdager === me && !d.gezien_u) || (d.tegenstander === me && !d.gezien_t))).length,
+          lopend: v.duels.filter(d => ["bezig", "open"].includes(d.status)).length }]; },
+      duel_lijst(){ return db().duels.filter(d => d.uitdager === ik() || (d.tegenstander === ik() && d.status !== "bezig")).sort((a, b) => b.gemaakt - a.gemaakt).map(json); },
+      duel_haal(a){ const d = db().duels.find(x => x.code === a.p_code || x.id === a.p_code); if (!d) fout("Dit duel bestaat niet (meer)"); return json(d); },
+      duel_zoek(a){ const q = String(a.p_q || "").toLowerCase();
+        return NAMEN.filter(n => !q ? n === "Sanne" || n === "Joris" || n === "Ilse" : n.toLowerCase().startsWith(q) || (q.length >= 3 && n.toLowerCase().includes(q)))
+          .map(n => ({ name: n, bron: n === "Joris" ? "recent" : n === "Sanne" || n === "Ilse" ? "league" : "" })); },
+      duel_maak(a){
+        const v = db(), me = ik(), tegen = a.p_tegen ? NAMEN.find(n => n.toLowerCase() === a.p_tegen.toLowerCase()) : null;
+        if (a.p_tegen && !tegen) fout("Deze speler bestaat niet");
+        if (tegen && v.duels.some(d => ["bezig", "open"].includes(d.status) && [d.uitdager, d.tegenstander].includes(tegen))) fout("Je hebt al een duel lopen met deze speler. Maak dat eerst af.");
+        if (v.duels.some(d => d.uitdager === me && d.status === "bezig")) fout("Speel eerst je vorige duel af.");
+        const d = { id: "nep-" + nu(), code: Math.random().toString(36).slice(2, 8).toUpperCase(), uitdager: me, tegenstander: tegen, expert: !!a.p_expert,
+          rondes: kies(a.p_skip || []), status: "bezig", gemaakt: nu(), spel: {}, revanche_van: a.p_revanche || null };
+        v.duels.push(d); zet_(v); return json(d);
+      },
+      duel_neem(a){ return r.duel_haal(a); },
+      duel_ronde(a){
+        const v = db(), d = v.duels.find(x => x.id === a.p_duel), me = ik(); if (!d) fout("Dit duel bestaat niet (meer)");
+        const mijn = d.spel[me] = d.spel[me] || [];
+        if (a.p_ronde < mijn.length) return json(d);
+        const o = { r: a.p_ronde, won: !!a.p_won, tries: a.p_tries, clues: a.p_clues, ms: a.p_ms }; o.punten = punten(d.expert, o); mijn.push(o);
+        if (mijn.length === 3){ if (d.uitdager === me){ d.status = "open"; d.open_op = nu(); laatSpelen(d.id); } else afronden(d); }
+        zet_(v); return json(d);
+      },
+      duel_weiger(a){ const v = db(), d = v.duels.find(x => x.id === a.p_duel); if (d){ d.status = "geweigerd"; d.klaar = nu(); zet_(v); } return null; },
+      duel_gezien(a){ const v = db(), d = v.duels.find(x => x.id === a.p_duel); if (d){ if (d.uitdager === ik()) d.gezien_u = true; else d.gezien_t = true; zet_(v); } return null; },
+      player_profiles(a){ return (a.p_names || []).filter(n => PROF[n]).map(n => ({ name: n, avatar: PROF[n][0], color: PROF[n][1], level: PROF[n][2], pct: PROF[n][3] })); }
+    };
+    return {
+      rpc: async (fn, a) => { await wacht(150); if (!r[fn]) throw Object.assign(new Error("Niet in het voorbeeld"), { status: 404 }); return JSON.parse(JSON.stringify(r[fn](a || {}))); },
+      begin(){ db(); /* een duel dat al open stond toen je herlaadde, wordt alsnog gespeeld */ for (const d of db().duels) if (d.status === "open" && !(d.spel[d.tegenstander] || []).length && d.uitdager === ik()) laatSpelen(d.id); }
+    };
+  })();
+
+  return { demo, zichtbaar, aantal, open, render, speel, bewaar, naCasus, vervolg, bindVervolg, balk, onthul, verwerkLink, naNaam, welkomTekst, start, badge };
 })();
