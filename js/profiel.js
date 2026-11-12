@@ -304,8 +304,10 @@ const Profiel = (() => {
                   ["trofeeen", "Titels en medailles"], ["uitnodigingen", "Uitgenodigde spelers"], ["prestaties", "Prestaties"], ["mijlpalen", "Mijlpalen"], ["minispellen", "Minigames"], ["spelersduels", "Spelersduels"], ["advent", "Adventkalender"], ["dwaalgasten", "Dwaalgasten"], ["levels", "Levels"]];
   const zonderNaam = (body, wat) => {
     body.innerHTML = `<div class="playerbox"><p><b>Kies eerst een spelersnaam.</b> ${wat}</p>
-      <div class="row2"><button class="btn" id="pfNaam">Kies een spelersnaam</button></div></div>`;
+      <div class="row2"><button class="btn" id="pfNaam">Kies een spelersnaam</button></div>
+      <p class="fine">Speel je al op een ander apparaat? <button class="linklike" id="pfHebCode">Ik heb een koppelcode</button></p></div>`;
     $("pfNaam").onclick = () => { showRank(); setTimeout(() => $("pName") && $("pName").focus(), 60); };
+    $("pfHebCode").onclick = () => Apparaat.koppel({ invoer: true });
   };
   const saldoHtml = w => w ? `${EIKEL} ${w.saldo}<small>eikels</small>` : `–<small>eikels</small>`;
   async function render(){
@@ -329,6 +331,7 @@ const Profiel = (() => {
     const geenDb = beschikbaar === false;
     body.innerHTML = `
       <div class="pfkaart">${Levels.mijnRing(avatarSVG(me, "avatar groot"), "groot")}<div><h3>${esc(me.name)}</h3><p class="pfsub">${me.subtitle ? esc(me.subtitle) : "Nog geen ondertitel"}</p></div></div>
+      ${typeof Apparaat !== "undefined" ? Apparaat.sectie() : ""}
       ${typeof Veld !== "undefined" && Veld.aan() ? `<p class="rankempty"><b>Veldmodus.</b> Zonder internet laden je eikels, de shop en je prestaties niet. Je speelt gewoon verder; alles wordt bijgewerkt zodra je weer online bent.</p>` : ""}
       ${geenDb ? `<p class="rankempty">Eikels, de shop en prestaties komen beschikbaar zodra de database van Vestigia is bijgewerkt.</p>` : `
       ${Levels.kaartHtml()}
@@ -349,10 +352,11 @@ const Profiel = (() => {
         <span class="msg" id="pfNaamMsg"></span>
       </section>
       <section class="pfsec" aria-labelledby="pfCodeH"><h3 id="pfCodeH">Spelerscode</h3>
-        <p class="fine">Met je spelerscode speel je verder op een ander apparaat, of haal je alles terug als je browsergegevens gewist zijn. Deel hem met niemand: met deze code speel je als jou.</p>
+        <p class="fine">Met je spelerscode haal je alles terug als je browsergegevens gewist zijn. Een ander apparaat koppelen gaat makkelijker met <b>Koppel je apparaten</b>, bovenaan. Bewaar je spelerscode op een veilige plek en deel hem met niemand: met deze code speel je als jou.</p>
         <div class="actions"><button class="btn line" id="pfCode">Kopieer spelerscode</button><span class="msg" id="pfCodeMsg"></span></div>
       </section>`;
     $("pfCode").onclick = () => { kopieerCode($("pfCodeMsg")); codeTip(); };
+    if (typeof Apparaat !== "undefined") Apparaat.bind();
     if ($("pfNaamBtn")) $("pfNaamBtn").onclick = wijzigNaam;
     if (naamRest === null && !naamGeprobeerd) haalNaamRest();
     if (!geenDb){

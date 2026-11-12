@@ -1675,3 +1675,72 @@ html.donker body.induel .tabbar{background:#20151f}
 #gameView .uitslagbalk.mis .btn:hover, html.donker #gameView .uitslagbalk.mis .btn:hover{background:#73311f}
 html.donker #gameView .uitslagbalk .btn{background:#3f8455; border-color:#3f8455}
 html.donker #gameView .uitslagbalk.mis .btn{background:#a64a33; border-color:#a64a33}
+
+/* ───────── update 21: ‘Gebruik de app!’ en ‘Koppel je apparaten’ (js/apparaat.js) ───────── */
+.apsec{margin-top:16px}
+.apknoppen{display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:10px}
+.apknop{all:unset; box-sizing:border-box; cursor:pointer; display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:14px;
+  background:linear-gradient(160deg, #f4faf1 0%, #e6f2e3 100%); border:1px solid #cfe0d0; box-shadow:0 2px 8px rgba(28,51,38,.07); transition:transform .15s, box-shadow .15s}
+.apknop:hover{box-shadow:0 4px 14px rgba(28,51,38,.14)}
+.apknop:active{transform:scale(.98)}
+.apknop:focus-visible{outline:2px solid var(--green); outline-offset:3px}
+.apknop .apic{flex:0 0 46px; height:46px; border-radius:50%; display:grid; place-items:center; color:#fff;
+  background:linear-gradient(160deg, var(--green) 0%, var(--green-d) 100%); box-shadow:0 0 0 4px rgba(75,122,94,.14)}
+.apknop b{display:block; font:600 1rem var(--display); color:var(--ink)}
+.apknop small{display:block; font-size:.82rem; color:var(--ink-2); line-height:1.3}
+.apsheet .top h2{margin:2px 0 0}
+.apsheet .actions{justify-content:center}
+.apsheet .btn.groot{min-width:220px; font-size:1.05rem}
+.apstappen{margin:0; padding:0; list-style:none; counter-reset:ap; display:grid; gap:10px}
+.apstappen li{counter-increment:ap; position:relative; padding-left:40px; min-height:28px}
+.apstappen li::before{content:counter(ap); position:absolute; left:0; top:-1px; width:28px; height:28px; border-radius:50%; display:grid; place-items:center;
+  background:var(--mint); color:var(--green-d); font:700 .9rem var(--display)}
+.apstappen.ios li{display:flex; gap:10px; align-items:flex-start}
+.apstappen .apstapic{flex:0 0 30px; height:30px; border-radius:8px; display:grid; place-items:center; background:#eef3f8; color:#2a6fd6; font-weight:700}
+.aplet{padding:10px 12px; border-radius:10px; background:#fbf3e2; border-left:4px solid #c99a3b; font-size:.92rem}
+.apkeus{display:grid; gap:10px}
+.apkeusknop{all:unset; box-sizing:border-box; cursor:pointer; display:block; padding:14px 16px; border-radius:12px; border:1.5px solid var(--rule); background:var(--leaf)}
+.apkeusknop:hover{border-color:var(--green)}
+.apkeusknop:focus-visible{outline:2px solid var(--green); outline-offset:2px}
+.apkeusknop b{display:block; font:600 1rem var(--display); color:var(--green-d)}
+.apkeusknop small{display:block; color:var(--ink-2); font-size:.86rem; margin-top:2px}
+.apcode{display:flex; gap:18px; align-items:center; flex-wrap:wrap; justify-content:center; padding:6px 0}
+.apqr{width:168px; height:168px; border-radius:10px; box-shadow:0 0 0 1px var(--rule); transition:opacity .3s, filter .3s}
+.apletters{display:block; font:700 2.2rem/1.1 var(--display); letter-spacing:.14em; color:var(--green-d); margin:4px 0}
+.apcode.verlopen .apqr{opacity:.25; filter:blur(2px)}
+.apcode.verlopen .apletters{opacity:.35; text-decoration:line-through}
+.apin{text-transform:uppercase; letter-spacing:.18em; font-size:1.3rem!important; font-weight:600; text-align:center}
+.aplang summary{cursor:pointer; color:var(--ink-2); font-size:.9rem}
+.aplang .row2{margin-top:8px}
+/* iPhone: blad in het midden, met een pijltje naar de Deel-knop van Safari onderin */
+#appPop.ios .sheet{margin-bottom:84px}
+.apijl{position:fixed; left:50%; bottom:calc(6px + env(safe-area-inset-bottom)); transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:2px; color:#fff;
+  pointer-events:none; animation:apwip 1.1s ease-in-out infinite; text-shadow:0 1px 3px rgba(0,0,0,.4)}
+.apijl span{font:700 .82rem var(--body)}
+.apijl svg{filter:drop-shadow(0 1px 3px rgba(0,0,0,.35))}
+@keyframes apwip{0%,100%{transform:translate(-50%, 0)} 50%{transform:translate(-50%, 8px)}}
+@media (prefers-reduced-motion:reduce){ .apijl{animation:none} }
+html.donker .apknop{background:linear-gradient(160deg, #1d2d23 0%, #17251c 100%); border-color:#2f4537; box-shadow:none}
+html.donker .apknop .apic{color:#0f1712; box-shadow:0 0 0 4px rgba(127,184,148,.16)}
+html.donker .apstappen .apstapic{background:#1c2733; color:#7fb0f0}
+html.donker .aplet{background:#2a2216; border-left-color:#b08a3e}
+html.donker .apqr{box-shadow:0 0 0 1px #3a4c41}
+/* update 21: ‘Nieuwe casus’ naast ‘Bekijk uitslag’ bij oefenen (de rand van .btn.line is een inset-schaduw) */
+.uitslagbalk .ub-knoppen{display:flex; gap:8px; margin-left:auto}
+@media (max-width:520px){
+  .uitslagbalk .ub-knoppen{flex:1 1 100%}
+  .uitslagbalk .ub-knoppen .btn{flex:1 1 0; min-width:0; padding-left:8px; padding-right:8px; font-size:.82rem; letter-spacing:.05em}
+}
+#gameView .uitslagbalk .btn.ubnieuw, html.donker #gameView .uitslagbalk .btn.ubnieuw{background:transparent; color:#2f6a44; border-color:transparent; box-shadow:inset 0 0 0 1.5px #2f6a44}
+#gameView .uitslagbalk .btn.ubnieuw:hover, html.donker #gameView .uitslagbalk .btn.ubnieuw:hover{background:rgba(47,106,68,.1)}
+#gameView .uitslagbalk.mis .btn.ubnieuw, html.donker #gameView .uitslagbalk.mis .btn.ubnieuw{background:transparent; color:#8f3f2b; box-shadow:inset 0 0 0 1.5px #8f3f2b}
+#gameView .uitslagbalk.mis .btn.ubnieuw:hover, html.donker #gameView .uitslagbalk.mis .btn.ubnieuw:hover{background:rgba(143,63,43,.1)}
+html.donker #gameView .uitslagbalk .btn.ubnieuw{color:#9fd3b0; box-shadow:inset 0 0 0 1.5px #5fa577}
+html.donker #gameView .uitslagbalk.mis .btn.ubnieuw{color:#f0b3a2; box-shadow:inset 0 0 0 1.5px #c46a52}
+/* update 21: dagcasus en oefenen net zo uitnodigend als het spelersduel: kleurverloop, stevig icoon, lichte gloed */
+.bel.dag .bol{--bold:#2f5a40; background:linear-gradient(160deg, #5b9a72 0%, #3b6149 100%); color:#fff; box-shadow:0 6px 18px rgba(28,51,38,.24), 0 0 0 5px rgba(75,122,94,.16)}
+.bel.oefen .bol{--bold:#6b4519; background:linear-gradient(160deg, #b07d3b 0%, #7a5020 100%); color:#fff; box-shadow:0 6px 18px rgba(74,48,16,.24), 0 0 0 5px rgba(160,110,48,.16)}
+.bel.spelersduel:not(.later) .bol{box-shadow:0 6px 18px rgba(60,30,58,.26), 0 0 0 5px rgba(122,79,117,.16)}
+html.donker .bel.dag .bol{--bold:#2c5139; background:linear-gradient(160deg, #5b9a72 0%, #35604a 100%); border-color:#7fb894; box-shadow:0 6px 18px rgba(0,0,0,.45), 0 0 0 5px rgba(127,184,148,.14)}
+html.donker .bel.oefen .bol{--bold:#5e3c15; background:linear-gradient(160deg, #b07d3b 0%, #7a5020 100%); border-color:#c19358; box-shadow:0 6px 18px rgba(0,0,0,.45), 0 0 0 5px rgba(193,147,88,.14)}
+html.donker .bel.spelersduel:not(.later) .bol{box-shadow:0 6px 18px rgba(0,0,0,.45), 0 0 0 5px rgba(211,166,204,.14)}
