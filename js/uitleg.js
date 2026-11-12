@@ -1,4 +1,4 @@
-/* Vestigia – uitleg bij de eerste keer: vijf korte kaartjes die naar het echte onderdeel wijzen.
+/* Vestigia – uitleg bij de eerste keer: vijf korte kaartjes die naar het echte onderdeel wijzen (een rondleiding).
    De rest van het scherm wordt donkerder. Steeds ‘Volgende’ en ‘Overslaan’; Esc slaat ook over.
    Start vanzelf alleen bij nieuwe spelers (nog niets gespeeld en geen spelersnaam). Wie al speelde, krijgt eenmalig
    een melding dat de uitleg in het menu staat. Daar staat hij ook voor iedereen: ‘Uitleg opnieuw bekijken’. */
@@ -6,17 +6,24 @@
 
 const Uitleg = (() => {
   const KEY = "vestigia:tutorial";
+  /* Vijf stappen, een korte maar volledige rondleiding voor iemand die Vestigia nog nooit zag (12 november 2026).
+     Werkregel: bij elk nieuw onderdeel hier kijken of het erin hoort en of het geheel nog te volgen is. Langer dan
+     vijf stappen wordt het niet: iets nieuws krijgt een bijzin in een bestaande stap, of uitleg op het moment zelf
+     (js/nieuw.js). Wat nog niet aan staat (levels, spelersduel), noemt de uitleg ook niet.
+     tekst mag een functie zijn; doel mag een lijst elementen geven (de lichtvlek omvat ze dan allemaal). */
+  const levelsAan = () => typeof Levels !== "undefined" && Levels.zichtbaar && Levels.zichtbaar();
+  const duelAan = () => typeof Duel !== "undefined" && Duel.zichtbaar && Duel.zichtbaar();
   const STAPPEN = [
     { doel: () => document.querySelector("#clues li"), kop: "Welk dier is dit?",
-      tekst: "Elke dag is er een nieuwe casus: een waarneming van een beschermde diersoort in Nederland. Jij raadt welke soort het is. Je begint met één waarneming: de locatie en het seizoen." },
+      tekst: "Elke dag is er één dagcasus, voor iedereen dezelfde: een waarneming van een beschermde diersoort in Nederland. Je begint met één waarneming: de locatie en het seizoen. Een gemiste dag kun je tot 3 dagen later nog inhalen." },
     { doel: () => $("gInput").closest(".det-row"), kop: "Determineer de soort",
-      tekst: "Denk je het te weten? Typ de Nederlandse of wetenschappelijke naam en kies de soort uit de lijst. Je hebt vijf pogingen. Na elke foute gok krijg je een extra waarneming en een tip." },
+      tekst: "Typ de Nederlandse of wetenschappelijke naam, of een groep zoals ‘uil’ of ‘vleermuis’, en kies de soort uit de lijst. Je hebt vijf pogingen. Na elke foute gok krijg je een extra waarneming, en de tabel laat zien wat klopt." },
     { doel: () => document.querySelector(".modebar"), kop: "Klassiek of expert",
-      tekst: "Klassiek: vijf pogingen, en na elke foute determinatie een waarneming erbij. Expert: je opent zelf waarnemingen en hebt één poging. Voor de ranglijst telt de modus die je die dag als eerste speelt." },
+      tekst: "Klassiek: vijf pogingen, en na elke foute gok een waarneming erbij. Expert: je opent zelf waarnemingen en hebt één poging. Voor de ranglijst telt alleen de modus die je die dag als eerste speelt." },
     { doel: () => $("tabbar"), kop: "Onderin",
-      tekst: `Via Spelen kies je de dagcasus of een oefencasus. Daarnaast staan de ranglijst en je ${NAAM.vestiarium}, waarin elke soort die je vindt een plaat krijgt.` },
-    { doel: () => $("menuBtn"), kop: "Jouw avatar en de shop",
-      tekst: "Onder je avatar rechtsboven zitten je profiel en het menu. Met een spelersnaam kies je daar een avatar. Door te spelen verdien je eikels, waarmee je in de shop nieuwe avatars, lijsten, kleuren en ondertitels koopt." }
+      tekst: () => `Ranglijst: van vandaag, deze week en altijd, ook in een eigen league met andere spelers. Spelen: de dagcasus, oefenen per diergroep${duelAan() ? " en het spelersduel" : ""}. ${NAAM.vestiarium}: elke soort die je vindt, krijgt daar een plaat.` },
+    { doel: () => [$("eikelBtn"), $("menuBtn")], kop: "Rechtsboven",
+      tekst: () => `Met spelen verdien je eikels${levelsAan() ? " en ervaringspunten; de ring om je avatar laat je level zien" : ""}. Onder je avatar vind je je profiel, de shop, je statistieken en de spelregels, waar je deze uitleg terugvindt. Af en toe duikt er een verrassing op, zoals een dwaalgast. Dan krijg je ter plekke uitleg.` }
   ];
   const NAV = "vestigia:nav-b";
   const gezien = () => { try { return !!localStorage.getItem(KEY); } catch(e){ return true; } };
@@ -28,9 +35,19 @@ const Uitleg = (() => {
   }
 
   let root = null, stap = 0, klaar = null, doelEl = null;
+  /* zichtbaar, ook als het vast in beeld staat (position: fixed, zoals de tabbalk) */
+  const zichtbaar = e => !!e && !e.hidden && e.getClientRects().length > 0;
+  /* één element of een lijst: de rechthoek om alles wat zichtbaar is */
+  function rechthoek(d){
+    const els = (Array.isArray(d) ? d : [d]).filter(zichtbaar);
+    if (!els.length) return { left: innerWidth / 2, right: innerWidth / 2, top: innerHeight / 3, bottom: innerHeight / 3, width: 0, height: 0 };
+    const rs = els.map(e => e.getBoundingClientRect());
+    const left = Math.min(...rs.map(x => x.left)), top = Math.min(...rs.map(x => x.top)), right = Math.max(...rs.map(x => x.right)), bottom = Math.max(...rs.map(x => x.bottom));
+    return { left, top, right, bottom, width: right - left, height: bottom - top };
+  }
   function plaats(){
     if (!root || !doelEl) return;
-    const r = doelEl.getBoundingClientRect(), pad = 8, spot = root.querySelector(".ui-spot"), kaart = root.querySelector(".ui-kaart");
+    const r = rechthoek(doelEl), pad = 8, spot = root.querySelector(".ui-spot"), kaart = root.querySelector(".ui-kaart");
     Object.assign(spot.style, { left: r.left - pad + "px", top: r.top - pad + "px", width: r.width + pad * 2 + "px", height: r.height + pad * 2 + "px" });
     const kw = kaart.offsetWidth, kh = kaart.offsetHeight, gap = 14;
     const onder = r.bottom + pad + gap + kh <= innerHeight - 8;
@@ -43,10 +60,11 @@ const Uitleg = (() => {
     stap = i;
     const s = STAPPEN[i];
     doelEl = s.doel();
-    if (doelEl) doelEl.scrollIntoView({ block: "center", behavior: "auto" });
+    const eerste = (Array.isArray(doelEl) ? doelEl : [doelEl]).find(zichtbaar);
+    if (eerste) eerste.scrollIntoView({ block: "center", behavior: "auto" });
     root.querySelector(".ui-teller").textContent = `Stap ${i + 1} van ${STAPPEN.length}`;
     root.querySelector("#uitlegH").textContent = s.kop;
-    root.querySelector(".ui-tekst").textContent = s.tekst;
+    root.querySelector(".ui-tekst").textContent = typeof s.tekst === "function" ? s.tekst() : s.tekst;
     const volg = root.querySelector(".ui-volgende");
     volg.textContent = i === STAPPEN.length - 1 ? "Aan de slag" : "Volgende";
     root.querySelector(".ui-overslaan").hidden = i === STAPPEN.length - 1;

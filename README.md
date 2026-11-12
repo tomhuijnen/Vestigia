@@ -23,7 +23,7 @@ Determinatiespel over beschermde fauna van Nederland: herken de soort aan habita
 | `js/kop.js` | kop met tegels, schakelaar klassiek/expert, menu onder je avatar, schermwissels en de smalle balk bij scrollen |
 | `js/spelen.js` | tabbalk onderin (Ranglijst · Spelen · Vestiarium), speelkring met bolletjes boven Spelen, oefenkader per diergroep, uitleg over tweelingsoorten |
 | `js/opening.js` | openingsanimatie: drie wandelsporen en ‘Vestigia’ groot in beeld (één keer per sessie, nooit het spoor van de dagcasus) |
-| `js/uitleg.js` | uitleg bij de eerste keer, en via het menu |
+| `js/uitleg.js` | uitleg bij de eerste keer (vijf stappen, een rondleiding voor nieuwe spelers), en via het menu |
 | `js/online.js` | ranglijst en synchronisatie met Supabase |
 | `js/league.js` | uitnodigen en leagues, en de links `?van=` en `?league=` |
 | `data/avatars.js` | de 29 avatartekeningen, waarvan 10 medaille-avatars in kleur (prijzen staan in Supabase) |
@@ -54,7 +54,8 @@ Casussen voor het spelersduel: de server kiest ze uit de tabel `duel_casussen`. 
 1. Pas de data of code aan.
 2. `node tools/controle.mjs` – controleert de soortdata, casussen, maanden, tweelingen, zeldzaamheid, verraderwoorden, het dagschema en of er niets verschoven is ten opzichte van wat live staat.
 3. Nieuwe soorten of casussen? `node tools/dagschema.mjs JJJJ-MM-DD` vult het dagschema aan. Bestaande dagen veranderen nooit.
-4. `node tools/versie.mjs` – nieuw versienummer, anders krijgen geïnstalleerde apps de update niet.
-5. `node tools/controle.mjs --vastleggen` – legt id's, platennummers, casussen en het dagschema vast voor de volgende controle.
+4. Iets nieuws in de app? Kijk de uitleg bij de eerste keer na (`js/uitleg.js`): hoort het erin, en is het voor een volledig nieuwe speler nog te volgen, logisch en duidelijk? Hooguit vijf stappen; iets nieuws krijgt een bijzin in een bestaande stap of uitleg op het moment zelf. Een melding ‘nieuw / staat nu hier’ (`Nieuw.blokjes` in `js/nieuw.js`) krijgt een datum in `VANAF`; is het een echte wijziging, dan ook in `WIJZIGING`. Zo zien alleen spelers die al een dagcasus speelden vóór die datum hem.
+5. `node tools/versie.mjs` – nieuw versienummer, anders krijgen geïnstalleerde apps de update niet.
+6. `node tools/controle.mjs --vastleggen` – legt id's, platennummers, casussen en het dagschema vast voor de volgende controle.
 
 Spelregels voor de data: een `id` en een platennummer (`no`) veranderen nooit; nieuwe platen en casussen komen achteraan; een oude naam gaat in `ALIASES`. Zo verliest niemand ooit voortgang.
