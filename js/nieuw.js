@@ -22,8 +22,10 @@ const Nieuw = (() => {
     xp: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9Z"/></svg></span>`,
     rang: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17V7h12l4 5-4 5H4Z"/><path d="M8 12h6"/></svg></span>`,
     duel: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 22 22" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="8" r="2.6"/><circle cx="15" cy="8" r="2.6"/><path d="M2.5 17c.5-2.6 2.3-4 4.5-4s4 1.4 4.5 4M10.5 17c.5-2.6 2.3-4 4.5-4s4 1.4 4.5 4"/></svg></span>`,
-    rondes: `<span class="nw-ic"><b>3</b></span>`,
-    tijd: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.5 2M10 2.8h4M12 2.8V6"/></svg></span>`,
+    /* twee gekruiste zwaarden: kling, pareerstang, greep en knop */
+    zwaarden: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 32 32" width="40" height="40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4.5 4.5l1.3 4.1 12 12 2.8-2.8-12-12Z" fill="currentColor" stroke-width="1"/><path d="M15.6 22.6l7-7" stroke-width="2.4"/><path d="M21.2 21.2l3.6 3.6" stroke-width="2.6"/><circle cx="26" cy="26" r="1.9" fill="currentColor" stroke="none"/>
+      <path d="M27.5 4.5l-1.3 4.1-12 12-2.8-2.8 12-12Z" fill="currentColor" stroke-width="1"/><path d="M16.4 22.6l-7-7" stroke-width="2.4"/><path d="M10.8 21.2l-3.6 3.6" stroke-width="2.6"/><circle cx="6" cy="26" r="1.9" fill="currentColor" stroke="none"/></svg></span>`,
     kalender: `<span class="nw-ic kerst"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4M9 14.5l2 2 4-4"/></svg></span>`
   };
 
@@ -40,11 +42,11 @@ const Nieuw = (() => {
         { ic: "spoor", kop: "Wat zit erin?", tekst: "Eikels, sporen in de sneeuw om te raden, winterweetjes over beschermde soorten en een paar dingen die je nergens anders krijgt." },
         { ic: "kalender", kop: "Een gemist vakje is weg", tekst: "Je kunt alleen het vakje van vandaag openen. Open je ze alle 24, dan word je Adventkampioen." }
       ] },
-    { id: "spelersduel", titel: "Spelersduel", verborgen: () => !(typeof Duel !== "undefined" && Duel.zichtbaar()),   // update 16, vanaf 14 december
+    { id: "spelersduel", titel: "Spelersduel", klasse: "duelnieuw", verborgen: () => !(typeof Duel !== "undefined" && Duel.zichtbaar()),   // update 16, vanaf 14 december
       stappen: [
-        { ic: "duel", kop: "Nieuw: het spelersduel", tekst: "Daag een speler uit, op naam of met een link. Jullie spelen dezelfde drie casussen, in de modus die de uitdager kiest." },
-        { ic: "rondes", kop: "Niet tegelijk", tekst: "Jij speelt je drie casussen meteen; daarna heeft de ander 48 uur. Wat de ander deed, zie je pas als jullie allebei klaar zijn. Dan gaan de casussen één voor één open." },
-        { ic: "xp", kop: "Wie wint?", tekst: "Per casus krijg je punten zoals bij de dagcasus. Meeste punten wint; gelijke punten is gelijkspel. Je krijgt 3 eikels plus 1 per punt, en 10 extra als je wint (5 bij gelijkspel). Er zijn ook prestaties en ondertitels voor duels. Een duel telt niet voor de ranglijst." }
+        { ic: "duel", kop: "Nieuw: het spelersduel!", tekst: "Daag een andere speler uit, op naam of met een link. Jullie spelen dezelfde drie casussen, in de modus die de uitdager kiest." },
+        { ic: "zwaarden", kop: "Wie verslaat de ander?", tekst: "Jij speelt je drie casussen meteen; daarna heeft de ander 48 uur. Wat de ander deed, zie je pas als jullie allebei klaar zijn. Dan gaan de casussen één voor één open." },
+        { ic: "xp", kop: "Wie wint?", tekst: "Per casus krijg je punten zoals bij de dagcasus. Meeste punten wint; gelijke punten is gelijkspel. Ook hier zijn eikels te verdienen! En er zijn eigen prestaties en ondertitels. Een duel telt niet voor de ranglijst." }
       ] },
     { id: "levels", titel: "Levels", verborgen: () => !(typeof Levels !== "undefined" && Levels.zichtbaar()),   // pas vanaf de startdatum
       stappen: [
@@ -59,7 +61,7 @@ const Nieuw = (() => {
     return new Promise(klaar => {
       const pop = $("wachtPop"), body = $("wachtBody");
       let i = 0;
-      const dicht = () => { pop.hidden = true; pop.classList.remove("nieuw"); document.removeEventListener("keydown", esc_, true); klaar(); };
+      const dicht = () => { pop.hidden = true; pop.classList.remove("nieuw"); if (o.klasse) pop.classList.remove(o.klasse); document.removeEventListener("keydown", esc_, true); klaar(); };
       const esc_ = e => { if (e.key === "Escape"){ e.preventDefault(); e.stopPropagation(); dicht(); } };
       function stap(){
         const s = o.stappen[i], laatste = i === o.stappen.length - 1;
@@ -72,6 +74,7 @@ const Nieuw = (() => {
         $("nwVolg").focus();
       }
       pop.classList.add("nieuw");
+      if (o.klasse) pop.classList.add(o.klasse);       // eigen opmaak, bijvoorbeeld het spelersduel (update 16)
       pop.hidden = false;
       document.addEventListener("keydown", esc_, true);
       stap();

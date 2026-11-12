@@ -187,7 +187,9 @@ const Duel = (() => {
     const d = huidig || {}, tegen = d.tegen ? esc(d.tegen) : "je tegenstander";
     const stip = Array.from({ length: 3 }, (_, i) => `<i class="${i <= r ? "klaar" : ""}"></i>`).join("");
     const kop = `<div class="dvkop"><span class="caps">Spelersduel · ${esc(modus(d))}</span><span class="dustip" aria-label="${r + 1} van 3 casussen gespeeld">${stip}</span></div>`;
-    if (r < 2) return `${kop}<p>Casus ${r + 1} van 3 gespeeld. Wat ${tegen} deed, zie je pas als jullie allebei klaar zijn.</p>
+    if (r === 0) return `${kop}<p>Casus 1 van 3 gespeeld. Wat ${tegen} deed, zie je pas als jullie allebei klaar zijn.</p>
+      <div class="actions"><button class="btn" id="duVolgende">Volgende casus</button></div>`;
+    if (r === 1) return `${kop}<p>Casus 2 gespeeld. Speel er nog één om ${d.tegen ? `de score van ${tegen}` : "de score van je tegenstander"} te zien!</p>
       <div class="actions"><button class="btn" id="duVolgende">Volgende casus</button></div>`;
     if (d.ik === "uitdager"){
       return `${kop}<p>Je drie casussen zijn gespeeld. ${d.tegen ? `Nu heeft ${tegen} 48 uur om dezelfde casussen te spelen.` : "Deel nu de link: wie hem als eerste opent, speelt tegen je."}</p>
@@ -415,7 +417,7 @@ const Duel = (() => {
     const pu = som(mijn), ph = som(hun);
     const naam = esc(d.tegen);
     const oordeel = d.uitslag === "gewonnen" ? "Je wint!" : d.uitslag === "verloren" ? `${naam} wint` : "Gelijkspel";
-    const waarom = pu !== ph ? `${pu} tegen ${ph} punten.` : pu === 0 ? "Jullie vonden geen van de drie casussen." : `Jullie haalden allebei ${pu} punten.`;
+    const waarom = berichtje(d.uitslag, pu, d.tegen);
     const eik = d.eikels !== undefined && d.eikels !== null ? +d.eikels : 3 + pu + (d.uitslag === "gewonnen" ? 10 : d.uitslag === "gelijk" ? 5 : 0);
     const rondes = d.rondes.map((ro, i) => {
       const t = BY_ID.get(ro.s), a = mijn.find(x => x.r === i), b = hun.find(x => x.r === i);
@@ -434,7 +436,7 @@ const Duel = (() => {
       <div class="duoordeel ${kls}"><h2 id="duelPopH">${oordeel}</h2><p>${esc(waarom)}</p>
         <p class="eikelline" id="duEikels"${!d.gezien ? "" : " hidden"}>${EIKEL} +${eik} ${eik === 1 ? "eikel" : "eikels"} · +${d.uitslag === "gewonnen" ? 20 : 10} XP</p>
         <p class="fine">Onderling: jij ${st.w}, ${naam} ${st.v}${st.g ? `, ${st.g} gelijk` : ""}.</p></div>
-      <div class="actions">${actief() ? `<button class="btn" id="duRevanche">Revanche</button>` : ""}<button class="btn line" id="duPopSluit">Sluiten</button></div>`;
+      <div class="actions dumidden">${actief() ? `<button class="btn" id="duRevanche">Revanche</button>` : ""}<button class="btn line" id="duPopSluit">Sluiten</button></div>`;
     pop.classList.toggle("stil", reduce());
     pop.classList.remove("af");
     pop.hidden = false;
@@ -456,6 +458,19 @@ const Duel = (() => {
       if (!pop.hidden) pop.classList.add("af");
     }
     if (nieuw && !demo){ await wacht(reduce() ? 0 : 600); Profiel.naSpel().catch(() => {}); }
+  }
+  /* een wisselend zinnetje onder ‘Je wint!’, ‘X wint’ of ‘Gelijkspel’ (de punten staan er al boven) */
+  const BERICHT = {
+    gewonnen: ["Gefeliciteerd, dit duel was jij de betere!", "Netjes gedaan! Nog een potje?", "Sterk gedetermineerd. {x} wil vast revanche.",
+               "Gewonnen! Je veldkennis liet zich zien.", "Mooi duel. Deze mag je in je veldboekje schrijven."],
+    verloren: ["Deze keer was {x} je de baas. Neem revanche!", "Jammer! Volgende keer beter. Nog een potje?", "Net niet. Wie lacht er na de revanche?",
+               "{x} wint dit duel, maar je hebt wel drie soorten geoefend.", "Verloren, maar de stand is nog niet definitief. Revanche?"],
+    gelijk:   ["Gelijk opgegaan! Wie beslist het in de revanche?", "Precies even goed als {x}. Spannend!", "Gelijkspel. Een revanche moet de doorslag geven."],
+    nul:      ["Geen van jullie vond een soort. Lastige casussen! Nog een poging?"]
+  };
+  function berichtje(uitslag, punten, tegen){
+    const lijst = BERICHT[uitslag === "gelijk" && !punten ? "nul" : uitslag] || BERICHT.gelijk;
+    return lijst[Math.floor(Math.random() * lijst.length)].replace("{x}", tegen || "je tegenstander");
   }
   function sluitPop(){ const pop = $("duelPop"); if (pop && !pop.hidden){ pop.hidden = true; pop.classList.remove("af"); } }
   $("duelPop").addEventListener("click", e => { if (e.target === $("duelPop")) sluitPop(); });

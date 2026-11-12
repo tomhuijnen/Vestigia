@@ -32,7 +32,8 @@ function kopLabel(){
 /* Oefenen krijgt een bruine kop, zodat je altijd ziet dat het niet om de dagcasus gaat. */
 function kleurKop(){
   document.body.classList.toggle("oefenen", VIEW === "game" && !!S && S.mode === "free");
-  document.body.classList.toggle("induel", VIEW === "game" && !!S && S.mode === "duel");     // update 16: geen modusknoppen in een duel
+  /* update 16: blauw in een duel en op het scherm Spelersduel (zoals groen voor de dagcasus en bruin voor oefenen) */
+  document.body.classList.toggle("induel", (VIEW === "game" && !!S && S.mode === "duel") || VIEW === "duel");
 }
 /* ---------- tabbalk onderin: Ranglijst · Spelen · Vestiarium ---------- */
 function renderTabbar(){
