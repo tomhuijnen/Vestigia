@@ -1495,7 +1495,7 @@ html.donker .lvbuit .beleik{color:#e6b866}
    --du:#2f5f7a --du-d:#1f4256 --du-l:#5ea3c9 --du-zacht:#8fb4c9 --du-mint:#d7e9f3 --du-wit:#e8f2f8 --du-leaf:#f1f6f9 --du-rule:#d3e1ea ── */
 :root{--du:#7a4f75; --du-d:#56344f; --du-l:#b07aa8; --du-zacht:#c6a6c1; --du-mint:#f0e1ee; --du-wit:#f6edf5; --du-leaf:#faf5f9; --du-rule:#e8d7e5;
   --du-tegel:rgba(50,20,45,.5); --du-tegel2:rgba(50,20,45,.7); --du-tb:rgba(240,225,238,.3); --du-gloed:rgba(176,122,168,.22); --du-schaduw:rgba(86,52,79,.6);
-  --dn:#c69cc0; --dn-l:#e0c3db; --dn-vlak:#2e1f2c; --dn-bg:#211720; --dn-bar:#2a1c28; --dn-kop:#352232; --dn-kop2:#1d141c; --dn-rand:#5a4257; --dn-tb:#4a3547; --dn-rule:#3d2c3a; --dn-nu:#5a3f56; --dn-tegel:rgba(42,28,40,.85)}
+  --dn:#d3a6cc; --dn-l:#ecd0e6; --dn-vlak:#3a2637; --dn-bg:#241a23; --dn-bar:#4a2b46; --dn-kop:#643a5e; --dn-kop2:#3f2340; --dn-rand:#8a6584; --dn-tb:#6b4a66; --dn-rule:#4a3547; --dn-nu:#6b4a66; --dn-tegel:rgba(36,18,34,.55)}
 /* ── update 16: spelersduel ── */
 .bel.spelersduel:not(.later) .bol{background:linear-gradient(160deg,var(--du) 0%,var(--du-d) 100%); color:#fff}
 .belstip, .duelstip{position:absolute; min-width:20px; height:20px; padding:0 5px; border-radius:10px; background:#c8553a; color:#fff; font:700 .72rem/20px var(--body); text-align:center; border:2px solid #fff; box-sizing:content-box}
@@ -1653,3 +1653,12 @@ html.donker #duelPop .btn:not(.line){color:var(--dn-bg)}
 html.donker #duelPop .sheet{background:var(--dn-bg)}
 html.donker #duelPop .duronde{background:var(--dn-vlak)}
 html.donker #duelPop .drspeler{background:var(--dn-bg)}
+
+/* donker: het duel moet duidelijk afsteken tegen de zwarte achtergrond (feedback Tom 12 november) */
+html.donker .duelbalk{background:var(--dn-vlak); border-color:var(--dn-rand); border-left-color:var(--dn)}
+html.donker .duelbalk b{color:#fff}
+html.donker .duelvervolg{background:var(--dn-vlak)}
+html.donker .induel .duelkaart{background:#2e1f2c; border-color:var(--dn-rand)}
+html.donker .induel .tile{border-color:var(--dn-rand)}
+/* donker: ook de achtergrond van het duel krijgt een paarse zweem, zodat het echt een eigen plek is */
+html.donker body.induel{--paper:#1a1219; background:#1a1219}

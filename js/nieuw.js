@@ -22,10 +22,11 @@ const Nieuw = (() => {
     xp: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9Z"/></svg></span>`,
     rang: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17V7h12l4 5-4 5H4Z"/><path d="M8 12h6"/></svg></span>`,
     duel: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 22 22" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="8" r="2.6"/><circle cx="15" cy="8" r="2.6"/><path d="M2.5 17c.5-2.6 2.3-4 4.5-4s4 1.4 4.5 4M10.5 17c.5-2.6 2.3-4 4.5-4s4 1.4 4.5 4"/></svg></span>`,
-    /* twee gekruiste zwaarden: kling, pareerstang, greep en knop */
-    zwaarden: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 32 32" width="40" height="40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M4.5 4.5l1.3 4.1 12 12 2.8-2.8-12-12Z" fill="currentColor" stroke-width="1"/><path d="M15.6 22.6l7-7" stroke-width="2.4"/><path d="M21.2 21.2l3.6 3.6" stroke-width="2.6"/><circle cx="26" cy="26" r="1.9" fill="currentColor" stroke="none"/>
-      <path d="M27.5 4.5l-1.3 4.1-12 12-2.8-2.8 12-12Z" fill="currentColor" stroke-width="1"/><path d="M16.4 22.6l-7-7" stroke-width="2.4"/><path d="M10.8 21.2l-3.6 3.6" stroke-width="2.6"/><circle cx="6" cy="26" r="1.9" fill="currentColor" stroke="none"/></svg></span>`,
+    /* twee gekruiste zwaarden, elk met kling, pareerstang, greep en knop; het voorste zwaard heeft een rand in de achtergrondkleur,
+       zodat je ziet dat het twee aparte zwaarden zijn */
+    zwaarden: `<span class="nw-ic zwaard"><svg aria-hidden="true" viewBox="-16 -16 32 32" width="56" height="56" fill="currentColor">
+      <g transform="rotate(-45)"><path d="M0-14.5L1.9-11V4.2h-3.8V-11Z"/><path d="M0-11V2.8" stroke="var(--du-d,#56344f)" stroke-width=".7" opacity=".55"/><rect x="-5.6" y="4" width="11.2" height="2.4" rx="1.2"/><rect x="-1.2" y="6.4" width="2.4" height="5.2" rx=".8"/><circle cy="13.2" r="1.9"/></g>
+      <g transform="rotate(45)" stroke="var(--du-d,#56344f)" stroke-width="1.4" paint-order="stroke" stroke-linejoin="round"><path d="M0-14.5L1.9-11V4.2h-3.8V-11Z"/><path d="M0-11V2.8" stroke="var(--du-d,#56344f)" stroke-width=".7" opacity=".55"/><rect x="-5.6" y="4" width="11.2" height="2.4" rx="1.2"/><rect x="-1.2" y="6.4" width="2.4" height="5.2" rx=".8"/><circle cy="13.2" r="1.9"/></g></svg></span>`,
     kalender: `<span class="nw-ic kerst"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4M9 14.5l2 2 4-4"/></svg></span>`
   };
 

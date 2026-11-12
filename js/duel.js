@@ -197,7 +197,7 @@ const Duel = (() => {
     }
     const klaar = d.status === "klaar";
     return `${kop}<p>Je drie casussen zijn gespeeld. ${klaar ? "De uitslag is binnen." : wachtOpServer ? "Even geduld, je laatste casus wordt verstuurd." : ""}</p>
-      <div class="actions"><button class="btn" id="duUitslag"${klaar ? "" : " disabled"}>${klaar ? "Bekijk de uitslag" : "Even geduld…"}</button></div>`;
+      <div class="actions"><button class="btn" id="duUitslag"${klaar ? "" : " disabled"}>${klaar ? "Bekijk de uitslag" : "Even geduld…"}</button>${klaar ? `<button class="btn line" id="duNaar">Naar je duels</button>` : ""}</div>`;
   }
   function tekenVervolg(){ const el = $("duelVervolg"); if (!el) return; el.innerHTML = vervolgBinnen(); bindVervolg(); }
   function bindVervolg(){
