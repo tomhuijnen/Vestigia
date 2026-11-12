@@ -1768,3 +1768,52 @@ html.donker #gameView .uitslagbalk.mis .btn.ubnieuw{color:#f0b3a2; box-shadow:in
 html.donker .bel.dag .bol{--bold:#2c5139; background:linear-gradient(160deg, #5b9a72 0%, #35604a 100%); border-color:#7fb894; box-shadow:0 6px 18px rgba(0,0,0,.45), 0 0 0 5px rgba(127,184,148,.14)}
 html.donker .bel.oefen .bol{--bold:#5e3c15; background:linear-gradient(160deg, #b07d3b 0%, #7a5020 100%); border-color:#c19358; box-shadow:0 6px 18px rgba(0,0,0,.45), 0 0 0 5px rgba(193,147,88,.14)}
 html.donker .bel.spelersduel:not(.later) .bol{box-shadow:0 6px 18px rgba(0,0,0,.45), 0 0 0 5px rgba(211,166,204,.14)}
+
+/* ---------- update 25: ‘Je week in Vestigia’ en het league-kroontje ---------- */
+#wachtPop.weekpop .sheet{border-top-color:var(--green)}
+.wkbadge{position:relative; display:grid; place-items:center; align-content:center; width:96px; height:96px; border-radius:50%;
+  background:var(--green-d); color:#fff; box-shadow:0 0 0 6px var(--mint)}
+.wkbadge .caps{font-size:.62rem; letter-spacing:.1em; color:#edfbe2}
+.wkbadge b{font:800 2.5rem/1 var(--display)}
+.wkbadge.p1{background:radial-gradient(circle at 50% 38%, #f3d77d 0, #d9a93a 70%, #b9862a 100%); box-shadow:0 0 0 6px rgba(226,184,78,.28); color:#4a3410}
+.wkbadge.p2{background:radial-gradient(circle at 50% 38%, #eef2f4 0, #c3ccd1 70%, #9aa5ab 100%); box-shadow:0 0 0 6px rgba(154,165,171,.28); color:#2f3b40}
+.wkbadge.p3{background:radial-gradient(circle at 50% 38%, #e9b88a 0, #c98a52 70%, #a8693c 100%); box-shadow:0 0 0 6px rgba(201,138,82,.28); color:#3e2410}
+.wkbadge:is(.p1,.p2,.p3) .caps{color:inherit; opacity:.8}
+.wkbadge .wkic.groot{width:54px; height:54px}
+#wachtPop.weekpop .sheet{gap:10px}
+.weekpop .lvtekst p{margin-top:2px}
+.weekpop .wkperiode{margin-top:4px}
+.weekpop:not([hidden]) .wkbadge{animation:lvin .7s cubic-bezier(.2,.8,.3,1.3)}
+.wkperiode{font-family:var(--caps); font-size:.78rem; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-2)}
+.wkrij .wkic{width:30px; height:30px; flex:0 0 auto}
+.weekpop .lvbuit{padding:9px 12px}
+.wkrij > span:not(.wkplek){flex:1 1 auto; min-width:0}
+.wkrij > span:not(.wkplek) b{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.wkrij.buiten small{color:var(--ink-2); font-style:italic}
+.wkrij.p1{border-color:#d4a72c; box-shadow:0 0 0 1px #d4a72c inset}
+.wkrij.p2{border-color:#9aa5ab; box-shadow:0 0 0 1px #9aa5ab inset}
+.wkrij.p3{border-color:#b97a45; box-shadow:0 0 0 1px #b97a45 inset}
+.lvbuit .wkplek{display:flex; align-items:center; gap:6px; margin-left:auto; flex:0 0 auto}
+.wkplek > b{font:800 1.55rem/1 var(--display); color:var(--green-d)}
+.wkplek > b small{font-size:.6em; font-weight:700; margin-left:1px}
+.wkkroon{width:22px; height:15px}
+.lvbuit .wkdelta{display:inline-flex; align-items:center; gap:2px; min-width:2.2em; justify-content:center; padding:2px 6px; border-radius:999px;
+  font:700 .78rem var(--caps); line-height:1.2}
+.wkdelta > span[aria-hidden]{font-size:.7em}
+.wkdelta.op{background:#e3f3e6; color:#2e6b43}
+.wkdelta.af{background:#f6e6df; color:#9a4a2c}
+.wkdelta.gelijk{background:var(--none); color:var(--ink-2)}
+.wkdelta .sr, .wkmeer .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+.wkmeer{justify-self:start; margin:-2px 0 0 4px; font-size:.9rem}
+.wkkroonnoot, .wkuitleg{margin:0; text-align:left; width:100%}
+.wkkroonnoot .lgkroon{display:inline-block; width:18px; height:12px; vertical-align:-1px; margin-right:4px}
+/* in de league-ranglijst: kroontje achter de naam (top 3 van vorige week) */
+.lgkroonknop{display:inline-flex; vertical-align:-1px; margin-left:6px; padding:0; border:0; background:none; cursor:pointer}
+.lgkroon{width:18px; height:12px; display:block}
+.kroonregel .lgkroon{display:inline-block; width:16px; height:11px; vertical-align:-1px}
+html.donker .wkbadge:not(.p1):not(.p2):not(.p3){background:#2c4a37; box-shadow:0 0 0 6px #1f3427}
+html.donker .wkplek > b{color:var(--green-d)}
+html.donker .wkdelta.op{background:#1f3a29; color:#9fd8b0}
+html.donker .wkdelta.af{background:#3a2620; color:#f0ab8e}
+html.donker .wkrij.p1{border-color:#c9a23a; box-shadow:0 0 0 1px #c9a23a inset}
+@media (prefers-reduced-motion:reduce){ .weekpop:not([hidden]) .wkbadge{animation:none} }
