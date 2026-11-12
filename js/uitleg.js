@@ -13,17 +13,21 @@ const Uitleg = (() => {
      tekst mag een functie zijn; doel mag een lijst elementen geven (de lichtvlek omvat ze dan allemaal). */
   const levelsAan = () => typeof Levels !== "undefined" && Levels.zichtbaar && Levels.zichtbaar();
   const duelAan = () => typeof Duel !== "undefined" && Duel.zichtbaar && Duel.zichtbaar();
+  const naam = () => online.enabled && !!online.player();
   const STAPPEN = [
     { doel: () => document.querySelector("#clues li"), kop: "Welk dier is dit?",
-      tekst: "Elke dag is er één dagcasus, voor iedereen dezelfde: een waarneming van een beschermde diersoort in Nederland. Je begint met één waarneming: de locatie en het seizoen. Een gemiste dag kun je tot 3 dagen later nog inhalen." },
+      tekst: "Elke dag is er één dagcasus, voor iedereen dezelfde: een waarneming van een beschermde diersoort in Nederland. Je begint met één waarneming, de locatie en het seizoen. Bij elke foute gok komt er een waarneming bij, en die worden steeds specifieker: van het habitat tot een spoor, geluid of kenmerk." },
     { doel: () => $("gInput").closest(".det-row"), kop: "Determineer de soort",
-      tekst: "Typ de Nederlandse of wetenschappelijke naam, of een groep zoals ‘uil’ of ‘vleermuis’, en kies de soort uit de lijst. Je hebt vijf pogingen. Na elke foute gok krijg je een extra waarneming, en de tabel laat zien wat klopt." },
+      tekst: "Typ de Nederlandse of wetenschappelijke naam, of een groep zoals ‘uil’ of ‘vleermuis’, en kies de soort uit de lijst. Je hebt vijf pogingen. Na elke foute gok zie je ook wat jouw soort en de gezochte soort gemeen hebben, of waarin ze verschillen." },
     { doel: () => document.querySelector(".modebar"), kop: "Klassiek of expert",
       tekst: "Klassiek: vijf pogingen, en na elke foute gok een waarneming erbij. Expert: je opent zelf waarnemingen en hebt één poging. Voor de ranglijst telt alleen de modus die je die dag als eerste speelt." },
-    { doel: () => $("tabbar"), kop: "Onderin",
-      tekst: () => `Ranglijst: van vandaag, deze week en altijd, ook in een eigen league met andere spelers. Spelen: de dagcasus, oefenen per diergroep${duelAan() ? " en het spelersduel" : ""}. ${NAAM.vestiarium}: elke soort die je vindt, krijgt daar een plaat.` },
-    { doel: () => [$("eikelBtn"), $("menuBtn")], kop: "Rechtsboven",
-      tekst: () => `Met spelen verdien je eikels${levelsAan() ? " en ervaringspunten; de ring om je avatar laat je level zien" : ""}. Onder je avatar vind je je profiel, de shop, je statistieken en de spelregels, waar je deze uitleg terugvindt. Af en toe duikt er een verrassing op, zoals een dwaalgast. Dan krijg je ter plekke uitleg.` }
+    { doel: () => $("tabbar"), kop: "Ranglijst, Spelen en Vestiarium",
+      tekst: () => `Met de balk onderaan het scherm ga je naar de rest van de app. Bij Ranglijst zie je hoe je het doet ten opzichte van andere spelers, ook in een eigen league. Via Spelen kies je de dagcasus of oefen je per diergroep${duelAan() ? ", en daag je iemand uit voor een spelersduel" : ""}. In het ${NAAM.vestiarium} krijgt elke soort die je vindt een eigen plaat.` },
+    { doel: () => [$("eikelBtn"), $("menuBtn")], kop: "Je avatar en het menu",
+      tekst: () => (naam()
+        ? `Rechtsboven staan je eikels en je avatar${levelsAan() ? ", met je level in de ring eromheen" : ""}. Eikels verdien je met spelen en besteed je in de shop.`
+        : `Kies je straks een spelersnaam, dan verdien je met spelen eikels${levelsAan() ? " en ervaringspunten" : ""}, en verschijnt je saldo naast je avatar. Eikels besteed je in de shop.`)
+        + " Tik op je avatar voor je profiel, de shop, je statistieken en de spelregels, waar je deze uitleg terugvindt. Af en toe duikt er een verrassing op, zoals een dwaalgast; dan krijg je ter plekke uitleg." }
   ];
   const NAV = "vestigia:nav-b";
   const gezien = () => { try { return !!localStorage.getItem(KEY); } catch(e){ return true; } };
@@ -112,14 +116,41 @@ const Uitleg = (() => {
       toon(0);
     });
   }
-  /* Na de openingsanimatie: nieuwe spelers krijgen de uitleg, anderen eenmalig een melding. */
+  /* Welkom (12 november 2026): de allereerste melding voor een nieuwe speler, midden in beeld, vóór de uitleg.
+     Wat Vestigia is, dat leren op een leuke manier het doel is, en dat er nu een korte uitleg volgt. */
+  function welkom(){
+    return new Promise(klaar => {
+      const el = document.createElement("div");
+      el.className = "uitleg welkom";
+      el.innerHTML = `<div class="wk-kaart" role="dialog" aria-modal="true" aria-labelledby="welkomH">
+          <span class="wk-poot" aria-hidden="true"><svg viewBox="0 0 22 22" width="34" height="34" fill="currentColor"><ellipse cx="11" cy="14" rx="4.2" ry="3.6"/><ellipse cx="5.5" cy="8.6" rx="1.7" ry="2.2"/><ellipse cx="9" cy="5.6" rx="1.7" ry="2.3"/><ellipse cx="13" cy="5.6" rx="1.7" ry="2.3"/><ellipse cx="16.5" cy="8.6" rx="1.7" ry="2.2"/></svg></span>
+          <h2 id="welkomH">Welkom bij Vestigia!</h2>
+          <p>Vestigia is een dagelijks determinatiespel over de beschermde dieren van Nederland. Elke dag herken je een soort aan waarnemingen in het veld: waar hij leeft, welke sporen hij achterlaat en hoe hij klinkt.</p>
+          <p><b>Op een leuke manier leren staat voorop.</b> Elke casus die je speelt, maakt je een betere soortkenner.</p>
+          <p class="wk-fijn">Hierna volgt een korte uitleg van de app in vijf stappen.</p>
+          <button class="btn wk-door" type="button">Doorgaan</button>
+        </div>`;
+      document.body.appendChild(el);
+      setInert(true);
+      const knop = el.querySelector(".wk-door");
+      const door = () => { document.removeEventListener("keydown", toets_, true); el.remove(); setInert(false); klaar(); };
+      const toets_ = e => { if (e.key === "Escape" || e.key === "Tab"){ e.preventDefault(); e.stopPropagation(); if (e.key === "Escape") door(); } };
+      knop.onclick = door;
+      document.addEventListener("keydown", toets_, true);
+      knop.focus({ preventScroll: true });
+    });
+  }
+  /* Na de openingsanimatie: nieuwe spelers krijgen het welkom en de uitleg, anderen eenmalig een melding. */
   function automatisch(){
     const navGezien = (() => { try { const g = !!localStorage.getItem(NAV); localStorage.setItem(NAV, "1"); return g; } catch(e){ return true; } })();
     if (gezien()){
       if (!navGezien) toast(`Nieuw: onderin staan nu Ranglijst, Spelen en je ${NAAM.vestiarium}. Het menu zit onder je avatar rechtsboven.`);
       return Promise.resolve();
     }
-    if (nieuweSpeler()) return start();
+    if (nieuweSpeler()){
+      if (VIEW !== "game" || S.mode !== "daily") startDaily();
+      return welkom().then(start);
+    }
     markeer();
     toast("Nieuw: een korte uitleg van het spel staat in het menu (tik op je avatar rechtsboven).");
     return Promise.resolve();

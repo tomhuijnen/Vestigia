@@ -33,13 +33,19 @@ async function sleutels(): Promise<{ publiek: string; prive: string }> {
 
 const amsterdamUur = () => +new Intl.DateTimeFormat("nl-NL", { timeZone: "Europe/Amsterdam", hour: "numeric", hourCycle: "h23" }).format(new Date());
 
+// wisselende teksten (12 november 2026: niet allemaal met dezelfde afsluiter)
 const ZONDER_REEKS = [
-  "De dagcasus van vandaag wacht nog op je. Je laat hem toch niet schieten?",
-  "Er is vandaag een nieuwe soort gezien. Je laat de dagcasus toch niet schieten?",
-  "Nog niet gedetermineerd vandaag. Je laat de dagcasus toch niet schieten?",
+  "De dagcasus van vandaag wacht nog op je. Welk dier is het deze keer?",
+  "Er is vandaag een beschermde soort waargenomen. Herken jij hem?",
+  "Je hebt de dagcasus van vandaag nog niet gedetermineerd. Je hebt nog tot middernacht!",
+  "Vijf waarnemingen, één beschermde soort. Speel je de dagcasus van vandaag nog?",
+];
+const MET_REEKS = [
+  (n: number) => `Je reeks van ${n} dagen staat op het spel. Nog even snel de dagcasus determineren?`,
+  (n: number) => `Al ${n} dagen op rij gespeeld! Houd je reeks vast met de dagcasus van vandaag.`,
 ];
 function tekst(reeks: number, i: number) {
-  if (reeks >= 2) return `Je reeks van ${reeks} dagen staat op het spel. Je laat de dagcasus toch niet schieten?`;
+  if (reeks >= 2) return MET_REEKS[i % MET_REEKS.length](reeks);
   return ZONDER_REEKS[i % ZONDER_REEKS.length];
 }
 
