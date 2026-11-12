@@ -45,7 +45,10 @@ const WAARNEMING = {
   "grote-bonte-specht":109, "hop":38, "kleine-bonte-specht":271, "kleine-vliegenvanger":1182, "koolmees":140, "pimpelmees":161, "raaf":54,
   "ruigpootuil":974, "zeearend":353, "zwarte-mees":209, "zwarte-roodstaart":356, "goudjakhals":80322, "pimpernelblauwtje":656,
   "teunisbloempijlstaart":8656, "grote-vos":677, "donker-pimpernelblauwtje":648, "grote-weerschijnvlinder":676,
-  "kleine-ijsvogelvlinder":690
+  "kleine-ijsvogelvlinder":690,
+  /* update 14, opgezocht op 12 november 2026 via de zoekfunctie van waarneming.nl */
+  "gevlekte-witsnuitlibel":645, "sierlijke-witsnuitlibel":643, "rivierrombout":602, "beekrombout":603, "bosbeekjuffer":579,
+  "vermiljoenkever":264382, "vliegend-hert":1660
 };
 /* afwijkende adressen: { id: "https://…" }, of { id: { naam, url } } als de pagina bij een andere organisatie staat */
 const BRON_LOS = {

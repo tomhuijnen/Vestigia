@@ -106,7 +106,7 @@ V.DAGSCHEMA.slice(0, V.DAILY_FIXED).forEach((e, i) => {
   const [id, k] = e.split("#"), m = V.caseMonth(BY_ID.get(id).cs[(+k || 1) - 1]), dm = new Date(V.START + i * V.DAY).getUTCMonth();
   if (Math.min((m - dm + 12) % 12, (dm - m + 12) % 12) > 1) buiten++;
 });
-if (buiten) INFO(`Dagschema: ${buiten} dagen hebben een casus buiten het seizoen (er waren toen te weinig casussen voor die maand)`);
+if (buiten) INFO(`Dagschema: ${buiten} dagen hebben een casus buiten het seizoen (bewust: sinds update 14 komt ongeveer 30% uit het hele jaar; daarvoor waren er soms te weinig casussen voor die maand)`);
 const perMaand = V.MONTHS.map((mn, m) => [mn, TARGETS.filter(t => t.cs.some(c => { const cm = V.caseMonth(c); return cm >= 0 && Math.min((cm - m + 12) % 12, (m - cm + 12) % 12) <= 1; })).length]);
 const krap = perMaand.filter(([, n]) => n < 22);
 if (krap.length) LETOP(`Te weinig soorten voor een seizoensdagcasus zonder herhaling binnen drie weken (minstens 22 nodig) in: ${krap.map(([m, n]) => `${m} (${n})`).join(", ")}`);
