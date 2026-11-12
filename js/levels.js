@@ -119,6 +119,7 @@ const Levels = (() => {
     winst = { k: key, n, delen: VOLGORDE.filter(s => som[s]).map(s => [s, som[s]]), voor, na };
     toonInResultaat();
     const blok = $("xpBlok");
+    if (typeof uitslagScroll !== "undefined") await uitslagScroll;     // update 19b: eerst stilstaan, dan vliegen
     await vlieg(blok && !blok.hidden ? blok.querySelector(".xptot") : null, n, voor);
     /* stil (update 13): Profiel.naSpel toont level omhoog zelf, samen met prestaties en mijlpalen in één pop-up */
     if (opts && opts.stil) return levelSprong(na);
