@@ -67,7 +67,9 @@ const online = (() => {
         if (!open.length) break;
         const games = open.map(e => { const t = BY_ID.get(e.s);
           return { k: logKey(e), g: GAME[e.m], t: e.t, d: e.d, s: e.s, grp: t ? t.g : null, c: (e.k || 0) + 1,
-                   x: !!e.x, w: !!e.w, p: e.p, n: e.c, sc: e.sc, tw: e.tw || 0 }; });
+                   x: !!e.x, w: !!e.w, p: e.p, n: e.c, sc: e.sc, tw: e.tw || 0,
+                   /* update 29a (SQL 024): de foute gokken, voor Vestigia Wrapped (‘je nemesis’, ‘meest verwarde soorten’) */
+                   ...(Array.isArray(e.f) ? { f: e.f.slice(0, 10) } : {}) }; });
         await rpc("submit_games", { p_id: p.id, p_key: p.key, p_games: games });
         const sent = new Set(open.map(logKey)), st = store.get();
         st.log = (st.log || []).map(e => sent.has(logKey(e)) ? Object.assign({}, e, { up: 1 }) : e);
