@@ -88,6 +88,8 @@ function veldweek(d){
 function veldweekOpkomst(d){ for (const n of [1, 2]){ const v = veldweek(d + n); if (v && v.start === d + n) return v.start; } return null; }
 /* Dagschema-regels vanaf dag 14 (vrijdag 20 november 2026); de dagen daarvoor staan vast in data/dagschema.js. */
 const SEIZOEN_LOS_VANAF = 14, SEIZOEN_LOS_KANS = 0.3;
+/* Update 23: vanaf dag 17 (maandag 23 november 2026) bij een herhaling de andere casus. Dagen daarvoor blijven zoals ze waren. */
+const ANDERE_CASUS_VANAF = 17;
 const INSTROOM = [
   { van: 14, tot: 50, ids: ["gevlekte-witsnuitlibel", "sierlijke-witsnuitlibel", "rivierrombout", "beekrombout", "bosbeekjuffer", "vermiljoenkever", "vliegend-hert"] }
 ];
@@ -95,13 +97,18 @@ function pickDaily(d, history){
   const m = new Date(START + d * DAY).getUTCMonth();
   const recent = new Set(history.slice(Math.max(0, d - 21), d).map(x => x.id));
   const vw = veldweek(d);
+  /* Update 23 (vanaf dag ANDERE_CASUS_VANAF): komt een soort terug, dan met de casus die het langst geleden was.
+     Een casus die het afgelopen jaar al dagcasus was, valt af zolang er iets anders te kiezen is. Past de andere casus
+     niet bij het seizoen, dan wordt het liever een andere soort dan dezelfde casus. */
+  const vers = d >= ANDERE_CASUS_VANAF ? new Set(history.slice(Math.max(0, d - 365), d).map(x => x.id + "#" + x.k)) : new Set();
+  const nieuw = p => { const q = p.filter(c => !vers.has(c.id + "#" + c.k)); return q.length ? q : p; };
   const cand = TARGETS.filter(t => !vw || vw.f(t)).flatMap(t => t.cs.map((c, k) => ({ id: t.id, k, m: caseMonth(c) })));
   const near = cand.filter(c => c.m >= 0 && Math.min((c.m - m + 12) % 12, (m - c.m + 12) % 12) <= 1);
   if (vw){
     /* binnen een veldweek: nooit twee keer dezelfde soort, liefst passend bij het seizoen en niet net geweest */
     const week = new Set(history.slice(vw.start, d).map(x => x.id));
     const pools = [near.filter(c => !week.has(c.id) && !recent.has(c.id)), near.filter(c => !week.has(c.id)), cand.filter(c => !week.has(c.id))];
-    const pool = pools.find(p => p.length);
+    const pool = (d >= ANDERE_CASUS_VANAF ? pools.map(p => p.filter(c => !vers.has(c.id + "#" + c.k))) : []).concat(pools).find(p => p.length);
     if (pool){ const c = pool[Math.floor(rng(20261106 + d * 7919)() * pool.length)]; return { id: c.id, k: c.k }; }
   }
   /* Instroom (update 14): nieuwe soorten komen binnen een paar weken een keer langs. Per dag is de kans twee keer
@@ -114,16 +121,17 @@ function pickDaily(d, history){
       const gisteren = history[d - 1] && ins.ids.includes(history[d - 1].id);       // niet twee dagen op rij een nieuwe soort
       if (open.length && !gisteren && rng(20261106 + d * 7919 + 2)() < 2 * open.length / (ins.tot - d + 1)){
         const id = open[Math.floor(rng(20261106 + d * 7919 + 3)() * open.length)], t = BY_ID.get(id);
-        return { id, k: Math.floor(rng(20261106 + d * 7919 + 4)() * t.cs.length) };
+        const ks = nieuw(t.cs.map((c, k) => ({ id, k })));
+        return ks[Math.floor(rng(20261106 + d * 7919 + 4)() * ks.length)];
       }
     }
   }
   /* Seizoen (vanaf dag 14): meestal een casus uit deze maand (± 1), maar op ruim een kwart van de dagen uit het hele jaar,
      zodat het niet eentonig wordt. */
   const los = d >= SEIZOEN_LOS_VANAF && rng(20261106 + d * 7919 + 1)() < SEIZOEN_LOS_KANS;
-  let pool = (los ? cand : near).filter(c => !recent.has(c.id));
-  if (!pool.length) pool = cand.filter(c => !recent.has(c.id));
-  if (!pool.length) pool = cand;
+  const basis = (los ? cand : near).filter(c => !recent.has(c.id)), ruim = cand.filter(c => !recent.has(c.id));
+  const fris = p => p.filter(c => !vers.has(c.id + "#" + c.k));
+  const pool = [fris(basis), fris(ruim), basis, ruim, cand].find(p => p.length);
   const c = pool[Math.floor(rng(20261106 + d * 7919)() * pool.length)];
   return { id: c.id, k: c.k };
 }
