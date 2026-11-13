@@ -90,7 +90,15 @@ else {
     else INFO(`Nieuwe plaat: nº ${t.no} ${t.n}`);
   }
   const ds = vast.dagschema || [];
-  for (let i = 0; i < ds.length; i++) if (V.DAGSCHEMA[i] !== ds[i]){ FOUT(`Dagschema: dag ${i} is veranderd (${ds[i]} → ${V.DAGSCHEMA[i] || "weg"}); vastgelegde dagen mogen nooit veranderen`); break; }
+  /* Dagen tot en met overmorgen mogen nooit veranderen (gespeeld, of al op een apparaat met de oude versie).
+     Verder vooruit mag een bewuste wijziging (zoals update 23); dan een melding, en daarna --vastleggen. */
+  const n_ = new Date(), vandaag_ = Math.round((Date.UTC(n_.getFullYear(), n_.getMonth(), n_.getDate()) - V.START) / V.DAY);
+  let later = 0, eersteLater = -1;
+  for (let i = 0; i < ds.length; i++) if (V.DAGSCHEMA[i] !== ds[i]){
+    if (i <= vandaag_ + 2){ FOUT(`Dagschema: dag ${i} is veranderd (${ds[i]} → ${V.DAGSCHEMA[i] || "weg"}); gespeelde en komende dagen mogen nooit veranderen`); break; }
+    if (eersteLater < 0) eersteLater = i; later++;
+  }
+  if (later) LETOP(`Dagschema: ${later} toekomstige dagen veranderd, vanaf dag ${eersteLater} (${new Date(V.START + eersteLater * V.DAY).toISOString().slice(0, 10)}). Bewust? Leg vast met --vastleggen`);
 }
 
 /* ---------- 3. dagschema ---------- */
@@ -101,6 +109,12 @@ const tot = new Date(V.START + (V.DAGSCHEMA.length - 1) * V.DAY).toISOString().s
 if (vooruit < 7) FOUT(`Dagschema loopt nog maar ${vooruit} dagen vooruit (tot ${tot}); vul aan met node tools/dagschema.mjs`);
 else if (vooruit < 30) LETOP(`Dagschema loopt nog ${vooruit} dagen vooruit (tot ${tot}); vul binnenkort aan`);
 else INFO(`Dagschema: ${V.DAGSCHEMA.length} dagen vast, tot en met ${tot} (${vooruit} dagen vooruit)`);
+/* Update 23: dezelfde casus mag niet binnen een jaar terugkomen (vanaf dag 17; de soort zelf mag wel, na 3 weken) */
+{
+  const laatst = new Map(), dubbel = [];
+  V.DAGSCHEMA.forEach((e, i) => { if (i >= 17 && laatst.has(e) && i - laatst.get(e) < 365) dubbel.push(`${new Date(V.START + i * V.DAY).toISOString().slice(0, 10)} ${e}`); laatst.set(e, i); });
+  if (dubbel.length) LETOP(`Dagschema: ${dubbel.length}× dezelfde casus binnen een jaar, eerst ${dubbel.slice(0, 3).join(", ")}`);
+}
 let buiten = 0;
 V.DAGSCHEMA.slice(0, V.DAILY_FIXED).forEach((e, i) => {
   const [id, k] = e.split("#"), m = V.caseMonth(BY_ID.get(id).cs[(+k || 1) - 1]), dm = new Date(V.START + i * V.DAY).getUTCMonth();
