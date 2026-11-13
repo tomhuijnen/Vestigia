@@ -115,11 +115,12 @@ const Opening = (() => {
       later(T.einde, () => einde(false));
     });
   }
-  /* update 11: vanaf 1 december (tot en met 6 januari) de gewone groene opening, met vallende sneeuwvlokjes
-     en een slee met twee rendieren die boven ‘Vestigia’ langs het scherm vliegt (html.kerst, zie js/kerst.js). */
+  /* update 11: vanaf 1 december de gewone groene opening met vallende sneeuwvlokjes (t/m 15 februari, html.wintersneeuw)
+     en, alleen t/m 26 december, een slee met twee rendieren die boven ‘Vestigia’ langs het scherm vliegt (html.kerst, zie js/kerst.js). */
   const SLEE = `<svg aria-hidden="true" viewBox="0 0 270 80" fill="#fff" stroke="#fff"><path d="M64 47L148 44M70 50L203 38" fill="none" stroke-width="1.2" opacity=".8"/><path d="M2 66C18 73 58 73 76 66C82 63 84 57 80 55" fill="none" stroke-width="3" stroke-linecap="round"/><path d="M22 60V68M54 60V69" stroke-width="2.4"/><path d="M12 60L17 42C18 38 21 37 24 38L40 42L62 40C68 39 72 44 70 50L64 60Z" stroke="none"/><path d="M17 42C14 36 16 30 20 28" fill="none" stroke-width="3" stroke-linecap="round"/><path d="M26 40C24 30 30 24 38 25C46 26 48 34 44 41Z" stroke="none" opacity=".9"/><path d="M33 25l2 -4" stroke-width="2" stroke-linecap="round"/><ellipse cx="150" cy="46" rx="17" ry="7.5"/><path d="M159 41C164 34 167 28 169 24L175 27C172 34 169 42 165 48Z"/><path d="M168 22C172 20 178 21 183 25C181 28 177 28 173 28Z"/><path d="M134 43l-5 -3l1 4z"/><g fill="none" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M170 22l-3 -9l-6 -3M168.5 18l-6 1M167 14l1 -6"/><path d="M173 22l1 -9l-3 -6M173.6 16l5 -3"/><path d="M160 50l9 5l7 -2M157 51l7 8l6 1"/><path d="M139 50l-11 4l-6 -2M142 51l-8 8l-5 2"/></g><ellipse cx="205" cy="40" rx="17" ry="7.5"/><path d="M214 35C219 28 222 22 224 18L230 21C227 28 224 36 220 42Z"/><path d="M223 16C227 14 233 15 238 19C236 22 232 22 228 22Z"/><path d="M189 37l-5 -3l1 4z"/><g fill="none" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M225 16l-3 -9l-6 -3M223.5 12l-6 1M222 8l1 -6"/><path d="M228 16l1 -9l-3 -6M228.6 10l5 -3"/><path d="M215 44l9 5l7 -2M212 45l7 8l6 1"/><path d="M194 44l-11 4l-6 -2M197 45l-8 8l-5 2"/></g></svg>`;
   function winter(el){
-    if (!document.documentElement.classList.contains("kerst")) return;
+    const html = document.documentElement;
+    if (!html.classList.contains("wintersneeuw") && !html.classList.contains("kerst")) return;
     const sneeuw = document.createElement("div"); sneeuw.className = "op-sneeuw"; sneeuw.setAttribute("aria-hidden", "true");
     const n = innerWidth < 500 ? 34 : 56;
     for (let i = 0; i < n; i++){
@@ -128,8 +129,9 @@ const Opening = (() => {
         + `--zij:${Math.round((Math.random() - .5) * 60)}px; animation-duration:${d.toFixed(2)}s; animation-delay:${(-Math.random() * d).toFixed(2)}s`;
       sneeuw.appendChild(f);
     }
-    const slee = document.createElement("div"); slee.className = "op-slee"; slee.innerHTML = SLEE;
     el.insertBefore(sneeuw, $("opNaam"));
+    if (!html.classList.contains("kerst")) return;
+    const slee = document.createElement("div"); slee.className = "op-slee"; slee.innerHTML = SLEE;
     el.insertBefore(slee, $("opNaam"));
   }
   return { run, T };
