@@ -40,7 +40,10 @@ const GROUPS = { Z:"Zoogdieren", R:"Reptielen", A:"Amfibieën", F:"Vissen", B:"V
 const RARITY = { A:"Algemeen", MA:"Minder algemeen", Z:"Zeldzaam", ZZ:"Zeer zeldzaam" };
 
 /* Oude namen die ooit in opslag kunnen staan, met de id waar ze nu bij horen. Voorbeeld: "Wezel (oud)": "wezel" */
-const ALIASES = { "Kortsnavelboomkruiper": "kortsnavelboomkruiper" };   // hernoemd naar taigaboomkruiper in update 15 (11-11-2026)
+const ALIASES = {
+  "Kortsnavelboomkruiper": "kortsnavelboomkruiper",   // hernoemd naar taigaboomkruiper in update 15 (11-11-2026)
+  "Korenwolf": "hamster"                              // andere naam voor de hamster: ‘korenwolf’ zoeken vindt de hamster (13-11-2026)
+};
 
 const SPECIES = [
 { id:"das", no:1, g:"Z", n:"Das", s:"Meles meles", r:"BAL", l:85, zz:null, twin:null,
