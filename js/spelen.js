@@ -39,8 +39,8 @@ const Spelen = (() => {
     { id: "raadsel", label: "Raadsel", later: true },
     { id: "oefen", label: "Oefenen", go: () => { bewaar(ALLES); startFree(ALLES); } },
     { id: "dag", label: "Dagcasus", go: () => { goDaily(); window.scrollTo({ top: 0, behavior: "auto" }); } },
-    /* update 16: aan vanaf 23 november (of eerder voor testers); tot dan grijs met ‘binnenkort’. Rechts naast de dagcasus. */
-    { id: "spelersduel", label: "Spelersduel", later: () => !(typeof Duel !== "undefined" && Duel.zichtbaar()), go: () => Duel.open(),
+    /* update 16: aan vanaf 23 november (of eerder voor testers); tot dan grijs met ‘binnenkort’ en (update 34) de datum. Rechts naast de dagcasus. */
+    { id: "spelersduel", label: "Spelersduel", datum: "23 nov", later: () => !(typeof Duel !== "undefined" && Duel.zichtbaar()), go: () => Duel.open(),
       sub: () => { const n = typeof Duel !== "undefined" ? Duel.aantal() : 0; return n ? `${n} voor jou` : ""; } },
     { id: "soortenduel", label: "Soortenduel", later: true }
   ];
@@ -64,7 +64,7 @@ const Spelen = (() => {
       const stip = !b.later && b.id === "spelersduel" && typeof Duel !== "undefined" && Duel.aantal() ? `<span class="belstip" aria-hidden="true">${Duel.aantal()}</span>` : "";
       return `<button type="button" class="bel ${b.id}${b.later ? " later" : ""}" data-bel="${b.id}" style="left:${cx}px;top:${cy}px;--x:${x}px;--y:${y}px;--d:${Math.abs(k - 2) * 35}ms"${b.later ? ' aria-disabled="true"' : ""}>
         <span class="bol">${IC[b.id]}${b.id === "dag" && gespeeld ? `<span class="belvink" aria-hidden="true">✓</span>` : ""}${stip}</span>
-        <span class="bl">${esc(b.label)}</span>${sub ? `<span class="bs">${esc(sub)}</span>` : ""}</button>`;
+        <span class="bl">${esc(b.label)}</span>${sub ? `<span class="bs">${esc(sub)}</span>` : ""}${b.later && b.datum ? `<span class="bd">${esc(b.datum)}</span>` : ""}</button>`;
     }).join("");
     $("kringBellen").querySelectorAll(".bel").forEach(b => b.onclick = () => {
       const bel = BELLEN.find(x => x.id === b.dataset.bel);
