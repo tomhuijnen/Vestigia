@@ -376,6 +376,7 @@ function renderResult(){
       : `telt niet voor de ranglijst: je speelde deze casus vandaag al in ${S.expert ? "klassiek" : "expert"}`}</span>` : ""}</p>
     ${toelichting() ? `<div class="toelrij"><button class="toelbtn" id="toelBtn" aria-expanded="false" aria-controls="toelBox"><svg aria-hidden="true" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="8" cy="8" r="6.4"/><path d="M8 7.3v4M8 4.9v.1"/></svg><span>Toelichting</span><i class="pijl" aria-hidden="true"></i></button></div>
     <div class="toelbox" id="toelBox" hidden><span class="caps">Waarom ${esc(/^Europese/.test(t.n) ? t.n : t.n.toLowerCase())}?</span><p>${esc(toelichting())}</p></div>` : ""}
+    ${S.mode === "free" ? `<div class="oefenverder"><button class="btn line" type="button" id="nieuwBoven">Nieuwe casus <span aria-hidden="true">→</span></button></div>` : ""}
     <details class="status-line"><summary><span class="caps">Status</span> <b>${esc(LABELS.r[t.r])}</b><span class="meer">uitleg</span></summary><p>${esc(REGIME_INFO[t.r])}</p></details>
     <dl class="traits">${traits}</dl>
     ${curCase().sl ? `<div class="sleutelbox"><span class="caps">Typisch ${esc(/^Europese/.test(t.n) ? t.n : t.n.toLowerCase())}</span><p>${esc(curCase().sl.t)}</p></div>` : ""}
@@ -394,7 +395,7 @@ function renderResult(){
     ${S.mode === "free" ? `<p class="oefenkeuze">Je oefent met ${esc(Spelen.omschrijving({ g: S.groep, nieuw: S.nieuw, ids: S.ids }))}. <button class="linklike" id="oefenWijzig">Wijzig</button></p>` : ""}
     <div class="actions">
       <button class="btn" id="copyBtn">Deel resultaat</button>
-      <button class="btn line" id="nextBtn">${S.mode === "daily" ? "Speel een oefencasus" : "Nieuwe casus"}</button>
+      ${S.mode === "daily" ? `<button class="btn line" id="nextBtn">Speel een oefencasus</button>` : ""}
       <span class="msg" id="copyMsg"></span>
     </div>
     <p class="inviteline statsline">Benieuwd hoe je het tot nu toe doet? <button class="linklike" id="toStats">Bekijk je statistieken</button></p>
@@ -415,7 +416,9 @@ function renderResult(){
     return;
   }
   $("copyBtn").onclick = () => shareOut(resultShare(), $("copyMsg"), card);
-  $("nextBtn").onclick = () => startFree();
+  /* update 33: bij oefenen staat ‘Nieuwe casus’ bovenin de uitslag (na naam, score en toelichting) en in de balk bij Determinatie */
+  if ($("nextBtn")) $("nextBtn").onclick = () => startFree();
+  if ($("nieuwBoven")) $("nieuwBoven").onclick = () => startFree();
   if ($("oefenWijzig")) $("oefenWijzig").onclick = () => Spelen.wijzig();
   $("toDex").onclick = () => showDex(ontdek ? t.id : undefined);
   $("repFromResult").onclick = e => openReport(t.id, e.currentTarget, S.k);

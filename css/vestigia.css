@@ -907,6 +907,9 @@ html.donker .mptxt .tb{background:#2c3b32}
 
 /* toelichting na afloop (update 6): knop in de stijl van klassiek/expert, binnen het soortvlak */
 .toelrij{margin:4px 0 10px}
+/* update 33: ‘Nieuwe casus’ bovenin de oefenuitslag */
+.oefenverder{margin:2px 0 14px}
+.oefenverder .btn{width:100%; max-width:320px}
 .toelbtn{display:inline-flex; align-items:center; gap:7px; height:36px; padding:0 14px 0 12px; border:1px solid var(--rule); border-radius:10px; background:var(--leaf); color:var(--green-d); font-family:var(--display); font-size:.92rem; font-weight:500; cursor:pointer; transition:background .2s ease, color .2s ease}
 .toelbtn:hover{background:#e6eee7}
 .toelbtn[aria-expanded="true"]{background:var(--green); color:#fff; border-color:var(--green)}
