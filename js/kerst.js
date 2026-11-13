@@ -1,7 +1,8 @@
 /* Vestigia – kerst (update 8)
-   1 t/m 26 december: een kerstmuts op het logo.
-   1 december t/m 6 januari: vallende sneeuw en een vliegende slee in de openingsanimatie (update 11) en een paar sneeuwvlokjes op het beginscherm
-   (hooguit tien seconden, uit te zetten in het menu, nooit bij ‘minder beweging’).
+   1 t/m 26 december: een kerstmuts op het logo, een vliegende slee in de openingsanimatie (update 11) en een paar sneeuwvlokjes
+   op het beginscherm (hooguit tien seconden, uit te zetten in het menu, nooit bij ‘minder beweging’).
+   Vanaf 27 december is alles wat met kerst te maken heeft weg (Tom, 13 november), behalve wat je uit de adventkalender kreeg.
+   1 december t/m 15 februari: vallende sneeuw in de openingsanimatie (html.wintersneeuw).
    1 t/m 24 december: de adventkalender. Elke dag één vakje; alleen het vakje van vandaag gaat open en een gemist vakje
    is weg. In een vakje: eikels, een sporenvraag, een ondertitel, een kleur of een lijst, en altijd een winterweetje.
    De server bepaalt de datum en wat erin zit (supabase-012); de app toont het alleen.
@@ -26,7 +27,10 @@ const Kerst = (() => {
       .formatToParts(new Date()).map(x => [x.type, +x.value]));
     return { j: p.year, m: p.month, d: p.day };
   }
-  const winter = () => { if (demo()) return true; const t = nl(); return t.m === 12 || (t.m === 1 && t.d <= 6); };
+  /* kerstperiode: 1 t/m 26 december (slee, sneeuw op het beginscherm, kerstmuts) */
+  const winter = () => { const dm = demo(); if (dm) return dm.dag <= 26; const t = nl(); return t.m === 12 && t.d <= 26; };
+  /* sneeuw in de openingsanimatie: 1 december t/m 15 februari */
+  const sneeuwIntro = () => { if (demo()) return true; const t = nl(); return t.m === 12 || t.m === 1 || (t.m === 2 && t.d <= 15); };
   const muts = () => { const dm = demo(); if (dm) return dm.dag <= 26; const t = nl(); return t.m === 12 && t.d <= 26; };
   const kalenderDag = () => { const dm = demo(); if (dm) return dm.dag; const t = nl(); return t.m === 12 && t.d <= 24 ? t.d : null; };
   const rustig = () => window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -59,6 +63,7 @@ const Kerst = (() => {
   /* ---------- versiering ---------- */
   function versier(){
     document.documentElement.classList.toggle("kerst", winter());
+    document.documentElement.classList.toggle("wintersneeuw", sneeuwIntro());
     document.documentElement.classList.toggle("kerstmuts", muts());
     const kal = winter() && !!kalenderDag();
     if ($("adventBtn")) $("adventBtn").hidden = !kal;
