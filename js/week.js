@@ -96,7 +96,7 @@ const Week = (() => {
     const r = lees(K.mijl); if (!r || !r.lijst.length) return;
     if (!nu && r.w === huidigeWeek() && opTijd() && nogNietGezien()) return;
     zet(K.mijl, null);
-    r.lijst.forEach((m, i) => setTimeout(() => toast(`Mijlpaal behaald: ${m.label}${m.eikels ? ` · +${m.eikels} eikels` : ""}${m.titel ? ` · ondertitel ${m.titel}` : ""}`, { duur: 6000 }), i * 6500));
+    r.lijst.forEach((m, i) => setTimeout(() => toast(Profiel.mijlToast(m), { duur: 6000 }), i * 6500));
   }
 
   /* ---------- de pop-up ---------- */
@@ -218,7 +218,7 @@ const Week = (() => {
         { pos: 4, gedeeld: true, n: 14, pts: 31, vorig: { pos: 4 }, league: ls[1] },
         { pos: 2, gedeeld: false, n: 5, pts: 31, vorig: null, league: ls[2] }].sort((a, b) => a.pos - b.pos) };
   }
-  const NEP_MIJL = plek => plek <= 3 ? [{ id: "podium_1", label: "Op het podium", eikels: 50, titel: null }].concat(plek === 1 ? [{ id: "winst_1", label: "Weekwinnaar", eikels: 100, titel: null }] : []) : [];
+  const NEP_MIJL = plek => plek <= 3 ? [{ id: "podium_1", label: "Op het podium", drempel: 1, eikels: 50, titel: null }].concat(plek === 1 ? [{ id: "winst_1", label: "Weekwinnaar", drempel: 1, eikels: 100, titel: null }] : []) : [];
   function nepKroon(list){
     const namen = {}, lis = [...list.querySelectorAll(":scope > li[data-n]")];
     lis.slice(0, 3).forEach((li, i) => namen[li.dataset.n] = i + 1);
