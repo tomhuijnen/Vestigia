@@ -106,7 +106,7 @@ const Profiel = (() => {
         if (m.behaald && was && !was.behaald){
           /* update 25: podium en weekwinst komen in de pop-up ‘Je week in Vestigia’ (als die nog komt) */
           if (typeof Week !== "undefined" && Week.vang(m)) continue;
-          toast(`Mijlpaal behaald: ${m.label}${m.eikels ? ` · +${m.eikels} eikels` : ""}${m.titel ? ` · ondertitel ${m.titel}` : ""}`, { duur: 6000 });
+          toast(mijlToast(m), { duur: 6000 });
         }
       }
       inVestiarium(); if (VIEW === "profiel") teken();
@@ -161,6 +161,48 @@ const Profiel = (() => {
     <path d="M9 21L5 38l6-3 4 5 3-14Z" fill="#4b7a5e"/><path d="M23 21l4 17-6-3-4 5-3-14Z" fill="#2e5a40"/>
     <circle cx="16" cy="15" r="12.5" fill="${vul}" stroke="${rand}" stroke-width="1.8"/><circle cx="16" cy="15" r="8.6" fill="none" stroke="${rand}" stroke-width="1" opacity=".55"/>
     <path d="M16 9.4l1.7 3.5 3.8.5-2.8 2.6.7 3.8L16 18l-3.4 1.8.7-3.8-2.8-2.6 3.8-.5Z" fill="#fff" opacity=".9"/></svg>`; };
+  /* update 32: in de pop-up en de melding staat hoeveel je haalde, bijv. ‘7 dagen op rij gespeeld’.
+     Het aantal is de drempel van de behaalde trede (brons, zilver of goud). */
+  const mv = (n, een, meer) => `${n} ${n === 1 ? een : meer}`;
+  const SPEC = { Z: ["zoogdier", "zoogdieren"], R: ["reptiel", "reptielen"], A: ["amfibie", "amfibieën"], F: ["vis", "vissen"], K: ["kevercasus", "kevercasussen"],
+                 B: ["vogel", "vogels"], V: ["vlinder", "vlinders"], L: ["libel", "libellen"] };
+  const PZIN = {
+    eenkeer: n => `${mv(n, "keer", "keer")} in één poging goed (klassiek)`,
+    expert1: n => `${mv(n, "keer", "keer")} na één waarneming goed (expert)`,
+    reeks: n => `${mv(n, "dag", "dagen")} op rij gespeeld`,
+    dagen: n => `${mv(n, "dagcasus", "dagcasussen")} gedetermineerd`,
+    tweeling: n => `${mv(n, "keer", "keer")} er net naast met een tweelingsoort`,
+    maanden: n => n >= 12 ? "In alle 12 maanden een dagcasus gedetermineerd" : `In ${n} verschillende maanden een dagcasus gedetermineerd`,
+    duel6: n => `${mv(n, "keer", "keer")} het soortenduel foutloos (6 van 6)`,
+    raadsel1: n => `${mv(n, "keer", "keer")} het kenmerken-raadsel in één poging`,
+    duelspelers: n => `${mv(n, "speler", "verschillende spelers")} verslagen in een duel`,
+    duelperfect: n => mv(n, "perfect duel", "perfecte duels"),
+    spelersduel: n => `${mv(n, "spelersduel", "spelersduels")} gewonnen`,
+    duelgespeeld: n => `${mv(n, "spelersduel", "spelersduels")} gespeeld`,
+    uitnodiging: n => n === 1 ? "1 uitgenodigde speler speelt mee" : `${n} uitgenodigde spelers spelen mee`,
+    veldwerker: n => mv(n, "complete veldweek", "complete veldweken")
+  };
+  function prestatieZin(r, niv){
+    const n = [r.brons, r.zilver, r.goud][niv - 1];
+    if (n == null) return "";
+    const spec = /^spec_(\w)$/.exec(r.id || "");
+    if (spec && SPEC[spec[1]]) return `${mv(n, ...SPEC[spec[1]])} in één keer goed`;
+    return PZIN[r.id] ? PZIN[r.id](n) : `${n} keer`;
+  }
+  const MZIN = {
+    podium: n => `${mv(n, "week", "weken")} in de top 3 van de weekranglijst`,
+    winst: n => `${mv(n, "week", "weken")} nummer 1 van de weekranglijst`,
+    duelreeks: n => `${mv(n, "spelersduel", "spelersduels")} op rij gewonnen`,
+    duelwinst: n => `${mv(n, "spelersduel", "spelersduels")} gewonnen`,
+    revanche: n => n === 1 ? "Een revanche gewonnen" : `${n} revanches gewonnen`,
+    alles1: () => "Elke soort minstens één keer in één poging goed"
+  };
+  function mijlZin(m){
+    const sleutel = m.id === "alles1" ? "alles1" : String(m.id || "").replace(/_\d+$/, "");
+    return MZIN[sleutel] && m.drempel != null ? MZIN[sleutel](m.drempel) : "";
+  }
+  const mijlSub = m => ["Mijlpaal", mijlZin(m), m.titel ? `ondertitel ${m.titel}` : ""].filter(Boolean).join(" · ");
+  const mijlToast = m => `Mijlpaal behaald: ${m.label}${mijlZin(m) ? ` · ${mijlZin(m)}` : ""}${m.eikels ? ` · +${m.eikels} eikels` : ""}${m.titel ? ` · ondertitel ${m.titel}` : ""}`;
   const eikRij = (ic, kop, sub, n) => `<div class="lvbuit belrij"${n ? ` data-eik="${n}"` : ""}>${ic}<span><b>${esc(kop)}</b><small>${esc(sub)}</small></span>${n ? `<span class="beleik">${EIKEL}+${n}</span>` : ""}</div>`;
   const wachtMs = ms => new Promise(r => setTimeout(r, ms));
   const zichtbaarInBeeld = el => { if (!el || el.hidden) return false; const r = el.getBoundingClientRect(); return r.width > 0 && r.top >= 0 && r.bottom <= innerHeight; };
@@ -183,17 +225,17 @@ const Profiel = (() => {
       const was = (oudP.find(o => o.id === r.id) || {}).niveau || 0;
       if (r.niveau > was){
         const e = beloning(r.id), erbij = e ? e.slice(was, r.niveau).reduce((a, b) => a + b, 0) : 0;
+        const zin = prestatieZin(r, r.niveau), tit = r.niveau === 3 && r.goud_titel ? ` · ondertitel ${r.goud_titel}` : "";
         uit.push({ soort: "prestatie", niv: r.niveau, ic: MEDAILLE(r.niveau, 30), groot: MEDAILLE(r.niveau, 84), kop: r.label,
-          sub: `Prestatie · ${NIV[r.niveau]}${r.niveau === 3 && r.goud_titel ? ` · ondertitel ${r.goud_titel}` : ""}`, eikels: erbij,
-          toast: `Prestatie behaald: ${r.label} · ${NIV[r.niveau]}${erbij ? ` · +${erbij} eikels` : ""}${r.niveau === 3 ? ` · ondertitel ${r.goud_titel}` : ""}` });
+          sub: `Prestatie · ${zin ? `${zin} · ` : ""}${NIV[r.niveau]}${tit}`, eikels: erbij,
+          toast: `Prestatie behaald: ${r.label} · ${zin ? `${zin} · ` : ""}${NIV[r.niveau]}${erbij ? ` · +${erbij} eikels` : ""}${tit}` });
       }
     }
     if (oudM && oudM.length) for (const m of nuM || []){
       const was = oudM.find(o => o.id === m.id);
       if (m.behaald && was && !was.behaald)
         uit.push({ soort: "mijlpaal", ic: LINT(true).replace('class="mplint"', 'class="mplint" width="30" height="38"'), groot: LINT(true).replace('class="mplint"', 'class="mplint" width="84" height="105"'),
-          kop: m.label, sub: `Mijlpaal${m.titel ? ` · ondertitel ${m.titel}` : ""}`, eikels: m.eikels || 0,
-          toast: `Mijlpaal behaald: ${m.label}${m.eikels ? ` · +${m.eikels} eikels` : ""}${m.titel ? ` · ondertitel ${m.titel}` : ""}` });
+          kop: m.label, sub: mijlSub(m), eikels: m.eikels || 0, toast: mijlToast(m) });
     }
     return uit;
   }
@@ -541,8 +583,7 @@ const Profiel = (() => {
 
   /* update 25: rij voor een mijlpaal in een andere pop-up, en de eikels uit die pop-up naar het saldo laten vliegen.
      Eerst het saldo opnieuw ophalen; het getal bovenin gaat even terug en telt dan mee terwijl de eikels landen. */
-  const mijlRij = m => eikRij(LINT(true).replace('class="mplint"', 'class="mplint" width="30" height="38"'), m.label,
-    `Mijlpaal${m.titel ? ` · ondertitel ${m.titel}` : ""}`, m.eikels || 0);
+  const mijlRij = m => eikRij(LINT(true).replace('class="mplint"', 'class="mplint" width="30" height="38"'), m.label, mijlSub(m), m.eikels || 0);
   async function vliegUit(body){
     const rijen = [...body.querySelectorAll("[data-eik]")], tot = rijen.reduce((a, r) => a + (+r.dataset.eik || 0), 0);
     if (!tot || !p()) return;
@@ -559,9 +600,19 @@ const Profiel = (() => {
   }
 
   /* bij het opstarten: saldo en profiel ophalen (stil als het niet lukt) */
-  function start(){ saldoInKop(); codeTip(); if (p()) haalAlles().then(() => { codeTip(); inVestiarium(); }); }
+  function start(){ saldoInKop(); codeTip(); if (p()) haalAlles().then(() => { codeTip(); inVestiarium(); }); demoMomenten(); }
+  /* voorbeeld van de pop-up (update 32): ?prestatie=demo (één prestatie) of ?prestatie=demo2 (meerdere doelen) */
+  function demoMomenten(){
+    const m = /[?&]prestatie=(demo2?)/.exec(location.search); if (!m) return;
+    const oud = [{ id: "reeks", niveau: 0 }, { id: "spec_L", niveau: 0 }];
+    const nu = [{ id: "reeks", label: "Dagen op rij gespeeld", brons: 7, zilver: 30, goud: 100, niveau: 1, goud_titel: null },
+                { id: "spec_L", label: "Libellenspecialist: libellen in één keer goed", brons: 1, zilver: 3, goud: 5, niveau: m[1] === "demo2" ? 2 : 0, goud_titel: null }];
+    const nuM = m[1] === "demo2" ? [{ id: "duelreeks_5", label: "Onverslagen", drempel: 5, eikels: 50, titel: "Onverslagen", behaald: true }] : [];
+    const oudM = m[1] === "demo2" ? [{ id: "duelreeks_5", behaald: false }] : null;
+    setTimeout(() => groteMomenten(nieuwBehaald(oud, nu, oudM, nuM), null).catch(() => {}), 1500);
+  }
 
-  return { mijlRij, vliegUit, mijlpalenKlaar: () => mijlBelofte || Promise.resolve(null), render, renderShop, naSpel, toonWinst, versier, saldoInKop, codeTip, start, mijn, inVestiarium, haalAlles, herteken: () => teken(),
+  return { mijlRij, mijlToast, vliegUit, mijlpalenKlaar: () => mijlBelofte || Promise.resolve(null), render, renderShop, naSpel, toonWinst, versier, saldoInKop, codeTip, start, mijn, inVestiarium, haalAlles, herteken: () => teken(),
            naNaam(){ codeTip(); haalAlles(); } };
 })();
 
