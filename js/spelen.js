@@ -141,8 +141,19 @@ const Spelen = (() => {
     const b = e.target.closest("[data-tab]"); if (!b) return;
     if (b.dataset.tab !== "spelen") sluit(true);
     /* update 7: nog een keer op de tab waar je al bent (Ranglijst, Vestiarium) = vloeiend terug naar boven */
+    /* update 44: in de ranglijst eerst naar je eigen regel als die niet in beeld is, anders naar boven */
     if (b.dataset.tab !== "spelen" && b.classList.contains("on")){
-      if (window.scrollY > 0) window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+      const zacht = matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+      const mij = VIEW === "rank" ? document.querySelector("#rankList li.me") : null;
+      if (mij){
+        const r = mij.getBoundingClientRect(), kop = $("slimbar").offsetHeight, onder = window.innerHeight - $("tabbar").offsetHeight;
+        if (r.top < kop || r.bottom > onder){
+          window.scrollTo({ top: Math.max(0, window.scrollY + r.top - (kop + onder - r.height) / 2), behavior: zacht });
+          mij.classList.remove("oplicht"); void mij.offsetWidth; mij.classList.add("oplicht");
+          return;
+        }
+      }
+      if (window.scrollY > 0) window.scrollTo({ top: 0, behavior: zacht });
       return;
     }
     TAB[b.dataset.tab]();

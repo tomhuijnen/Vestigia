@@ -1898,3 +1898,23 @@ html.donker .lvring.lvt0 .lvnr{color:#1f3a2a}
 .lvbuit.lvwacht{opacity:0; transform:translateY(6px)}
 .lvbuit{transition:opacity .45s, transform .45s}
 @media (prefers-reduced-motion:reduce){ .lvcirkel, .lvbuit, #wachtPop.levelpop .sheet > *{transition:none} .lvcirkel.puls{animation:none} .lvsterren i.nieuw::before{animation:none} }
+
+/* ── update 44: duidelijker zien op welk tabblad je bent ──
+   Actief tabblad (Ranglijst, Vestiarium): gevuld donkergroen vlak met een licht pictogram, vet label en een streepje
+   bovenaan de tabbalk. Inactief: dunner label. In de kop staat de schermnaam in een omlijnd label (.series.scherm). */
+.tabbar button{position:relative; font-weight:600}
+.tabbar button:not(.mid)::before{content:""; position:absolute; top:-4px; left:50%; width:28px; height:3px; margin-left:-14px; border-radius:0 0 3px 3px;
+  background:var(--green-d); transform:scaleX(0); transition:transform .2s ease}
+.tabbar button.on:not(.mid)::before{transform:none}
+.tabbar button.on:not(.mid){color:var(--green-d); font-weight:800}
+.tabbar button.on:not(.mid) .ic{background:var(--green-d); color:#fff}
+html.donker .tabbar button.on:not(.mid), html.donker .tabbar button.on:not(.mid) > span[data-naam]{color:var(--green-d)}
+html.donker .tabbar button.on:not(.mid) .ic{background:var(--green)}
+html.donker .tabbar button.on:not(.mid) .ic *{color:#10201a}
+html.donker .tabbar button:not(.mid)::before{background:var(--green)}
+.series.scherm{align-self:flex-start; border:1.5px solid currentColor; border-radius:999px; padding:2px 9px 1px; font-weight:700; font-size:.7rem}
+.slimbar .series.scherm{align-self:center; font-size:.68rem}
+/* eigen regel in de ranglijst even laten oplichten na tikken op het actieve tabblad */
+@keyframes mijnplek{0%,100%{box-shadow:0 0 0 1px var(--green) inset} 40%{box-shadow:0 0 0 1px var(--green) inset, 0 0 0 5px rgba(75,122,94,.35)}}
+.ranklist li.me.oplicht{animation:mijnplek 1.1s ease 2}
+@media (prefers-reduced-motion:reduce){ .tabbar button:not(.mid)::before{transition:none} .ranklist li.me.oplicht{animation:none} }
