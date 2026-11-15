@@ -431,7 +431,9 @@ const Profiel = (() => {
       ${inhoud}<span class="pl">${esc(label)}</span><span class="ps">${staat === "aan" ? "in gebruik" : staat === "koop" ? `${EIKEL} ${prijsTekst(item.price)}` : staat === "heb" ? "in bezit" : staat === "verdiend" ? "verdiend" : staat === "gratis" ? "gratis" : staat === "dicht" ? "te verdienen" : ""}</span></button>`;
   const heeft = (own, i) => own.has(i.item) || (i.price === 0 && i.for_sale);
   const waardeVan = i => i.item.slice(i.item.indexOf(":") + 1);
-  const voorbeeld = (soort, v) => { const me = mijn(); return soort === "titel" ? "" : avatarSVG(Object.assign({}, me, { [VELD[soort]]: v }), "avatar mid"); };
+  /* medaille-avatars ook hier met lauriertakken in plaats van het medaille-embleem */
+  const metKrans = (q, cls, maat) => metLaurier(avatarSVG(q, cls, isMedaille(q)), q, maat);
+  const voorbeeld = (soort, v) => { const me = mijn(); return soort === "titel" ? "" : metKrans(Object.assign({}, me, { [VELD[soort]]: v }), "avatar mid", "klein"); };
   function teken(){
     const body = $("profielBody"), me = mijn(), w = wallet();
     $("pfSaldo").innerHTML = saldoHtml(w);
@@ -627,7 +629,7 @@ const Profiel = (() => {
       : "Zo staat hij onder je naam in de ranglijst, je league en je profielkaart:";
     $("shopPopBeeld").innerHTML = soort === "titel"
       ? `<div class="shoppop-rij">${avatarSVG(me, "avatar")}<div><b>${esc(me.name || "")}</b><span>${esc(i.label)}</span></div></div>`
-      : avatarSVG(Object.assign({}, me, { [VELD[soort]]: v }), "avatar shopgroot");
+      : metKrans(Object.assign({}, me, { [VELD[soort]]: v }), "avatar shopgroot", "groot");
     $("shopPopPrijs").innerHTML = `${EIKEL} ${prijsTekst(i.price)}`;
     const tekort = i.price - (w.saldo || 0), knop = $("shopPopKoop");
     $("shopPopMsg").textContent = tekort > 0 ? `Je hebt nog ${prijsTekst(tekort)} eikels nodig.` : "";
