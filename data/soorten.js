@@ -400,8 +400,8 @@ const SPECIES = [
     ] },
     { bron:"Zodion, soortpagina damhert", sl:{ i:4, t:"Een witte spiegel met zwarte rand en een lange staart, en in de zomer witte vlekken op de rug. Bij schrik springt hij met vier poten tegelijk weg." }, wn:[
       "Duinen bij Wassenaar, juni. Een stil duinbos.",
-      "Duinbos met open valleien en hoog, ongemaaid gras.",
-      "Een rustig stuk bos met een dichte struiklaag en hoog gras.",
+      "Duinbos met open, grazige valleien.",
+      "In het hoge gras aan de bosrand een plat gelegen plekje, net groot genoeg voor een jong dier.",
       "Een groep hindes met gevlekte jongen; bij schrik springen ze met vier poten tegelijk weg.",
       "Bruin met witte vlekken in de zomer en een spiegel met zwarte rand en een lange staart."
     ] }
