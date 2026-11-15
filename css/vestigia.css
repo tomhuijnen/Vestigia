@@ -585,6 +585,15 @@ svg.avatar.groot{width:104px; height:104px; flex:0 0 104px}
 .pfsec{margin-top:22px; display:grid; gap:10px}
 .pfsec > h3{margin:0; font-family:var(--caps); text-transform:uppercase; letter-spacing:.08em; font-size:.88rem; color:var(--ochre); border-bottom:1px solid var(--rule); padding-bottom:6px}
 .pfsec .dexfilters{padding:0}
+/* update 54: Prestaties en Mijlpalen inklapbaar */
+.pfklap > summary{list-style:none; cursor:pointer; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--rule); padding-bottom:6px; border-radius:2px}
+.pfklap > summary::-webkit-details-marker{display:none}
+.pfklap > summary h3{margin:0; flex:1; font-family:var(--caps); text-transform:uppercase; letter-spacing:.08em; font-size:.88rem; color:var(--ochre)}
+.pfklap > summary::after{content:""; width:7px; height:7px; margin-right:4px; border-right:2px solid var(--ochre); border-bottom:2px solid var(--ochre); transform:rotate(45deg) translateY(-2px); transition:transform .2s}
+.pfklap[open] > summary::after{transform:rotate(-135deg) translateY(-1px)}
+.pfklap > summary:focus-visible{outline:2px solid var(--green); outline-offset:3px}
+.pfklapin{display:grid; gap:10px; padding-top:10px}
+@media (prefers-reduced-motion: reduce){ .pfklap > summary::after{transition:none} }
 .pfopties{display:grid; grid-template-columns:repeat(auto-fill, minmax(96px, 1fr)); gap:10px}
 .pfopt{display:flex; flex-direction:column; align-items:center; gap:4px; padding:10px 6px; border:1.5px solid var(--rule); background:#fff; border-radius:10px; cursor:pointer; font:inherit; color:var(--ink); text-align:center}
 .pfopt:hover{border-color:var(--green)}
@@ -1980,6 +1989,8 @@ html.donker .shoppop-rij{background:var(--mint)}
 .spnaam .sub{margin:2px 0 0; color:var(--ink-2); font-size:.92rem}
 .spnaam .rang{display:inline-flex; align-items:center; gap:6px; margin-top:8px; padding:3px 10px; border-radius:999px; background:var(--mint); color:var(--green-d); font:600 .72rem var(--caps); letter-spacing:.06em; text-transform:uppercase}
 .spnaam .sinds{display:block; margin-top:6px; font-size:.8rem; color:var(--ink-2)}
+.spnaam .spvandaag{display:inline-flex; align-items:center; gap:5px; margin-top:6px; font-size:.8rem; color:var(--ink-2)}
+.spnaam .spvandaag.ja{color:var(--green-d); font-weight:600}
 .spbody{padding:16px 18px 18px; display:grid; gap:16px}
 /* tegels: 2 kolommen op een smalle telefoon, 3 zodra de kaart breed genoeg is */
 .sptegels{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px}
@@ -2034,6 +2045,7 @@ html.donker .spkop{background:linear-gradient(160deg,#20352a 0%,#152219 100%)}
 html.donker .spkaart .sheet{background:var(--paper)}
 html.donker .sptegel{background:#1d2a22}
 html.donker .spnaam .rang{background:#1f3427; color:#a9d6b8}
+html.donker .spnaam .spvandaag.ja{color:#8fd0a8}
 html.donker .spduel{background:var(--dn-bg); border-color:var(--dn-rule)}
 html.donker .spduel h3, html.donker .spbalans b{color:var(--dn-l)}
 html.donker .spbalk{background:var(--dn-rule)}

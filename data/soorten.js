@@ -19,7 +19,7 @@ const LABELS = {
        MOER:"Moeras & riet", STIL:"Stilstaand water", STROOM:"Stromend water", ZEE:"Zee & kust", BEB:"Bebouwd" },
   a: { DAG:"Dag", SCHEMER:"Schemer", NACHT:"Nacht" },
   v: { PLANT:"Plantaardig", ONG:"Ongewervelden", VIS:"Vis", GEW:"Gewervelden" },
-  b: { HOL:"Hol of burcht", BOOM:"Boom(holte)", GEB:"Gebouw of bouwwerk", VEG:"Nest in vegetatie",
+  b: { HOL:"Hol of burcht", BOOM:"Boom(holte)", GEB:"Gebouw of bouwwerk", VEG:"In de vegetatie",
        GROND:"Bodem of strooisel", WATER:"In het water", STEEN:"Muur of rots" },
   w: { ACT:"Actief", SLAAP:"Winterslaap/-rust", TREK:"Trekt weg", LARVE:"Als ei, larve of pop" },
   r: { HR:"Habitatrichtlijn IV", BAL:"Bal bijlage IX", VRJ:"Vogelrichtlijn · nest jaarrond", VR:"Vogelrichtlijn", NB:"Niet beschermd" }

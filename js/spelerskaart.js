@@ -5,6 +5,8 @@
    platen, eikels totaal verdiend (niet het saldo), favoriete diergroep (vaakst goed gedetermineerd), beste drie prestaties,
    level met de gekleurde ring, rang, ‘speler sinds’, de duelbalans (al zijn of haar duels, tegen iedereen) en ‘Daag uit’.
    Niet tonen: met welke soorten iemand fout zat, tijdstippen van spelen, spelerscode.
+   Update 54/55 (15 november): onder ‘Speler sinds’ staat of iemand de dagcasus van vandaag al speelde (veld `vandaag`,
+   supabase-030); alleen ja of nee, geen tijdstip. Alleen op de kaart, niet in de ranglijst zelf (Tom, 13:01).
    Duelbalans en ‘Daag uit’ verschijnen pas als het spelersduel aan staat (maandag 23 november); daarvoor een korte zin.
    Op je eigen naam tikken opent Mijn profiel. Geen pop-up of ‘Nieuw’-melding (Tom, 15 november 08:14).
    De kaart is een .overlay, dus de pop-upwachtrij (js/wachtrij.js) wacht vanzelf zolang hij open is. */
@@ -14,6 +16,7 @@ const Spelerskaart = (() => {
   const NIV = ["", "brons", "zilver", "goud"];
   const X = `<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
   const ZWAARD = `<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l6-6M3 17l4 4M14.5 3.5H20v5.5L10 19l-5-5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>`;
+  const VINK = `<svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   const getal = n => Number(n || 0).toLocaleString("nl-NL");
   const MAAND = ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"];
   const datum = s => { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s || ""); return m ? `${+m[3]} ${MAAND[+m[2] - 1]} ${m[1]}` : ""; };
@@ -41,7 +44,8 @@ const Spelerskaart = (() => {
       <div class="spkop"><span class="caps">Spelersprofiel</span><button class="spsluit" id="spelerSluit" aria-label="Sluiten">${X}</button></div>
       <div class="spav">${k.level ? Levels.ring(av, k.level, k.pct || 0, "groot") : av}</div>
       <div class="spnaam"><h2 id="spelerPopH">${naam}</h2>${k.subtitle ? `<p class="sub">${esc(k.subtitle)}</p>` : ""}
-        ${k.rang ? `<span class="rang">${esc(k.rang)}</span>` : ""}${k.sinds ? `<span class="sinds">Speler sinds ${datum(k.sinds)}</span>` : ""}</div>
+        ${k.rang ? `<span class="rang">${esc(k.rang)}</span>` : ""}${k.sinds ? `<span class="sinds">Speler sinds ${datum(k.sinds)}</span>` : ""}
+        ${k.vandaag == null ? "" : `<span class="spvandaag${k.vandaag ? " ja" : ""}">${k.vandaag ? `${VINK}Dagcasus van vandaag gespeeld` : "Dagcasus van vandaag nog niet gespeeld"}</span>`}</div>
       <div class="spbody">
         <div class="sptegels">
           ${tegel("Reeks nu", `${k.reeks ? VLAM : ""}${k.reeks} <small>${k.reeks === 1 ? "dag" : "dagen"}</small>`, `langste: ${k.reeks_max} ${k.reeks_max === 1 ? "dag" : "dagen"}`)}
