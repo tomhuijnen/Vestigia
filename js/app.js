@@ -119,8 +119,8 @@ const INSTALL_UITLEG = {
   safari: ["Safari", `Kies in de menubalk <b>Archief</b> → <b>Voeg toe aan Dock</b> (vanaf macOS Sonoma). Op een oudere macOS kan dat niet; gebruik dan Chrome of Edge.`],
   firefox: ["Firefox", `Firefox kan op een laptop of pc geen web-apps installeren. Open Vestigia in <b>Chrome</b> of <b>Edge</b> en installeer hem daar. Met de knoppen hieronder neem je je spelersnaam en voortgang mee.`],
   ios: ["iPhone of iPad", `Open Vestigia in <b>Safari</b>, tik op <b>Deel</b> (vierkantje met pijl omhoog) en kies <b>Zet op beginscherm</b>. Let op: de app heeft een eigen geheugen. Kopieer eerst je spelerscode in Mijn profiel als je al een naam hebt.`],
-  android: ["Android", `Tik in Chrome op <b>⋮</b> rechtsboven → <b>App installeren</b> of <b>Toevoegen aan startscherm</b>.`],
-  samsung: ["Samsung Internet", `Tik op <b>☰</b> rechtsonder → <b>Pagina toevoegen aan</b> → <b>Startscherm</b>.`],
+  android: ["Android", `Tik in Chrome op <b>⋮</b> rechtsboven → <b>Toevoegen aan startscherm</b> → <b>Installeren</b>.`],
+  samsung: ["Samsung Internet", `Tik in de adresbalk op het icoontje met het <b>pijltje naar beneden</b> en kies <b>Installeren</b>. Zie je dat niet, tik dan op <b>☰</b> rechtsonder → <b>Pagina toevoegen aan</b> → <b>Startscherm</b>.`],
   anders: ["je browser", `Installeren werkt het best in <b>Chrome</b> of <b>Edge</b> (op een laptop of pc) en in Safari op een iPhone.`]
 };
 /* Firefox: Vestigia openen in Edge (Windows kent de link microsoft-edge:) of een link kopiëren voor Chrome.

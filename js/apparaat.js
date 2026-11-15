@@ -10,6 +10,8 @@
      per dag gemeld. Zo weet de app hoeveel apparaten je gebruikt en of je Vestigia ergens als app hebt. Wie al twee
      apparaten gebruikt, krijgt geen uitleg over koppelen. Wie de app al heeft, krijgt geen uitleg over installeren.
      Ook de pushmeldingen (update 18) gebruiken dit nummer.
+   Android (update 42): de uitleg noemt de browser die je gebruikt (Samsung Internet, Chrome, Edge, Firefox, Opera)
+     en geeft per browser de route via de adresbalk én via het menu.
    Voorbeeld zonder database: ?apparaat=demo (een nepcode; koppelen zelf gebeurt dan niet). */
 "use strict";
 
@@ -45,6 +47,39 @@ const Apparaat = (() => {
   const soort = () => ios() ? "ios" : android() ? "android" : "pc";
   const isApp = () => (window.matchMedia && (matchMedia("(display-mode: standalone)").matches || matchMedia("(display-mode: window-controls-overlay)").matches)) || navigator.standalone === true;
   const vraag = () => (typeof installEvt !== "undefined" && installEvt) || window.__installEvt || null;
+  /* Android: welke browser (update 42). Samsung Internet stuurt geen installatievraag; daar installeer je met het
+     icoontje in de adresbalk of via het menu. Chrome stuurt die vraag meestal wel (dan de knop ‘Installeer’). */
+  function androidBrowser(){
+    const ua = navigator.userAgent;
+    if (/SamsungBrowser/.test(ua)) return "samsung";
+    if (/Firefox/.test(ua)) return "firefox";
+    if (/EdgA\//.test(ua)) return "edge";
+    if (/OPR\/|OPT\//.test(ua)) return "opera";
+    if (/Chrome\//.test(ua)) return "chrome";
+    return "anders";
+  }
+  const NAARCHROME = "Lukt het niet? Open Vestigia dan in <b>Chrome</b> en installeer hem daar.";
+  const ANDROID = {
+    samsung: ["Samsung Internet", [
+      `<b>Snelst:</b> zie je in de adresbalk (bovenin, of onderin als je hem daar hebt) een icoontje met een <b>pijltje naar beneden</b>? Tik erop en kies <b>Installeren</b>.`,
+      `<b>Of via het menu:</b> tik rechtsonder op <b>☰</b> → <b>Pagina toevoegen aan</b> → <b>Startscherm</b> → <b>Toevoegen</b>.`], NAARCHROME],
+    chrome: ["Chrome", [
+      `Tik rechtsboven op <b>⋮</b> en kies <b>Toevoegen aan startscherm</b>.`,
+      `Kies daarna <b>Installeren</b> (niet ‘Snelkoppeling maken’: dan krijg je geen echte app). Zie je rechts in de adresbalk een knop om te installeren? Dan kan het ook met één tik.`],
+      "Zie je ‘Toevoegen aan startscherm’ niet? Scroll in het menu een stukje naar beneden."],
+    edge: ["Edge", [
+      `Tik onderin op <b>☰</b> (of <b>···</b>).`,
+      `Kies <b>Toevoegen aan telefoon</b> (of <b>App installeren</b>) en daarna <b>Installeren</b>.`], NAARCHROME],
+    firefox: ["Firefox", [
+      `Tik op <b>⋮</b> (rechtsboven of onderin).`,
+      `Kies <b>Installeren</b> of <b>Toevoegen aan startscherm</b>.`], NAARCHROME],
+    opera: ["Opera", [
+      `Tik op <b>⋮</b> of het Opera-menu.`,
+      `Kies <b>Toevoegen aan</b> → <b>Startscherm</b>.`], NAARCHROME],
+    anders: ["je browser", [
+      `Open Vestigia in <b>Chrome</b> of <b>Samsung Internet</b>.`,
+      `Kies daar in het menu <b>Toevoegen aan startscherm</b> en daarna <b>Installeren</b>.`], ""]
+  };
 
   /* ---------- melden: hooguit één keer per dag per apparaat ---------- */
   const stand = () => lees(K.stand) || null;
@@ -111,6 +146,7 @@ const Apparaat = (() => {
     const v = vraag();
     if (v){
       toon(kop("Installeer Vestigia", "Gebruik de app!") + `
+        ${android() && androidBrowser() !== "anders" ? `<p>Je gebruikt <b>${ANDROID[androidBrowser()][0]}</b>. Installeren gaat met één tik.</p>` : ""}
         <ol class="apstappen"><li><b>Tik op ‘Installeer’.</b> Je ${android() ? "telefoon" : "browser"} vraagt nog even of het goed is.</li>
           <li><b>Klaar.</b> Vestigia staat ${android() ? "op je startscherm" : "bij je apps"} en opent schermvullend, ook zonder internet.</li></ol>
         <p class="fine">Je naam en voortgang gaan gewoon mee: de app gebruikt hetzelfde geheugen als deze browser.</p>
@@ -124,14 +160,11 @@ const Apparaat = (() => {
       return;
     }
     if (android()){
-      const tekst = /SamsungBrowser/.test(navigator.userAgent)
-        ? [`Tik rechtsonder op <b>☰</b>.`, `Kies <b>Pagina toevoegen aan</b> → <b>Startscherm</b>.`]
-        : /Firefox/.test(navigator.userAgent)
-          ? [`Tik op <b>⋮</b> rechtsboven (of onderin).`, `Kies <b>Installeren</b> of <b>Toevoegen aan startscherm</b>.`]
-          : [`Tik rechtsboven op <b>⋮</b>.`, `Kies <b>App installeren</b> of <b>Toevoegen aan startscherm</b>.`];
+      const b = androidBrowser(), [naam, routes, anders] = ANDROID[b];
       toon(kop("Zet Vestigia op je startscherm", "Gebruik de app!") + `
-        <ol class="apstappen">${tekst.map(t => `<li>${t}</li>`).join("")}<li><b>Klaar.</b> Je naam en voortgang gaan mee.</li></ol>
-        <p class="fine">Zie je ‘App installeren’ niet? Dan staat Vestigia misschien al op je telefoon. Kijk bij je apps.</p>`);
+        <p>${b === "anders" ? "Je gebruikt een browser die Vestigia niet altijd kan installeren." : `Je gebruikt <b>${naam}</b>.`}${b === "samsung" || b === "chrome" ? " Deze stappen gelden voor die browser." : ""}</p>
+        <ol class="apstappen">${routes.map(t => `<li>${t}</li>`).join("")}<li><b>Klaar.</b> Vestigia staat op je startscherm. Je naam en voortgang gaan mee.</li></ol>
+        <p class="fine">Staat er <b>Openen</b> of <b>Openen in app</b> in plaats van Installeren? Dan staat Vestigia al op je telefoon: kijk bij je apps. ${anders}</p>`);
       return;
     }
     /* laptop of pc zonder installatievraag: de bestaande uitleg per browser (js/app.js) */
