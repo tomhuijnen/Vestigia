@@ -241,7 +241,7 @@ function renderMenu(){
     if ($(id).dataset.av === sleutel && $(id).firstChild) return;
     /* medaille-avatar: lauriertakken om de knop in plaats van het medaille-embleem (zoals in profiel en ranglijst) */
     const me = p ? Profiel.mijn() : null, lauw = !!me && isMedaille(me);
-    $(id).innerHTML = p ? avatarSVG(me, "avatar kop", lauw) + (lauw ? laurierTakken("klein") : "") : POPPETJE; $(id).dataset.av = sleutel;
+    $(id).innerHTML = p ? avatarSVG(me, "avatar kop", lauw) + (lauw ? laurierTakken("kop") : "") : POPPETJE; $(id).dataset.av = sleutel;
     $(id).classList.toggle("metlaurier", lauw);
   });
   /* levels (update 10): de rand om je avatar is een voortgangsring met een levelbolletje */
