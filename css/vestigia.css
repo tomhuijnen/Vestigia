@@ -1948,3 +1948,80 @@ html.donker .shoppop-rij{background:var(--mint)}
 /* bij een ondertitel komt de naamregel onder de uitleg (‘Zo staat hij onder je naam…’) */
 .shoppop.titel #shopPopSoort{order:0} .shoppop.titel #shopPopH{order:1} .shoppop.titel #shopPopTekst{order:2} .shoppop.titel .shoppop-beeld{order:3}
 .shoppop.titel .shoppop-prijs{order:4} .shoppop.titel .shoppop-msg{order:5} .shoppop.titel .shoppop-knoppen{order:6}
+
+/* ── update 38: profielkaart van een andere speler (alleen-lezen) ── */
+.overlay.spkaart{-webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); background:rgba(20,36,27,.45)}
+.spkaart .sheet{max-width:440px; width:100%; padding:0; gap:0; border-top:0; border-radius:18px; overflow:hidden auto; max-height:min(88vh, 760px); box-shadow:0 18px 50px rgba(0,0,0,.28)}
+/* kop: groen zoals de masthead, met de avatar half eroverheen */
+.spkop{position:relative; color:#fff; background:linear-gradient(160deg, var(--green) 0%, var(--green-d) 100%); padding:16px 18px 54px; text-align:center}
+.spkop .caps{color:#edfbe2; font-weight:600; letter-spacing:.09em; font-size:.62rem}
+.spkop .spsluit{position:absolute; top:10px; right:10px; width:36px; height:36px; border-radius:18px; border:1.5px solid rgba(237,251,226,.6); background:transparent; color:#fff; display:grid; place-items:center; cursor:pointer}
+.spkop .spsluit:hover{background:rgba(237,251,226,.14)}
+.spav{display:grid; justify-items:center; margin-top:-48px; position:relative; z-index:1}
+.spav .lvring{background-clip:padding-box}
+.spav .lvring > svg.avatar{box-shadow:0 0 0 4px var(--paper)}
+.spnaam{text-align:center; padding:8px 20px 0}
+.spnaam h2{margin:0; font-family:var(--display); font-weight:700; font-size:1.55rem; line-height:1.15; overflow-wrap:anywhere}
+.spnaam .sub{margin:2px 0 0; color:var(--ink-2); font-size:.92rem}
+.spnaam .rang{display:inline-flex; align-items:center; gap:6px; margin-top:8px; padding:3px 10px; border-radius:999px; background:var(--mint); color:var(--green-d); font:600 .72rem var(--caps); letter-spacing:.06em; text-transform:uppercase}
+.spnaam .sinds{display:block; margin-top:6px; font-size:.8rem; color:var(--ink-2)}
+.spbody{padding:16px 18px 18px; display:grid; gap:16px}
+/* tegels: 2 kolommen op een smalle telefoon, 3 zodra de kaart breed genoeg is */
+.sptegels{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px}
+.spbody{container-type:inline-size}
+@container (min-width:380px){ .sptegels{grid-template-columns:repeat(3, minmax(0,1fr))} }
+.sptegel{background:var(--leaf); border:1px solid var(--rule); border-radius:12px; padding:10px 12px; display:grid; gap:1px; min-width:0}
+.sptegel .tl{font:600 .6rem var(--caps); text-transform:uppercase; letter-spacing:.08em; color:var(--ink-2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.sptegel .tv{font:600 1.2rem/1.25 var(--display); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.sptegel .tv small{font:500 .78rem var(--body); color:var(--ink-2)}
+.sptegel .ts{font-size:.74rem; color:var(--ink-2); line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.sptegel .tb{display:block; height:5px; border-radius:3px; background:var(--rule); overflow:hidden; margin-top:5px}
+.sptegel .tb i{display:block; height:5px; background:var(--green)}
+.sptegel .vlam{vertical-align:-2px; margin-right:2px}
+.sptegel .eikel{width:15px; height:15px; vertical-align:-2px; margin-right:3px}
+.sptegel .tv.fav{display:flex; align-items:center; font-size:.92rem; line-height:1.3; white-space:normal}
+.sptegel .tv.fav span{min-width:0; overflow:hidden; text-overflow:ellipsis}
+.sptegel .tv.fav .grpstip{flex:none}
+.sptegel .grpstip{display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:6px; vertical-align:1px}
+.spsec h3, .spduel h3{margin:0 0 8px; font:600 .72rem var(--caps); text-transform:uppercase; letter-spacing:.08em; color:var(--green-d); display:flex; justify-content:space-between; align-items:baseline}
+.spsec h3 small, .spduel h3 small{font:400 .78rem var(--body); text-transform:none; letter-spacing:0; color:var(--ink-2)}
+.spsec .prlist{display:grid; gap:6px}
+.spsec .pr{padding:8px 10px}
+.spsec .prtxt > span{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+/* duelbalans: gewonnen · gelijk · verloren, in de kleur van het spelersduel */
+.spduel{display:grid; gap:8px; padding:12px 14px; border-radius:12px; background:var(--du-leaf); border:1px solid var(--du-rule)}
+.spduel h3{color:var(--du-d); margin:0}
+.spbalans{display:grid; grid-template-columns:repeat(3, 1fr); text-align:center}
+.spbalans b{display:block; font:700 1.35rem/1.1 var(--display); color:var(--du-d)}
+.spbalans span{font-size:.74rem; color:var(--ink-2)}
+.spbalk{display:flex; height:7px; border-radius:4px; overflow:hidden; background:var(--du-rule)}
+.spbalk i{display:block; height:7px}
+.spbalk .w{background:var(--du)} .spbalk .g{background:var(--du-zacht)} .spbalk .v{background:#d9cdd7}
+.spduel .fine{margin:0; font-size:.8rem; color:var(--ink-2)}
+.spknop{display:grid; gap:8px}
+.spknop .btn{width:100%; min-height:46px; display:flex; align-items:center; justify-content:center; gap:8px}
+.spknop .btn.duel{background:linear-gradient(160deg, var(--du) 0%, var(--du-d) 100%); border-color:var(--du-d); color:#fff}
+.spknop .btn.duel:hover{filter:brightness(1.08)}
+.spknop .fine{margin:0; text-align:center; font-size:.78rem; color:var(--ink-2)}
+/* vóór het spelersduel (23 november): alleen een zin */
+.spnog{margin:0; text-align:center; font-size:.82rem; color:var(--ink-2)}
+/* laden en fouten */
+.spleeg{padding:28px 20px 30px; text-align:center; color:var(--ink-2)}
+/* een naam in de ranglijst is nu aan te tikken */
+.ranklist li[data-n]{cursor:pointer}
+.ranklist li[data-n]:focus-visible{outline:2px solid var(--green); outline-offset:2px}
+.ranklist li[data-n]:not(.me):hover{border-color:var(--green)}
+.ranklist li[data-n] .who b{text-decoration:underline dotted transparent; text-underline-offset:3px; transition:text-decoration-color .15s}
+.ranklist li[data-n]:not(.me):hover .who b{text-decoration-color:var(--green)}
+
+html.donker .overlay.spkaart{background:rgba(0,0,0,.55)}
+html.donker .spkop{background:linear-gradient(160deg,#20352a 0%,#152219 100%)}
+html.donker .spkaart .sheet{background:var(--paper)}
+html.donker .sptegel{background:#1d2a22}
+html.donker .spnaam .rang{background:#1f3427; color:#a9d6b8}
+html.donker .spduel{background:var(--dn-bg); border-color:var(--dn-rule)}
+html.donker .spduel h3, html.donker .spbalans b{color:var(--dn-l)}
+html.donker .spbalk{background:var(--dn-rule)}
+html.donker .spbalk .w{background:var(--dn)} html.donker .spbalk .g{background:var(--dn-tb)} html.donker .spbalk .v{background:#3a2a37}
+html.donker .spknop .btn.duel{background:linear-gradient(160deg,#8a5a84 0%,#643a5e 100%); color:#fff; border-color:#8a6584}
+@media (prefers-reduced-motion: reduce){ .ranklist li[data-n] .who b{transition:none} }
