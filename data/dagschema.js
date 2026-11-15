@@ -48,75 +48,75 @@ const DAGSCHEMA = [
   "damhert#1"                       , //  43 · za 19 dec 2026
   "kleine-bonte-specht#1"           , //  44 · zo 20 dec 2026
   "koolmees#1"                      , //  45 · ma 21 dec 2026
-  "kievit#2"                        , //  46 · di 22 dec 2026
+  "boomklever#1"                    , //  46 · di 22 dec 2026
   "brilduiker#1"                    , //  47 · wo 23 dec 2026
   "grote-gele-kwikstaart#2"         , //  48 · do 24 dec 2026
-  "ooievaar#2"                      , //  49 · vr 25 dec 2026
-  "grutto#2"                        , //  50 · za 26 dec 2026
+  "ijsvogel#1"                      , //  49 · vr 25 dec 2026
+  "patrijs#1"                       , //  50 · za 26 dec 2026
   "sperwer#1"                       , //  51 · zo 27 dec 2026
   "zwarte-mees#1"                   , //  52 · ma 28 dec 2026
   "bosmuis#2"                       , //  53 · di 29 dec 2026
-  "huismus#2"                       , //  54 · wo 30 dec 2026
+  "oehoe#1"                         , //  54 · wo 30 dec 2026
   "torenvalk#2"                     , //  55 · do 31 dec 2026
-  "wezel#2"                         , //  56 · vr 1 jan 2027
-  "zwarte-specht#1"                 , //  57 · za 2 jan 2027
-  "zeearend#1"                      , //  58 · zo 3 jan 2027
-  "gewone-baardvleermuis#2"         , //  59 · ma 4 jan 2027
+  "vos#1"                           , //  56 · vr 1 jan 2027
+  "gewone-baardvleermuis#2"         , //  57 · za 2 jan 2027
+  "goudjakhals#1"                   , //  58 · zo 3 jan 2027
+  "kauw#1"                          , //  59 · ma 4 jan 2027
   "grote-bonte-specht#1"            , //  60 · di 5 jan 2027
-  "boomklever#1"                    , //  61 · wo 6 jan 2027
-  "boomkruiper#1"                   , //  62 · do 7 jan 2027
+  "boomkruiper#1"                   , //  61 · wo 6 jan 2027
+  "ekster#1"                        , //  62 · do 7 jan 2027
   "pimpelmees#1"                    , //  63 · vr 8 jan 2027
-  "vos#1"                           , //  64 · za 9 jan 2027
-  "kauw#1"                          , //  65 · zo 10 jan 2027
-  "blauwe-reiger#2"                 , //  66 · ma 11 jan 2027
-  "ijsvogel#1"                      , //  67 · di 12 jan 2027
-  "kortsnavelboomkruiper#1"         , //  68 · wo 13 jan 2027
+  "steenmarter#2"                   , //  64 · za 9 jan 2027
+  "kerkuil#2"                       , //  65 · zo 10 jan 2027
+  "zwarte-specht#1"                 , //  66 · ma 11 jan 2027
+  "bruine-kikker#1"                 , //  67 · di 12 jan 2027
+  "zwarte-wouw#2"                   , //  68 · wo 13 jan 2027
   "gevlekte-witsnuitlibel#2"        , //  69 · do 14 jan 2027
   "boommarter#2"                    , //  70 · vr 15 jan 2027
-  "buizerd#2"                       , //  71 · za 16 jan 2027
+  "blauwe-reiger#2"                 , //  71 · za 16 jan 2027
   "wolf#1"                          , //  72 · zo 17 jan 2027
-  "bruine-kikker#1"                 , //  73 · ma 18 jan 2027
+  "franjestaart#1"                  , //  73 · ma 18 jan 2027
   "bever#1"                         , //  74 · di 19 jan 2027
-  "franjestaart#1"                  , //  75 · wo 20 jan 2027
-  "kerkuil#1"                       , //  76 · do 21 jan 2027
-  "steenmarter#2"                   , //  77 · vr 22 jan 2027
-  "goudjakhals#1"                   , //  78 · za 23 jan 2027
+  "gewone-bosspitsmuis#2"           , //  75 · wo 20 jan 2027
+  "roek#1"                          , //  76 · do 21 jan 2027
+  "waterspitsmuis#2"                , //  77 · vr 22 jan 2027
+  "zwarte-mees#2"                   , //  78 · za 23 jan 2027
   "grote-vos#2"                     , //  79 · zo 24 jan 2027
   "bosbeekjuffer#2"                 , //  80 · ma 25 jan 2027
-  "geelbuikvuurpad#1"               , //  81 · di 26 jan 2027
-  "hermelijn#1"                     , //  82 · wo 27 jan 2027
-  "oehoe#1"                         , //  83 · do 28 jan 2027
-  "meerkikker#1"                    , //  84 · vr 29 jan 2027
-  "ekster#1"                        , //  85 · za 30 jan 2027
-  "gewone-bosspitsmuis#2"           , //  86 · zo 31 jan 2027
-  "havik#1"                         , //  87 · ma 1 feb 2027
-  "raaf#1"                          , //  88 · di 2 feb 2027
+  "vroedmeesterpad#2"               , //  81 · di 26 jan 2027
+  "wezel#2"                         , //  82 · wo 27 jan 2027
+  "buizerd#2"                       , //  83 · do 28 jan 2027
+  "beekprik#2"                      , //  84 · vr 29 jan 2027
+  "raaf#1"                          , //  85 · za 30 jan 2027
+  "grauwe-gans#1"                   , //  86 · zo 31 jan 2027
+  "slechtvalk#1"                    , //  87 · ma 1 feb 2027
+  "havik#1"                         , //  88 · di 2 feb 2027
   "das#1"                           , //  89 · wo 3 feb 2027
-  "adder#1"                         , //  90 · do 4 feb 2027
-  "slechtvalk#1"                    , //  91 · vr 5 feb 2027
+  "hermelijn#1"                     , //  90 · do 4 feb 2027
+  "adder#1"                         , //  91 · vr 5 feb 2027
   "bunzing#2"                       , //  92 · za 6 feb 2027
   "ruigpootuil#1"                   , //  93 · zo 7 feb 2027
-  "waterspitsmuis#2"                , //  94 · ma 8 feb 2027
-  "brilduiker#2"                    , //  95 · di 9 feb 2027
-  "zwarte-mees#2"                   , //  96 · wo 10 feb 2027
-  "edelhert#2"                      , //  97 · do 11 feb 2027
-  "gewone-pad#1"                    , //  98 · vr 12 feb 2027
+  "bruinvis#1"                      , //  94 · ma 8 feb 2027
+  "kortsnavelboomkruiper#1"         , //  95 · di 9 feb 2027
+  "brilduiker#2"                    , //  96 · wo 10 feb 2027
+  "haas#1"                          , //  97 · do 11 feb 2027
+  "heikikker#1"                     , //  98 · vr 12 feb 2027
   "donker-pimpernelblauwtje#2"      , //  99 · za 13 feb 2027
   "aardmuis#2"                      , // 100 · zo 14 feb 2027
-  "blauwe-reiger#1"                 , // 101 · ma 15 feb 2027
+  "merel#2"                         , // 101 · ma 15 feb 2027
   "huiszwaluw#2"                    , // 102 · di 16 feb 2027
   "eekhoorn#2"                      , // 103 · wo 17 feb 2027
-  "heikikker#1"                     , // 104 · do 18 feb 2027
-  "vroedmeesterpad#2"               , // 105 · vr 19 feb 2027
-  "merel#2"                         , // 106 · za 20 feb 2027
-  "grote-vos#1"                     , // 107 · zo 21 feb 2027
-  "pimpelmees#2"                    , // 108 · ma 22 feb 2027
-  "bruinvis#1"                      , // 109 · di 23 feb 2027
-  "roek#1"                          , // 110 · wo 24 feb 2027
-  "buizerd#1"                       , // 111 · do 25 feb 2027
-  "kerkuil#2"                       , // 112 · vr 26 feb 2027
-  "beekdonderpad#1"                 , // 113 · za 27 feb 2027
-  "vos#2"                           , // 114 · zo 28 feb 2027
+  "gewone-pad#1"                    , // 104 · do 18 feb 2027
+  "vuursalamander#2"                , // 105 · vr 19 feb 2027
+  "grote-vos#1"                     , // 106 · za 20 feb 2027
+  "blauwe-reiger#1"                 , // 107 · zo 21 feb 2027
+  "zeearend#1"                      , // 108 · ma 22 feb 2027
+  "edelhert#2"                      , // 109 · di 23 feb 2027
+  "buizerd#1"                       , // 110 · wo 24 feb 2027
+  "beekdonderpad#1"                 , // 111 · do 25 feb 2027
+  "ijsvogel#2"                      , // 112 · vr 26 feb 2027
+  "draaihals#2"                     , // 113 · za 27 feb 2027
+  "hermelijn#2"                     , // 114 · zo 28 feb 2027
   "ruige-dwergvleermuis#2"          , // 115 · ma 1 mrt 2027
   "grote-gele-kwikstaart#1"         , // 116 · di 2 mrt 2027
   "ringslang#2"                     , // 117 · wo 3 mrt 2027
@@ -124,119 +124,119 @@ const DAGSCHEMA = [
   "kwabaal#2"                       , // 119 · vr 5 mrt 2027
   "ooievaar#1"                      , // 120 · za 6 mrt 2027
   "kamsalamander#1"                 , // 121 · zo 7 mrt 2027
-  "beekprik#1"                      , // 122 · ma 8 mrt 2027
-  "haas#1"                          , // 123 · di 9 mrt 2027
+  "grote-modderkruiper#2"           , // 122 · ma 8 mrt 2027
+  "vos#2"                           , // 123 · di 9 mrt 2027
   "kauw#2"                          , // 124 · wo 10 mrt 2027
-  "spreeuw#1"                       , // 125 · do 11 mrt 2027
+  "kievit#1"                        , // 125 · do 11 mrt 2027
   "alpenwatersalamander#1"          , // 126 · vr 12 mrt 2027
   "steenuil#2"                      , // 127 · za 13 mrt 2027
-  "raaf#2"                          , // 128 · zo 14 mrt 2027
+  "pimpelmees#2"                    , // 128 · zo 14 mrt 2027
   "dwergmuis#1"                     , // 129 · ma 15 mrt 2027
-  "vuursalamander#2"                , // 130 · di 16 mrt 2027
-  "kleine-watersalamander#1"        , // 131 · wo 17 mrt 2027
-  "zwarte-kraai#2"                  , // 132 · do 18 mrt 2027
+  "knoflookpad#1"                   , // 130 · di 16 mrt 2027
+  "vinpootsalamander#1"             , // 131 · wo 17 mrt 2027
+  "witte-kwikstaart#2"              , // 132 · do 18 mrt 2027
   "woelrat#1"                       , // 133 · vr 19 mrt 2027
-  "witte-kwikstaart#2"              , // 134 · za 20 mrt 2027
+  "grutto#2"                        , // 134 · za 20 mrt 2027
   "bruinvis#2"                      , // 135 · zo 21 mrt 2027
   "vermiljoenkever#2"               , // 136 · ma 22 mrt 2027
   "hop#1"                           , // 137 · di 23 mrt 2027
-  "knoflookpad#1"                   , // 138 · wo 24 mrt 2027
-  "kleine-vliegenvanger#1"          , // 139 · do 25 mrt 2027
+  "kleine-watersalamander#1"        , // 138 · wo 24 mrt 2027
+  "kleine-vliegenvanger#2"          , // 139 · do 25 mrt 2027
   "zwarte-roodstaart#2"             , // 140 · vr 26 mrt 2027
   "sierlijke-witsnuitlibel#1"       , // 141 · za 27 mrt 2027
-  "sperwer#2"                       , // 142 · zo 28 mrt 2027
-  "vinpootsalamander#1"             , // 143 · ma 29 mrt 2027
-  "draaihals#1"                     , // 144 · di 30 mrt 2027
+  "wespendief#1"                    , // 142 · zo 28 mrt 2027
+  "beekprik#1"                      , // 143 · ma 29 mrt 2027
+  "kortsnavelboomkruiper#2"         , // 144 · di 30 mrt 2027
   "havik#2"                         , // 145 · wo 31 mrt 2027
   "koolmees#2"                      , // 146 · do 1 apr 2027
   "waterspitsmuis#1"                , // 147 · vr 2 apr 2027
-  "grote-bosmuis#2"                 , // 148 · za 3 apr 2027
+  "aardmuis#1"                      , // 148 · za 3 apr 2027
   "houtduif#2"                      , // 149 · zo 4 apr 2027
-  "zandhagedis#1"                   , // 150 · ma 5 apr 2027
-  "rugstreeppad#1"                  , // 151 · di 6 apr 2027
+  "gladde-slang#2"                  , // 150 · ma 5 apr 2027
+  "poelkikker#1"                    , // 151 · di 6 apr 2027
   "gekraagde-roodstaart#1"          , // 152 · wo 7 apr 2027
   "konijn#1"                        , // 153 · do 8 apr 2027
-  "poelkikker#1"                    , // 154 · vr 9 apr 2027
-  "tapuit#1"                        , // 155 · za 10 apr 2027
-  "gladde-slang#2"                  , // 156 · zo 11 apr 2027
+  "vinpootsalamander#2"             , // 154 · vr 9 apr 2027
+  "draaihals#1"                     , // 155 · za 10 apr 2027
+  "tapuit#1"                        , // 156 · zo 11 apr 2027
   "kleine-bonte-specht#2"           , // 157 · ma 12 apr 2027
   "hamster#2"                       , // 158 · di 13 apr 2027
   "boommarter#1"                    , // 159 · wo 14 apr 2027
-  "wespendief#1"                    , // 160 · do 15 apr 2027
+  "huismus#2"                       , // 160 · do 15 apr 2027
   "watervleermuis#1"                , // 161 · vr 16 apr 2027
-  "oeverzwaluw#1"                   , // 162 · za 17 apr 2027
-  "torenvalk#1"                     , // 163 · zo 18 apr 2027
+  "gestippelde-alver#2"             , // 162 · za 17 apr 2027
+  "bosuil#2"                        , // 163 · zo 18 apr 2027
   "rosse-woelmuis#1"                , // 164 · ma 19 apr 2027
-  "hazelworm#2"                     , // 165 · di 20 apr 2027
-  "veldmuis#2"                      , // 166 · wo 21 apr 2027
-  "groene-specht#1"                 , // 167 · do 22 apr 2027
-  "grauwe-gans#1"                   , // 168 · vr 23 apr 2027
-  "huismus#1"                       , // 169 · za 24 apr 2027
+  "levendbarende-hagedis#2"         , // 165 · di 20 apr 2027
+  "spreeuw#1"                       , // 166 · wo 21 apr 2027
+  "torenvalk#1"                     , // 167 · do 22 apr 2027
+  "europese-steur#2"                , // 168 · vr 23 apr 2027
+  "ransuil#2"                       , // 169 · za 24 apr 2027
   "rosse-vleermuis#1"               , // 170 · zo 25 apr 2027
-  "houtduif#1"                      , // 171 · ma 26 apr 2027
-  "egel#1"                          , // 172 · di 27 apr 2027
-  "kortsnavelboomkruiper#2"         , // 173 · wo 28 apr 2027
-  "glanskop#2"                      , // 174 · do 29 apr 2027
-  "alpenwatersalamander#2"          , // 175 · vr 30 apr 2027
-  "witsnuitdolfijn#2"               , // 176 · za 1 mei 2027
-  "grauwe-vliegenvanger#1"          , // 177 · zo 2 mei 2027
-  "huiszwaluw#1"                    , // 178 · ma 3 mei 2027
-  "kleine-vliegenvanger#2"          , // 179 · di 4 mei 2027
-  "boerenzwaluw#1"                  , // 180 · wo 5 mei 2027
-  "zwarte-wouw#2"                   , // 181 · do 6 mei 2027
-  "gierzwaluw#1"                    , // 182 · vr 7 mei 2027
+  "roodborsttapuit#1"               , // 171 · ma 26 apr 2027
+  "wezel#1"                         , // 172 · di 27 apr 2027
+  "zwarte-kraai#2"                  , // 173 · wo 28 apr 2027
+  "middelste-groene-kikker#1"       , // 174 · do 29 apr 2027
+  "rugstreeppad#1"                  , // 175 · vr 30 apr 2027
+  "patrijs#2"                       , // 176 · za 1 mei 2027
+  "eidereend#2"                     , // 177 · zo 2 mei 2027
+  "boomvalk#2"                      , // 178 · ma 3 mei 2027
+  "hop#2"                           , // 179 · di 4 mei 2027
+  "wespendief#2"                    , // 180 · wo 5 mei 2027
+  "huiszwaluw#1"                    , // 181 · do 6 mei 2027
+  "meervleermuis#2"                 , // 182 · vr 7 mei 2027
   "bonte-vliegenvanger#1"           , // 183 · za 8 mei 2027
-  "wespendief#2"                    , // 184 · zo 9 mei 2027
-  "grote-bonte-specht#2"            , // 185 · ma 10 mei 2027
-  "grote-modderkruiper#1"           , // 186 · di 11 mei 2027
-  "spreeuw#2"                       , // 187 · wo 12 mei 2027
-  "ree#1"                           , // 188 · do 13 mei 2027
-  "ruigpootuil#2"                   , // 189 · vr 14 mei 2027
-  "gestippelde-alver#2"             , // 190 · za 15 mei 2027
+  "gierzwaluw#1"                    , // 184 · zo 9 mei 2027
+  "glanskop#2"                      , // 185 · ma 10 mei 2027
+  "alpenwatersalamander#2"          , // 186 · di 11 mei 2027
+  "veldmuis#1"                      , // 187 · wo 12 mei 2027
+  "edelhert#1"                      , // 188 · do 13 mei 2027
+  "grote-bonte-specht#2"            , // 189 · vr 14 mei 2027
+  "elrits#1"                        , // 190 · za 15 mei 2027
   "heikikker#2"                     , // 191 · zo 16 mei 2027
-  "noordzeehouting#2"               , // 192 · ma 17 mei 2027
-  "rosse-vleermuis#2"               , // 193 · di 18 mei 2027
-  "bosuil#2"                        , // 194 · wo 19 mei 2027
+  "gestippelde-alver#1"             , // 192 · ma 17 mei 2027
+  "franjestaart#2"                  , // 193 · di 18 mei 2027
+  "zwarte-specht#2"                 , // 194 · wo 19 mei 2027
   "hazelworm#1"                     , // 195 · do 20 mei 2027
-  "zeearend#2"                      , // 196 · vr 21 mei 2027
-  "kievit#1"                        , // 197 · za 22 mei 2027
-  "ransuil#2"                       , // 198 · zo 23 mei 2027
-  "damhert#2"                       , // 199 · ma 24 mei 2027
-  "muurhagedis#1"                   , // 200 · di 25 mei 2027
+  "ruigpootuil#2"                   , // 196 · vr 21 mei 2027
+  "boerenzwaluw#1"                  , // 197 · za 22 mei 2027
+  "oeverzwaluw#1"                   , // 198 · zo 23 mei 2027
+  "wild-zwijn#2"                    , // 199 · ma 24 mei 2027
+  "kamsalamander#2"                 , // 200 · di 25 mei 2027
   "otter#2"                         , // 201 · wo 26 mei 2027
-  "beekrombout#2"                   , // 202 · do 27 mei 2027
-  "woelrat#2"                       , // 203 · vr 28 mei 2027
-  "kamsalamander#2"                 , // 204 · za 29 mei 2027
-  "edelhert#1"                      , // 205 · zo 30 mei 2027
-  "gewone-dwergvleermuis#1"         , // 206 · ma 31 mei 2027
-  "knoflookpad#2"                   , // 207 · di 1 jun 2027
-  "ijsvogel#2"                      , // 208 · wo 2 jun 2027
+  "rivierrombout#1"                 , // 202 · do 27 mei 2027
+  "dwergmuis#2"                     , // 203 · vr 28 mei 2027
+  "muurhagedis#1"                   , // 204 · za 29 mei 2027
+  "damhert#2"                       , // 205 · zo 30 mei 2027
+  "noordse-woelmuis#1"              , // 206 · ma 31 mei 2027
+  "geelbuikvuurpad#1"               , // 207 · di 1 jun 2027
+  "oehoe#2"                         , // 208 · wo 2 jun 2027
   "grote-weerschijnvlinder#2"       , // 209 · do 3 jun 2027
-  "noordse-woelmuis#1"              , // 210 · vr 4 jun 2027
+  "gewone-grootoorvleermuis#1"      , // 210 · vr 4 jun 2027
   "vroedmeesterpad#1"               , // 211 · za 5 jun 2027
-  "middelste-groene-kikker#1"       , // 212 · zo 6 jun 2027
+  "grutto#1"                        , // 212 · zo 6 jun 2027
   "kleine-ijsvogelvlinder#2"        , // 213 · ma 7 jun 2027
-  "franjestaart#2"                  , // 214 · di 8 jun 2027
-  "wolf#2"                          , // 215 · wo 9 jun 2027
-  "vinpootsalamander#2"             , // 216 · do 10 jun 2027
+  "wilde-kat#2"                     , // 214 · di 8 jun 2027
+  "grauwe-vliegenvanger#1"          , // 215 · wo 9 jun 2027
+  "ingekorven-vleermuis#1"          , // 216 · do 10 jun 2027
   "vliegend-hert#1"                 , // 217 · vr 11 jun 2027
-  "oehoe#2"                         , // 218 · za 12 jun 2027
-  "wilde-kat#2"                     , // 219 · zo 13 jun 2027
-  "teunisbloempijlstaart#1"         , // 220 · ma 14 jun 2027
+  "sperwer#2"                       , // 218 · za 12 jun 2027
+  "eikelmuis#1"                     , // 219 · zo 13 jun 2027
+  "teunisbloempijlstaart#2"         , // 220 · ma 14 jun 2027
   "donker-pimpernelblauwtje#1"      , // 221 · di 15 jun 2027
-  "levendbarende-hagedis#2"         , // 222 · wo 16 jun 2027
-  "meervleermuis#2"                 , // 223 · do 17 jun 2027
-  "gewone-grootoorvleermuis#1"      , // 224 · vr 18 jun 2027
-  "grutto#1"                        , // 225 · za 19 jun 2027
+  "boomkikker#1"                    , // 222 · wo 16 jun 2027
+  "gewone-dwergvleermuis#1"         , // 223 · do 17 jun 2027
+  "zandhagedis#2"                   , // 224 · vr 18 jun 2027
+  "witsnuitdolfijn#2"               , // 225 · za 19 jun 2027
   "hazelmuis#2"                     , // 226 · zo 20 jun 2027
-  "eikelmuis#1"                     , // 227 · ma 21 jun 2027
+  "steenmarter#1"                   , // 227 · ma 21 jun 2027
   "pimpernelblauwtje#1"             , // 228 · di 22 jun 2027
-  "dwergmuis#2"                     , // 229 · wo 23 jun 2027
-  "laatvlieger#1"                   , // 230 · do 24 jun 2027
-  "watervleermuis#2"                , // 231 · vr 25 jun 2027
-  "elrits#2"                        , // 232 · za 26 jun 2027
-  "grauwe-vliegenvanger#2"          , // 233 · zo 27 jun 2027
-  "beekdonderpad#2"                 , // 234 · ma 28 jun 2027
-  "gestippelde-alver#1"             , // 235 · di 29 jun 2027
-  "veldmuis#1"                      , // 236 · wo 30 jun 2027
+  "gewone-bosspitsmuis#1"           , // 229 · wo 23 jun 2027
+  "ree#1"                           , // 230 · do 24 jun 2027
+  "laatvlieger#1"                   , // 231 · vr 25 jun 2027
+  "kerkuil#1"                       , // 232 · za 26 jun 2027
+  "raaf#2"                          , // 233 · zo 27 jun 2027
+  "gierzwaluw#2"                    , // 234 · ma 28 jun 2027
+  "grote-modderkruiper#1"           , // 235 · di 29 jun 2027
+  "spreeuw#2"                       , // 236 · wo 30 jun 2027
 ];

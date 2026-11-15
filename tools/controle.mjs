@@ -206,13 +206,13 @@ if (args.has("--woorden")){
         if (woord.has(w) && woord.get(w) !== z.naam) LETOP(`zoekwoord "${w}" staat bij ${woord.get(w)} én ${z.naam}`);
         woord.set(w, z.naam);
       }
-      const kies = (z.g ? SPECIES.filter(t => t.g === z.g) : (z.ids || []).map(id => BY_ID.get(id)).filter(Boolean)).filter(t => t.r !== "NB");
+      const kies = (z.g ? SPECIES.filter(t => t.g === z.g) : (z.ids || []).map(id => BY_ID.get(id)).filter(Boolean)).filter(t => t.r !== "NB" && !t.lk);
       if (!kies.length) LETOP(`zoekgroep ${z.naam}: geen enkele kiesbare (beschermde) soort`);
       /* update 19: soorten die alleen via hun naam bij een groepswoord passen (‘vogel’ → kleine ijsvogelvlinder) staan in de
          app los onder de groep. Ter kennisname, zodat je ziet of er een soort tussen zit die eigenlijk wél in de groep hoort. */
       const nrm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9 ]/g, " ");
       const leden = new Set(kies.map(t => t.id));
-      const los = SPECIES.filter(t => t.r !== "NB" && !leden.has(t.id) && z.w.some(w => nrm(t.n).includes(w) || nrm(t.s).includes(w)));
+      const los = SPECIES.filter(t => t.r !== "NB" && !t.lk && !leden.has(t.id) && z.w.some(w => nrm(t.n).includes(w) || nrm(t.s).includes(w)));
       if (los.length) INFO(`zoekgroep ${z.naam}: los eronder, alleen via de naam: ${los.map(t => t.n).join(", ")}`);
     }
   }

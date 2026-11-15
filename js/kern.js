@@ -4,7 +4,7 @@
 const TARGETS = SPECIES.filter(s => s.cs && s.cs.length);       // alleen soorten met een casus kunnen het antwoord zijn
 /* kiesbaar bij het determineren: alleen beschermde soorten. Niet-beschermde look-alikes (r = NB) blijven in de data,
    omdat ze in ‘Verwar niet met’ genoemd worden en in oude logboeken kunnen staan. */
-const KIESBAAR = SPECIES.filter(s => s.r !== "NB");
+const KIESBAAR = SPECIES.filter(s => s.r !== "NB" && !s.lk);      // lk: alleen lijker bij ‘Verwar niet met’ (update 47)
 const BY_ID = new Map(SPECIES.map(s => [s.id, s]));
 const BY_NAME = new Map(SPECIES.map(s => [s.n, s]));
 const MAX = 5;
@@ -92,7 +92,8 @@ const SEIZOEN_LOS_VANAF = 14, SEIZOEN_LOS_KANS = 0.3;
 const ANDERE_CASUS_VANAF = 17;
 const INSTROOM = [
   { van: 14, tot: 50, ids: ["gevlekte-witsnuitlibel", "sierlijke-witsnuitlibel", "rivierrombout", "beekrombout", "bosbeekjuffer", "vermiljoenkever", "vliegend-hert"] },
-  { van: 14, tot: 40, ids: ["grote-bosmuis"] }          // update 30: de grote bosmuis, tussen vr 20 november en 16 december
+  { van: 14, tot: 40, ids: ["grote-bosmuis"] },         // update 30: de grote bosmuis, tussen vr 20 november en 16 december
+  { van: 31, tot: 58, ids: ["patrijs"] }                // update 47: de patrijs, tussen ma 7 december en zo 3 januari
 ];
 function pickDaily(d, history){
   const m = new Date(START + d * DAY).getUTCMonth();
