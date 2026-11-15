@@ -200,9 +200,12 @@ const Nieuw = (() => {
 })();
 
 /* update 30: één keer ‘Nieuwe soort: de grote bosmuis’, direct na die van update 14. Alleen voor wie al een dagcasus speelde
-   vóór VANAF. */
+   vóór VANAF. Tijdelijk uit (Tom, 15 november 16:40): bij update 47 komt één melding voor de grote bosmuis en de patrijs
+   samen. Wie deze al zag (vestigia:nieuw:grotebosmuis), krijgt dan alleen de patrijs. */
+const GROTEBOSMUIS_LOS = false;
 Wachtrij.voeg({ id: "grotebosmuis", prio: 2.61,
   kan(){
+    if (!GROTEBOSMUIS_LOS) return false;
     try { if (localStorage.getItem("vestigia:nieuw:grotebosmuis")) return false; } catch(e){ return false; }
     return Nieuw.veteraan("grotebosmuis");
   },
