@@ -619,7 +619,7 @@ const Profiel = (() => {
     setTimeout(() => groteMomenten(nieuwBehaald(oud, nu, oudM, nuM), null).catch(() => {}), 1500);
   }
 
-  return { mijlRij, mijlToast, vliegUit, mijlpalenKlaar: () => mijlBelofte || Promise.resolve(null), render, renderShop, naSpel, toonWinst, versier, saldoInKop, codeTip, start, mijn, inVestiarium, haalAlles, herteken: () => teken(),
+  return { kiesTitel: t => kies("titel", t, null), mijlRij, mijlToast, vliegUit, mijlpalenKlaar: () => mijlBelofte || Promise.resolve(null), render, renderShop, naSpel, toonWinst, versier, saldoInKop, codeTip, start, mijn, inVestiarium, haalAlles, herteken: () => teken(),
            naNaam(){ codeTip(); haalAlles(); } };
 })();
 
