@@ -74,6 +74,31 @@ const MEDAILLE_EMBLEEM = `<g transform="translate(78 78) scale(1.25)"><path d="M
    fonkeling. Zo vallen de verdiende avatars van de meest zeldzame soorten op in de ranglijst, zonder lijst eromheen.
    Elke avatar krijgt een eigen vertraging, zodat ze in de ranglijst niet allemaal tegelijk glanzen. */
 const MEDAILLE_GLANS = id => `<defs><linearGradient id="${id}gl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><g clip-path="url(#${id})" class="av-glans" style="--d:-${(Math.random() * 5).toFixed(2)}s"><rect class="av-glans-streep" x="-40" y="-20" width="26" height="140" fill="url(#${id}gl)" transform="rotate(20 50 50)"/></g><path class="av-fonkel" style="--d:-${(Math.random() * 5).toFixed(2)}s" d="M24 20L25.6 25.4L31 27L25.6 28.6L24 34L22.4 28.6L17 27L22.4 25.4Z" fill="#fffbe6"/>`;
+/* Lauriertakken (update 57, gekozen door Tom op 15 november): bij een medaille-avatar krullen twee gouden takken om de
+   avatar (en om de levelring), in Mijn profiel, de ranglijst en op de profielkaart. Ze laten het levelbolletje
+   linksonder en de sterretjes bovenin vrij, en komen in plaats van het oude embleem rechtsonder in de avatar.
+   Een gekochte lijst blijft gewoon zichtbaar. Af en toe een fonkeling (niet bij ‘minder beweging’). */
+function laurierTak(a0, a1, n, s){
+  const r = 56, rad = a => a * Math.PI / 180, pt = (a, rr) => [50 + rr * Math.cos(rad(a)), 50 + rr * Math.sin(rad(a))];
+  const dir = a1 > a0 ? 1 : -1, [x0, y0] = pt(a0, r), [x1, y1] = pt(a1, r), f = v => v.toFixed(2);
+  const blad = (a, rr, rot, g) => { const [x, y] = pt(a, rr), w = g * .42;
+    return `<g transform="translate(${f(x)} ${f(y)}) rotate(${rot.toFixed(1)})"><path d="M0 ${f(-g)}C${f(w)} ${f(-g * .45)} ${f(w)} ${f(g * .45)} 0 ${f(g * .7)}C${f(-w)} ${f(g * .45)} ${f(-w)} ${f(-g * .45)} 0 ${f(-g)}Z" fill="url(#{id}g)" stroke="#8a6418" stroke-width="${f(g * .09)}"/><path d="M0 ${f(-g * .8)}V${f(g * .55)}" stroke="#8a6418" stroke-width="${f(g * .06)}" stroke-opacity=".7"/></g>`; };
+  let h = `<path d="M${f(x0)} ${f(y0)}A${r} ${r} 0 0 ${dir > 0 ? 1 : 0} ${f(x1)} ${f(y1)}" fill="none" stroke="#8a6418" stroke-width="${f(s * .22)}" stroke-linecap="round"/>`;
+  for (let i = 0; i < n; i++){
+    const t = (i + .6) / (n + .4), a = a0 + (a1 - a0) * t, g = s * (1 - .32 * t), groei = a + 90 * dir;
+    h += blad(a - dir * 2, r + g * .55, groei + 128, g) + blad(a + dir * 2, r - g * .5, groei + 52, g * .92);
+  }
+  return h + blad(a1 + dir * 3, r, a1 + 90 * dir + 90, s * .62);
+}
+const LAURIER = { groot: laurierTak(158, 248, 6, 5.6) + laurierTak(22, -68, 6, 5.6), klein: laurierTak(158, 248, 4, 7.2) + laurierTak(22, -68, 4, 7.2) };
+let laurNr = 0;
+const isMedaille = p => !!(p && p.avatar && AVATARS[p.avatar] && MEDALS.some(t => t.id === p.avatar));
+/* html = de avatar (eventueel met levelring); maat = "groot" of "klein" */
+function metLaurier(html, p, maat){
+  if (!isMedaille(p)) return html;
+  const id = "lr" + (++laurNr), m = maat === "klein" ? "klein" : "groot";
+  return `<span class="laurier ${m}">${html}<svg class="laurier-tak" viewBox="-15 -15 130 130" aria-hidden="true" focusable="false"><defs><linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1b8"/><stop offset=".35" stop-color="#e9c35a"/><stop offset=".7" stop-color="#b8862a"/><stop offset="1" stop-color="#f3d27a"/></linearGradient></defs>${LAURIER[m].replaceAll("{id}", id)}<path class="laurier-fonkel" d="M102 29.8l.9 3.3 3.3.9-3.3.9-.9 3.3-.9-3.3-3.3-.9 3.3-.9Z" fill="#fff"/></svg></span>`;
+}
 const EIKEL = `<svg class="eikel" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path d="M8 2.6V1.2" stroke="#7d5330" stroke-width="1.4" stroke-linecap="round"/><path d="M2.8 6.6C2.8 4.1 5.1 2.6 8 2.6s5.2 1.5 5.2 4Z" fill="#7d5330"/><path d="M3.9 7.1h8.2c0 3.6-1.8 6.6-4.1 6.6S3.9 10.7 3.9 7.1Z" fill="#d9a441"/></svg>`;
 let avNr = 0;
 /* Contrast per achtergrondkleur (update 19). De details van een tekening (#1f3428: ogen, neus, oren, poten) liggen deels
@@ -94,8 +119,9 @@ function avatarTekening(avatar, k, id){
     <mask id="${id}m" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100" style="mask-type:alpha"><g filter="url(#${id}f)"><circle cx="50" cy="50" r="50" fill="${k.bg}"/><g color="${k.fg}">${met("none")}</g></g></mask></defs>
     <g clip-path="url(#${id})" color="${k.fg}">${met(donker)}<g mask="url(#${id}m)">${met(k.licht)}</g></g>`;
 }
-/* p = { avatar, frame, color, name }; medaille-avatars krijgen altijd het medaille-embleem rechtsonder */
-function avatarSVG(p, cls){
+/* p = { avatar, frame, color, name }; medaille-avatars krijgen het medaille-embleem rechtsonder, behalve waar de
+   lauriertakken eromheen komen (laurier = true; update 57) */
+function avatarSVG(p, cls, laurier){
   p = p || {};
   const k = KLEUREN[p.color] || KLEUREN.groen, id = "av" + (++avNr), teken = p.avatar && AVATARS[p.avatar];
   const medaille = teken && MEDALS.some(t => t.id === p.avatar);
@@ -104,7 +130,7 @@ function avatarSVG(p, cls){
     ? avatarTekening(p.avatar, k, id)
     : `<text x="50" y="50" dy=".35em" text-anchor="middle" font-size="46" font-family="Rubik, sans-serif" font-weight="600" fill="${k.fg}">${esc(((p.name || "?").trim()[0] || "?").toUpperCase())}</text>`;
   return `<svg class="${cls || "avatar"}" viewBox="0 0 100 100" aria-hidden="true" style="--av-bg:${k.bg}"><defs><clipPath id="${id}"><circle cx="50" cy="50" r="50"/></clipPath></defs>
-    <circle cx="50" cy="50" r="50" fill="${k.bg}"/>${k.edel ? edelLaag(k.edel, id) : ""}${binnen}${glans ? MEDAILLE_GLANS(id) : ""}${p.frame && LIJSTEN[p.frame] ? LIJSTEN[p.frame].replaceAll("{id}", id) : ""}${medaille ? MEDAILLE_EMBLEEM : ""}</svg>`;
+    <circle cx="50" cy="50" r="50" fill="${k.bg}"/>${k.edel ? edelLaag(k.edel, id) : ""}${binnen}${glans ? MEDAILLE_GLANS(id) : ""}${p.frame && LIJSTEN[p.frame] ? LIJSTEN[p.frame].replaceAll("{id}", id) : ""}${medaille && !laurier ? MEDAILLE_EMBLEEM : ""}</svg>`;
 }
 
 const Profiel = (() => {
@@ -349,7 +375,7 @@ const Profiel = (() => {
     for (const li of lis){
       if (li.querySelector(".rav")) continue;
       const pr = anderen.get(li.dataset.n.toLowerCase()) || { name: li.dataset.n };
-      li.querySelector(".pos").insertAdjacentHTML("afterend", `<span class="rav">${Levels.ring(avatarSVG(pr, "avatar klein"), pr.level, pr.pct || 0, "klein")}</span>`);
+      li.querySelector(".pos").insertAdjacentHTML("afterend", `<span class="rav">${metLaurier(Levels.ring(avatarSVG(pr, "avatar klein", true), pr.level, pr.pct || 0, "klein"), pr, "klein")}</span>`);
       const regel = li.querySelector(".who > span");
       if (pr.subtitle && regel){ regel.title = regel.textContent; regel.textContent = pr.subtitle; regel.classList.add("sub"); }
     }
@@ -405,7 +431,7 @@ const Profiel = (() => {
     $("pfSaldo").innerHTML = saldoHtml(w);
     const geenDb = beschikbaar === false;
     body.innerHTML = `
-      <div class="pfkaart">${Levels.mijnRing(avatarSVG(me, "avatar groot"), "groot")}<div><h3>${esc(me.name)}</h3><p class="pfsub">${me.subtitle ? esc(me.subtitle) : "Nog geen ondertitel"}</p></div></div>
+      <div class="pfkaart">${metLaurier(Levels.mijnRing(avatarSVG(me, "avatar groot", true), "groot"), me, "groot")}<div><h3>${esc(me.name)}</h3><p class="pfsub">${me.subtitle ? esc(me.subtitle) : "Nog geen ondertitel"}</p></div></div>
       ${typeof Apparaat !== "undefined" ? Apparaat.sectie() : ""}
       ${typeof Veld !== "undefined" && Veld.aan() ? `<p class="rankempty"><b>Veldmodus.</b> Zonder internet laden je eikels, de shop en je prestaties niet. Je speelt gewoon verder; alles wordt bijgewerkt zodra je weer online bent.</p>` : ""}
       ${geenDb ? `<p class="rankempty">Eikels, de shop en prestaties komen beschikbaar zodra de database van Vestigia is bijgewerkt.</p>` : `

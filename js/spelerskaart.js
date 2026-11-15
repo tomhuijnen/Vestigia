@@ -39,10 +39,10 @@ const Spelerskaart = (() => {
     const fav = k.favoriet && GROUPS[k.favoriet.g];
     const pr = k.prestaties || [], du = k.duel || { gewonnen: 0, gelijk: 0, verloren: 0 };
     const duels = du.gewonnen + du.gelijk + du.verloren, pct = n => duels ? (100 * n / duels).toFixed(1) : 0;
-    const av = avatarSVG(k, "avatar groot");
+    const av = avatarSVG(k, "avatar groot", true);
     return `
       <div class="spkop"><span class="caps">Spelersprofiel</span><button class="spsluit" id="spelerSluit" aria-label="Sluiten">${X}</button></div>
-      <div class="spav">${k.level ? Levels.ring(av, k.level, k.pct || 0, "groot") : av}</div>
+      <div class="spav">${metLaurier(k.level ? Levels.ring(av, k.level, k.pct || 0, "groot") : av, k, "groot")}</div>
       <div class="spnaam"><h2 id="spelerPopH">${naam}</h2>${k.subtitle ? `<p class="sub">${esc(k.subtitle)}</p>` : ""}
         ${k.rang ? `<span class="rang">${esc(k.rang)}</span>` : ""}${k.sinds ? `<span class="sinds">Speler sinds ${datum(k.sinds)}</span>` : ""}
         ${k.vandaag == null ? "" : `<span class="spvandaag${k.vandaag ? " ja" : ""}">${k.vandaag ? `${VINK}Dagcasus van vandaag gespeeld` : "Dagcasus van vandaag nog niet gespeeld"}</span>`}</div>

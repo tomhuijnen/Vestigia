@@ -27,7 +27,7 @@ Determinatiespel over beschermde fauna van Nederland: herken de soort aan habita
 | `js/online.js` | ranglijst en synchronisatie met Supabase |
 | `js/league.js` | uitnodigen en leagues, en de links `?van=` en `?league=` |
 | `data/avatars.js` | de 29 avatartekeningen, waarvan 10 medaille-avatars in kleur (prijzen staan in Supabase) |
-| `js/profiel.js` | eikels, avatars, Mijn profiel (kiezen uit wat je hebt), shop (kopen, goedkoop naar duur) en prestaties met eikels; per achtergrondkleur een eigen tint voor de details van een avatar (update 19, `KLEUREN` en `avatarTekening`) |
+| `js/profiel.js` | eikels, avatars, Mijn profiel (kiezen uit wat je hebt), shop (kopen, goedkoop naar duur) en prestaties met eikels; per achtergrondkleur een eigen tint voor de details van een avatar (update 19, `KLEUREN` en `avatarTekening`); gouden lauriertakken om een medaille-avatar in Mijn profiel, de ranglijst en op de profielkaart (update 57, `metLaurier`; elders blijft het embleem) |
 | `js/wachtrij.js` | wachtrij voor pop-ups: nooit twee tegelijk; herinnering om een avatar te kiezen (update 8) |
 | `data/advent.js` | winterweetjes voor de adventkalender (update 8) |
 | `js/kerst.js` | kerstmuts, sneeuw en adventkalender van 1 december t/m 6 januari; testen met `?kerst=demo&dag=12` (update 8) |
