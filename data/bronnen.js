@@ -39,7 +39,7 @@ const WAARNEMING = {
   "wespendief":349, "boomvalk":74, "grote-gele-kwikstaart":756, "bosuil":77, "torenvalk":188, "boerenzwaluw":65, "huiszwaluw":123,
   "blauwe-reiger":64, "zwarte-specht":759, "groene-specht":40, "tapuit":46, "kievit":129, "spreeuw":180, "veldmuis":426,
   "gewone-baardvleermuis":373, "europese-steur":2120, "boomklever":70, "kauw":126, "zwarte-kraai":208, "grauwe-gans":104, "tuimelaar":422,
-  "middelste-groene-kikker":2270, "witte-kwikstaart":202, "roodborsttapuit":45, "grutto":26, "merel":150, "houtduif":120,
+  "middelste-groene-kikker":2270, "witte-kwikstaart":202, "roodborsttapuit":45, "grutto":26, "merel":150, "houtduif":120, "patrijs":16,
   "witsnuitdolfijn":435, "wolf":70056, "zwarte-wouw":364, "bonte-vliegenvanger":69, "boomkruiper":71, "kortsnavelboomkruiper":337,
   "brilduiker":80, "draaihals":39, "eidereend":11, "ekster":87, "gekraagde-roodstaart":94, "glanskop":98, "grauwe-vliegenvanger":105,
   "grote-bonte-specht":109, "hop":38, "kleine-bonte-specht":271, "kleine-vliegenvanger":1182, "koolmees":140, "pimpelmees":161, "raaf":54,

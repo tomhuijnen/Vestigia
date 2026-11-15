@@ -24,9 +24,10 @@ const Nieuw = (() => {
     "statistiek-na-casus": "2026-11-11", "verward-statistiek": "2026-11-12", apparaten: "2026-11-12",
     levels: "2026-11-16", spelersduel: "2026-11-23", advent: "2026-12-01",
     soorten14: "2026-11-13",           // update 14: libellen en kevers; de dag dat ze live gaan
-    grotebosmuis: "2026-11-15"         // update 30: de grote bosmuis
+    grotebosmuis: "2026-11-15",        // update 30: de grote bosmuis
+    patrijs: "2026-11-15"              // update 47: de patrijs (live 15 november)
   };
-  const WIJZIGING = new Set(["zoekgroepen", "bronnen", "statistiek-na-casus", "verward-statistiek", "soorten14", "grotebosmuis"]);
+  const WIJZIGING = new Set(["zoekgroepen", "bronnen", "statistiek-na-casus", "verward-statistiek", "soorten14", "grotebosmuis", "patrijs"]);
   /* speelde je al een dagcasus vóór die dag? (het logboek gaat via Supabase mee naar je andere apparaten) */
   function veteraan(id){
     const d = VANAF[id]; if (!d) return true;
@@ -48,6 +49,7 @@ const Nieuw = (() => {
     cadeau: `<span class="nw-ic kerst"><svg aria-hidden="true" viewBox="0 0 20 20" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="3" y="8" width="14" height="9" rx="1.2"/><path d="M2.5 5.2h15v2.8h-15zM10 5.2V17"/><path d="M10 5.2C8.6 2.4 5.6 2.4 6.1 4.3c.3 1 2.4.9 3.9.9ZM10 5.2c1.4-2.8 4.4-2.8 3.9-.9-.3 1-2.4.9-3.9.9Z"/></svg></span>`,
     spoor: `<span class="nw-ic kerst"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><ellipse cx="12" cy="15.5" rx="4.2" ry="3.6"/><ellipse cx="6.5" cy="9.5" rx="1.8" ry="2.3"/><ellipse cx="10" cy="6.5" rx="1.8" ry="2.3"/><ellipse cx="14" cy="6.5" rx="1.8" ry="2.3"/><ellipse cx="17.5" cy="9.5" rx="1.8" ry="2.3"/></svg></span>`,
     /* update 30: pootafdruk in de gewone kleur (de rode ‘spoor’ hoort bij de adventkalender) */
+    veer: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><path d="M16 8 2 22"/><path d="M17.5 15H9"/></svg></span>`,
     poot: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><ellipse cx="12" cy="15.5" rx="4.2" ry="3.6"/><ellipse cx="6.5" cy="9.5" rx="1.8" ry="2.3"/><ellipse cx="10" cy="6.5" rx="1.8" ry="2.3"/><ellipse cx="14" cy="6.5" rx="1.8" ry="2.3"/><ellipse cx="17.5" cy="9.5" rx="1.8" ry="2.3"/></svg></span>`,
     level: `<span class="nw-ic"><b>7</b></span>`,
     xp: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9Z"/></svg></span>`,
@@ -100,10 +102,11 @@ const Nieuw = (() => {
         { ic: "kever", kop: "Zeven nieuwe platen", tekst: `Ze staan in je ${NAAM.vestiarium} als nº 701 tot en met 705 (libellen) en nº 801 en 802 (kevers), elk met twee casussen. Heb je alle libellen, dan ben je Vleugelvorst; met alle kevers word je Schildknaap. Oefen ze nu, of wacht tot ze als dagcasus langskomen.` },
         { ic: "pop", kop: "Nieuw bij Winter", tekst: "Na elke determinatie vergelijkt Vestigia jouw soort met de gezochte soort in een tabel. De kolom Winter in die tabel kent nu ook ‘Als ei, larve of pop’. Dat geldt voor de libellen en kevers, en voor de vlinders die als rups of pop overwinteren." }
       ] },
-    /* update 30: alleen voor wie al speelde voordat de grote bosmuis er was (via de wachtrij, hieronder) */
-    { id: "grotebosmuis", titel: "Grote bosmuis", actie: { label: "Oefen de grote bosmuis", run: () => startFree({ g: null, nieuw: false, ids: ["grote-bosmuis"] }) },
+    /* update 30 en 47: de grote bosmuis en de patrijs, samen in één melding (via de wachtrij, hieronder) */
+    { id: "nieuwesoorten", titel: "Nieuwe soorten", actie: { label: "Oefen de nieuwe soorten", run: () => startFree({ g: null, nieuw: false, ids: ["grote-bosmuis", "patrijs"] }) },
       stappen: [
-        { ic: "poot", kop: "Nieuwe soort: de grote bosmuis", tekst: `De tweelingsoort van de bosmuis staat nu in je ${NAAM.vestiarium}, als plaat nº 128, direct na de bosmuis. Hij heeft twee casussen. Gok je ‘bosmuis’ terwijl het een grote bosmuis is (of andersom), dan kost je dat geen poging.` }
+        { ic: "poot", wat: "grotebosmuis", kop: "Nieuwe soort: de grote bosmuis", tekst: `De tweelingsoort van de bosmuis staat nu in je ${NAAM.vestiarium}, als plaat nº 128, direct na de bosmuis. Hij heeft twee casussen. Gok je ‘bosmuis’ terwijl het een grote bosmuis is (of andersom), dan kost je dat geen poging.` },
+        { ic: "veer", wat: "patrijs", kop: "Nieuwe soort: de patrijs", tekst: `De patrijs staat nu in je ${NAAM.vestiarium}, als plaat nº 559. Hij heeft twee casussen. Oefen hem nu, of wacht tot hij als dagcasus langskomt.` }
       ] },
     { id: "levels", titel: "Levels", verborgen: () => !(typeof Levels !== "undefined" && Levels.zichtbaar()),   // pas vanaf de startdatum
       stappen: [
@@ -199,19 +202,27 @@ const Nieuw = (() => {
   return { toon, blokjes, knoppen, veteraan, ONDERDELEN };
 })();
 
-/* update 30: één keer ‘Nieuwe soort: de grote bosmuis’, direct na die van update 14. Alleen voor wie al een dagcasus speelde
-   vóór VANAF. Tijdelijk uit (Tom, 15 november 16:40): bij update 47 komt één melding voor de grote bosmuis en de patrijs
-   samen. Wie deze al zag (vestigia:nieuw:grotebosmuis), krijgt dan alleen de patrijs. */
-const GROTEBOSMUIS_LOS = false;
-Wachtrij.voeg({ id: "grotebosmuis", prio: 2.61,
+/* update 30 en 47: één melding ‘Nieuwe soorten’, direct na die van update 14. De kaart van de grote bosmuis krijgt wie al een
+   dagcasus speelde vóór 15 november en de losse bosmuis-melding (15 november 16:13–16:40) nog niet zag; de kaart van de
+   patrijs krijgt wie al speelde vóór VANAF.patrijs. Wie alleen de patrijs krijgt, ziet ook alleen die kaart. */
+Wachtrij.voeg({ id: "nieuwesoorten", prio: 2.61,
+  kaarten(){
+    let al = true; try { al = !!localStorage.getItem("vestigia:nieuw:grotebosmuis"); } catch(e){}
+    return { grotebosmuis: !al && Nieuw.veteraan("grotebosmuis"), patrijs: Nieuw.veteraan("patrijs") };
+  },
   kan(){
-    if (!GROTEBOSMUIS_LOS) return false;
-    try { if (localStorage.getItem("vestigia:nieuw:grotebosmuis")) return false; } catch(e){ return false; }
-    return Nieuw.veteraan("grotebosmuis");
+    try { if (localStorage.getItem("vestigia:nieuw:nieuwesoorten")) return false; } catch(e){ return false; }
+    const k = this.kaarten(); return k.grotebosmuis || k.patrijs;
   },
   toon(){
-    try { localStorage.setItem("vestigia:nieuw:grotebosmuis", "1"); } catch(e){}
-    return Nieuw.toon(Nieuw.ONDERDELEN.find(o => o.id === "grotebosmuis"));
+    const k = this.kaarten();
+    try { localStorage.setItem("vestigia:nieuw:nieuwesoorten", "1"); localStorage.setItem("vestigia:nieuw:grotebosmuis", "1"); } catch(e){}
+    const o = Nieuw.ONDERDELEN.find(x => x.id === "nieuwesoorten"), st = o.stappen.filter(s => k[s.wat]);
+    const ids = st.map(s => s.wat === "grotebosmuis" ? "grote-bosmuis" : "patrijs");
+    const een = st.length === 1;
+    return Nieuw.toon(Object.assign({}, o, { id: k.patrijs ? "patrijs" : "grotebosmuis", stappen: st,
+      titel: een ? (ids[0] === "patrijs" ? "Patrijs" : "Grote bosmuis") : o.titel,
+      actie: { label: een ? (ids[0] === "patrijs" ? "Oefen de patrijs" : "Oefen de grote bosmuis") : o.actie.label, run: () => startFree({ g: null, nieuw: false, ids }) } }));
   } });
 
 /* update 14: één keer ‘Nieuw: libellen en kevers’, na de dwaalgast, het duel, de levels, de adventkalender en de uitleg

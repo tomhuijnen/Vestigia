@@ -88,6 +88,7 @@ const ZOEKGROEPEN = [
   { naam: "Boomkruipers", w: ["boomkruipers"], ids: ["boomkruiper", "kortsnavelboomkruiper"] },
   { naam: "Lijsters", w: ["lijster", "lijsters"], ids: ["merel"] },
   { naam: "Duiven", w: ["duif", "duiven"], ids: ["houtduif"] },
+  { naam: "Hoenders", w: ["hoen", "hoender", "hoenders", "veldhoender", "veldhoenders"], ids: ["patrijs"] },   // update 47
   /* zangvogels = alle Passeriformes in het spel; kraaien horen daar ook bij */
   { naam: "Zangvogels", w: ["zangvogel", "zangvogels"], ids: ["huismus", "roek", "grote-gele-kwikstaart", "oeverzwaluw", "boerenzwaluw", "huiszwaluw",
       "tapuit", "spreeuw", "boomklever", "kauw", "zwarte-kraai", "witte-kwikstaart", "roodborsttapuit", "merel", "bonte-vliegenvanger", "boomkruiper",
