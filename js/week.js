@@ -10,7 +10,13 @@
      een getoonde plaats. Bij een league telt de week ervoor in die league.
    - Mijlpalen voor de weekranglijst (podium, weekwinnaar) staan in deze pop-up en hun eikels vliegen vanuit hier naar
      het saldo. Komt de pop-up niet meer (woensdag), dan als gewone melding.
-   - Geen beloningen voor plaatsing (geen XP, geen eikels).
+   - Weekprijs (update 58, Tom 15 november 2026): de top 10 van de algemene weekranglijst krijgt eikels
+     (1e 50, 2e 35, 3e 25, 4e t/m 10e 10; gelijke stand = dezelfde prijs). De server telt ze mee in het saldo
+     (techniek/supabase-033-weekprijs.sql); deze pop-up feliciteert en laat ze naar het saldo vliegen. Geen XP.
+     Leagues geven geen eikels, alleen het kroontje.
+   Bekertje (update 58)
+   - Alleen in je eigen rij, bij Iedereen + Deze week, naast je punten. Tikken toont wat je krijgt voor je plaats van
+     nu, de hele prijzentabel en (buiten de top 10) hoeveel punten je nog nodig hebt. Anderen zien jouw bekertje niet.
    League-kroontje
    - De top 3 van vorige week in een league (met punten, gedeelde plaatsen tellen mee: 1, 2, 2, 4) krijgt deze hele
      week een kroontje in goud, zilver of brons achter de naam in die league. Anders dan de kroon in het plaatsnummer:
@@ -62,6 +68,8 @@ const Week = (() => {
     const [nu, toen] = await Promise.all([algemeen(ws), algemeen(ws - 7).catch(() => [])]);
     const ik = plaatsVan(nu, naam);
     if (!ik) return null;                                        // vorige week geen punten: geen pop-up
+    const t = await prijzen();
+    ik.prijs = t ? prijsVoor(t, ik.pos) : 0;
     ik.vorig = plaatsVan(toen, naam);
     let ls = [];
     try { ls = await League.vernieuw(); } catch(e){ ls = League.cached(); }
@@ -124,9 +132,9 @@ const Week = (() => {
       ${top10 ? `<span class="wkplek">${r.pos <= 3 && kroonTekst ? kroon(r.pos, "wkkroon") : ""}<b>${r.pos}<small>e</small></b>${verschil(r)}</span>` : ""}</div>`;
   }
   function kopTekst(ik){
-    if (ik.pos === 1) return ["Weekwinnaar!", "Niemand haalde meer punten uit de dagcasussen."];
-    if (ik.pos <= 3) return ["Op het podium!", "Je eindigde in de top 3 van de weekranglijst."];
-    if (ik.pos <= 10) return ["Mooi gespeeld", "Je eindigde in de top 10 van de weekranglijst."];
+    if (ik.pos === 1) return ["Weekwinnaar!", "Gefeliciteerd, je bent 1e geëindigd: niemand haalde meer punten uit de dagcasussen."];
+    if (ik.pos <= 3) return ["Op het podium!", `Gefeliciteerd, je bent ${ik.pos}e geëindigd in de weekranglijst.`];
+    if (ik.pos <= 10) return ["Mooi gespeeld", `Gefeliciteerd, je bent ${ik.pos}e geëindigd in de weekranglijst.`];
     return ["Een nieuwe week", "Elke maandag begint de weekranglijst weer bij nul. Wie pakt deze week de top 10?"];
   }
   function html(u, mijl){
@@ -138,6 +146,7 @@ const Week = (() => {
       <div class="lvtekst"><h2 id="wachtH">${h}</h2><p>${p_}</p><p class="wkperiode">Week van ${periode(u.ws)}</p></div>
       <div class="lvbuitlijst">
         ${rij(ICOON.alle, "Weekranglijst", u.ik)}
+        ${u.ik.prijs ? `<div class="lvbuit belrij" data-eik="${u.ik.prijs}">${BEKER.replace('class="wpbeker"', 'class="wkic wpbeker"')}<span><b>Weekprijs</b><small>${u.ik.gedeeld ? "Gedeelde " : ""}${u.ik.pos}e plaats in de weekranglijst</small></span><span class="beleik">${EIKEL}+${u.ik.prijs}</span></div>` : ""}
         ${toon.map(l => rij(ICOON.league, l.league.name, l, "kroontje")).join("")}
         ${rest > 0 ? `<button class="linklike wkmeer" id="wkMeer">en nog ${rest} ${rest === 1 ? "league" : "leagues"}</button>` : ""}
         ${mijl.map(m => Profiel.mijlRij(m)).join("")}
@@ -151,7 +160,7 @@ const Week = (() => {
     const dicht = Levels.popup(html(u, mijl), "weekpop");
     const meer = $("wkMeer");
     if (meer) meer.onclick = () => { $("lvVerder").click(); showRank("week"); };
-    if (mijl.length){ zet(K.mijl, null); await Profiel.vliegUit($("wachtBody")); }
+    if (mijl.length || u.ik.prijs){ zet(K.mijl, null); await Profiel.vliegUit($("wachtBody")); }
     return dicht;
   }
 
@@ -208,11 +217,79 @@ const Week = (() => {
     toast(`${k.getAttribute("aria-label").replace("Kroontje: ", "Kroontje voor de ")}. Het blijft deze hele week staan.`, { duur: 5000 });
   });
 
+  /* ---------- weekprijs en bekertje (update 58) ---------- */
+  const PRIJS_STD = { 1: 50, 2: 35, 3: 25, top10: 10 };      // zelfde als eikel_regels (weekprijs_…); de server is leidend
+  let prijsTabel, prijsVraag = null;
+  /* bedragen van de server; bestaat de functie nog niet (SQL 033 niet gedraaid), dan staat de weekprijs uit */
+  function prijzen(){
+    if (prijsTabel !== undefined) return Promise.resolve(prijsTabel);
+    if (demo) return Promise.resolve(prijsTabel = PRIJS_STD);
+    return prijsVraag || (prijsVraag = online.rpc("weekprijzen", {})
+      .then(r => (prijsTabel = r && r["1"] != null ? r : null))
+      .catch(e => { prijsVraag = null; if (e && e.status >= 400 && e.status < 500) prijsTabel = null; return e && e.status ? null : PRIJS_STD; }));
+  }
+  const prijsVoor = (t, pos) => !t || !pos ? 0 : pos <= 3 ? +t[pos] || 0 : pos <= 10 ? +t.top10 || 0 : 0;
+  const BEKER = `<svg class="wpbeker" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.2 5.2H4.6a2.6 2.6 0 0 0 2.9 4.3M16.8 5.2h2.6a2.6 2.6 0 0 1-2.9 4.3" fill="none" stroke="#a8731b" stroke-width="1.5" stroke-linecap="round"/><path d="M6.8 3h10.4v5.2a5.2 5.2 0 0 1-10.4 0Z" fill="#e2b84e" stroke="#a8731b" stroke-width="1.3" stroke-linejoin="round"/><path d="M10.6 13.2h2.8l.5 3.4h-3.8Z" fill="#d9a441" stroke="#a8731b" stroke-width="1.2" stroke-linejoin="round"/><rect x="7.6" y="16.6" width="8.8" height="3.6" rx="1" fill="#7d5330"/><path d="M9.4 5.2v2.6" stroke="#fff3c9" stroke-width="1.3" stroke-linecap="round" opacity=".8"/></svg>`;
+
+  /* in een getekende weekranglijst (Iedereen, Deze week): bekertje in je eigen rij, naast je punten */
+  async function beker(list){
+    if (!p()) return;
+    const t = await prijzen().catch(() => null);
+    if (!t || !list.isConnected) return;
+    const li = list.querySelector(":scope > li.me"), pts = li && li.querySelector(".pts");
+    if (!pts || pts.querySelector(".wpknop")) return;
+    pts.classList.add("metbeker");
+    pts.insertAdjacentHTML("afterbegin", `<button type="button" class="wpknop" aria-haspopup="dialog" aria-label="Weekprijs: wat krijg je voor je plaats?">${BEKER}</button>`);
+  }
+  const pop = () => $("prijsPop");
+  let terugNaar = null;
+  function sluitPrijs(){
+    if (!pop() || pop().hidden) return;
+    pop().hidden = true;
+    if (terugNaar && terugNaar.isConnected) terugNaar.focus({ preventScroll: true });
+    terugNaar = null;
+  }
+  async function openPrijs(knop){
+    const t = await prijzen().catch(() => null); if (!t) return;
+    const list = knop.closest(".ranklist"), me = knop.closest("li");
+    const getal = li => parseInt((li.querySelector(".pts") || {}).textContent, 10) || 0;
+    const geplaatst = [...list.querySelectorAll(":scope > li[data-pos]")].filter(li => getal(li) > 0);
+    const mijn = getal(me), pos = mijn > 0 ? +me.dataset.pos : 0;
+    const gedeeld = pos && geplaatst.filter(li => +li.dataset.pos === pos).length > 1;
+    let h, zin;
+    if (!pos){ h = "Nog geen punten deze week"; zin = `Speel de dagcasus en maak kans op een weekprijs: de top 10 wint eikels.`; }
+    else if (pos <= 10){ h = `Je staat nu ${pos}e${gedeeld ? " (gedeeld)" : ""}`; zin = `Blijft dat zo, dan krijg je maandag <b>${prijsVoor(t, pos)} eikels</b>.`; }
+    else {
+      const tiende = geplaatst.filter(li => +li.dataset.pos <= 10).pop(), nodig = Math.max(1, getal(tiende) - mijn + 1);
+      h = `Je staat nu ${pos}e`; zin = `Met ${nodig} ${nodig === 1 ? "punt" : "punten"} meer sta je in de top 10 en win je <b>${prijsVoor(t, 10)} eikels</b>.`;
+    }
+    const rij = (van, tot, label) => {
+      const jij = pos && pos >= van && pos <= tot;
+      return `<li class="${jij ? "jij" : ""}${van <= 3 ? " p" + van : ""}"><span class="wpplek">${label}</span>${jij ? `<span class="wpjij">jij</span>` : ""}<span class="wpeik">${EIKEL} ${prijsVoor(t, van)}</span></li>`;
+    };
+    $("prijsPopBody").innerHTML = `<div class="spkop wpkop"><span class="caps">Weekprijs</span><button class="spsluit" id="prijsSluit" aria-label="Sluiten">×</button>
+        <div class="wpgroot">${BEKER}</div><h2 id="prijsPopH">${h}</h2><p>${zin}</p></div>
+      <div class="wpbody">
+        <ul class="wplijst">${rij(1, 1, "1e plaats")}${rij(2, 2, "2e plaats")}${rij(3, 3, "3e plaats")}${rij(4, 10, "4e t/m 10e plaats")}</ul>
+        <p class="fine">De prijs komt maandag bij je eikels, als de week voorbij is. Alleen de dagcasus telt, oefenen niet. Gelijke stand? Dan deel je de plaats en krijg je dezelfde prijs.</p>
+        <button class="btn" id="prijsOke">Oké</button>
+      </div>`;
+    terugNaar = knop;
+    pop().hidden = false;
+    $("prijsSluit").onclick = sluitPrijs; $("prijsOke").onclick = sluitPrijs;
+    $("prijsOke").focus({ preventScroll: true });
+  }
+  document.addEventListener("click", e => {
+    const k = e.target.closest(".wpknop"); if (k){ e.stopPropagation(); openPrijs(k); return; }
+    if (pop() && e.target === pop()) sluitPrijs();
+  });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && pop() && !pop().hidden){ e.preventDefault(); sluitPrijs(); } });
+
   /* ---------- voorbeeld (?week=demo) ---------- */
   function nepUitslag(plek){
     const ws = huidigeWeek() - 7, ls = [
       { id: "demo1", name: "Brabant Eco" }, { id: "demo2", name: "HAS Toegepaste Biologie" }, { id: "demo3", name: "Dassenclub" }];
-    return { ws, ik: { pos: plek, gedeeld: false, n: 27, pts: 31, vorig: { pos: plek + 2 } },
+    return { ws, ik: { pos: plek, gedeeld: false, n: 27, pts: 31, vorig: { pos: plek + 2 }, prijs: prijsVoor(PRIJS_STD, plek) },
       leagues: [
         { pos: 1, gedeeld: false, n: 6, pts: 31, vorig: { pos: 2 }, league: ls[0] },
         { pos: 4, gedeeld: true, n: 14, pts: 31, vorig: { pos: 4 }, league: ls[1] },
@@ -225,5 +302,5 @@ const Week = (() => {
     return namen;
   }
 
-  return { vang, kroontjes, kroon, uitslag };
+  return { vang, kroontjes, kroon, uitslag, beker };
 })();

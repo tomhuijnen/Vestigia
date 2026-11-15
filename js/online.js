@@ -199,6 +199,7 @@ const online = (() => {
       if (list.querySelector(".pos.gedeeld")) $("rankRule").textContent += " " + GELIJK_REGEL;
       Profiel.versier(list);
       if (lg && typeof Week !== "undefined") Week.kroontjes(list, lg);     // update 25: top 3 van vorige week
+      if (!lg && rankMode === "week" && typeof Week !== "undefined") Week.beker(list);   // update 58: weekprijs
       if (me){
         const wk = await refreshWeek();
         $("rankMe").innerHTML = `${wk ? wk.pts : 0}<small>jouw punten deze week</small>`;
