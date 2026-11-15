@@ -3,7 +3,11 @@
 
    Velden per soort
    id    vaste sleutel. Verandert nooit, ook niet als de naam verandert (zet de oude naam dan in ALIASES).
-   no    vast platennummer in het Vestiarium. Alleen soorten met een casus hebben er een; nieuwe nummers komen achteraan.
+   no    vast platennummer in het Vestiarium. Alleen soorten met een casus hebben er een. Sinds update 46 (15 november 2026)
+         in blokken per diergroep: zoogdieren 101–199, reptielen 201–299, amfibieën 301–399, vissen 401–499, vogels 501–599,
+         vlinders 601–699, libellen 701–799, kevers 801–899; binnen een blok staan verwanten bij elkaar. Een nieuwe soort
+         krijgt het eerstvolgende nummer van zijn eigen blok (of een nummer uit GERESERVEERD in tools/controle.mjs; 128 is
+         voor de grote bosmuis). Een nummer verandert daarna nooit meer; voortgang hangt aan de id, niet aan het nummer.
    g     diergroep (GROUPS) · n Nederlandse naam · s wetenschappelijke naam · r regime (LABELS.r) · l lengte in cm (vlinders: spanwijdte; libellen en kevers: lichaamslengte)
    zz    zeldzaamheidsklasse (RARITY), op basis van de bronnen. De klasse ZZ levert een medaille op. null = nog niet bepaald.
    twin  id van de tweelingsoort (gokken telt niet als poging). Geldt alleen in de richting waarin het hier staat.
@@ -46,7 +50,7 @@ const ALIASES = {
 };
 
 const SPECIES = [
-{ id:"das", no:1, g:"Z", n:"Das", s:"Meles meles", r:"BAL", l:85, zz:null, twin:null,
+{ id:"das", no:136, g:"Z", n:"Das", s:"Meles meles", r:"BAL", l:85, zz:null, twin:null,
   h:["HALF","BOS"], a:["NACHT","SCHEMER"], v:["ONG","PLANT","GEW"], b:["HOL"], w:["ACT"],
   x:"vos",
   t:"Een vossenburcht heeft minder en kleinere pijpen, zonder beddingmateriaal ervoor, en ruikt scherp. Vossenuitwerpselen liggen los op opvallende plekken, niet in latrinekuiltjes.",
@@ -66,7 +70,7 @@ const SPECIES = [
       "Een zware, laag op de poten staande loper met een witte kop met twee zwarte strepen."
     ] }
   ] },
-{ id:"otter", no:2, g:"Z", n:"Otter", s:"Lutra lutra", r:"HR", l:110, zz:null, twin:null,
+{ id:"otter", no:137, g:"Z", n:"Otter", s:"Lutra lutra", r:"HR", l:110, zz:null, twin:null,
   h:["STROOM","MOER","STIL"], a:["NACHT","SCHEMER"], v:["VIS","GEW"], b:["HOL"], w:["ACT"],
   x:"bever",
   t:"Bevers laten geen visresten achter maar knaagsporen en ontschorste takken. Hun uitwerpselen vind je zelden, omdat ze in het water poepen.",
@@ -86,7 +90,7 @@ const SPECIES = [
       "Een lange, slanke en bruine waterbewoner met een dikke, taps toelopende staart."
     ] }
   ] },
-{ id:"bever", no:3, g:"Z", n:"Bever", s:"Castor fiber", r:"HR", l:120, zz:null, twin:null,
+{ id:"bever", no:118, g:"Z", n:"Bever", s:"Castor fiber", r:"HR", l:120, zz:null, twin:null,
   h:["STROOM","STIL","MOER"], a:["SCHEMER","NACHT"], v:["PLANT"], b:["HOL","WATER"], w:["ACT"],
   x:"muskusrat",
   t:"De muskusrat is veel kleiner, heeft een zijdelings afgeplatte staart en knaagt geen bomen om; zijn vraatsporen zijn biezen, riet en lisdodde.",
@@ -106,7 +110,7 @@ const SPECIES = [
       "Groot, tot 30 kilo, met een brede, platte en kale staart."
     ] }
   ] },
-{ id:"hamster", no:4, g:"Z", n:"Hamster", s:"Cricetus cricetus", r:"HR", l:28, zz:null, twin:null,
+{ id:"hamster", no:121, g:"Z", n:"Hamster", s:"Cricetus cricetus", r:"HR", l:28, zz:null, twin:null,
   h:["OPEN"], a:["SCHEMER","NACHT"], v:["PLANT","ONG"], b:["HOL"], w:["SLAAP"],
   x:"bruine-rat",
   t:"Een rattenhol heeft meerdere ingangen met uitgegraven grond en duidelijke looppaden ertussen, meestal bij water of erven. Loodrechte valpijpen zonder grondhoop ontbreken.",
@@ -126,7 +130,7 @@ const SPECIES = [
       "Zo groot als een cavia, met een roodbruine rug, witte flankvlekken en een zwarte buik."
     ] }
   ] },
-{ id:"hazelmuis", no:5, g:"Z", n:"Hazelmuis", s:"Muscardinus avellanarius", r:"HR", l:14, zz:null, twin:null,
+{ id:"hazelmuis", no:119, g:"Z", n:"Hazelmuis", s:"Muscardinus avellanarius", r:"HR", l:14, zz:null, twin:null,
   h:["BOS","HALF"], a:["NACHT"], v:["PLANT","ONG"], b:["VEG","BOOM"], w:["SLAAP"],
   x:"bosmuis",
   t:"De bosmuis knaagt ook een rond gat in hazelnoten, maar laat tandsporen achter op het buitenoppervlak rond het gat.",
@@ -146,7 +150,7 @@ const SPECIES = [
       "Goudbruin, met grote zwarte ogen en een dichtbehaarde, wat pluimige staart."
     ] }
   ] },
-{ id:"eikelmuis", no:6, g:"Z", n:"Eikelmuis", s:"Eliomys quercinus", r:"BAL", l:25, zz:null, twin:null,
+{ id:"eikelmuis", no:120, g:"Z", n:"Eikelmuis", s:"Eliomys quercinus", r:"BAL", l:25, zz:null, twin:null,
   h:["BOS","BEB"], a:["NACHT"], v:["ONG","PLANT"], b:["GEB","BOOM","STEEN"], w:["SLAAP"],
   x:"hazelmuis",
   t:"De hazelmuis heeft geen zwart masker, is kleiner en oranjebruin, en leeft in de struiklaag in plaats van in muren en gebouwen.",
@@ -166,7 +170,7 @@ const SPECIES = [
       "Grijsbruin met een witte buik, grote oren en een zwart masker dat doorloopt tot achter het oor."
     ] }
   ] },
-{ id:"boommarter", no:7, g:"Z", n:"Boommarter", s:"Martes martes", r:"BAL", l:70, zz:null, twin:null,
+{ id:"boommarter", no:138, g:"Z", n:"Boommarter", s:"Martes martes", r:"BAL", l:70, zz:null, twin:null,
   h:["BOS"], a:["NACHT","SCHEMER"], v:["GEW","PLANT"], b:["BOOM"], w:["ACT"],
   x:"steenmarter",
   t:"De steenmarter heeft een witte, vaak gevorkte keelvlek die doorloopt over de voorpoten en een lichte neus, en rust bij voorkeur in gebouwen.",
@@ -186,7 +190,7 @@ const SPECIES = [
       "Een donkerbruine marter met lange poten, grote oren en een gele keelvlek."
     ] }
   ] },
-{ id:"steenmarter", no:8, g:"Z", n:"Steenmarter", s:"Martes foina", r:"BAL", l:70, zz:null, twin:null,
+{ id:"steenmarter", no:139, g:"Z", n:"Steenmarter", s:"Martes foina", r:"BAL", l:70, zz:null, twin:null,
   h:["BEB","HALF"], a:["NACHT"], v:["GEW","PLANT"], b:["GEB"], w:["ACT"],
   x:"boommarter",
   t:"De boommarter heeft een romige tot oranjegele keelvlek die niet gevorkt is, behaarde voetzolen en grotere oren, en rust in boomholtes.",
@@ -206,7 +210,7 @@ const SPECIES = [
       "Grijsbruin, slank, met een lange pluimstaart en een witte, in tweeën gesplitste keelvlek."
     ] }
   ] },
-{ id:"eekhoorn", no:9, g:"Z", n:"Eekhoorn", s:"Sciurus vulgaris", r:"BAL", l:40, zz:null, twin:null,
+{ id:"eekhoorn", no:117, g:"Z", n:"Eekhoorn", s:"Sciurus vulgaris", r:"BAL", l:40, zz:null, twin:null,
   h:["BOS","BEB"], a:["DAG"], v:["PLANT"], b:["BOOM"], w:["ACT"],
   x:"bosmuis",
   t:"Muizen laten een kort en glad afgeknaagde kegelspil achter zonder rafelig topje, en hazelnoten krijgen een rond gaatje in plaats van in tweeën te worden gekraakt.",
@@ -226,7 +230,7 @@ const SPECIES = [
       "Roodbruin tot donkerbruin, met een lange pluimstaart en oorpluimen."
     ] }
   ] },
-{ id:"watervleermuis", no:10, g:"Z", n:"Watervleermuis", s:"Myotis daubentonii", r:"HR", l:9, zz:null, twin:null,
+{ id:"watervleermuis", no:105, g:"Z", n:"Watervleermuis", s:"Myotis daubentonii", r:"HR", l:9, zz:null, twin:null,
   h:["STIL","BOS"], a:["NACHT"], v:["ONG"], b:["BOOM","GEB"], w:["SLAAP"],
   x:"meervleermuis",
   t:"De meervleermuis is groter (spanwijdte ±30 cm), jaagt boven bredere wateren en heeft zijn meeste energie rond 35 kHz in plaats van rond 45 kHz.",
@@ -246,7 +250,7 @@ const SPECIES = [
       "Een middelgrote Myotis met grote voeten en een roze-bruin gezicht."
     ] }
   ] },
-{ id:"laatvlieger", no:11, g:"Z", n:"Laatvlieger", s:"Eptesicus serotinus", r:"HR", l:12, zz:null, twin:null,
+{ id:"laatvlieger", no:112, g:"Z", n:"Laatvlieger", s:"Eptesicus serotinus", r:"HR", l:12, zz:null, twin:null,
   h:["BEB","HALF"], a:["NACHT","SCHEMER"], v:["ONG"], b:["GEB"], w:["SLAAP"],
   x:"rosse-vleermuis",
   t:"De rosse vleermuis vliegt hoger en sneller met smalle vleugels, roept met afwisselende ‘plip-plop’-signalen rond 20 kHz en woont in boomholtes.",
@@ -266,7 +270,7 @@ const SPECIES = [
       "Groot en donkerbruin, met brede vleugels; de punt van de staart steekt een stukje voorbij het vel tussen de achterpoten."
     ] }
   ] },
-{ id:"waterspitsmuis", no:12, g:"Z", n:"Waterspitsmuis", s:"Neomys fodiens", r:"BAL", l:15, zz:null, twin:null,
+{ id:"waterspitsmuis", no:104, g:"Z", n:"Waterspitsmuis", s:"Neomys fodiens", r:"BAL", l:15, zz:null, twin:null,
   h:["STROOM","STIL","MOER"], a:["NACHT","DAG"], v:["ONG","VIS"], b:["HOL"], w:["ACT"],
   x:"gewone-bosspitsmuis",
   t:"De bosspitsmuis is driekleurig (donkere rug, bruine flank, lichte buik), mist de haarkiel onder de staart en jaagt niet onder water.",
@@ -286,7 +290,7 @@ const SPECIES = [
       "Zwart van boven en wit van onder, met een rij stijve haren onder de staart."
     ] }
   ] },
-{ id:"hermelijn", no:13, g:"Z", n:"Hermelijn", s:"Mustela erminea", r:"BAL", l:35, zz:null, twin:null,
+{ id:"hermelijn", no:140, g:"Z", n:"Hermelijn", s:"Mustela erminea", r:"BAL", l:35, zz:null, twin:null,
   h:["HALF","OPEN","DUIN"], a:["DAG","NACHT"], v:["GEW"], b:["HOL"], w:["ACT"],
   x:"wezel",
   t:"De wezel is kleiner, heeft een korte staart zonder zwarte punt, en de grens tussen bruin en wit is grillig in plaats van recht.",
@@ -306,7 +310,7 @@ const SPECIES = [
       "Groter dan een wezel, bruin met een scherpe grens naar de roomwitte buik, en een staartpunt die zwart is."
     ] }
   ] },
-{ id:"bruinvis", no:14, g:"Z", n:"Bruinvis", s:"Phocoena phocoena", r:"HR", l:155, zz:null, twin:null,
+{ id:"bruinvis", no:149, g:"Z", n:"Bruinvis", s:"Phocoena phocoena", r:"HR", l:155, zz:null, twin:null,
   h:["ZEE"], a:["DAG","NACHT"], v:["VIS"], b:["WATER"], w:["ACT"],
   x:"tuimelaar",
   t:"De tuimelaar is twee keer zo groot (±3 m), heeft een duidelijke snavel en een hoge, sikkelvormige rugvin, en springt vaak boven water uit.",
@@ -326,7 +330,7 @@ const SPECIES = [
       "Tot anderhalve meter, donkergrijs met een lichte buik, zonder snavel en met een kleine driehoekige rugvin."
     ] }
   ] },
-{ id:"vos", no:15, g:"Z", n:"Vos", s:"Vulpes vulpes", r:"BAL", l:105, zz:null, twin:null,
+{ id:"vos", no:134, g:"Z", n:"Vos", s:"Vulpes vulpes", r:"BAL", l:105, zz:null, twin:null,
   h:["HALF","BOS","BEB","DUIN"], a:["NACHT","SCHEMER"], v:["GEW","ONG","PLANT"], b:["HOL"], w:["ACT"],
   x:"das",
   t:"Een dassenburcht heeft grote zandhopen met beddingmateriaal ervoor en in de buurt een latrine met kuiltjes. De dassenprent heeft vijf tenen naast elkaar met lange nagels, geen ovale prent met vier tenen.",
@@ -346,7 +350,7 @@ const SPECIES = [
       "Rossig, met witte keel, zwarte achterkant van de oren en een lange pluimstaart met witte punt."
     ] }
   ] },
-{ id:"ree", no:16, g:"Z", n:"Ree", s:"Capreolus capreolus", r:"BAL", l:115, zz:null, twin:null,
+{ id:"ree", no:144, g:"Z", n:"Ree", s:"Capreolus capreolus", r:"BAL", l:115, zz:null, twin:null,
   h:["BOS","HALF","OPEN"], a:["SCHEMER","DAG","NACHT"], v:["PLANT"], b:["VEG"], w:["ACT"],
   x:"damhert",
   t:"Het damhert is groter, heeft een lange staart met een zwarte streep, vaak een gevlekte vacht en een schopvormig gewei. Het bronst in oktober, niet in de zomer.",
@@ -366,7 +370,7 @@ const SPECIES = [
       "Een klein hert met een witte spiegel, maar zonder staart en zonder zwarte staartstreep."
     ] }
   ] },
-{ id:"edelhert", no:17, g:"Z", n:"Edelhert", s:"Cervus elaphus", r:"BAL", l:220, zz:null, twin:null,
+{ id:"edelhert", no:145, g:"Z", n:"Edelhert", s:"Cervus elaphus", r:"BAL", l:220, zz:null, twin:null,
   h:["BOS","HEI"], a:["SCHEMER","NACHT"], v:["PLANT"], b:["VEG"], w:["ACT"],
   x:"damhert",
   t:"Het damhert is kleiner en heeft een schopvormig gewei en een lange staart met zwarte streep. Een bronstig damhert boert kort en rochelend; het edelhert brult langgerekt.",
@@ -386,7 +390,7 @@ const SPECIES = [
       "Groot en roodbruin in de zomer, grijsbruin in de winter, met een lichte spiegel en een korte staart."
     ] }
   ] },
-{ id:"damhert", no:18, g:"Z", n:"Damhert", s:"Dama dama", r:"BAL", l:150, zz:null, twin:null,
+{ id:"damhert", no:146, g:"Z", n:"Damhert", s:"Dama dama", r:"BAL", l:150, zz:null, twin:null,
   h:["DUIN","BOS","HALF"], a:["SCHEMER","DAG"], v:["PLANT"], b:["VEG"], w:["ACT"],
   x:"ree",
   t:"Het ree is kleiner, heeft vrijwel geen zichtbare staart, een effen vacht en een klein, rechtopstaand gewei. Het bronst in de zomer, niet in oktober.",
@@ -406,7 +410,7 @@ const SPECIES = [
       "Bruin met witte vlekken in de zomer en een spiegel met zwarte rand en een lange staart."
     ] }
   ] },
-{ id:"wild-zwijn", no:19, g:"Z", n:"Wild zwijn", s:"Sus scrofa", r:"BAL", l:160, zz:null, twin:null,
+{ id:"wild-zwijn", no:143, g:"Z", n:"Wild zwijn", s:"Sus scrofa", r:"BAL", l:160, zz:null, twin:null,
   h:["BOS"], a:["NACHT","SCHEMER"], v:["PLANT","ONG"], b:["VEG"], w:["ACT"],
   x:"edelhert",
   t:"Een hertenprent heeft smallere hoeven. Als de bijhoeven al zichtbaar zijn, staan die recht achter de hoeven en niet breed uitstaand.",
@@ -426,7 +430,7 @@ const SPECIES = [
       "Grijsbruin en ruig, met een lange snuit; de jongen hebben lichte lengtestrepen."
     ] }
   ] },
-{ id:"haas", no:20, g:"Z", n:"Haas", s:"Lepus europaeus", r:"BAL", l:60, zz:null, twin:null,
+{ id:"haas", no:130, g:"Z", n:"Haas", s:"Lepus europaeus", r:"BAL", l:60, zz:null, twin:null,
   h:["OPEN","HALF"], a:["SCHEMER","NACHT"], v:["PLANT"], b:["GROND"], w:["ACT"],
   x:"konijn",
   t:"Het konijn is kleiner, graaft burchten met veel pijpen en heeft kortere oren zonder zwarte punten. Zijn jongen worden naakt en blind geboren.",
@@ -446,7 +450,7 @@ const SPECIES = [
       "Groot en goudbruin, met lange oren met zwarte punten en lange achterpoten."
     ] }
   ] },
-{ id:"konijn", no:21, g:"Z", n:"Konijn", s:"Oryctolagus cuniculus", r:"BAL", l:45, zz:null, twin:null,
+{ id:"konijn", no:131, g:"Z", n:"Konijn", s:"Oryctolagus cuniculus", r:"BAL", l:45, zz:null, twin:null,
   h:["DUIN","HALF","BEB"], a:["SCHEMER"], v:["PLANT"], b:["HOL"], w:["ACT"],
   x:"haas",
   t:"De haas is groter, graaft niet maar ligt in een ondiepe kuil, en heeft lange oren met zwarte punten. Zijn keutels zijn platter en groter.",
@@ -466,7 +470,7 @@ const SPECIES = [
       "Klein en grijsbruin, met korte oren zonder zwarte punten en een witte staartonderkant."
     ] }
   ] },
-{ id:"egel", no:22, g:"Z", n:"Egel", s:"Erinaceus europaeus", r:"BAL", l:25, zz:null, twin:null,
+{ id:"egel", no:101, g:"Z", n:"Egel", s:"Erinaceus europaeus", r:"BAL", l:25, zz:null, twin:null,
   h:["HALF","BEB"], a:["NACHT"], v:["ONG"], b:["VEG"], w:["SLAAP"],
   x:"bruine-rat",
   t:"Rattenuitwerpselen zijn kleiner (±1–2 cm), hebben stompe uiteinden en bevatten geen keverresten. Ratten lopen vaste paden met holen erlangs.",
@@ -486,7 +490,7 @@ const SPECIES = [
       "Bedekt met stekels, met een spitse snuit en kleine pootjes."
     ] }
   ] },
-{ id:"wezel", no:23, g:"Z", n:"Wezel", s:"Mustela nivalis", r:"BAL", l:22, zz:null, twin:null,
+{ id:"wezel", no:141, g:"Z", n:"Wezel", s:"Mustela nivalis", r:"BAL", l:22, zz:null, twin:null,
   h:["HALF","OPEN"], a:["DAG","NACHT"], v:["GEW"], b:["HOL"], w:["ACT"],
   x:"hermelijn",
   t:"De hermelijn is groter, heeft een langere staart met altijd een zwarte punt, en de grens tussen bruin en wit loopt recht.",
@@ -506,7 +510,7 @@ const SPECIES = [
       "Heel klein en bruin met een witte buik, met een korte staart zonder zwarte punt."
     ] }
   ] },
-{ id:"bunzing", no:24, g:"Z", n:"Bunzing", s:"Mustela putorius", r:"BAL", l:50, zz:null, twin:null,
+{ id:"bunzing", no:142, g:"Z", n:"Bunzing", s:"Mustela putorius", r:"BAL", l:50, zz:null, twin:null,
   h:["HALF","MOER"], a:["NACHT"], v:["GEW"], b:["HOL","GEB"], w:["ACT"],
   x:"steenmarter",
   t:"De steenmarter is groter, heeft een witte keelvlek en geen gezichtsmasker, klimt veel en woont vooral op zolders.",
@@ -526,7 +530,7 @@ const SPECIES = [
       "Donkerbruin met een gelige ondervacht die erdoorheen schemert, en een donkere band over de ogen."
     ] }
   ] },
-{ id:"gewone-zeehond", no:25, g:"Z", n:"Gewone zeehond", s:"Phoca vitulina", r:"BAL", l:160, zz:null, twin:null,
+{ id:"gewone-zeehond", no:147, g:"Z", n:"Gewone zeehond", s:"Phoca vitulina", r:"BAL", l:160, zz:null, twin:null,
   h:["ZEE"], a:["DAG","NACHT"], v:["VIS"], b:["WATER"], w:["ACT"],
   x:"grijze-zeehond",
   t:"De grijze zeehond is groter, heeft een langgerekte kop met een ‘Romeins’ profiel en parallelle neusgaten, en jongt rond de jaarwisseling.",
@@ -546,7 +550,7 @@ const SPECIES = [
       "Een ronde, hondachtige kop met een korte snuit, grote ogen en V-vormige neusgaten."
     ] }
   ] },
-{ id:"wilde-kat", no:26, g:"Z", n:"Wilde kat", s:"Felis silvestris", r:"HR", l:90, zz:null, twin:null,
+{ id:"wilde-kat", no:135, g:"Z", n:"Wilde kat", s:"Felis silvestris", r:"HR", l:90, zz:null, twin:null,
   h:["BOS"], a:["NACHT","SCHEMER"], v:["GEW"], b:["BOOM","HOL"], w:["ACT"],
   x:"huiskat",
   t:"Een verwilderde huiskat heeft een dunnere, spits toelopende staart, en de rugstreep loopt vaak door over de staart. Alleen DNA geeft zekerheid.",
@@ -566,7 +570,7 @@ const SPECIES = [
       "Grijsbruin met vage strepen, een zwarte rugstreep tot aan de staart, en een dikke staart met zwarte ringen."
     ] }
   ] },
-{ id:"bosmuis", no:27, g:"Z", n:"Bosmuis", s:"Apodemus sylvaticus", r:"BAL", l:18, zz:null, twin:null,
+{ id:"bosmuis", no:127, g:"Z", n:"Bosmuis", s:"Apodemus sylvaticus", r:"BAL", l:18, zz:null, twin:null,
   h:["BOS","HALF"], a:["NACHT"], v:["PLANT","ONG"], b:["HOL"], w:["ACT"],
   x:"hazelmuis",
   t:"De hazelmuis laat een gladde rand achter met schuine tandsporen langs de binnenkant en vrijwel geen sporen op het oppervlak. Ze heeft een pluizige staart.",
@@ -586,7 +590,7 @@ const SPECIES = [
       "Een roodbruin muisje met grote oren, grote ogen en een lange staart."
     ] }
   ] },
-{ id:"dwergmuis", no:28, g:"Z", n:"Dwergmuis", s:"Micromys minutus", r:"BAL", l:12, zz:null, twin:null,
+{ id:"dwergmuis", no:129, g:"Z", n:"Dwergmuis", s:"Micromys minutus", r:"BAL", l:12, zz:null, twin:null,
   h:["MOER"], a:["DAG","NACHT"], v:["PLANT","ONG"], b:["VEG"], w:["ACT"],
   x:"hazelmuis",
   t:"Het hazelmuisnest is gemaakt van gestripte kamperfoeliebast en zit in struiken, niet in riet. De hazelmuis heeft een pluizige staart en grote zwarte ogen.",
@@ -606,7 +610,7 @@ const SPECIES = [
       "Heel klein, oranjebruin met een witte buik, en een staart waarmee het kan grijpen."
     ] }
   ] },
-{ id:"woelrat", no:29, g:"Z", n:"Woelrat", s:"Arvicola amphibius", r:"BAL", l:30, zz:null, twin:null,
+{ id:"woelrat", no:122, g:"Z", n:"Woelrat", s:"Arvicola amphibius", r:"BAL", l:30, zz:null, twin:null,
   h:["STIL","MOER","STROOM"], a:["DAG","NACHT"], v:["PLANT"], b:["HOL"], w:["ACT"],
   x:"bruine-rat",
   t:"De bruine rat heeft een spitse snuit, grotere oren en een lange, kale, geschubde staart. Zijn keutels zijn groter, met stompe uiteinden.",
@@ -626,7 +630,7 @@ const SPECIES = [
       "Groot, donkerbruin, met een stompe snuit, kleine oren en een behaarde staart."
     ] }
   ] },
-{ id:"aardmuis", no:30, g:"Z", n:"Aardmuis", s:"Microtus agrestis", r:"BAL", l:15, zz:null, twin:null,
+{ id:"aardmuis", no:124, g:"Z", n:"Aardmuis", s:"Microtus agrestis", r:"BAL", l:15, zz:null, twin:null,
   h:["MOER","HALF"], a:["DAG","NACHT"], v:["PLANT"], b:["VEG"], w:["ACT"],
   x:"veldmuis",
   t:"De veldmuis heeft een kortere, gladdere, meer geelbruine vacht en leeft in kort grasland, met veel open holletjes in plaats van paadjes door hoog gras.",
@@ -646,7 +650,7 @@ const SPECIES = [
       "Een woelmuis met een lange, ruige en donkere vacht en een korte, tweekleurige staart."
     ] }
   ] },
-{ id:"rosse-woelmuis", no:31, g:"Z", n:"Rosse woelmuis", s:"Clethrionomys glareolus", r:"BAL", l:15, zz:null, twin:null,
+{ id:"rosse-woelmuis", no:123, g:"Z", n:"Rosse woelmuis", s:"Clethrionomys glareolus", r:"BAL", l:15, zz:null, twin:null,
   h:["BOS"], a:["DAG","NACHT"], v:["PLANT"], b:["HOL"], w:["ACT"],
   x:"bosmuis",
   t:"De bosmuis heeft grote oren en ogen, een lange staart en springt. Bij hazelnoten laat ze tandsporen achter op het buitenoppervlak rond het gat.",
@@ -666,7 +670,7 @@ const SPECIES = [
       "Een knaagdiertje met een roodbruine rug, grijze flanken, kleine oren en een staart van zo'n halve lichaamslengte."
     ] }
   ] },
-{ id:"gewone-bosspitsmuis", no:32, g:"Z", n:"Gewone bosspitsmuis", s:"Sorex araneus", r:"BAL", l:12, zz:null, twin:null,
+{ id:"gewone-bosspitsmuis", no:102, g:"Z", n:"Gewone bosspitsmuis", s:"Sorex araneus", r:"BAL", l:12, zz:null, twin:null,
   h:["BOS","HALF"], a:["NACHT","DAG"], v:["ONG"], b:["GROND"], w:["ACT"],
   x:"huisspitsmuis",
   t:"De huisspitsmuis heeft witte tandpunten, grote, opvallende oren en lange, losse haren op de staart.",
@@ -686,7 +690,7 @@ const SPECIES = [
       "Een donkerbruine rug, lichtere flanken en een grijswitte buik: drie kleuren."
     ] }
   ] },
-{ id:"huisspitsmuis", no:33, g:"Z", n:"Huisspitsmuis", s:"Crocidura russula", r:"BAL", l:11, zz:null, twin:null,
+{ id:"huisspitsmuis", no:103, g:"Z", n:"Huisspitsmuis", s:"Crocidura russula", r:"BAL", l:11, zz:null, twin:null,
   h:["BEB","HALF"], a:["NACHT"], v:["ONG"], b:["GROND"], w:["ACT"],
   x:"gewone-bosspitsmuis",
   t:"De bosspitsmuis heeft rode tandpunten, kleine oren die in de vacht wegvallen, en een driekleurige vacht.",
@@ -706,7 +710,7 @@ const SPECIES = [
       "Witte tanden, opvallend grote oren en losse, lange haren op de staart."
     ] }
   ] },
-{ id:"gewone-dwergvleermuis", no:34, g:"Z", n:"Gewone dwergvleermuis", s:"Pipistrellus pipistrellus", r:"HR", l:7, zz:null, twin:"ruige-dwergvleermuis",
+{ id:"gewone-dwergvleermuis", no:110, g:"Z", n:"Gewone dwergvleermuis", s:"Pipistrellus pipistrellus", r:"HR", l:7, zz:null, twin:"ruige-dwergvleermuis",
   h:["BEB","HALF"], a:["NACHT"], v:["ONG"], b:["GEB"], w:["SLAAP"],
   x:"ruige-dwergvleermuis",
   t:"De ruige dwergvleermuis is iets groter, roept rond 38–40 kHz, en is vooral in de trektijd en bij water te vinden.",
@@ -726,7 +730,7 @@ const SPECIES = [
       "Een heel klein, donkerbruin vleermuisje met korte, ronde oren."
     ] }
   ] },
-{ id:"ruige-dwergvleermuis", no:35, g:"Z", n:"Ruige dwergvleermuis", s:"Pipistrellus nathusii", r:"HR", l:8, zz:null, twin:"gewone-dwergvleermuis",
+{ id:"ruige-dwergvleermuis", no:111, g:"Z", n:"Ruige dwergvleermuis", s:"Pipistrellus nathusii", r:"HR", l:8, zz:null, twin:"gewone-dwergvleermuis",
   h:["MOER","BOS","STIL"], a:["NACHT"], v:["ONG"], b:["BOOM","GEB"], w:["TREK","SLAAP"],
   x:"gewone-dwergvleermuis",
   t:"De gewone dwergvleermuis is kleiner, roept rond 45 kHz, trekt niet en heeft grote kraamkolonies in woningen.",
@@ -746,7 +750,7 @@ const SPECIES = [
       "Iets groter dan het gewone dwergje, met een ruige, lange vacht en een behaarde staartvlieghuid."
     ] }
   ] },
-{ id:"rosse-vleermuis", no:36, g:"Z", n:"Rosse vleermuis", s:"Nyctalus noctula", r:"HR", l:13, zz:null, twin:null,
+{ id:"rosse-vleermuis", no:114, g:"Z", n:"Rosse vleermuis", s:"Nyctalus noctula", r:"HR", l:13, zz:null, twin:null,
   h:["BOS","STIL"], a:["NACHT","SCHEMER"], v:["ONG"], b:["BOOM"], w:["SLAAP"],
   x:"laatvlieger",
   t:"De laatvlieger heeft brede vleugels, fladdert langzamer langs boomranden, roept rond 25–30 kHz en woont in gebouwen.",
@@ -766,7 +770,7 @@ const SPECIES = [
       "Groot, met smalle, puntige vleugels en een glanzend roodbruine vacht."
     ] }
   ] },
-{ id:"meervleermuis", no:37, g:"Z", n:"Meervleermuis", s:"Myotis dasycneme", r:"HR", l:11, zz:null, twin:null,
+{ id:"meervleermuis", no:106, g:"Z", n:"Meervleermuis", s:"Myotis dasycneme", r:"HR", l:11, zz:null, twin:null,
   h:["STIL","STROOM"], a:["NACHT"], v:["ONG"], b:["GEB"], w:["SLAAP","TREK"],
   x:"watervleermuis",
   t:"De watervleermuis is kleiner, jaagt boven vijvers en smallere wateren, roept rond 45 kHz en heeft kraamkolonies in bomen. In de hand heeft de meervleermuis grotere neusknobbels, bredere neusgaten en dikkere, bruinpaarse polsen.",
@@ -786,7 +790,7 @@ const SPECIES = [
       "Een grote Myotis met lange voeten en een vacht die van boven bruin en van onder grijswit is."
     ] }
   ] },
-{ id:"franjestaart", no:38, g:"Z", n:"Franjestaart", s:"Myotis nattereri", r:"HR", l:8, zz:null, twin:null,
+{ id:"franjestaart", no:107, g:"Z", n:"Franjestaart", s:"Myotis nattereri", r:"HR", l:8, zz:null, twin:null,
   h:["BOS","HALF"], a:["NACHT"], v:["ONG"], b:["BOOM","GEB"], w:["SLAAP"],
   x:"watervleermuis",
   t:"De watervleermuis heeft geen haarrand langs de staartvlieghuid, maar grote voeten, en jaagt laag boven het water.",
@@ -806,7 +810,7 @@ const SPECIES = [
       "Een middelgrote Myotis met lange oren, een lichte buik en een rand van stijve haartjes langs de staartvlieghuid."
     ] }
   ] },
-{ id:"ingekorven-vleermuis", no:39, g:"Z", n:"Ingekorven vleermuis", s:"Myotis emarginatus", r:"HR", l:9, zz:null, twin:null,
+{ id:"ingekorven-vleermuis", no:108, g:"Z", n:"Ingekorven vleermuis", s:"Myotis emarginatus", r:"HR", l:9, zz:null, twin:null,
   h:["BOS","HALF"], a:["NACHT"], v:["ONG"], b:["GEB"], w:["SLAAP"],
   x:"franjestaart",
   t:"De franjestaart heeft geen inkeping in het oor, maar een haarrand langs de staartvlieghuid. Zijn kolonies zitten verborgen in kieren, niet open aan de nok.",
@@ -826,7 +830,7 @@ const SPECIES = [
       "Een middelgrote Myotis met een wollige, rossige vacht en een inkeping in de buitenrand van het oor."
     ] }
   ] },
-{ id:"tweekleurige-vleermuis", no:40, g:"Z", n:"Tweekleurige vleermuis", s:"Vespertilio murinus", r:"HR", l:11, zz:"ZZ", twin:null,
+{ id:"tweekleurige-vleermuis", no:113, g:"Z", n:"Tweekleurige vleermuis", s:"Vespertilio murinus", r:"HR", l:11, zz:"ZZ", twin:null,
   h:["BEB","STIL"], a:["NACHT"], v:["ONG"], b:["GEB"], w:["SLAAP"],
   x:"laatvlieger",
   t:"De laatvlieger is groter, egaal donkerbruin zonder zilverige haarpunten, en heeft geen hoorbare baltszang.",
@@ -846,7 +850,7 @@ const SPECIES = [
       "Middelgroot, met brede, korte oren, een witte buik en een donkere rug met zilvergrijze haarpunten."
     ] }
   ] },
-{ id:"grijze-grootoorvleermuis", no:41, g:"Z", n:"Grijze grootoorvleermuis", s:"Plecotus austriacus", r:"HR", l:9, zz:"ZZ", twin:"gewone-grootoorvleermuis",
+{ id:"grijze-grootoorvleermuis", no:115, g:"Z", n:"Grijze grootoorvleermuis", s:"Plecotus austriacus", r:"HR", l:9, zz:"ZZ", twin:"gewone-grootoorvleermuis",
   h:["HALF","BEB"], a:["NACHT"], v:["ONG"], b:["GEB"], w:["SLAAP"],
   x:"gewone-grootoorvleermuis",
   t:"De gewone grootoor is bruiner, heeft een lichter gezicht en een duim van meer dan 6 mm, en komt in heel Nederland voor, vooral bij bos.",
@@ -866,7 +870,7 @@ const SPECIES = [
       "Een grijze vacht, een donker gezicht en een duim korter dan 6 mm."
     ] }
   ] },
-{ id:"gewone-grootoorvleermuis", no:42, g:"Z", n:"Gewone grootoorvleermuis", s:"Plecotus auritus", r:"HR", l:9, zz:null, twin:"grijze-grootoorvleermuis",
+{ id:"gewone-grootoorvleermuis", no:116, g:"Z", n:"Gewone grootoorvleermuis", s:"Plecotus auritus", r:"HR", l:9, zz:null, twin:"grijze-grootoorvleermuis",
   h:["BOS","HALF","BEB"], a:["NACHT"], v:["ONG"], b:["GEB","BOOM"], w:["SLAAP"],
   x:"grijze-grootoorvleermuis",
   t:"De grijze grootoor heeft een grijzere vacht, een donker gezichtsmasker en een duim korter dan 6 mm, en komt vooral in het zuiden voor.",
@@ -886,7 +890,7 @@ const SPECIES = [
       "Een bruine vacht, een licht gezicht en een duim langer dan 6 mm."
     ] }
   ] },
-{ id:"noordse-woelmuis", no:43, g:"Z", n:"Noordse woelmuis", s:"Microtus oeconomus", r:"HR", l:18, zz:"ZZ", twin:"aardmuis",
+{ id:"noordse-woelmuis", no:125, g:"Z", n:"Noordse woelmuis", s:"Microtus oeconomus", r:"HR", l:18, zz:"ZZ", twin:"aardmuis",
   h:["MOER"], a:["DAG","NACHT"], v:["PLANT"], b:["VEG"], w:["ACT"],
   x:"aardmuis",
   t:"De aardmuis is iets kleiner, heeft een kortere staart en een ruigere, meer grijsbruine vacht. Hij leeft in vrijwel dezelfde habitat en verdringt de noordse woelmuis.",
@@ -906,7 +910,7 @@ const SPECIES = [
       "Donkerbruin, groter dan een veldmuis, met een vrij lange staart."
     ] }
   ] },
-{ id:"grijze-zeehond", no:44, g:"Z", n:"Grijze zeehond", s:"Halichoerus grypus", r:"BAL", l:220, zz:null, twin:null,
+{ id:"grijze-zeehond", no:148, g:"Z", n:"Grijze zeehond", s:"Halichoerus grypus", r:"BAL", l:220, zz:null, twin:null,
   h:["ZEE"], a:["DAG","NACHT"], v:["VIS"], b:["WATER"], w:["ACT"],
   x:"gewone-zeehond",
   t:"De gewone zeehond heeft een ronde ‘hondenkop’ met V-vormige neusgaten en jongt in juni–juli. Zijn jongen verliezen hun witte vacht al vóór de geboorte.",
@@ -926,7 +930,7 @@ const SPECIES = [
       "Een langgerekte kop met een 'Romeinse neus' en parallelle neusgaten; vaak gevlekt."
     ] }
   ] },
-{ id:"zandhagedis", no:45, g:"R", n:"Zandhagedis", s:"Lacerta agilis", r:"HR", l:20, zz:null, twin:null,
+{ id:"zandhagedis", no:201, g:"R", n:"Zandhagedis", s:"Lacerta agilis", r:"HR", l:20, zz:null, twin:null,
   h:["HEI","DUIN"], a:["DAG"], v:["ONG"], b:["GROND"], w:["SLAAP"],
   x:"levendbarende-hagedis",
   t:"De levendbarende hagedis is slanker en bruiner, heeft geen witte oogvlekjes, en mannetjes hebben een oranje buik in plaats van groene flanken. Hij legt geen eieren.",
@@ -946,7 +950,7 @@ const SPECIES = [
       "Gedrongen, met een korte kop en rijen donkere vlekken met een witte kern over rug en flanken."
     ] }
   ] },
-{ id:"gladde-slang", no:46, g:"R", n:"Gladde slang", s:"Coronella austriaca", r:"HR", l:60, zz:null, twin:null,
+{ id:"gladde-slang", no:205, g:"R", n:"Gladde slang", s:"Coronella austriaca", r:"HR", l:60, zz:null, twin:null,
   h:["HEI"], a:["DAG"], v:["GEW"], b:["GROND"], w:["SLAAP"],
   x:"adder",
   t:"De adder heeft een doorlopende zigzagband, een verticale spleetpupil en gekielde schubben.",
@@ -966,7 +970,7 @@ const SPECIES = [
       "Grijsbruin, met een donkere vlek op het achterhoofd, twee rijen kleine vlekjes over de rug en een ronde pupil."
     ] }
   ] },
-{ id:"adder", no:47, g:"R", n:"Adder", s:"Vipera berus", r:"BAL", l:60, zz:null, twin:null,
+{ id:"adder", no:207, g:"R", n:"Adder", s:"Vipera berus", r:"BAL", l:60, zz:null, twin:null,
   h:["HEI","MOER"], a:["DAG"], v:["GEW"], b:["GROND"], w:["SLAAP"],
   x:"gladde-slang",
   t:"De gladde slang heeft geen doorlopende zigzagband, maar een ronde pupil, gladde schubben en een donkere streep door het oog.",
@@ -986,7 +990,7 @@ const SPECIES = [
       "Bruin met een donkere zigzag over de rug, een rode iris en een spleetpupil."
     ] }
   ] },
-{ id:"ringslang", no:48, g:"R", n:"Ringslang", s:"Natrix helvetica", r:"BAL", l:90, zz:null, twin:null,
+{ id:"ringslang", no:206, g:"R", n:"Ringslang", s:"Natrix helvetica", r:"BAL", l:90, zz:null, twin:null,
   h:["MOER","STIL"], a:["DAG"], v:["GEW","VIS"], b:["GROND"], w:["SLAAP"],
   x:"adder",
   t:"Ook een adder kan zwemmen, maar de ringslang heeft gele halvemaanvlekken in de nek, een ronde pupil en wordt veel groter.",
@@ -1006,7 +1010,7 @@ const SPECIES = [
       "Grijsgroen, met kleine zwarte vlekjes langs de flanken, een ronde pupil en twee gele vlekken achter de kop."
     ] }
   ] },
-{ id:"hazelworm", no:49, g:"R", n:"Hazelworm", s:"Anguis fragilis", r:"BAL", l:40, zz:null, twin:null,
+{ id:"hazelworm", no:204, g:"R", n:"Hazelworm", s:"Anguis fragilis", r:"BAL", l:40, zz:null, twin:null,
   h:["BOS","HEI","HALF"], a:["SCHEMER","DAG"], v:["ONG"], b:["GROND"], w:["SLAAP"],
   x:"gladde-slang",
   t:"Een slang kan zijn ogen niet sluiten en kan zijn staart niet afwerpen. De hazelworm heeft beweegbare oogleden en een stijve, glanzende bouw.",
@@ -1026,7 +1030,7 @@ const SPECIES = [
       "Langgerekt en zonder poten, met gladde, glanzende schubben en geen zichtbare nek."
     ] }
   ] },
-{ id:"levendbarende-hagedis", no:50, g:"R", n:"Levendbarende hagedis", s:"Zootoca vivipara", r:"BAL", l:15, zz:null, twin:null,
+{ id:"levendbarende-hagedis", no:202, g:"R", n:"Levendbarende hagedis", s:"Zootoca vivipara", r:"BAL", l:15, zz:null, twin:null,
   h:["HEI","MOER"], a:["DAG"], v:["ONG"], b:["GROND"], w:["SLAAP"],
   x:"zandhagedis",
   t:"De zandhagedis is gedrongener, heeft rijen witte oogvlekjes op de rug en groene flanken bij de mannetjes in het voorjaar, en legt eieren in warm zand.",
@@ -1046,7 +1050,7 @@ const SPECIES = [
       "Klein en slank, bruin, met een smalle kop en een dunne donkere rugstreep."
     ] }
   ] },
-{ id:"muurhagedis", no:51, g:"R", n:"Muurhagedis", s:"Podarcis muralis", r:"HR", l:20, zz:null, twin:null,
+{ id:"muurhagedis", no:203, g:"R", n:"Muurhagedis", s:"Podarcis muralis", r:"HR", l:20, zz:null, twin:null,
   h:["BEB"], a:["DAG"], v:["ONG"], b:["STEEN"], w:["SLAAP"],
   x:"zandhagedis",
   t:"De zandhagedis is gedrongener, leeft op zandgrond in heide en duinen en heeft rijen witte oogvlekjes in plaats van een netvormige tekening.",
@@ -1066,7 +1070,7 @@ const SPECIES = [
       "Slank, met een lange staart en een platte kop, bruin of grijs met een donkere zijband."
     ] }
   ] },
-{ id:"kamsalamander", no:52, g:"A", n:"Kamsalamander", s:"Triturus cristatus", r:"HR", l:15, zz:null, twin:null,
+{ id:"kamsalamander", no:301, g:"A", n:"Kamsalamander", s:"Triturus cristatus", r:"HR", l:15, zz:null, twin:null,
   h:["STIL","HALF","BOS"], a:["NACHT"], v:["ONG"], b:["WATER","GROND"], w:["SLAAP"],
   x:"kleine-watersalamander",
   t:"De kleine watersalamander is kleiner (±9 cm), heeft een gladde huid, en bij het mannetje loopt de golvende kam door tot op de staart. De larven blijven dichter bij bodem en planten.",
@@ -1086,7 +1090,7 @@ const SPECIES = [
       "Groot, tot 16 cm, zwartbruin met witte stippels op de flanken."
     ] }
   ] },
-{ id:"boomkikker", no:53, g:"A", n:"Boomkikker", s:"Hyla arborea", r:"HR", l:4.5, zz:null, twin:null,
+{ id:"boomkikker", no:311, g:"A", n:"Boomkikker", s:"Hyla arborea", r:"HR", l:4.5, zz:null, twin:null,
   h:["HALF","STIL"], a:["NACHT","SCHEMER"], v:["ONG"], b:["VEG","WATER"], w:["SLAAP"],
   x:"poelkikker",
   t:"Groene kikkers zitten aan de waterkant in plaats van hoog in struiken, missen de kleefschijfjes en kwaken met kwaakblazen aan de zijkant van de bek.",
@@ -1106,7 +1110,7 @@ const SPECIES = [
       "Glad en fel groen, met een donkere streep van de neus tot de achterpoot en schijfjes aan de tenen."
     ] }
   ] },
-{ id:"rugstreeppad", no:54, g:"A", n:"Rugstreeppad", s:"Epidalea calamita", r:"HR", l:7, zz:null, twin:null,
+{ id:"rugstreeppad", no:310, g:"A", n:"Rugstreeppad", s:"Epidalea calamita", r:"HR", l:7, zz:null, twin:null,
   h:["DUIN","HEI"], a:["NACHT"], v:["ONG"], b:["GROND"], w:["SLAAP"],
   x:"gewone-pad",
   t:"De gewone pad heeft geen gele rugstreep, springt of loopt langzaam, legt eisnoeren met twee tot vier rijen eitjes in diepere wateren en roept zacht.",
@@ -1126,7 +1130,7 @@ const SPECIES = [
       "Gedrongen en wrattig, met groengele ogen en een lichtgele streep over de rug."
     ] }
   ] },
-{ id:"knoflookpad", no:55, g:"A", n:"Knoflookpad", s:"Pelobates fuscus", r:"HR", l:6, zz:"ZZ", twin:null,
+{ id:"knoflookpad", no:308, g:"A", n:"Knoflookpad", s:"Pelobates fuscus", r:"HR", l:6, zz:"ZZ", twin:null,
   h:["OPEN","HEI"], a:["NACHT"], v:["ONG"], b:["GROND"], w:["SLAAP"],
   x:"gewone-pad",
   t:"De gewone pad heeft een horizontale pupil en geen hoornige graafschop, en zijn larven blijven klein en zwart.",
@@ -1146,7 +1150,7 @@ const SPECIES = [
       "Glad, grijsbruin met olijfgroene vlekken, met grote, uitpuilende ogen met een verticale pupil."
     ] }
   ] },
-{ id:"geelbuikvuurpad", no:56, g:"A", n:"Geelbuikvuurpad", s:"Bombina variegata", r:"HR", l:4.5, zz:null, twin:null,
+{ id:"geelbuikvuurpad", no:306, g:"A", n:"Geelbuikvuurpad", s:"Bombina variegata", r:"HR", l:4.5, zz:null, twin:null,
   h:["STIL","BOS"], a:["DAG","NACHT"], v:["ONG"], b:["WATER","GROND"], w:["SLAAP"],
   x:"vroedmeesterpad",
   t:"De vroedmeesterpad heeft een verticale pupil en geen felgekleurde buik, en het mannetje draagt de eieren mee.",
@@ -1166,7 +1170,7 @@ const SPECIES = [
       "Klein, grijsbruin en wrattig, met een geel-zwart gevlekte buik."
     ] }
   ] },
-{ id:"vroedmeesterpad", no:57, g:"A", n:"Vroedmeesterpad", s:"Alytes obstetricans", r:"HR", l:5, zz:null, twin:null,
+{ id:"vroedmeesterpad", no:307, g:"A", n:"Vroedmeesterpad", s:"Alytes obstetricans", r:"HR", l:5, zz:null, twin:null,
   h:["HALF","BEB"], a:["NACHT"], v:["ONG"], b:["STEEN","GROND"], w:["SLAAP"],
   x:"geelbuikvuurpad",
   t:"De geelbuikvuurpad heeft een hartvormige pupil en een gele buik met zwarte vlekken, en legt losse eitjes in tijdelijke plasjes.",
@@ -1186,7 +1190,7 @@ const SPECIES = [
       "Klein en grijsbruin, met een verticale pupil en een rij lichtere wratjes langs elke flank."
     ] }
   ] },
-{ id:"heikikker", no:58, g:"A", n:"Heikikker", s:"Rana arvalis", r:"HR", l:6.5, zz:null, twin:null,
+{ id:"heikikker", no:313, g:"A", n:"Heikikker", s:"Rana arvalis", r:"HR", l:6.5, zz:null, twin:null,
   h:["HEI","MOER"], a:["DAG","NACHT"], v:["ONG"], b:["WATER","GROND"], w:["SLAAP"],
   x:"bruine-kikker",
   t:"De bruine kikker heeft een stompere snuit, een kleine, zachte knobbel aan de achterpoot en vaak een gevlekte buik, en kleurt niet blauw.",
@@ -1206,7 +1210,7 @@ const SPECIES = [
       "Slank, met een spitse snuit en een donkere vlek achter het oog."
     ] }
   ] },
-{ id:"vuursalamander", no:59, g:"A", n:"Vuursalamander", s:"Salamandra salamandra", r:"BAL", l:17, zz:null, twin:null,
+{ id:"vuursalamander", no:302, g:"A", n:"Vuursalamander", s:"Salamandra salamandra", r:"BAL", l:17, zz:null, twin:null,
   h:["BOS","STROOM"], a:["NACHT"], v:["ONG"], b:["GROND"], w:["SLAAP"],
   x:"alpenwatersalamander",
   t:"De alpenwatersalamander is kleiner, leeft in het voorjaar in het water, heeft een egaal oranje buik en geen gele vlekken op de rug.",
@@ -1226,7 +1230,7 @@ const SPECIES = [
       "Groot, tot 20 cm, met opvallende gifklieren achter de ogen en grote gele vlekken."
     ] }
   ] },
-{ id:"gewone-pad", no:60, g:"A", n:"Gewone pad", s:"Bufo bufo", r:"BAL", l:10, zz:null, twin:null,
+{ id:"gewone-pad", no:309, g:"A", n:"Gewone pad", s:"Bufo bufo", r:"BAL", l:10, zz:null, twin:null,
   h:["BOS","HALF","BEB"], a:["NACHT"], v:["ONG"], b:["GROND"], w:["SLAAP"],
   x:"rugstreeppad",
   t:"De rugstreeppad heeft een gele rugstreep en korte achterpoten, rent in plaats van te springen, legt eisnoeren met één of twee rijen eitjes in ondiepe plassen zonder vis, en roept luid ratelend.",
@@ -1246,7 +1250,7 @@ const SPECIES = [
       "Een droge, wrattige huid, grote schuine oorklieren en een oranjebruin oog."
     ] }
   ] },
-{ id:"bruine-kikker", no:61, g:"A", n:"Bruine kikker", s:"Rana temporaria", r:"BAL", l:8, zz:null, twin:null,
+{ id:"bruine-kikker", no:312, g:"A", n:"Bruine kikker", s:"Rana temporaria", r:"BAL", l:8, zz:null, twin:null,
   h:["HALF","BOS","STIL"], a:["NACHT","DAG"], v:["ONG"], b:["GROND","WATER"], w:["SLAAP"],
   x:"heikikker",
   t:"De heikikker heeft een spitse snuit en een grote, harde knobbel aan de achterpoot, leeft in zure, voedselarme wateren, en de mannetjes kleuren in de paartijd blauw.",
@@ -1266,7 +1270,7 @@ const SPECIES = [
       "Bruin, met een stompe snuit en een donkere vlek achter het oog."
     ] }
   ] },
-{ id:"kleine-watersalamander", no:62, g:"A", n:"Kleine watersalamander", s:"Lissotriton vulgaris", r:"BAL", l:9, zz:null, twin:null,
+{ id:"kleine-watersalamander", no:304, g:"A", n:"Kleine watersalamander", s:"Lissotriton vulgaris", r:"BAL", l:9, zz:null, twin:null,
   h:["STIL","HALF"], a:["NACHT"], v:["ONG"], b:["WATER","GROND"], w:["SLAAP"],
   x:"kamsalamander",
   t:"De kamsalamander is groter (±15 cm), heeft een wrattige, donkere huid en een getande kam die bij de staartwortel onderbroken is.",
@@ -1286,7 +1290,7 @@ const SPECIES = [
       "Een oranje buik met kleine zwarte stippen, ook op de keel."
     ] }
   ] },
-{ id:"alpenwatersalamander", no:63, g:"A", n:"Alpenwatersalamander", s:"Ichthyosaura alpestris", r:"BAL", l:10, zz:null, twin:null,
+{ id:"alpenwatersalamander", no:303, g:"A", n:"Alpenwatersalamander", s:"Ichthyosaura alpestris", r:"BAL", l:10, zz:null, twin:null,
   h:["BOS","STIL"], a:["NACHT"], v:["ONG"], b:["WATER","GROND"], w:["SLAAP"],
   x:"vinpootsalamander",
   t:"De vinpootsalamander is kleiner, heeft een lichte, ongevlekte keel en een lichtgeel tot oranje streepje op de buik; mannetjes hebben donkere zwemvliezen en een draadje aan de staartpunt.",
@@ -1306,7 +1310,7 @@ const SPECIES = [
       "Een egaal oranje buik."
     ] }
   ] },
-{ id:"vinpootsalamander", no:64, g:"A", n:"Vinpootsalamander", s:"Lissotriton helveticus", r:"BAL", l:8, zz:null, twin:null,
+{ id:"vinpootsalamander", no:305, g:"A", n:"Vinpootsalamander", s:"Lissotriton helveticus", r:"BAL", l:8, zz:null, twin:null,
   h:["HEI","BOS","STIL"], a:["NACHT"], v:["ONG"], b:["WATER","GROND"], w:["SLAAP"],
   x:"kleine-watersalamander",
   t:"De kleine watersalamander heeft een gestippelde keel; het mannetje heeft een hoge, golvende kam in plaats van een draadje aan de staart.",
@@ -1326,7 +1330,7 @@ const SPECIES = [
       "Klein, met een bleke, ongevlekte keel."
     ] }
   ] },
-{ id:"poelkikker", no:65, g:"A", n:"Poelkikker", s:"Pelophylax lessonae", r:"HR", l:7, zz:null, twin:"middelste-groene-kikker",
+{ id:"poelkikker", no:314, g:"A", n:"Poelkikker", s:"Pelophylax lessonae", r:"HR", l:7, zz:null, twin:"middelste-groene-kikker",
   h:["STIL","HEI"], a:["DAG"], v:["ONG"], b:["WATER"], w:["SLAAP"],
   x:"meerkikker",
   t:"De meerkikker is veel groter, heeft grijze kwaakblazen en een kleine knobbel aan de achterpoot, en overwintert in het water.",
@@ -1346,7 +1350,7 @@ const SPECIES = [
       "Klein en groen, met korte achterpoten en een grote, harde hielknobbel."
     ] }
   ] },
-{ id:"meerkikker", no:66, g:"A", n:"Meerkikker", s:"Pelophylax ridibundus", r:"BAL", l:11, zz:null, twin:null,
+{ id:"meerkikker", no:316, g:"A", n:"Meerkikker", s:"Pelophylax ridibundus", r:"BAL", l:11, zz:null, twin:null,
   h:["STIL","STROOM"], a:["DAG"], v:["ONG","GEW"], b:["WATER"], w:["SLAAP"],
   x:"poelkikker",
   t:"De poelkikker is kleiner, heeft witte kwaakblazen en een grote, halvemaanvormige knobbel aan de achterpoot, en overwintert op het land.",
@@ -1366,7 +1370,7 @@ const SPECIES = [
       "Groot, olijfgroen tot bruin, met een kleine hielknobbel en lange achterpoten."
     ] }
   ] },
-{ id:"grote-modderkruiper", no:67, g:"F", n:"Grote modderkruiper", s:"Misgurnus fossilis", r:"BAL", l:25, zz:null, twin:null,
+{ id:"grote-modderkruiper", no:403, g:"F", n:"Grote modderkruiper", s:"Misgurnus fossilis", r:"BAL", l:25, zz:null, twin:null,
   h:["STIL","MOER"], a:["NACHT","SCHEMER"], v:["ONG"], b:["WATER"], w:["ACT"],
   x:"kleine-modderkruiper",
   t:"De kleine modderkruiper heeft zes korte baarddraden en een rij donkere vlekken langs de flank, en leeft op zandige bodems in helder water. Hij valt niet onder de soortenbescherming.",
@@ -1386,7 +1390,7 @@ const SPECIES = [
       "Tot 30 cm, geelbruin met donkere lengtestrepen."
     ] }
   ] },
-{ id:"beekprik", no:68, g:"F", n:"Beekprik", s:"Lampetra planeri", r:"BAL", l:14, zz:null, twin:null,
+{ id:"beekprik", no:401, g:"F", n:"Beekprik", s:"Lampetra planeri", r:"BAL", l:14, zz:null, twin:null,
   h:["STROOM"], a:["NACHT"], v:["PLANT"], b:["WATER"], w:["ACT"],
   x:"rivierprik",
   t:"De rivierprik trekt naar zee, wordt veel groter (±30–40 cm) en paait als volwassen dier in grotere rivieren. Hij valt niet onder de soortenbescherming van de Omgevingswet.",
@@ -1406,7 +1410,7 @@ const SPECIES = [
       "Zo'n 15 cm, aalvormig, met zeven kieuwopeningen achter het oog."
     ] }
   ] },
-{ id:"kwabaal", no:69, g:"F", n:"Kwabaal", s:"Lota lota", r:"BAL", l:45, zz:null, twin:null,
+{ id:"kwabaal", no:407, g:"F", n:"Kwabaal", s:"Lota lota", r:"BAL", l:45, zz:null, twin:null,
   h:["STROOM","STIL"], a:["NACHT"], v:["VIS","ONG"], b:["WATER"], w:["ACT"],
   x:"aal",
   t:"De aal heeft geen baarddraad en geen afzonderlijke rugvinnen: rug-, staart- en aarsvin lopen in één zoom door.",
@@ -1426,7 +1430,7 @@ const SPECIES = [
       "Een langgerekte vis met een lange tweede rugvin en één baarddraad aan de kin."
     ] }
   ] },
-{ id:"elrits", no:70, g:"F", n:"Elrits", s:"Phoxinus phoxinus", r:"BAL", l:9, zz:null, twin:null,
+{ id:"elrits", no:404, g:"F", n:"Elrits", s:"Phoxinus phoxinus", r:"BAL", l:9, zz:null, twin:null,
   h:["STROOM"], a:["DAG"], v:["ONG"], b:["WATER"], w:["ACT"],
   x:"gestippelde-alver",
   t:"De gestippelde alver is hoger gebouwd en heeft een opvallende dubbele rij donkere stippen langs de zijlijn.",
@@ -1446,7 +1450,7 @@ const SPECIES = [
       "Klein, tot 10 cm, met een rij donkere vlekken langs de flank en een goudkleurige streep erboven."
     ] }
   ] },
-{ id:"beekdonderpad", no:71, g:"F", n:"Beekdonderpad", s:"Cottus rhenanus", r:"BAL", l:12, zz:null, twin:"rivierdonderpad",
+{ id:"beekdonderpad", no:408, g:"F", n:"Beekdonderpad", s:"Cottus rhenanus", r:"BAL", l:12, zz:null, twin:"rivierdonderpad",
   h:["STROOM"], a:["NACHT"], v:["ONG"], b:["WATER"], w:["ACT"],
   x:"rivierdonderpad",
   t:"De rivierdonderpad lijkt sterk op de beekdonderpad, maar leeft in grote rivieren, kanalen en meren, vaak tussen stortsteen. Hij valt niet onder de soortenbescherming van de Omgevingswet.",
@@ -1466,7 +1470,7 @@ const SPECIES = [
       "Een plompe bodemvis zonder schubben, met een brede kop en grote, uitgespreide vinnen aan de zijkant."
     ] }
   ] },
-{ id:"gestippelde-alver", no:72, g:"F", n:"Gestippelde alver", s:"Alburnoides bipunctatus", r:"BAL", l:12, zz:"ZZ", twin:null,
+{ id:"gestippelde-alver", no:405, g:"F", n:"Gestippelde alver", s:"Alburnoides bipunctatus", r:"BAL", l:12, zz:"ZZ", twin:null,
   h:["STROOM"], a:["DAG"], v:["ONG"], b:["WATER"], w:["ACT"],
   x:"elrits",
   t:"De elrits is ronder en kleiner, heeft zeer fijne schubben en een donkere lengteband, maar geen dubbele stippenrij langs de zijlijn.",
@@ -1486,7 +1490,7 @@ const SPECIES = [
       "Zilverig, met een zijlijn die aan weerszijden door een rij donkere puntjes wordt begeleid."
     ] }
   ] },
-{ id:"noordzeehouting", no:73, g:"F", n:"Noordzeehouting", s:"Coregonus oxyrinchus", r:"HR", l:40, zz:null, twin:null,
+{ id:"noordzeehouting", no:406, g:"F", n:"Noordzeehouting", s:"Coregonus oxyrinchus", r:"HR", l:40, zz:null, twin:null,
   h:["ZEE","STROOM","STIL"], a:["DAG"], v:["ONG"], b:["WATER"], w:["ACT"],
   x:"spiering",
   t:"De spiering is kleiner, heeft een grote bek met tanden en geen spitse, overhangende snuit, en ruikt naar komkommer.",
@@ -1506,7 +1510,7 @@ const SPECIES = [
       "Een zalmachtige met een vetvin en een stompe neus die over de bek steekt."
     ] }
   ] },
-{ id:"steenuil", no:74, g:"B", n:"Steenuil", s:"Athene noctua", r:"VRJ", l:22, zz:null, twin:null,
+{ id:"steenuil", no:519, g:"B", n:"Steenuil", s:"Athene noctua", r:"VRJ", l:22, zz:null, twin:null,
   h:["HALF","OPEN"], a:["SCHEMER","NACHT"], v:["ONG","GEW"], b:["BOOM","GEB"], w:["ACT"],
   x:"kerkuil",
   t:"Kerkuilbraakballen zijn groter, zwart en glanzend, en bevatten complete muizenschedels. Die van de steenuil zijn klein, grijs en zitten vol insectenresten.",
@@ -1526,7 +1530,7 @@ const SPECIES = [
       "Klein en gedrongen, bruin met witte vlekjes en gele ogen."
     ] }
   ] },
-{ id:"gierzwaluw", no:75, g:"B", n:"Gierzwaluw", s:"Apus apus", r:"VRJ", l:17, zz:null, twin:null,
+{ id:"gierzwaluw", no:524, g:"B", n:"Gierzwaluw", s:"Apus apus", r:"VRJ", l:17, zz:null, twin:null,
   h:["BEB"], a:["DAG"], v:["ONG"], b:["GEB"], w:["TREK"],
   x:"huiszwaluw",
   t:"De huiszwaluw heeft een witte stuit en buik, bouwt een zichtbaar modderkommetje onder de dakgoot en gaat wel op draden zitten.",
@@ -1546,7 +1550,7 @@ const SPECIES = [
       "Donker, met korte pootjes waarvan alle vier de tenen naar voren wijzen."
     ] }
   ] },
-{ id:"kerkuil", no:76, g:"B", n:"Kerkuil", s:"Tyto alba", r:"VRJ", l:34, zz:null, twin:null,
+{ id:"kerkuil", no:518, g:"B", n:"Kerkuil", s:"Tyto alba", r:"VRJ", l:34, zz:null, twin:null,
   h:["OPEN","HALF"], a:["NACHT"], v:["GEW"], b:["GEB"], w:["ACT"],
   x:"bosuil",
   t:"Bosuilbraakballen zijn grijs, dof en brokkelig. De bosuil roept het bekende bibberende ‘hoe-hoe’ en broedt vooral in boomholtes.",
@@ -1566,7 +1570,7 @@ const SPECIES = [
       "Witte onderkant, goudbruine bovenkant met grijze waas, lange poten en een witte, hartvormige sluier."
     ] }
   ] },
-{ id:"ooievaar", no:77, g:"B", n:"Ooievaar", s:"Ciconia ciconia", r:"VRJ", l:100, zz:null, twin:null,
+{ id:"ooievaar", no:504, g:"B", n:"Ooievaar", s:"Ciconia ciconia", r:"VRJ", l:100, zz:null, twin:null,
   h:["OPEN","MOER"], a:["DAG"], v:["GEW","ONG"], b:["GEB"], w:["TREK","ACT"],
   x:"blauwe-reiger",
   t:"De blauwe reiger vliegt met ingetrokken nek, is grijs, en broedt in kolonies hoog in bomen.",
@@ -1586,7 +1590,7 @@ const SPECIES = [
       "Wit met zwarte slagpennen; vliegt met gestrekte hals."
     ] }
   ] },
-{ id:"ijsvogel", no:78, g:"B", n:"IJsvogel", s:"Alcedo atthis", r:"VR", l:17, zz:null, twin:null,
+{ id:"ijsvogel", no:525, g:"B", n:"IJsvogel", s:"Alcedo atthis", r:"VR", l:17, zz:null, twin:null,
   h:["STROOM","STIL"], a:["DAG"], v:["VIS"], b:["HOL"], w:["ACT"],
   x:"oeverzwaluw",
   t:"Oeverzwaluwen graven in kolonie tientallen kleinere gaten bij elkaar, zonder vislucht of witte veeg uit de opening.",
@@ -1606,7 +1610,7 @@ const SPECIES = [
       "Fel blauw van boven en oranje van onder, met een lange snavel."
     ] }
   ] },
-{ id:"roek", no:79, g:"B", n:"Roek", s:"Corvus frugilegus", r:"VRJ", l:46, zz:null, twin:null,
+{ id:"roek", no:534, g:"B", n:"Roek", s:"Corvus frugilegus", r:"VRJ", l:46, zz:null, twin:null,
   h:["OPEN","BEB"], a:["DAG"], v:["ONG","PLANT"], b:["BOOM"], w:["ACT"],
   x:"zwarte-kraai",
   t:"De zwarte kraai heeft een volledig bevederde snavelbasis, broedt solitair en heeft geen ‘broekje’.",
@@ -1626,7 +1630,7 @@ const SPECIES = [
       "Zwart met paarse glans, een puntige snavel met een kale, lichte basis en een 'broek' van losse veren."
     ] }
   ] },
-{ id:"oeverzwaluw", no:80, g:"B", n:"Oeverzwaluw", s:"Riparia riparia", r:"VR", l:12, zz:null, twin:null,
+{ id:"oeverzwaluw", no:541, g:"B", n:"Oeverzwaluw", s:"Riparia riparia", r:"VR", l:12, zz:null, twin:null,
   h:["STIL","STROOM","OPEN"], a:["DAG"], v:["ONG"], b:["HOL"], w:["TREK"],
   x:"ijsvogel",
   t:"Een ijsvogelhol is groter, ligt alleen, en ruikt sterk naar vis; uit de opening loopt vaak een witte veeg.",
@@ -1646,7 +1650,7 @@ const SPECIES = [
       "Klein, bruin van boven, wit van onder met een bruine borstband."
     ] }
   ] },
-{ id:"slechtvalk", no:81, g:"B", n:"Slechtvalk", s:"Falco peregrinus", r:"VRJ", l:43, zz:null, twin:null,
+{ id:"slechtvalk", no:514, g:"B", n:"Slechtvalk", s:"Falco peregrinus", r:"VRJ", l:43, zz:null, twin:null,
   h:["BEB","ZEE"], a:["DAG"], v:["GEW"], b:["GEB"], w:["ACT"],
   x:"torenvalk",
   t:"De torenvalk is kleiner en roodbruin, bidt boven open terrein en jaagt op muizen in plaats van op vogels in de vlucht.",
@@ -1666,7 +1670,7 @@ const SPECIES = [
       "Blauwgrijze rug, dwarsgestreepte buik en een brede, zwarte baardstreep."
     ] }
   ] },
-{ id:"ransuil", no:82, g:"B", n:"Ransuil", s:"Asio otus", r:"VRJ", l:36, zz:null, twin:null,
+{ id:"ransuil", no:522, g:"B", n:"Ransuil", s:"Asio otus", r:"VRJ", l:36, zz:null, twin:null,
   h:["HALF","BOS","BEB"], a:["NACHT"], v:["GEW"], b:["BOOM"], w:["ACT"],
   x:"bosuil",
   t:"De bosuil heeft geen oorpluimen en donkere ogen, en roest niet in groepen.",
@@ -1686,7 +1690,7 @@ const SPECIES = [
       "Middelgroot, bruin gestreept, met lange oorpluimen."
     ] }
   ] },
-{ id:"huismus", no:83, g:"B", n:"Huismus", s:"Passer domesticus", r:"VRJ", l:15, zz:null, twin:null,
+{ id:"huismus", no:556, g:"B", n:"Huismus", s:"Passer domesticus", r:"VRJ", l:15, zz:null, twin:null,
   h:["BEB"], a:["DAG"], v:["PLANT","ONG"], b:["GEB"], w:["ACT"],
   x:"spreeuw",
   t:"De spreeuw broedt ook onder dakpannen, maar is groter, zwart met een metaalglans en lichte stippen in de winter, en heeft een lange, spitse snavel.",
@@ -1706,7 +1710,7 @@ const SPECIES = [
       "Mannetje met een grijze kruin, kastanjebruine nek en zwarte bef."
     ] }
   ] },
-{ id:"oehoe", no:84, g:"B", n:"Oehoe", s:"Bubo bubo", r:"VRJ", l:65, zz:null, twin:null,
+{ id:"oehoe", no:520, g:"B", n:"Oehoe", s:"Bubo bubo", r:"VRJ", l:65, zz:null, twin:null,
   h:["BOS"], a:["NACHT","SCHEMER"], v:["GEW"], b:["STEEN","GEB"], w:["ACT"],
   x:"ransuil",
   t:"De ransuil heeft ook oranje ogen en oorpluimen, maar is ruim de helft kleiner, broedt in oude kraaiennesten en eet vooral muizen.",
@@ -1726,7 +1730,7 @@ const SPECIES = [
       "Groot, tot 70 cm, met oorpluimen en oranje ogen."
     ] }
   ] },
-{ id:"buizerd", no:85, g:"B", n:"Buizerd", s:"Buteo buteo", r:"VRJ", l:53, zz:null, twin:null,
+{ id:"buizerd", no:511, g:"B", n:"Buizerd", s:"Buteo buteo", r:"VRJ", l:53, zz:null, twin:null,
   h:["HALF","BOS"], a:["DAG"], v:["GEW"], b:["BOOM"], w:["ACT"],
   x:"wespendief",
   t:"De wespendief heeft een smallere, duifachtige kop, een langere staart met twee smalle banden bij de basis en één brede aan het eind, en is een zomergast die wespennesten uitgraaft.",
@@ -1746,7 +1750,7 @@ const SPECIES = [
       "Gedrongen, met brede vleugels, een korte staart en een lichte band over de borst."
     ] }
   ] },
-{ id:"havik", no:86, g:"B", n:"Havik", s:"Astur gentilis", r:"VRJ", l:55, zz:null, twin:null,
+{ id:"havik", no:509, g:"B", n:"Havik", s:"Astur gentilis", r:"VRJ", l:55, zz:null, twin:null,
   h:["BOS"], a:["DAG"], v:["GEW"], b:["BOOM"], w:["ACT"],
   x:"sperwer",
   t:"De sperwer is veel kleiner, slaat vooral zangvogels, heeft lange, dunne poten en jaagt ook in tuinen in de bebouwde kom.",
@@ -1766,7 +1770,7 @@ const SPECIES = [
       "Groot, met een witte wenkbrauwstreep en een fijn gestreepte borst."
     ] }
   ] },
-{ id:"sperwer", no:87, g:"B", n:"Sperwer", s:"Accipiter nisus", r:"VRJ", l:34, zz:null, twin:null,
+{ id:"sperwer", no:510, g:"B", n:"Sperwer", s:"Accipiter nisus", r:"VRJ", l:34, zz:null, twin:null,
   h:["BOS","BEB"], a:["DAG"], v:["GEW"], b:["BOOM"], w:["ACT"],
   x:"havik",
   t:"De havik is veel groter, heeft een witte wenkbrauwstreep en een fijner gebandeerde buik, en slaat duiven en kraaien in plaats van zangvogels.",
@@ -1786,7 +1790,7 @@ const SPECIES = [
       "Klein, met korte vleugels en een lange staart; het mannetje heeft oranje wangen."
     ] }
   ] },
-{ id:"wespendief", no:88, g:"B", n:"Wespendief", s:"Pernis apivorus", r:"VRJ", l:55, zz:null, twin:null,
+{ id:"wespendief", no:506, g:"B", n:"Wespendief", s:"Pernis apivorus", r:"VRJ", l:55, zz:null, twin:null,
   h:["BOS"], a:["DAG"], v:["ONG"], b:["BOOM"], w:["TREK"],
   x:"buizerd",
   t:"De buizerd heeft een bredere kop en een kortere staart met veel fijne bandjes, blijft het hele jaar en jaagt vooral op muizen.",
@@ -1806,7 +1810,7 @@ const SPECIES = [
       "Een lange staart met twee donkere banden bij de basis en één bij de punt."
     ] }
   ] },
-{ id:"boomvalk", no:89, g:"B", n:"Boomvalk", s:"Falco subbuteo", r:"VRJ", l:32, zz:null, twin:null,
+{ id:"boomvalk", no:513, g:"B", n:"Boomvalk", s:"Falco subbuteo", r:"VRJ", l:32, zz:null, twin:null,
   h:["HALF","MOER"], a:["DAG","SCHEMER"], v:["ONG","GEW"], b:["BOOM"], w:["TREK"],
   x:"slechtvalk",
   t:"De slechtvalk is groter en zwaarder, heeft een gebandeerde in plaats van gestreepte buik, geen rode broek, en broedt op gebouwen of richels.",
@@ -1826,7 +1830,7 @@ const SPECIES = [
       "Lange, spitse vleugels, een zwarte baardstreep en een gestreepte borst."
     ] }
   ] },
-{ id:"grote-gele-kwikstaart", no:90, g:"B", n:"Grote gele kwikstaart", s:"Motacilla cinerea", r:"VRJ", l:19, zz:null, twin:null,
+{ id:"grote-gele-kwikstaart", no:557, g:"B", n:"Grote gele kwikstaart", s:"Motacilla cinerea", r:"VRJ", l:19, zz:null, twin:null,
   h:["STROOM"], a:["DAG"], v:["ONG"], b:["GEB","STEEN"], w:["ACT"],
   x:"witte-kwikstaart",
   t:"De witte kwikstaart is zwart-wit-grijs zonder geel en broedt in allerlei gebouwen, niet speciaal bij stromend water.",
@@ -1846,7 +1850,7 @@ const SPECIES = [
       "Grijze rug, gele onderstaart en een zeer lange staart."
     ] }
   ] },
-{ id:"bosuil", no:91, g:"B", n:"Bosuil", s:"Strix aluco", r:"VR", l:38, zz:null, twin:null,
+{ id:"bosuil", no:521, g:"B", n:"Bosuil", s:"Strix aluco", r:"VR", l:38, zz:null, twin:null,
   h:["BOS","BEB"], a:["NACHT"], v:["GEW"], b:["BOOM"], w:["ACT"],
   x:"ransuil",
   t:"De ransuil heeft lange oorpluimen en oranje ogen, broedt in oude kraaiennesten en roest ’s winters in groepen in coniferen.",
@@ -1866,7 +1870,7 @@ const SPECIES = [
       "Een ronde kop zonder oorpluimen en donkere ogen."
     ] }
   ] },
-{ id:"torenvalk", no:92, g:"B", n:"Torenvalk", s:"Falco tinnunculus", r:"VR", l:34, zz:null, twin:null,
+{ id:"torenvalk", no:512, g:"B", n:"Torenvalk", s:"Falco tinnunculus", r:"VR", l:34, zz:null, twin:null,
   h:["OPEN","BEB"], a:["DAG"], v:["GEW"], b:["GEB","BOOM"], w:["ACT"],
   x:"boomvalk",
   t:"De boomvalk bidt niet, jaagt op libellen en zwaluwen, heeft een leigrijze rug en een rode broek, en is een zomergast.",
@@ -1886,7 +1890,7 @@ const SPECIES = [
       "Een mannetje met grijze kop, roodbruine rug en grijze staart met zwarte eindband."
     ] }
   ] },
-{ id:"boerenzwaluw", no:93, g:"B", n:"Boerenzwaluw", s:"Hirundo rustica", r:"VR", l:18, zz:null, twin:null,
+{ id:"boerenzwaluw", no:542, g:"B", n:"Boerenzwaluw", s:"Hirundo rustica", r:"VR", l:18, zz:null, twin:null,
   h:["OPEN"], a:["DAG"], v:["ONG"], b:["GEB"], w:["TREK"],
   x:"huiszwaluw",
   t:"De huiszwaluw heeft een witte stuit en een kortere, minder diep gevorkte staart, en bouwt gesloten modderkommetjes aan de buitenkant van gebouwen.",
@@ -1906,7 +1910,7 @@ const SPECIES = [
       "Een roodbruine keel, blauwzwarte rug en een diep gevorkte staart met lange punten."
     ] }
   ] },
-{ id:"huiszwaluw", no:94, g:"B", n:"Huiszwaluw", s:"Delichon urbicum", r:"VR", l:13, zz:null, twin:null,
+{ id:"huiszwaluw", no:543, g:"B", n:"Huiszwaluw", s:"Delichon urbicum", r:"VR", l:13, zz:null, twin:null,
   h:["BEB","OPEN"], a:["DAG"], v:["ONG"], b:["GEB"], w:["TREK"],
   x:"boerenzwaluw",
   t:"De boerenzwaluw heeft lange staartpennen en een roodbruine keel, en bouwt open nesten binnen in stallen en schuren.",
@@ -1926,7 +1930,7 @@ const SPECIES = [
       "Klein, blauwzwart, met een witte stuit en witte, bevederde pootjes."
     ] }
   ] },
-{ id:"blauwe-reiger", no:95, g:"B", n:"Blauwe reiger", s:"Ardea cinerea", r:"VR", l:95, zz:null, twin:null,
+{ id:"blauwe-reiger", no:505, g:"B", n:"Blauwe reiger", s:"Ardea cinerea", r:"VR", l:95, zz:null, twin:null,
   h:["STIL","OPEN"], a:["DAG","SCHEMER"], v:["VIS","GEW"], b:["BOOM"], w:["ACT"],
   x:"ooievaar",
   t:"De ooievaar vliegt met gestrekte nek, is wit met zwarte slagpennen en een rode snavel, en broedt alleen of in kleine groepen op palen en daken.",
@@ -1946,7 +1950,7 @@ const SPECIES = [
       "Grijs, met een witte kop, een zwarte streep boven het oog en een dolkvormige snavel."
     ] }
   ] },
-{ id:"zwarte-specht", no:96, g:"B", n:"Zwarte specht", s:"Dryocopus martius", r:"VR", l:46, zz:null, twin:null,
+{ id:"zwarte-specht", no:529, g:"B", n:"Zwarte specht", s:"Dryocopus martius", r:"VR", l:46, zz:null, twin:null,
   h:["BOS"], a:["DAG"], v:["ONG"], b:["BOOM"], w:["ACT"],
   x:"groene-specht",
   t:"De groene specht is kleiner en groen met een gele stuit, foerageert vooral op de grond en maakt ronde, kleinere holen.",
@@ -1966,7 +1970,7 @@ const SPECIES = [
       "Zwart met een lichte snavel en een rode kruin."
     ] }
   ] },
-{ id:"groene-specht", no:97, g:"B", n:"Groene specht", s:"Picus viridis", r:"VR", l:32, zz:null, twin:null,
+{ id:"groene-specht", no:528, g:"B", n:"Groene specht", s:"Picus viridis", r:"VR", l:32, zz:null, twin:null,
   h:["HALF","BOS"], a:["DAG"], v:["ONG"], b:["BOOM"], w:["ACT"],
   x:"zwarte-specht",
   t:"De zwarte specht is veel groter, helemaal zwart met een rode kruin, en hakt grote, ovale holen in beuken.",
@@ -1986,7 +1990,7 @@ const SPECIES = [
       "Groen met een rode kruin en een zwart masker."
     ] }
   ] },
-{ id:"tapuit", no:98, g:"B", n:"Tapuit", s:"Oenanthe oenanthe", r:"VR", l:15, zz:null, twin:null,
+{ id:"tapuit", no:555, g:"B", n:"Tapuit", s:"Oenanthe oenanthe", r:"VR", l:15, zz:null, twin:null,
   h:["DUIN"], a:["DAG"], v:["ONG"], b:["HOL"], w:["TREK"],
   x:"roodborsttapuit",
   t:"De roodborsttapuit broedt op de grond in de vegetatie, niet in holen, heeft geen witte stuit, en het mannetje heeft een zwarte kop en een oranjerode borst.",
@@ -2006,7 +2010,7 @@ const SPECIES = [
       "Zandkleurig, met een witte stuit en een zwarte 'T' op de staart."
     ] }
   ] },
-{ id:"kievit", no:99, g:"B", n:"Kievit", s:"Vanellus vanellus", r:"VR", l:30, zz:null, twin:null,
+{ id:"kievit", no:515, g:"B", n:"Kievit", s:"Vanellus vanellus", r:"VR", l:30, zz:null, twin:null,
   h:["OPEN"], a:["DAG","NACHT"], v:["ONG"], b:["GROND"], w:["ACT","TREK"],
   x:"grutto",
   t:"De grutto broedt in hoog, kruidenrijk grasland, heeft een lange, rechte snavel, lange poten en geen kuif.",
@@ -2026,7 +2030,7 @@ const SPECIES = [
       "Een groenglanzende rug, witte buik en kuif."
     ] }
   ] },
-{ id:"spreeuw", no:100, g:"B", n:"Spreeuw", s:"Sturnus vulgaris", r:"VR", l:21, zz:null, twin:null,
+{ id:"spreeuw", no:547, g:"B", n:"Spreeuw", s:"Sturnus vulgaris", r:"VR", l:21, zz:null, twin:null,
   h:["BEB","OPEN"], a:["DAG"], v:["ONG","PLANT"], b:["BOOM","GEB"], w:["ACT"],
   x:"merel",
   t:"De merel is groter, heeft een langere staart, het mannetje is egaal zwart met een oranje snavel, en hij broedt in open nesten in struiken.",
@@ -2046,7 +2050,7 @@ const SPECIES = [
       "Een spitse, gele snavel en lichte stippen."
     ] }
   ] },
-{ id:"veldmuis", no:104, g:"Z", n:"Veldmuis", s:"Microtus arvalis", r:"BAL", l:13, zz:"A", twin:null,
+{ id:"veldmuis", no:126, g:"Z", n:"Veldmuis", s:"Microtus arvalis", r:"BAL", l:13, zz:"A", twin:null,
   h:["OPEN"], a:["DAG","NACHT"], v:["PLANT"], b:["HOL"], w:["ACT"],
   x:"aardmuis",
   t:"De aardmuis heeft een langere, ruigere en donkerdere vacht en zit in vochtiger, ruiger gras. Zeker weten doe je het aan de kiezen: bij de aardmuis heeft de tweede bovenkies een extra lus.",
@@ -2076,7 +2080,7 @@ const SPECIES = [
   h:["STIL","MOER"], a:["SCHEMER","NACHT"], v:["PLANT"], b:["HOL"], w:["ACT"] },
 { id:"wasbeer", no:null, g:"Z", n:"Wasbeer", s:"Procyon lotor", r:"NB", l:80, zz:null, twin:null,
   h:["BOS","BEB"], a:["NACHT"], v:["ONG","PLANT","VIS"], b:["BOOM","GEB"], w:["ACT"] },
-{ id:"gewone-baardvleermuis", no:101, g:"Z", n:"Gewone baardvleermuis", s:"Myotis mystacinus", r:"HR", l:8, zz:"Z", twin:null,
+{ id:"gewone-baardvleermuis", no:109, g:"Z", n:"Gewone baardvleermuis", s:"Myotis mystacinus", r:"HR", l:8, zz:"Z", twin:null,
   h:["HALF","BEB","BOS"], a:["NACHT"], v:["ONG"], b:["GEB","BOOM"], w:["SLAAP"],
   x:"gewone-dwergvleermuis",
   t:"De gewone dwergvleermuis vliegt sneller en schokkeriger, roept rond 45 kHz en heeft een donkerbruine snuit. Een baardvleermuis roept met steile FM-pulsen (Myotis) en heeft een donker gezichtje met een puntige tragus.",
@@ -2100,7 +2104,7 @@ const SPECIES = [
   h:["STIL"], a:["NACHT","DAG"], v:["GEW","ONG"], b:["WATER"], w:["SLAAP"] },
 { id:"roodwangschildpad", no:null, g:"R", n:"Roodwangschildpad", s:"Trachemys scripta", r:"NB", l:25, zz:null, twin:null,
   h:["STIL","BEB"], a:["DAG"], v:["ONG","PLANT"], b:["WATER"], w:["SLAAP"] },
-{ id:"europese-steur", no:103, g:"F", n:"Europese steur", s:"Acipenser sturio", r:"HR", l:200, zz:"ZZ", twin:null,
+{ id:"europese-steur", no:402, g:"F", n:"Europese steur", s:"Acipenser sturio", r:"HR", l:200, zz:"ZZ", twin:null,
   h:["STROOM","ZEE"], a:["NACHT","DAG"], v:["ONG"], b:["WATER"], w:["TREK"],
   x:"noordzeehouting",
   t:"De noordzeehouting heeft gewone schubben, een vetvin en een vlezige neuspunt, maar geen rijen beenplaten en geen baarddraden.",
@@ -2128,7 +2132,7 @@ const SPECIES = [
   h:["STIL","MOER"], a:["DAG","SCHEMER"], v:["VIS"], b:["WATER"], w:["ACT"] },
 { id:"aal", no:null, g:"F", n:"Aal", s:"Anguilla anguilla", r:"NB", l:70, zz:null, twin:null,
   h:["STIL","STROOM"], a:["NACHT"], v:["ONG","VIS"], b:["WATER"], w:["ACT"] },
-{ id:"boomklever", no:106, g:"B", n:"Boomklever", s:"Sitta europaea", r:"VR", l:14, zz:"A", twin:null,
+{ id:"boomklever", no:544, g:"B", n:"Boomklever", s:"Sitta europaea", r:"VR", l:14, zz:"A", twin:null,
   h:["BOS","BEB"], a:["DAG"], v:["ONG","PLANT"], b:["BOOM"], w:["ACT"],
   x:"grote-bonte-specht",
   t:"Een specht steunt op zijn staart en klimt alleen omhoog. Deze vogel klimt ook kopje-onder naar beneden en metselt de opening van zijn nestholte met modder kleiner.",
@@ -2148,7 +2152,7 @@ const SPECIES = [
       "Blauwgrijs met een zwarte oogstreep en een korte staart."
     ] }
   ] },
-{ id:"kauw", no:107, g:"B", n:"Kauw", s:"Corvus monedula", r:"VR", l:34, zz:"A", twin:null,
+{ id:"kauw", no:533, g:"B", n:"Kauw", s:"Corvus monedula", r:"VR", l:34, zz:"A", twin:null,
   h:["BEB","HALF"], a:["DAG"], v:["ONG","PLANT"], b:["GEB","BOOM"], w:["ACT"],
   x:"roek",
   t:"De roek is groter, glanzend zwart met een kale, grijswitte snavelbasis en broedt in boomkolonies. Deze soort is kleiner, met een grijze nek en lichte ogen.",
@@ -2168,7 +2172,7 @@ const SPECIES = [
       "Klein en zwart, met een grijze nek en lichte ogen."
     ] }
   ] },
-{ id:"zwarte-kraai", no:108, g:"B", n:"Zwarte kraai", s:"Corvus corone", r:"VR", l:47, zz:"A", twin:null,
+{ id:"zwarte-kraai", no:535, g:"B", n:"Zwarte kraai", s:"Corvus corone", r:"VR", l:47, zz:"A", twin:null,
   h:["OPEN","BEB","HALF"], a:["DAG"], v:["ONG","PLANT","GEW"], b:["BOOM"], w:["ACT"],
   x:"roek",
   t:"De roek heeft een kale, grijswitte snavelbasis, een ‘broekje’ van losse veren en broedt in kolonies. Deze soort heeft een bevederde snavelbasis en broedt in paren met een eigen territorium.",
@@ -2188,7 +2192,7 @@ const SPECIES = [
       "Geheel zwart, met een bevederde snavelbasis en een recht afgesneden staart."
     ] }
   ] },
-{ id:"grauwe-gans", no:109, g:"B", n:"Grauwe gans", s:"Anser anser", r:"VR", l:80, zz:"A", twin:null,
+{ id:"grauwe-gans", no:501, g:"B", n:"Grauwe gans", s:"Anser anser", r:"VR", l:80, zz:"A", twin:null,
   h:["MOER","OPEN","STIL"], a:["DAG"], v:["PLANT"], b:["VEG"], w:["ACT"],
   x:"eidereend",
   t:"Een eidereend is een zee-eend die schelpdieren duikt, met een wigvormige kop en een man in zwart-wit. Deze soort graast in groepen op land en heeft een oranje snavel en roze poten.",
@@ -2208,7 +2212,7 @@ const SPECIES = [
       "Grijsbruin, met een oranje snavel en roze poten."
     ] }
   ] },
-{ id:"tuimelaar", no:102, g:"Z", n:"Tuimelaar", s:"Tursiops truncatus", r:"HR", l:300, zz:"Z", twin:null,
+{ id:"tuimelaar", no:150, g:"Z", n:"Tuimelaar", s:"Tursiops truncatus", r:"HR", l:300, zz:"Z", twin:null,
   h:["ZEE"], a:["DAG","NACHT"], v:["VIS"], b:["WATER"], w:["ACT"],
   x:"bruinvis",
   t:"Een bruinvis is veel kleiner (tot 1,8 m), heeft een lage driehoekige rugvin, geen snavel, en zwemt meestal alleen of met z'n tweeën zonder te springen.",
@@ -2232,7 +2236,7 @@ const SPECIES = [
   h:["BEB","HALF"], a:["NACHT","SCHEMER"], v:["GEW"], b:["GEB"], w:["ACT"] },
 { id:"beverrat", no:null, g:"Z", n:"Beverrat", s:"Myocastor coypus", r:"NB", l:90, zz:null, twin:null,
   h:["STIL","MOER"], a:["SCHEMER","NACHT"], v:["PLANT"], b:["HOL"], w:["ACT"] },
-{ id:"middelste-groene-kikker", no:105, g:"A", n:"Middelste groene kikker", s:"Pelophylax kl. esculentus", r:"BAL", l:9, zz:"A", twin:"poelkikker",
+{ id:"middelste-groene-kikker", no:315, g:"A", n:"Middelste groene kikker", s:"Pelophylax kl. esculentus", r:"BAL", l:9, zz:"A", twin:"poelkikker",
   h:["STIL","MOER"], a:["DAG"], v:["ONG"], b:["WATER"], w:["SLAAP"],
   x:"meerkikker",
   t:"De meerkikker is groter, vaak olijfbruiner, heeft grijze tot donkere kwaakblazen en zit vooral in grote, voedselrijke wateren. Het tweelingsoortverschil met de poelkikker zit in de hielknobbel: bij de poelkikker groot en halfrond.",
@@ -2258,7 +2262,7 @@ const SPECIES = [
   h:["STROOM","STIL"], a:["NACHT"], v:["ONG"], b:["WATER"], w:["ACT"] },
 { id:"spiering", no:null, g:"F", n:"Spiering", s:"Osmerus eperlanus", r:"NB", l:20, zz:null, twin:null,
   h:["STIL","ZEE"], a:["DAG"], v:["ONG","VIS"], b:["WATER"], w:["ACT"] },
-{ id:"witte-kwikstaart", no:110, g:"B", n:"Witte kwikstaart", s:"Motacilla alba", r:"VR", l:18, zz:"A", twin:null,
+{ id:"witte-kwikstaart", no:558, g:"B", n:"Witte kwikstaart", s:"Motacilla alba", r:"VR", l:18, zz:"A", twin:null,
   h:["BEB","OPEN"], a:["DAG"], v:["ONG"], b:["GEB","STEEN"], w:["ACT","TREK"],
   x:"grote-gele-kwikstaart",
   t:"De grote gele kwikstaart heeft een gele onderstaartdek en buik, een langere staart en zit bij stromend water. Deze soort is zwart-wit-grijs en zit overal waar kort gras of verharding is.",
@@ -2278,7 +2282,7 @@ const SPECIES = [
       "Grijs, zwart en wit, met een zwarte bef en een wit gezicht."
     ] }
   ] },
-{ id:"roodborsttapuit", no:111, g:"B", n:"Roodborsttapuit", s:"Saxicola rubicola", r:"VR", l:12, zz:"MA", twin:null,
+{ id:"roodborsttapuit", no:554, g:"B", n:"Roodborsttapuit", s:"Saxicola rubicola", r:"VR", l:12, zz:"MA", twin:null,
   h:["HEI","DUIN","OPEN"], a:["DAG"], v:["ONG"], b:["VEG"], w:["ACT","TREK"],
   x:"tapuit",
   t:"De tapuit staat rechtop op de grond, heeft een witte stuit met een zwarte T op de staart en broedt in konijnenholen. Deze soort zit op toppen van struikjes en broedt op de grond in de vegetatie.",
@@ -2298,7 +2302,7 @@ const SPECIES = [
       "Klein, met een zwarte kop, witte halsvlek en oranjerode borst."
     ] }
   ] },
-{ id:"grutto", no:112, g:"B", n:"Grutto", s:"Limosa limosa", r:"VR", l:40, zz:"MA", twin:null,
+{ id:"grutto", no:516, g:"B", n:"Grutto", s:"Limosa limosa", r:"VR", l:40, zz:"MA", twin:null,
   h:["OPEN","MOER"], a:["DAG"], v:["ONG"], b:["GROND"], w:["TREK"],
   x:"kievit",
   t:"De kievit is kleiner, heeft een korte snavel en een kuif, en is groenig zwart met wit. Deze soort heeft lange poten en een lange, rechte snavel.",
@@ -2318,7 +2322,7 @@ const SPECIES = [
       "Oranjebruine hals en borst, een lange rechte snavel en lange poten."
     ] }
   ] },
-{ id:"merel", no:113, g:"B", n:"Merel", s:"Turdus merula", r:"VR", l:25, zz:"A", twin:null,
+{ id:"merel", no:548, g:"B", n:"Merel", s:"Turdus merula", r:"VR", l:25, zz:"A", twin:null,
   h:["BEB","BOS","HALF"], a:["DAG","SCHEMER"], v:["ONG","PLANT"], b:["VEG"], w:["ACT"],
   x:"spreeuw",
   t:"De spreeuw heeft lichte stippen, een korte staart en loopt kwiek in groepen. Deze soort is effen zwart (man) of donkerbruin (vrouw), wipt alleen over het gazon en woelt bladeren om.",
@@ -2338,7 +2342,7 @@ const SPECIES = [
       "Het mannetje is zwart met een gele snavel; het vrouwtje donkerbruin."
     ] }
   ] },
-{ id:"houtduif", no:114, g:"B", n:"Houtduif", s:"Columba palumbus", r:"VR", l:41, zz:"A", twin:null,
+{ id:"houtduif", no:517, g:"B", n:"Houtduif", s:"Columba palumbus", r:"VR", l:41, zz:"A", twin:null,
   h:["BEB","OPEN","BOS"], a:["DAG"], v:["PLANT"], b:["BOOM"], w:["ACT"],
   x:"kauw",
   t:"De kauw is zwart met een grijze nek en roept ‘kja’. Deze soort is blauwgrijs en roze, heeft witte halsvlekken en koert zacht.",
@@ -2358,7 +2362,7 @@ const SPECIES = [
       "Blauwgrijs, met een witte halsvlek en witte vleugelband."
     ] }
   ] },
-{ id:"witsnuitdolfijn", no:115, g:"Z", n:"Witsnuitdolfijn", s:"Lagenorhynchus albirostris", r:"HR", l:270, zz:"Z", twin:null,
+{ id:"witsnuitdolfijn", no:151, g:"Z", n:"Witsnuitdolfijn", s:"Lagenorhynchus albirostris", r:"HR", l:270, zz:"Z", twin:null,
   h:["ZEE"], a:["DAG","NACHT"], v:["VIS"], b:["WATER"], w:["ACT"],
   x:"tuimelaar",
   t:"De tuimelaar is egaal grijs en zie je vaker dicht onder de kust. Deze soort heeft een korte witte snavel, een lichte vlek achter de rugvin en leeft vooral in de diepere, koudere Noordzee.",
@@ -2378,7 +2382,7 @@ const SPECIES = [
       "Zwart en wit, met een lichte vlek achter de rugvin en een korte, witte snavel."
     ] }
   ] },
-{ id:"wolf", no:116, g:"Z", n:"Wolf", s:"Canis lupus", r:"BAL", l:150, zz:"Z", twin:null,
+{ id:"wolf", no:132, g:"Z", n:"Wolf", s:"Canis lupus", r:"BAL", l:150, zz:"Z", twin:null,
   h:["BOS","HEI","HALF"], a:["NACHT","SCHEMER"], v:["GEW"], b:["HOL"], w:["ACT"],
   x:"vos",
   t:"Vossenprenten zijn kleiner (ongeveer 5 cm lang) en lopen vaak in een licht zigzaggend spoor. Deze prenten zijn 9–11 cm lang en liggen in draf vrijwel op één rechte lijn.",
@@ -2398,7 +2402,7 @@ const SPECIES = [
       "Grijsbruin en hoogpotig, met lichte wangen, een donkere zadelvlek en een staart die recht naar beneden hangt."
     ] }
   ] },
-{ id:"zwarte-wouw", no:117, g:"B", n:"Zwarte wouw", s:"Milvus migrans", r:"VRJ", l:55, zz:"ZZ", twin:null,
+{ id:"zwarte-wouw", no:507, g:"B", n:"Zwarte wouw", s:"Milvus migrans", r:"VRJ", l:55, zz:"ZZ", twin:null,
   h:["HALF","STROOM","BOS"], a:["DAG"], v:["GEW","VIS"], b:["BOOM"], w:["TREK"],
   x:"buizerd",
   t:"De buizerd heeft een korte, ronde staart, een gedrongen bouw en cirkelt met iets opgetrokken vleugels. Deze soort heeft een ondiep gevorkte staart die hij voortdurend draait.",
@@ -2418,7 +2422,7 @@ const SPECIES = [
       "Donkerbruin, met een lichtere kop en een licht gevorkte staart."
     ] }
   ] },
-{ id:"bonte-vliegenvanger", no:118, g:"B", n:"Bonte vliegenvanger", s:"Ficedula hypoleuca", r:"VR", l:13, zz:"MA", twin:null,
+{ id:"bonte-vliegenvanger", no:551, g:"B", n:"Bonte vliegenvanger", s:"Ficedula hypoleuca", r:"VR", l:13, zz:"MA", twin:null,
   h:["BOS"], a:["DAG"], v:["ONG"], b:["BOOM"], w:["TREK"],
   x:"grauwe-vliegenvanger",
   t:"De grauwe vliegenvanger is grijsbruin met een gestreepte kruin en broedt in een halfopen nis. Deze soort is (bij de man) zwart-wit en broedt in een holte of nestkast met een rond gat.",
@@ -2438,7 +2442,7 @@ const SPECIES = [
       "Bruingrijs van boven, wit van onder, met een witte vleugelvlek."
     ] }
   ] },
-{ id:"boomkruiper", no:119, g:"B", n:"Boomkruiper", s:"Certhia brachydactyla", r:"VR", l:12, zz:"A", twin:"kortsnavelboomkruiper",
+{ id:"boomkruiper", no:545, g:"B", n:"Boomkruiper", s:"Certhia brachydactyla", r:"VR", l:12, zz:"A", twin:"kortsnavelboomkruiper",
   h:["BOS","BEB","HALF"], a:["DAG"], v:["ONG"], b:["BOOM"], w:["ACT"],
   x:"boomklever",
   t:"De boomklever klimt ook kopje-onder, is blauwgrijs met oranje en heeft een rechte snavel. Deze soort klimt alleen spiraalsgewijs omhoog en heeft een dunne, gebogen snavel.",
@@ -2458,7 +2462,7 @@ const SPECIES = [
       "Bruin gestreept, met een dunne gebogen snavel en vuilwitte, iets bruinige flanken."
     ] }
   ] },
-{ id:"kortsnavelboomkruiper", no:120, g:"B", n:"Taigaboomkruiper", s:"Certhia familiaris", r:"VR", l:12, zz:"Z", twin:"boomkruiper",
+{ id:"kortsnavelboomkruiper", no:546, g:"B", n:"Taigaboomkruiper", s:"Certhia familiaris", r:"VR", l:12, zz:"Z", twin:"boomkruiper",
   h:["BOS"], a:["DAG"], v:["ONG"], b:["BOOM"], w:["ACT"],
   x:"boomklever",
   t:"De boomklever klimt ook kopje-onder, is blauwgrijs met oranje en heeft een rechte snavel. Deze soort klimt alleen spiraalsgewijs omhoog en heeft een dunne, gebogen snavel.",
@@ -2478,7 +2482,7 @@ const SPECIES = [
       "Zuiver wit van onder, met een witte wenkbrauwstreep."
     ] }
   ] },
-{ id:"brilduiker", no:121, g:"B", n:"Brilduiker", s:"Bucephala clangula", r:"VR", l:45, zz:"MA", twin:null,
+{ id:"brilduiker", no:503, g:"B", n:"Brilduiker", s:"Bucephala clangula", r:"VR", l:45, zz:"MA", twin:null,
   h:["STIL","ZEE"], a:["DAG"], v:["ONG"], b:["BOOM"], w:["ACT","TREK"],
   x:"eidereend",
   t:"De eidereend is groter, heeft een wigvormige kop zonder ronde wangvlek en zit vooral op zee en in de Waddenzee. Deze soort heeft een driehoekige kop en (bij de man) een ronde witte vlek voor het oog.",
@@ -2498,7 +2502,7 @@ const SPECIES = [
       "Vrouwtje met chocoladebruine kop, witte halsband, grijs lijf en een gele snavelpunt."
     ] }
   ] },
-{ id:"draaihals", no:122, g:"B", n:"Draaihals", s:"Jynx torquilla", r:"VR", l:17, zz:"Z", twin:null,
+{ id:"draaihals", no:527, g:"B", n:"Draaihals", s:"Jynx torquilla", r:"VR", l:17, zz:"Z", twin:null,
   h:["HEI","HALF","BOS"], a:["DAG"], v:["ONG"], b:["BOOM"], w:["TREK"],
   x:"groene-specht",
   t:"De groene specht is groter, groen met een rode kruin en hakt zelf holen. Deze soort is grijsbruin gevlekt als boomschors en gebruikt bestaande holtes of nestkasten.",
@@ -2518,7 +2522,7 @@ const SPECIES = [
       "Grijsbruin gevlekt als schors, met een donkere streep over kruin en rug."
     ] }
   ] },
-{ id:"eidereend", no:123, g:"B", n:"Eidereend", s:"Somateria mollissima", r:"VR", l:60, zz:"MA", twin:null,
+{ id:"eidereend", no:502, g:"B", n:"Eidereend", s:"Somateria mollissima", r:"VR", l:60, zz:"MA", twin:null,
   h:["ZEE"], a:["DAG"], v:["ONG"], b:["VEG"], w:["ACT"],
   x:"brilduiker",
   t:"De brilduiker is kleiner, heeft een driehoekige kop met een ronde witte wangvlek en zit vooral op zoete meren. Deze soort heeft een wigvormige kop waarbij de snavel doorloopt in het voorhoofd.",
@@ -2538,7 +2542,7 @@ const SPECIES = [
       "Een zware bruine eend met een wigvormige kop."
     ] }
   ] },
-{ id:"ekster", no:124, g:"B", n:"Ekster", s:"Pica pica", r:"VR", l:45, zz:"A", twin:null,
+{ id:"ekster", no:532, g:"B", n:"Ekster", s:"Pica pica", r:"VR", l:45, zz:"A", twin:null,
   h:["HALF","BEB","OPEN"], a:["DAG"], v:["ONG","PLANT","GEW"], b:["BOOM"], w:["ACT"],
   x:"kauw",
   t:"De kauw is helemaal zwart met een grijze nek en een korte staart. Deze soort is zwart-wit met een lange, groenglanzende staart en bouwt een overkapt takkennest.",
@@ -2558,7 +2562,7 @@ const SPECIES = [
       "Zwart-wit, met een lange, glanzende staart."
     ] }
   ] },
-{ id:"gekraagde-roodstaart", no:125, g:"B", n:"Gekraagde roodstaart", s:"Phoenicurus phoenicurus", r:"VR", l:14, zz:"MA", twin:null,
+{ id:"gekraagde-roodstaart", no:553, g:"B", n:"Gekraagde roodstaart", s:"Phoenicurus phoenicurus", r:"VR", l:14, zz:"MA", twin:null,
   h:["BOS","HALF","HEI"], a:["DAG"], v:["ONG"], b:["BOOM"], w:["TREK"],
   x:"zwarte-roodstaart",
   t:"De zwarte roodstaart is (bij de man) roetzwart zonder oranje borst en broedt aan gebouwen. Deze soort heeft een oranje borst, een witte voorhoofdsband en broedt in boomholtes.",
@@ -2578,7 +2582,7 @@ const SPECIES = [
       "Een man met grijze rug, zwarte keel, oranje borst en een witte voorhoofdsband."
     ] }
   ] },
-{ id:"glanskop", no:126, g:"B", n:"Glanskop", s:"Poecile palustris", r:"VR", l:12, zz:"MA", twin:null,
+{ id:"glanskop", no:537, g:"B", n:"Glanskop", s:"Poecile palustris", r:"VR", l:12, zz:"MA", twin:null,
   h:["BOS"], a:["DAG"], v:["ONG","PLANT"], b:["BOOM"], w:["ACT"],
   x:"zwarte-mees",
   t:"De zwarte mees heeft een witte nekvlek en twee witte vleugelstreepjes en houdt van naaldbos. Deze soort heeft een glanzend zwart kapje, een klein zwart befje en geen vleugelstreepjes.",
@@ -2598,7 +2602,7 @@ const SPECIES = [
       "Grijsbruin, met een glanzend zwart kapje en een klein befje."
     ] }
   ] },
-{ id:"grauwe-vliegenvanger", no:127, g:"B", n:"Grauwe vliegenvanger", s:"Muscicapa striata", r:"VR", l:14, zz:"MA", twin:null,
+{ id:"grauwe-vliegenvanger", no:549, g:"B", n:"Grauwe vliegenvanger", s:"Muscicapa striata", r:"VR", l:14, zz:"MA", twin:null,
   h:["HALF","BEB","BOS"], a:["DAG"], v:["ONG"], b:["BOOM","GEB"], w:["TREK"],
   x:"bonte-vliegenvanger",
   t:"De bonte vliegenvanger is (bij de man) zwart-wit en broedt in een gesloten holte of nestkast met rond gat. Deze soort is grijsbruin, gestreept op de kruin en broedt in een half-open nis.",
@@ -2618,7 +2622,7 @@ const SPECIES = [
       "Grijsbruin en slank, met een fijn gestreepte kruin."
     ] }
   ] },
-{ id:"grote-bonte-specht", no:128, g:"B", n:"Grote bonte specht", s:"Dendrocopos major", r:"VR", l:23, zz:"A", twin:null,
+{ id:"grote-bonte-specht", no:530, g:"B", n:"Grote bonte specht", s:"Dendrocopos major", r:"VR", l:23, zz:"A", twin:null,
   h:["BOS","BEB","HALF"], a:["DAG"], v:["ONG","PLANT"], b:["BOOM"], w:["ACT"],
   x:"kleine-bonte-specht",
   t:"De kleine bonte specht is mussengroot, heeft dwarse witte strepen over de rug en geen rood onder de staart. Deze soort is lijstergroot, heeft grote witte schoudervlekken en een rode onderstaart.",
@@ -2638,7 +2642,7 @@ const SPECIES = [
       "Zwart-wit, met grote witte schoudervlekken en een rode onderstaart."
     ] }
   ] },
-{ id:"hop", no:129, g:"B", n:"Hop", s:"Upupa epops", r:"VR", l:27, zz:"ZZ", twin:null,
+{ id:"hop", no:526, g:"B", n:"Hop", s:"Upupa epops", r:"VR", l:27, zz:"ZZ", twin:null,
   h:["HEI","HALF","DUIN"], a:["DAG"], v:["ONG"], b:["BOOM","GEB"], w:["TREK"],
   x:"groene-specht",
   t:"De groene specht is groen met een rode kruin en roept een lachend ‘kjuk-kjuk’. Deze soort is roze-oranjebruin met een zwart-witte kuif en roept een dof ‘oep-oep-oep’.",
@@ -2658,7 +2662,7 @@ const SPECIES = [
       "Roze-oranje, met zwart-witte vleugels en een kuif."
     ] }
   ] },
-{ id:"kleine-bonte-specht", no:130, g:"B", n:"Kleine bonte specht", s:"Dryobates minor", r:"VR", l:15, zz:"MA", twin:null,
+{ id:"kleine-bonte-specht", no:531, g:"B", n:"Kleine bonte specht", s:"Dryobates minor", r:"VR", l:15, zz:"MA", twin:null,
   h:["BOS","HALF","MOER"], a:["DAG"], v:["ONG"], b:["BOOM"], w:["ACT"],
   x:"grote-bonte-specht",
   t:"De grote bonte specht is lijstergroot, heeft grote witte schoudervlekken en een rode onderstaart. Deze soort is mussengroot, met dwarse witte strepen over rug en vleugels.",
@@ -2678,7 +2682,7 @@ const SPECIES = [
       "Een zwart-wit geladderde rug en geen witte schoudervlekken."
     ] }
   ] },
-{ id:"kleine-vliegenvanger", no:131, g:"B", n:"Kleine vliegenvanger", s:"Ficedula parva", r:"VR", l:12, zz:"ZZ", twin:null,
+{ id:"kleine-vliegenvanger", no:550, g:"B", n:"Kleine vliegenvanger", s:"Ficedula parva", r:"VR", l:12, zz:"ZZ", twin:null,
   h:["DUIN","BOS","HALF"], a:["DAG"], v:["ONG"], b:["BOOM"], w:["TREK"],
   x:"grauwe-vliegenvanger",
   t:"De grauwe vliegenvanger is groter, egaal grijsbruin met een gestreepte kruin en heeft geen wit in de staart. Deze soort is klein, met een opvallende witte vlek aan weerszijden van de staartbasis.",
@@ -2698,7 +2702,7 @@ const SPECIES = [
       "Een man met een oranjerode keel, grijze kop en zwart-witte staart."
     ] }
   ] },
-{ id:"koolmees", no:132, g:"B", n:"Koolmees", s:"Parus major", r:"VR", l:14, zz:"A", twin:null,
+{ id:"koolmees", no:540, g:"B", n:"Koolmees", s:"Parus major", r:"VR", l:14, zz:"A", twin:null,
   h:["BEB","BOS","HALF"], a:["DAG"], v:["ONG","PLANT"], b:["BOOM","GEB"], w:["ACT"],
   x:"pimpelmees",
   t:"De pimpelmees is kleiner, heeft een blauw petje en geen zwarte buikstreep. Deze soort heeft een zwarte kop met witte wangen en een zwarte streep over de gele buik.",
@@ -2718,7 +2722,7 @@ const SPECIES = [
       "Geel met een zwarte kop en een zwarte streep over de buik."
     ] }
   ] },
-{ id:"pimpelmees", no:133, g:"B", n:"Pimpelmees", s:"Cyanistes caeruleus", r:"VR", l:12, zz:"A", twin:null,
+{ id:"pimpelmees", no:539, g:"B", n:"Pimpelmees", s:"Cyanistes caeruleus", r:"VR", l:12, zz:"A", twin:null,
   h:["BEB","BOS","HALF"], a:["DAG"], v:["ONG","PLANT"], b:["BOOM","GEB"], w:["ACT"],
   x:"koolmees",
   t:"De koolmees is groter, heeft een zwarte kop en een zwarte streep over de buik. Deze soort heeft een blauw petje, een witte kop met een donkere oogstreep en geen buikstreep.",
@@ -2738,7 +2742,7 @@ const SPECIES = [
       "Een blauw petje en een gele buik."
     ] }
   ] },
-{ id:"raaf", no:134, g:"B", n:"Raaf", s:"Corvus corax", r:"VR", l:64, zz:"MA", twin:null,
+{ id:"raaf", no:536, g:"B", n:"Raaf", s:"Corvus corax", r:"VR", l:64, zz:"MA", twin:null,
   h:["BOS","HEI","OPEN"], a:["DAG"], v:["GEW","ONG","PLANT"], b:["BOOM"], w:["ACT"],
   x:"zwarte-kraai",
   t:"De zwarte kraai is kleiner, met een rechte staart en een schor ‘kraa’. Deze soort is buizerdgroot, heeft een wigvormige staart, een zware snavel en een diep ‘krok-krok’.",
@@ -2758,7 +2762,7 @@ const SPECIES = [
       "Zo groot als een buizerd, zwart, met een zware snavel en een wigvormige staart."
     ] }
   ] },
-{ id:"ruigpootuil", no:135, g:"B", n:"Ruigpootuil", s:"Aegolius funereus", r:"VR", l:25, zz:"ZZ", twin:null,
+{ id:"ruigpootuil", no:523, g:"B", n:"Ruigpootuil", s:"Aegolius funereus", r:"VR", l:25, zz:"ZZ", twin:null,
   h:["BOS"], a:["NACHT"], v:["GEW"], b:["BOOM"], w:["ACT"],
   x:"steenuil",
   t:"De steenuil heeft een platte kop, gele ogen onder ‘boze’ wenkbrauwen en zit in kleinschalig boerenland. Deze soort heeft een grote, ronde kop met een licht gezicht met donkere rand en zit in oud naaldbos.",
@@ -2778,7 +2782,7 @@ const SPECIES = [
       "Klein, met een grote vierkante kop en een wit gezicht met donkere rand."
     ] }
   ] },
-{ id:"zeearend", no:136, g:"B", n:"Zeearend", s:"Haliaeetus albicilla", r:"VR", l:85, zz:"Z", twin:null,
+{ id:"zeearend", no:508, g:"B", n:"Zeearend", s:"Haliaeetus albicilla", r:"VR", l:85, zz:"Z", twin:null,
   h:["MOER","STIL","ZEE"], a:["DAG"], v:["VIS","GEW"], b:["BOOM"], w:["ACT"],
   x:"buizerd",
   t:"De buizerd is veel kleiner, met een korte, gebandeerde staart. Deze soort heeft een spanwijdte van meer dan twee meter, ‘plankvleugels’ en (oud) een korte witte wigstaart.",
@@ -2798,7 +2802,7 @@ const SPECIES = [
       "Bruin, met een lichte kop en witte staart."
     ] }
   ] },
-{ id:"zwarte-mees", no:137, g:"B", n:"Zwarte mees", s:"Periparus ater", r:"VR", l:11, zz:"A", twin:null,
+{ id:"zwarte-mees", no:538, g:"B", n:"Zwarte mees", s:"Periparus ater", r:"VR", l:11, zz:"A", twin:null,
   h:["BOS"], a:["DAG"], v:["ONG","PLANT"], b:["BOOM","HOL"], w:["ACT"],
   x:"glanskop",
   t:"De glanskop heeft geen witte nekvlek en geen vleugelstreepjes en zit in loofbos. Deze soort heeft een witte vlek in de nek, twee witte vleugelstreepjes en zit vooral in naaldbos.",
@@ -2818,7 +2822,7 @@ const SPECIES = [
       "Heel klein, met een zwarte kop en een witte nekvlek."
     ] }
   ] },
-{ id:"zwarte-roodstaart", no:138, g:"B", n:"Zwarte roodstaart", s:"Phoenicurus ochruros", r:"VR", l:14, zz:"MA", twin:null,
+{ id:"zwarte-roodstaart", no:552, g:"B", n:"Zwarte roodstaart", s:"Phoenicurus ochruros", r:"VR", l:14, zz:"MA", twin:null,
   h:["BEB","DUIN"], a:["DAG"], v:["ONG"], b:["GEB","STEEN"], w:["TREK","ACT"],
   x:"gekraagde-roodstaart",
   t:"De gekraagde roodstaart heeft (bij de man) een oranje borst en witte voorhoofdsband en broedt in boomholtes. Deze soort is roetgrijs tot zwart en broedt op richels van gebouwen.",
@@ -2838,7 +2842,7 @@ const SPECIES = [
       "Roetgrijs met een roestrode staart."
     ] }
   ] },
-{ id:"goudjakhals", no:139, g:"Z", n:"Goudjakhals", s:"Canis aureus", r:"BAL", l:100, zz:"Z", twin:null,
+{ id:"goudjakhals", no:133, g:"Z", n:"Goudjakhals", s:"Canis aureus", r:"BAL", l:100, zz:"Z", twin:null,
   h:["MOER","OPEN","HALF"], a:["NACHT","SCHEMER"], v:["GEW","ONG","PLANT"], b:["HOL"], w:["ACT"],
   x:"wolf",
   t:"De wolf is veel groter (schouderhoogte 70–80 cm), grijzer, met een zware kop en prenten van zo'n 10 cm. Deze soort is nauwelijks groter dan een vos, goudbruin, met een kortere staart en prenten van rond de 6 cm.",
@@ -2858,7 +2862,7 @@ const SPECIES = [
       "Zo groot als een vos maar hoger op de poten, geelgrijs met een gouden gloed, met een vrij korte staart met een donkere punt."
     ] }
   ] },
-{ id:"pimpernelblauwtje", no:140, g:"V", n:"Pimpernelblauwtje", s:"Phengaris teleius", r:"HR", l:3.5, zz:"Z", twin:"donker-pimpernelblauwtje",
+{ id:"pimpernelblauwtje", no:601, g:"V", n:"Pimpernelblauwtje", s:"Phengaris teleius", r:"HR", l:3.5, zz:"Z", twin:"donker-pimpernelblauwtje",
   h:["OPEN","MOER"], a:["DAG"], v:["PLANT","ONG"], b:["VEG","GROND"], w:["LARVE"],
   x:"donker-pimpernelblauwtje",
   t:"Het donker pimpernelblauwtje is van onderen egaal donker chocoladebruin met maar één rij stippen, en de rups wordt sneller door de gewone steekmier geadopteerd. Deze soort is van onderen lichtbruin met twee rijen zwarte stippen en leeft samen met de moerassteekmier.",
@@ -2878,7 +2882,7 @@ const SPECIES = [
       "Onderkant licht grijsbruin met twee rijen zwarte stippen."
     ] }
   ] },
-{ id:"teunisbloempijlstaart", no:141, g:"V", n:"Teunisbloempijlstaart", s:"Proserpinus proserpina", r:"HR", l:4.5, zz:"Z", twin:null,
+{ id:"teunisbloempijlstaart", no:606, g:"V", n:"Teunisbloempijlstaart", s:"Proserpinus proserpina", r:"HR", l:4.5, zz:"Z", twin:null,
   h:["OPEN","STROOM","HALF"], a:["SCHEMER","NACHT"], v:["PLANT"], b:["VEG","GROND"], w:["LARVE"],
   x:"groot-avondrood",
   t:"De rups van groot avondrood heeft een echte ‘pijl’ op het achterlijf en grote oogvlekken achter de kop. Deze rups mist de pijl en heeft op die plek een bultje met een oogvlek; de vlinder is groen in plaats van roze.",
@@ -2898,7 +2902,7 @@ const SPECIES = [
       "Klein, met groene vleugels met een getande rand en oranjegele achtervleugels."
     ] }
   ] },
-{ id:"grote-vos", no:142, g:"V", n:"Grote vos", s:"Nymphalis polychloros", r:"BAL", l:6, zz:"Z", twin:null,
+{ id:"grote-vos", no:603, g:"V", n:"Grote vos", s:"Nymphalis polychloros", r:"BAL", l:6, zz:"Z", twin:null,
   h:["BOS","HALF"], a:["DAG"], v:["PLANT"], b:["BOOM"], w:["SLAAP"],
   x:"kleine-vos",
   t:"De kleine vos is kleiner, feller oranje, heeft een witte vlek bij de vleugelpunt en blauwe randvlekjes op alle vleugels, en de rups eet brandnetel. Deze soort is groter en doffer, met blauwe randjes alleen op de achtervleugels, en de rupsen leven in een gezamenlijk spinsel op iep of wilg.",
@@ -2918,7 +2922,7 @@ const SPECIES = [
       "Spanwijdte zo'n 6 cm; oranjebruin met zwarte vlekken en zonder witte vlek bij de vleugelpunt."
     ] }
   ] },
-{ id:"donker-pimpernelblauwtje", no:145, g:"V", n:"Donker pimpernelblauwtje", s:"Phengaris nausithous", r:"HR", l:3.5, zz:"Z", twin:"pimpernelblauwtje",
+{ id:"donker-pimpernelblauwtje", no:602, g:"V", n:"Donker pimpernelblauwtje", s:"Phengaris nausithous", r:"HR", l:3.5, zz:"Z", twin:"pimpernelblauwtje",
   h:["OPEN","MOER"], a:["DAG"], v:["PLANT","ONG"], b:["VEG","GROND"], w:["LARVE"],
   x:"pimpernelblauwtje",
   t:"Het pimpernelblauwtje is van onderen lichter grijsbruin met twee rijen zwarte stippen, vliegt iets eerder en legt één eitje per klein bloemhoofdje. Het donker pimpernelblauwtje zoekt juist de grote, nog gesloten hoofdjes in ruigere vegetatie en leeft met de gewone steekmier.",
@@ -2942,7 +2946,7 @@ const SPECIES = [
   h:["HALF","BEB","OPEN"], a:["DAG"], v:["PLANT"], b:["VEG"], w:["SLAAP"] },
 { id:"groot-avondrood", no:null, g:"V", n:"Groot avondrood", s:"Deilephila elpenor", r:"NB", l:6, zz:null, twin:null,
   h:["HALF","STROOM","BEB"], a:["SCHEMER","NACHT"], v:["PLANT"], b:["VEG","GROND"], w:["LARVE"] },
-{ id:"grote-weerschijnvlinder", no:143, g:"V", n:"Grote weerschijnvlinder", s:"Apatura iris", r:"BAL", l:6.5, zz:"Z", twin:null,
+{ id:"grote-weerschijnvlinder", no:604, g:"V", n:"Grote weerschijnvlinder", s:"Apatura iris", r:"BAL", l:6.5, zz:"Z", twin:null,
   h:["BOS"], a:["DAG"], v:["PLANT","ONG"], b:["BOOM"], w:["LARVE"],
   x:"kleine-ijsvogelvlinder",
   t:"De kleine ijsvogelvlinder is kleiner, zwart met een witte band maar zonder paarse glans en zonder oogvlek op de achtervleugel, en zweeft laag langs bosranden met kamperfoelie. Deze soort glanst (bij het mannetje) paars en heeft een oranje omrande oogvlek op de achtervleugel.",
@@ -2962,7 +2966,7 @@ const SPECIES = [
       "Later in de zomer vliegt hier een grote, bruinzwarte vlinder met een witte band."
     ] }
   ] },
-{ id:"kleine-ijsvogelvlinder", no:144, g:"V", n:"Kleine ijsvogelvlinder", s:"Limenitis camilla", r:"BAL", l:5.5, zz:"MA", twin:null,
+{ id:"kleine-ijsvogelvlinder", no:605, g:"V", n:"Kleine ijsvogelvlinder", s:"Limenitis camilla", r:"BAL", l:5.5, zz:"MA", twin:null,
   h:["BOS","HALF"], a:["DAG"], v:["PLANT"], b:["VEG"], w:["LARVE"],
   x:"grote-weerschijnvlinder",
   t:"De grote weerschijnvlinder is groter, glanst (bij het mannetje) paars en heeft een oogvlek op de achtervleugel; hij vliegt vooral hoog in de boomkruinen. Deze soort zweeft laag en sierlijk langs schaduwrijke bosranden en zet eitjes af op kamperfoelie.",
@@ -2984,7 +2988,7 @@ const SPECIES = [
   ] },
 /* ---------- libellen (update 14, november 2026). Bron: De Vlinderstichting (soortpagina's), Natura 2000-profielen.
    Lengte = lichaamslengte. Libellen overwinteren als ei of larve in het water (Winter: Als ei, larve of pop). ---------- */
-{ id:"gevlekte-witsnuitlibel", no:146, g:"L", n:"Gevlekte witsnuitlibel", s:"Leucorrhinia pectoralis", r:"HR", l:3.6, zz:"Z", twin:null,
+{ id:"gevlekte-witsnuitlibel", no:704, g:"L", n:"Gevlekte witsnuitlibel", s:"Leucorrhinia pectoralis", r:"HR", l:3.6, zz:"Z", twin:null,
   h:["MOER","STIL","HEI"], a:["DAG"], v:["ONG"], b:["WATER","VEG"], w:["LARVE"],
   x:"noordse-witsnuitlibel",
   t:"Bij de noordse witsnuitlibel zijn de vlekken op het achterlijf kleiner en smaller, en ze blijven eenkleurig; een uitgekleurd mannetje heeft geen gele vlek op segment 7. Deze soort is de grootste en forste witsnuitlibel, en de vlek op segment 7 blijft altijd helder geel, ook als de andere vlekken bij het mannetje donkerrood zijn.",
@@ -3004,7 +3008,7 @@ const SPECIES = [
       "Robuust, ruim 3,5 cm; zwart achterlijf met grote lichte vlekken, de vlek op segment 7 het helderst geel; achterlijfsaanhangsels en vleugelvlekjes zwart."
     ] }
   ] },
-{ id:"sierlijke-witsnuitlibel", no:147, g:"L", n:"Sierlijke witsnuitlibel", s:"Leucorrhinia caudalis", r:"HR", l:3.5, zz:"Z", twin:null,
+{ id:"sierlijke-witsnuitlibel", no:705, g:"L", n:"Sierlijke witsnuitlibel", s:"Leucorrhinia caudalis", r:"HR", l:3.5, zz:"Z", twin:null,
   h:["STIL","MOER"], a:["DAG"], v:["ONG"], b:["WATER","VEG"], w:["LARVE"],
   x:"gevlekte-witsnuitlibel",
   t:"De gevlekte witsnuitlibel is forser, heeft zwarte achterlijfsaanhangsels en een achterlijf met grote vlekken, zonder knots. Deze soort heeft bij beide geslachten witte achterlijfsaanhangsels; het mannetje heeft een duidelijk knotsvormig achterlijf met een scherp afgetekende lichtgrijze basis.",
@@ -3024,7 +3028,7 @@ const SPECIES = [
       "Vrouwtje: donker achterlijf met gele vlekjes op segment 2 tot 6, nooit roodbruin, met witte achterlijfsaanhangsels en zwarte vleugelvlekjes."
     ] }
   ] },
-{ id:"rivierrombout", no:148, g:"L", n:"Rivierrombout", s:"Stylurus flavipes", r:"HR", l:5.2, zz:"Z", twin:null,
+{ id:"rivierrombout", no:703, g:"L", n:"Rivierrombout", s:"Stylurus flavipes", r:"HR", l:5.2, zz:"Z", twin:null,
   h:["STROOM","OPEN"], a:["DAG"], v:["ONG"], b:["WATER","VEG"], w:["LARVE"],
   x:"plasrombout",
   t:"De plasrombout heeft duidelijk smallere zwarte strepen op het borststuk, een doorlopende eerste zijnaadstreep en bij het mannetje maar een zwakke knots; hij leeft vooral bij stilstaand water. Deze soort oogt erg geel, ook op de poten, en heeft op elke schouder een scherp afgetekende gele ovale vlek.",
@@ -3044,7 +3048,7 @@ const SPECIES = [
       "Van boven een vrijwel doorlopende gele lengtestreep op een zwart achterlijf; het mannetje heeft een duidelijke knots aan het eind en de poten zijn geel."
     ] }
   ] },
-{ id:"beekrombout", no:149, g:"L", n:"Beekrombout", s:"Gomphus vulgatissimus", r:"BAL", l:4.7, zz:"MA", twin:null,
+{ id:"beekrombout", no:702, g:"L", n:"Beekrombout", s:"Gomphus vulgatissimus", r:"BAL", l:4.7, zz:"MA", twin:null,
   h:["STROOM","HALF"], a:["DAG"], v:["ONG"], b:["WATER","VEG"], w:["LARVE"],
   x:"rivierrombout",
   t:"De rivierrombout is slanker en veel geler, met gele poten, een doorlopende gele rugstreep en een gele ovale schoudervlek, en vliegt later in de zomer. Deze soort is plomper en donkerder, met vrijwel zwarte poten; de gele rugstreep houdt op bij segment 7.",
@@ -3064,7 +3068,7 @@ const SPECIES = [
       "Geelgroen en zwart, met vrijwel zwarte poten; het mannetje heeft een duidelijke knots aan het eind van het achterlijf."
     ] }
   ] },
-{ id:"bosbeekjuffer", no:150, g:"L", n:"Bosbeekjuffer", s:"Calopteryx virgo", r:"BAL", l:4.7, zz:"MA", twin:null,
+{ id:"bosbeekjuffer", no:701, g:"L", n:"Bosbeekjuffer", s:"Calopteryx virgo", r:"BAL", l:4.7, zz:"MA", twin:null,
   h:["STROOM","BOS"], a:["DAG"], v:["ONG"], b:["WATER","VEG"], w:["LARVE"],
   x:"weidebeekjuffer",
   t:"Bij de weidebeekjuffer zijn de vleugels iets smaller en minder donker, en de onderkant van de achterlijfspunt van het mannetje is vuilwit. Deze soort heeft zeer brede, bijna geheel donkere vleugels met een blauwe glans, en bij het mannetje is de onderkant van de achterlijfspunt roodbruin.",
@@ -3092,7 +3096,7 @@ const SPECIES = [
 { id:"weidebeekjuffer", no:null, g:"L", n:"Weidebeekjuffer", s:"Calopteryx splendens", r:"NB", l:4.7, zz:null, twin:null,
   h:["STROOM","OPEN"], a:["DAG"], v:["ONG"], b:["WATER","VEG"], w:["LARVE"] },
 /* ---------- kevers (update 14). Bron: EIS Kenniscentrum Insecten (en publicaties van EIS-medewerkers), Natura 2000-profiel H1083. ---------- */
-{ id:"vermiljoenkever", no:151, g:"K", n:"Vermiljoenkever", s:"Cucujus cinnaberinus", r:"HR", l:1.3, zz:"Z", twin:null,
+{ id:"vermiljoenkever", no:802, g:"K", n:"Vermiljoenkever", s:"Cucujus cinnaberinus", r:"HR", l:1.3, zz:"Z", twin:null,
   h:["BOS","MOER"], a:["DAG"], v:["PLANT","ONG"], b:["BOOM"], w:["SLAAP","LARVE"],
   x:"roodkopvuurkever",
   t:"De larve van de roodkopvuurkever leeft in hetzelfde dode hout, maar is lichter van kleur en het laatste segment is duidelijk langer dan het voorlaatste. Bij deze soort is het laatste segment ongeveer even lang als de voorgaande, en de kever zelf is sterk afgeplat, met een glanzend helderrood halsschild met smalle, getande zwarte zijranden.",
@@ -3112,7 +3116,7 @@ const SPECIES = [
       "11 tot 15 mm en extreem plat; kop en halsschild glanzend helderrood met smalle, getande zwarte zijranden, dekschilden mat rood, poten en sprieten zwart."
     ] }
   ] },
-{ id:"vliegend-hert", no:152, g:"K", n:"Vliegend hert", s:"Lucanus cervus", r:"BAL", l:6, zz:"Z", twin:null,
+{ id:"vliegend-hert", no:801, g:"K", n:"Vliegend hert", s:"Lucanus cervus", r:"BAL", l:6, zz:"Z", twin:null,
   h:["BOS","HALF","BEB"], a:["SCHEMER"], v:["PLANT"], b:["GROND","BOOM"], w:["LARVE"],
   x:"klein-vliegend-hert",
   t:"Het klein vliegend hert is veel kleiner en dof zwart, en het mannetje heeft geen gewei, alleen iets grotere kaken. Bij deze soort heeft het mannetje een groot, roodbruin gewei van kaken; het vrouwtje is kleiner en mist dat gewei.",
