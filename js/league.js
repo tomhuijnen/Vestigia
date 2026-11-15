@@ -134,7 +134,7 @@ const League = (() => {
     $("leaguePopBody").innerHTML = `
       <div class="top"><h2 id="leaguePopH">Speler uitnodigen</h2><button class="iconbtn" id="lpX" aria-label="Sluiten"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l10 10M13 3L3 13"/></svg></button></div>
       ${me
-        ? `<p>De speler die je uitnodigt, krijgt een link met jouw naam erin. Kiest die speler een spelersnaam en speelt hij of zij op drie verschillende dagen de dagcasus, dan levert dat jou 20 eikels op (voor maximaal vijf spelers).</p>`
+        ? `<p>De speler die je uitnodigt, krijgt een link met jouw naam erin. Kiest die speler een spelersnaam en determineert hij of zij een eerste casus, dan krijg jij 10 eikels. Speelt die speler daarna op drie verschillende dagen de dagcasus, dan komen er nog 10 bij (voor maximaal vijf spelers).</p>`
         : `<p>De speler die je uitnodigt, krijgt een link naar Vestigia. Kies eerst zelf een spelersnaam, dan staat jouw naam in de link en tellen de uitnodigingen voor jou.</p>`}
       ${cached().length ? `<p class="fine">Wil je iemand in een league? Deel dan de uitnodiging bij die league, onder Leagues in het menu.</p>` : ""}
       <div class="actions"><button class="btn" id="lpDeel">Deel uitnodiging</button>${me ? "" : `<button class="btn line" id="lpNaam">Kies een spelersnaam</button>`}<span class="msg" id="lpMsg"></span></div>`;
