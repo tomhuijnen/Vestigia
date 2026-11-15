@@ -682,5 +682,5 @@ const Duel = (() => {
     };
   })();
 
-  return { demo, zichtbaar, aantal, open, render, speel, bewaar, naCasus, vervolg, bindVervolg, balk, onthul, verwerkLink, naNaam, welkomTekst, start, badge };
+  return { demo, zichtbaar, actief, aantal, open, render, speel, bewaar, naCasus, vervolg, bindVervolg, balk, onthul, verwerkLink, naNaam, welkomTekst, start, badge };
 })();

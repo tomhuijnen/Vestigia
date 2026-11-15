@@ -74,6 +74,7 @@ function start(){
   startDaily();
   Profiel.start();
   Duel.start();
+  Spelerskaart.start();
   Apparaat.start();
   Push.start();
   /* update 8: daarna hooguit één pop-up uit de wachtrij (adventkalender, avatar kiezen) en, in de kerstperiode, wat sneeuw */
