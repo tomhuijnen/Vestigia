@@ -497,10 +497,17 @@ const Profiel = (() => {
              + koopbaar.map(i => knop(waardeVan(i), voorbeeld(shopTab, waardeVan(i)), i.label, "koop", i)).join("")
              + gekocht.map(i => knop(waardeVan(i), voorbeeld(shopTab, waardeVan(i)), i.label, me[VELD[shopTab]] === waardeVan(i) ? "aan" : "heb", i)).join("");
     if (!koopbaar.length) html = `<p class="fine pfnoot">Je hebt alles uit deze rij al.</p>` + html;
+    /* verdiend (prijs 0, niet te koop): medaille- en dwaalgast-avatars, en sinds 15 november ook verdiende lijsten,
+       kleuren en ondertitels (Dwaalgast, Dwaalgastjager, kerstlijst, Adventkampioen, rangen, prestatietitels).
+       Eerst stonden alleen de avatars hier; de rest was alleen in Mijn profiel te kiezen. */
+    const verdiend = (winkel || []).filter(i => i.kind === shopTab && !i.for_sale && i.price === 0 && own.has(i.item));
+    html += verdiend.map(i => knop(waardeVan(i), voorbeeld(shopTab, waardeVan(i)), i.label, me[VELD[shopTab]] === waardeVan(i) ? "aan" : "verdiend", i)).join("");
+    if (shopTab === "titel"){
+      const inWinkel = new Set((winkel || []).map(i => i.item));
+      const los = [...own].filter(x => x.startsWith("titel:") && !inWinkel.has(x)).map(x => x.slice(6)).sort((a, b) => a.localeCompare(b, "nl"));
+      html += los.map(t => knop(t, "", t, me.subtitle === t ? "aan" : "verdiend")).join("");
+    }
     if (shopTab === "avatar"){
-      /* verdiende medaille-avatars (prijs 0, niet te koop) vielen eerst buiten elke rij; nu staan ze er als ‘verdiend’ */
-      const verdiend = (winkel || []).filter(i => i.kind === "avatar" && !i.for_sale && i.price === 0 && own.has(i.item));
-      html += verdiend.map(i => knop(waardeVan(i), voorbeeld(shopTab, waardeVan(i)), i.label, me[VELD[shopTab]] === waardeVan(i) ? "aan" : "verdiend", i)).join("");
       const medailles = (winkel || []).filter(i => i.kind === "avatar" && !i.for_sale && !own.has(i.item) && !i.item.startsWith("avatar:dg-") && !i.item.startsWith("avatar:winter-"));   // dwaalgasten en het kerstavondcadeau blijven een verrassing
       html += medailles.map(i => knop(waardeVan(i), `<span class="pfgeheim">?</span>`, "Medaille-avatar", "dicht", i)).join("")
             + `<p class="fine pfnoot">Medaille-avatars koop je niet: je krijgt ze als je een van de ${telwoord(MEDALS.length)} meest zeldzame soorten determineert.</p>`;
