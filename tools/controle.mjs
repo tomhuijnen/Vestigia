@@ -69,15 +69,28 @@ for (const [oud, id] of Object.entries(ALIASES)){
   if (!BY_ID.has(id)) FOUT(`ALIASES: "${oud}" wijst naar onbekende id "${id}"`);
   if (V.BY_NAME.has(oud)) FOUT(`ALIASES: "${oud}" is ook de naam van een huidige soort`);
 }
-const nos = TARGETS.map(t => t.no).filter(Number.isInteger).sort((a, b) => a - b);
-if (nos.length && nos[nos.length - 1] !== nos.length) LETOP(`Platennummers lopen niet aaneengesloten van 1 tot ${nos.length} (hoogste is ${nos[nos.length - 1]})`);
+/* Platennummers in blokken per diergroep (update 46, 15 november 2026): zoogdieren 101–199, reptielen 201–299, amfibieën
+   301–399, vissen 401–499, vogels 501–599, vlinders 601–699, libellen 701–799, kevers 801–899 (de volgorde van GROUPS).
+   Een nieuwe soort krijgt het eerstvolgende nummer van zijn eigen blok; zo schuift er nooit meer een nummer op.
+   GERESERVEERD: nummers die al vastliggen voor een soort die nog komt (128 = grote bosmuis, update 30, direct na de bosmuis). */
+const GERESERVEERD = new Set([128]);
+const blokVan = g => (Object.keys(V.GROUPS).indexOf(g) + 1) * 100;
+for (const g of Object.keys(V.GROUPS)){
+  const b = blokVan(g), lijst = TARGETS.filter(t => t.g === g && Number.isInteger(t.no));
+  for (const t of lijst) if (t.no <= b || t.no >= b + 100) FOUT(`${t.n}: platennummer ${t.no} valt buiten het blok van ${V.GROUPS[g]} (${b + 1}–${b + 99})`);
+  for (const t of lijst) if (GERESERVEERD.has(t.no)) INFO(`Gereserveerd nummer ${t.no} is nu in gebruik door ${t.n}; haal het uit GERESERVEERD`);
+  const nos = new Set(lijst.map(t => t.no)), hoogste = Math.max(b, ...nos);
+  const gaten = []; for (let n = b + 1; n < hoogste; n++) if (!nos.has(n) && !GERESERVEERD.has(n)) gaten.push(n);
+  if (gaten.length) LETOP(`${V.GROUPS[g]}: platennummers lopen niet aaneengesloten (ontbreekt: ${gaten.join(", ")})`);
+}
 
 /* ---------- 2. niets mag verschuiven ten opzichte van wat al live staat ---------- */
 const VAST = path.join(ROOT, "tools/vastgelegd.json");
 const vast = fs.existsSync(VAST) ? JSON.parse(fs.readFileSync(VAST, "utf8")) : null;
 if (!vast) LETOP("tools/vastgelegd.json bestaat nog niet; maak hem met --vastleggen");
 else {
-  const maxNo = Math.max(0, ...Object.values(vast.soorten).map(x => x.no || 0));
+  /* hoogste vastgelegde nummer per blok: een nieuwe plaat komt achteraan in het blok van zijn eigen diergroep */
+  const maxIn = b => Math.max(b, ...Object.values(vast.soorten).map(x => x.no || 0).filter(n => n > b && n < b + 100));
   for (const [id, x] of Object.entries(vast.soorten)){
     const t = BY_ID.get(id);
     if (!t){ FOUT(`Soort "${id}" (${x.n}) is verdwenen; een id mag nooit weg, anders raken spelers hun plaat kwijt`); continue; }
@@ -86,7 +99,8 @@ else {
     if (x.n !== t.n && ALIASES[x.n] !== id) LETOP(`${t.n}: heette eerst "${x.n}"; zet die oude naam in ALIASES`);
   }
   for (const t of TARGETS) if (!vast.soorten[t.id] || !vast.soorten[t.id].no){
-    if (t.no <= maxNo) FOUT(`${t.n}: nieuwe plaat moet achteraan komen (nummer hoger dan ${maxNo})`);
+    const maxNo = maxIn(blokVan(t.g));
+    if (t.no <= maxNo && !GERESERVEERD.has(t.no)) FOUT(`${t.n}: nieuwe plaat moet achteraan in het blok van ${V.GROUPS[t.g]} komen (nummer hoger dan ${maxNo}), of op een gereserveerd nummer`);
     else INFO(`Nieuwe plaat: nº ${t.no} ${t.n}`);
   }
   const ds = vast.dagschema || [];
