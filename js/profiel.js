@@ -419,8 +419,8 @@ const Profiel = (() => {
         <p class="fine">Eikels verdien je met de dagcasus, reeksen, veldweken, platen, trofeeën, prestaties, mijlpalen${Levels.zichtbaar() ? ", levels" : ""} en uitgenodigde spelers. Je saldo wordt steeds opnieuw uitgerekend uit wat je gespeeld hebt, dus het raakt nooit kwijt.</p>
         <div class="actions"><button class="btn line" id="pfNaarShop">Naar de shop</button></div>
       </section>
-      <section class="pfsec" aria-labelledby="pfPrH"><h3 id="pfPrH">Prestaties</h3><div class="prlist">${prestatieLijst()}</div></section>
-      ${mijlpalenHtml()}`}
+      ${klapSec("prest", "pfPrH", "Prestaties", "", `<div class="prlist">${prestatieLijst()}</div>`)}
+      ${mijlpalenHtml(true)}`}
       <section class="pfsec" id="pfNaamSec" aria-labelledby="pfNaamH"${naamRest === null ? " hidden" : ""}><h3 id="pfNaamH">Spelersnaam</h3>
         <p class="fine" id="pfNaamUitleg">${naamUitleg()}</p>
         ${naamRest > 0 ? `<div class="row2"><input id="pfNaamIn" maxlength="20" autocomplete="nickname" value="${esc(me.name)}" aria-label="Nieuwe spelersnaam"><button class="btn line" id="pfNaamBtn">Wijzig naam</button></div>` : ""}
@@ -434,6 +434,7 @@ const Profiel = (() => {
     if (typeof Apparaat !== "undefined") Apparaat.bind();
     if ($("pfNaamBtn")) $("pfNaamBtn").onclick = wijzigNaam;
     if (naamRest === null && !naamGeprobeerd) haalNaamRest();
+    body.querySelectorAll("details.pfklap").forEach(d => d.ontoggle = () => { klapOpen[d.dataset.k] = d.open; });
     if (!geenDb){
       $("pfTabs").querySelectorAll(".chipbtn").forEach(b => b.onclick = () => { tab = b.dataset.t; teken(); });
       $("pfNaarShop").onclick = () => showShop(tab);
@@ -529,7 +530,10 @@ const Profiel = (() => {
     const me = mijn(), own = bezit(), items = (winkel || []).filter(i => i.kind === shopTab && i.price > 0);
     const gratis = (winkel || []).filter(i => i.kind === shopTab && i.price === 0 && i.for_sale);
     const koopbaar = items.filter(i => i.for_sale && !own.has(i.item)), gekocht = items.filter(i => own.has(i.item));
-    let html = gratis.map(i => knop(waardeVan(i), voorbeeld(shopTab, waardeVan(i)), i.label, me[VELD[shopTab]] === waardeVan(i) ? "aan" : "gratis", i)).join("")
+    /* update 54: de standaardkeuze (groen, geen lijst, geen ondertitel) staat ook in de shop, zodat je na een aankoop
+       terug kunt; hij bestaat niet als product, dus zonder data-item (koop() zet hem dan meteen in gebruik) */
+    const standaard = shopTab === "avatar" ? "" : knop("", voorbeeld(shopTab, null), shopTab === "kleur" ? "Groen" : shopTab === "lijst" ? "Geen lijst" : "Geen ondertitel", me[VELD[shopTab]] ? "gratis" : "aan");
+    let html = standaard + gratis.map(i => knop(waardeVan(i), voorbeeld(shopTab, waardeVan(i)), i.label, me[VELD[shopTab]] === waardeVan(i) ? "aan" : "gratis", i)).join("")
              + koopGroepen(koopbaar)
              + gekocht.map(i => knop(waardeVan(i), voorbeeld(shopTab, waardeVan(i)), i.label, me[VELD[shopTab]] === waardeVan(i) ? "aan" : "heb", i)).join("");
     if (!koopbaar.length) html = `<p class="fine pfnoot">Je hebt alles uit deze rij al.</p>` + html;
@@ -647,20 +651,26 @@ const Profiel = (() => {
       return `<div class="prcat"><h4>${esc(c)}<span>${goud} van ${rij.length} op goud</span></h4>${rij.map(prestatieRij).join("")}</div>`;
     }).join("");
   }
+  /* update 54: Prestaties en Mijlpalen in Mijn profiel zijn inklapbaar met een pijltje, standaard dicht (Tom, 15 november).
+     Open of dicht blijft bewaard zolang de app open is, ook als het profiel opnieuw getekend wordt (bijv. na een kleurkeuze). */
+  const klapOpen = {};
+  const klapSec = (k, id, kop, cls, inhoud) => `<section class="pfsec ${cls}" aria-labelledby="${id}"><details class="pfklap" data-k="${k}"${klapOpen[k] ? " open" : ""}>
+      <summary><h3 id="${id}">${kop}</h3></summary><div class="pfklapin">${inhoud}</div></details></section>`;
   /* mijlpalen: één keer te halen, geen brons/zilver/goud; als lintje */
   const LINT = on => `<svg class="mplint" viewBox="0 0 32 40" aria-hidden="true"><path d="M9 22L5 38l6-3 4 5 3-14Z" fill="${on ? "#4b7a5e" : "#d3d8cd"}"/><path d="M23 22l4 16-6-3-4 5-3-14Z" fill="${on ? "#2e5a40" : "#e3e3da"}"/>
     <circle cx="16" cy="15" r="12" fill="${on ? "#a3341f" : "none"}" stroke="${on ? "#7a2414" : "#b9c0b1"}" stroke-width="1.6" ${on ? "" : 'stroke-dasharray="2.5 2.5"'}/>
     ${on ? `<path d="M10.5 15.5l3.6 3.4 7.4-7.6" fill="none" stroke="#fbf4e2" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>` : ""}</svg>`;
-  function mijlpalenHtml(){
+  function mijlpalenHtml(klap){
     const ms = lees(K.mijl);
     if (!ms || !ms.length) return "";
-    const n = ms.filter(m => m.behaald).length;
-    return `<section class="pfsec mpsec" aria-labelledby="pfMpH"><h3 id="pfMpH">Mijlpalen <small>${n} van ${ms.length}</small></h3>
-      <p class="fine">Eenmalige doelen voor de lange adem. Een behaalde mijlpaal blijft altijd van jou. Weken in de ranglijst tellen zodra de week voorbij is.</p>
+    const n = ms.filter(m => m.behaald).length, kop = `Mijlpalen <small>${n} van ${ms.length}</small>`;
+    const inhoud = `<p class="fine">Eenmalige doelen voor de lange adem. Een behaalde mijlpaal blijft altijd van jou. Weken in de ranglijst tellen zodra de week voorbij is.</p>
       <div class="mplist">${ms.map(m => `<div class="mp${m.behaald ? " on" : ""}">${LINT(m.behaald)}
         <span class="mptxt"><b>${esc(m.label)}</b><span>${esc(m.uitleg)}</span>
         <span class="mpst">${m.behaald ? "behaald" : `${m.waarde} van ${m.drempel}`}${m.eikels ? ` · ${EIKEL} ${m.behaald ? "" : "+"}${m.eikels}` : ""}${m.titel ? ` · ondertitel ${esc(m.titel)}` : ""}</span>
-        ${m.behaald ? "" : `<span class="tb"><i style="width:${Math.round(100 * Math.min(1, m.waarde / m.drempel))}%"></i></span>`}</span></div>`).join("")}</div></section>`;
+        ${m.behaald ? "" : `<span class="tb"><i style="width:${Math.round(100 * Math.min(1, m.waarde / m.drempel))}%"></i></span>`}</span></div>`).join("")}</div>`;
+    return klap ? klapSec("mijl", "pfMpH", kop, "mpsec", inhoud) : `<section class="pfsec mpsec" aria-labelledby="pfMpH"><h3 id="pfMpH">${kop}</h3>
+      ${inhoud}</section>`;
   }
   /* prestaties ook in het Vestiarium */
   function inVestiarium(){
