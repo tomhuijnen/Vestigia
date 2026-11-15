@@ -11,7 +11,12 @@
 "use strict";
 
 const Push = (() => {
-  const K = { sleutel: "vestigia:pushSleutel", gevraagd: "vestigia:pushGevraagd", stand: "vestigia:pushStand", vers: "vestigia:pushVers" };
+  const K = { sleutel: "vestigia:pushSleutel", gevraagd: "vestigia:pushGevraagd", stand: "vestigia:pushStand", vers: "vestigia:pushVers", alleenApp: "vestigia:pushAlleenApp" };
+  /* update 35: wat er met de vraag gebeurt naar de server (alleen de gebeurtenis, stil; mislukt het, dan niets aan de hand) */
+  function log(gebeurtenis, detail){
+    const a = acc(); if (!a || !online.enabled || demo) return;
+    online.rpc("push_vraag_log", { p_id: a.id, p_key: a.key, p_apparaat: Apparaat.nummer(), p_gebeurtenis: gebeurtenis, p_detail: detail == null ? null : String(detail) }).catch(() => {});
+  }
   const lees = k => { try { return JSON.parse(localStorage.getItem(k)); } catch(e){ return null; } };
   const zet = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, JSON.stringify(v)); } catch(e){} };
   let demo = false;
@@ -57,7 +62,7 @@ const Push = (() => {
     if (!kanHier()){ toast("Deze browser kan geen meldingen ontvangen."); return false; }
     if (moetApp()){ toast("Op een iPhone werkt dit alleen in de app. Zet Vestigia eerst op je beginscherm.", { label: "Hoe?", run: () => { $("toast").hidden = true; showProfiel(); }, duur: 7000 }); return false; }
     let ok = Notification.permission;
-    if (ok === "default") ok = await Notification.requestPermission();
+    if (ok === "default"){ ok = await Notification.requestPermission(); log("toestemming", ok); }
     if (ok !== "granted"){ toast("Je browser blokkeert meldingen voor Vestigia. Zet ze aan bij de instellingen van je browser of telefoon.", { duur: 7000 }); teken(); return false; }
     let stap = "sleutel";
     try {
@@ -73,11 +78,13 @@ const Push = (() => {
       if (!sub) sub = await r.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: bytes(k) });
       stap = "vestigia";
       await meldAan(sub);
+      log("aangemeld");
       teken();
       toast("Top! Speelde je de dagcasus om 19:00 nog niet, dan krijg je een seintje.");
       return true;
     } catch(e){
       console.warn("Vestigia push: aanzetten mislukt bij stap", stap, e);
+      log("mislukt", stap);
       const waar = { sleutel: "geen verbinding met de server", browser: "de browser weigerde de aanmelding", vestigia: "opslaan bij Vestigia lukte niet" }[stap];
       toast(`Aanzetten lukte niet (${waar}${e && e.name && e.name !== "Error" ? ", " + e.name : ""}). Probeer het later nog eens via het menu.`, { duur: 8000 });
       teken(); return false;
@@ -120,7 +127,12 @@ const Push = (() => {
   const BEL = `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15Z"/><path d="M10 20.5a2 2 0 0 0 4 0"/><path d="M12 3v2"/></svg></span>`;
   Wachtrij.voeg({ id: "push", prio: 2.7,
     async kan(){
-      if (!online.enabled || !acc() || !kanHier() || moetApp()) return false;
+      if (!online.enabled || !acc() || !kanHier()) return false;
+      /* update 35: iPhone in Safari kan geen meldingen krijgen; één keer per apparaat melden dat de vraag hier niet kon komen */
+      if (moetApp()){
+        if (!lees(K.alleenApp) && !demo){ const s0 = await haalStand(); if (s0 && s0.actief && !s0.aan && s0.dagen >= 3){ zet(K.alleenApp, todayIndex()); log("alleen_in_app"); } }
+        return false;
+      }
       if (Notification.permission !== "default") return false;
       if (lees(K.gevraagd) && !demo) return false;
       const s = await haalStand();
@@ -137,10 +149,11 @@ const Push = (() => {
         <div class="nw-knoppen"><button class="linklike" id="pushNee">Nee, liever niet</button><button class="btn" id="pushJa">Ja, graag</button></div>
         <p class="fine">Aan- of uitzetten kan altijd in het menu, per apparaat.</p>`;
       const dicht = () => { pop.hidden = true; pop.classList.remove("nieuw"); };
-      $("pushNee").onclick = () => { zet(K.gevraagd, todayIndex()); dicht(); toast("Prima. Wil je het later toch? Je vindt het seintje in het menu."); };
-      $("pushJa").onclick = () => { zet(K.gevraagd, todayIndex()); dicht(); aan(); };
+      $("pushNee").onclick = () => { zet(K.gevraagd, todayIndex()); log("nee"); dicht(); toast("Prima. Wil je het later toch? Je vindt het seintje in het menu."); };
+      $("pushJa").onclick = () => { zet(K.gevraagd, todayIndex()); log("ja"); dicht(); aan(); };
       pop.classList.add("nieuw");
       pop.hidden = false;
+      log("getoond");
       $("pushJa").focus();
     } });
 
