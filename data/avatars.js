@@ -530,3 +530,59 @@ AVATARS["winter-hermelijn"] = `<defs><linearGradient id="{id}l" x1="0" y1="0" x2
 <path d="M46 42L32 40M46 43.4L33 45.6M54 42L68 40M54 43.4L67 45.6" stroke="#aebccb" stroke-width=".7"/>
 <path fill="#f4f8fb" d="M-2 86C14 80 30 84 42 88C56 84 72 80 102 86V102H-2Z"/>
 <path d="M8 92C16 90 24 91 30 93M66 94C74 92 84 92 92 94" stroke="#c9d7e3" stroke-width="1.6" stroke-linecap="round" fill="none"/>`;
+
+/* prestige-avatars (update 39): in de gewone stijl (currentColor op de achtergrondkleur), met gouden details en glans */
+const AV_GOUD = `<linearGradient id="{id}au" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3c2"/><stop offset=".3" stop-color="#ecc55c"/><stop offset=".62" stop-color="#a77722"/><stop offset="1" stop-color="#f4d478"/></linearGradient>`;
+AVATARS["wolf"] = `<defs>${AV_GOUD}</defs>
+<path fill="currentColor" fill-opacity=".45" d="M50 22C66 22 79 30 83 44L92 50L86 56L95 64L84 66L89 76L76 74L62 90C57 95 43 95 38 90L24 74L11 76L16 66L5 64L14 56L8 50L17 44C21 30 34 22 50 22Z"/>
+<path fill="#1f3428" d="M17 48C14 30 17 14 22 2C31 9 39 18 45 27Z"/><path fill="#1f3428" d="M83 48C86 30 83 14 78 2C69 9 61 18 55 27Z"/>
+<path d="M17 46C14 30 17 14 22 2C31 9 39 18 45 27M83 46C86 30 83 14 78 2C69 9 61 18 55 27" fill="none" stroke="url(#{id}au)" stroke-width="1.7" stroke-linejoin="round"/>
+<path fill="currentColor" fill-opacity=".8" d="M22 38C21 28 22 19 24.5 11C30 16 35 21 39 28ZM78 38C79 28 78 19 75.5 11C70 16 65 21 61 28Z"/>
+<path fill="currentColor" fill-opacity=".62" d="M50 24C61 24 71 30 76 40C70 38 62 40 56 44L50 52L44 44C38 40 30 38 24 40C29 30 39 24 50 24Z"/>
+<path fill="currentColor" d="M50 50C47 56 42 59 33 60C25 61 19 63 15 66L24 68L19 74L31 72L41 87C45 92 55 92 59 87L69 72L81 74L76 68L85 66C81 63 75 61 67 60C58 59 53 56 50 50Z"/>
+<path fill="currentColor" d="M24 40C28 37 35 37 39 40L36 43C33 41 28 41 24 42ZM76 40C72 37 65 37 61 40L64 43C67 41 72 41 76 42Z"/>
+<path fill="#1f3428" fill-opacity=".55" d="M50 26C47 32 45 40 50 48C55 40 53 32 50 26Z"/>
+<path fill="url(#{id}au)" d="M45 51.5C41 47.5 35 45.8 28 45.8C31.5 50.2 37.5 52.8 45 51.5ZM55 51.5C59 47.5 65 45.8 72 45.8C68.5 50.2 62.5 52.8 55 51.5Z"/>
+<circle cx="37.6" cy="49" r="1.95" fill="#1f3428"/><circle cx="62.4" cy="49" r="1.95" fill="#1f3428"/><circle cx="38.3" cy="48.3" r=".55" fill="#fff"/><circle cx="63.1" cy="48.3" r=".55" fill="#fff"/>
+<path fill="#1f3428" d="M47.5 46.8L25 42L26.6 39.2L48.8 43.6ZM52.5 46.8L75 42L73.4 39.2L51.2 43.6Z"/>
+<path d="M45.5 54L43 58M54.5 54L57 58" fill="none" stroke="#1f3428" stroke-width="1.2" stroke-linecap="round" stroke-opacity=".5"/>
+<path fill="#1f3428" d="M42.5 78C42.5 74.5 46 73.5 50 73.5C54 73.5 57.5 74.5 57.5 78C57.5 81.5 54 83.5 50 83.5C46 83.5 42.5 81.5 42.5 78Z"/>
+<path d="M45.5 75.5C47 74.8 49 74.6 50.5 74.7" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-opacity=".7"/>
+<path d="M50 83.5V86M43 88Q50 85.5 57 88" fill="none" stroke="#1f3428" stroke-width="1.5" stroke-linecap="round"/>`;
+AVATARS["zeearend"] = `<defs>${AV_GOUD}<linearGradient id="{id}sn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e08e"/><stop offset=".5" stop-color="#dcaa3c"/><stop offset="1" stop-color="#946818"/></linearGradient></defs>
+<path fill="currentColor" fill-opacity=".38" d="M-2 104C0 86 10 76 24 72L50 78L76 72C90 76 100 86 102 104Z"/>
+<path d="M14 88L20 96M26 82L31 92M74 82L69 92M86 88L80 96M38 86L41 96M62 86L59 96" fill="none" stroke="#1f3428" stroke-opacity=".35" stroke-width="1.6" stroke-linecap="round"/>
+<path fill="currentColor" fill-opacity=".85" d="M50 16L56 12L60 17L67 14L69 20L76 19L76 26C80 30 82 35 83 40C84 50 88 56 92 62L84 62L88 70L78 69L80 78L71 74L68 84L60 77L55 87L50 79L45 87L40 77L32 84L29 74L20 78L22 69L12 70L16 62L8 62C12 56 16 50 17 40C18 35 20 30 24 26L24 19L31 20L33 14L40 17L44 12Z"/>
+<path d="M36 22L33 28M64 22L67 28M28 30L24 35M72 30L76 35M42 18L41 23M58 18L59 23" fill="none" stroke="#1f3428" stroke-opacity=".22" stroke-width="1.3" stroke-linecap="round"/>
+<path fill="#1f3428" fill-opacity=".28" d="M22 46C26 52 32 54 38 52L40 46C34 44 27 44 22 46ZM78 46C74 52 68 54 62 52L60 46C66 44 73 44 78 46Z"/>
+<circle cx="31" cy="46" r="5" fill="url(#{id}au)"/><circle cx="69" cy="46" r="5" fill="url(#{id}au)"/>
+<circle cx="31.4" cy="46.6" r="2.4" fill="#1f3428"/><circle cx="68.6" cy="46.6" r="2.4" fill="#1f3428"/>
+<circle cx="32.4" cy="45.8" r=".8" fill="#fff"/><circle cx="69.6" cy="45.8" r=".8" fill="#fff"/>
+<path fill="#1f3428" d="M47 47.5L19 37L18 41.5L30 44L38 46ZM53 47.5L81 37L82 41.5L70 44L62 46Z"/>
+<path fill="currentColor" fill-opacity=".95" d="M47 44.5L20 34L19 37L47 47.5ZM53 44.5L80 34L81 37L53 47.5Z"/>
+<path fill="url(#{id}sn)" d="M43 47C43 43.5 57 43.5 57 47L58 58C58 67 55.5 75 50 86C44.5 75 42 67 42 58Z"/>
+<path fill="#c9962e" d="M43 47C43 43.5 57 43.5 57 47L57.3 51.5C54 50.2 46 50.2 42.7 51.5Z"/>
+<ellipse cx="46.6" cy="48.6" rx="1.3" ry=".9" fill="#1f3428"/><ellipse cx="53.4" cy="48.6" rx="1.3" ry=".9" fill="#1f3428"/>
+<path d="M50 53V80" stroke="#fff6d2" stroke-width="1.4" stroke-linecap="round" stroke-opacity=".7"/>
+<path d="M42.5 58C43.5 65 45.5 71 48 76M57.5 58C56.5 65 54.5 71 52 76" fill="none" stroke="#7a5414" stroke-width="1.1" stroke-linecap="round"/>
+<path fill="#5c3f0c" d="M46.8 80L50 86L53.2 80C51.8 81.6 48.2 81.6 46.8 80Z"/>`;
+AVATARS["edelhert"] = `<defs>${AV_GOUD}</defs>
+<g transform="translate(2.5 4.5) scale(.95)"><g fill="none" stroke="url(#{id}au)" stroke-linecap="round" stroke-linejoin="round">
+<path stroke-width="4.2" d="M41 36C35 31 29 26 27 19C26 15 27 11 30 8M59 36C65 31 71 26 73 19C74 15 73 11 70 8"/>
+<path stroke-width="3" d="M38 33C37 28 38 24 41 21M62 33C63 28 62 24 59 21M33 29C27 29 21 28 15 24M67 29C73 29 79 28 85 24M28 21C23 19 18 16 14 12M72 21C77 19 82 16 86 12M30 9L25 8M70 9L75 8M30 9L33 4M70 9L67 4M30 9L37 5M70 9L63 5"/></g>
+<g fill="none" stroke="#fff6d2" stroke-width="1" stroke-linecap="round" stroke-opacity=".75"><path d="M39 33C34 29 30 25 28.5 19M61 33C66 29 70 25 71.5 19M33 28C28 28 23 27 18 24M72 20C76 18 80 16 83 13"/></g></g>
+<path fill="currentColor" fill-opacity=".42" d="M8 104C10 88 18 78 28 74L22 70L32 70L30 64L50 74L70 64L68 70L78 70L72 74C82 78 90 88 92 104Z"/>
+<path d="M20 88L24 98M30 80L33 92M70 80L67 92M80 88L76 98M40 84L42 96M60 84L58 96M50 86V98" fill="none" stroke="#1f3428" stroke-opacity=".3" stroke-width="1.5" stroke-linecap="round"/>
+<path fill="currentColor" fill-opacity=".55" d="M33 44C25 46 15 44 8 37C17 32 27 34 35 40ZM67 44C75 46 85 44 92 37C83 32 73 34 65 40Z"/>
+<path fill="currentColor" fill-opacity=".85" d="M31 42C25 42 18 40 13 37C20 36 27 37 32 40ZM69 42C75 42 82 40 87 37C80 36 73 37 68 40Z"/>
+<path fill="currentColor" fill-opacity=".62" d="M50 33C62 33 69 39 69 48C69 55 66 61 63 69L59 84C57 91 43 91 41 84L37 69C34 61 31 55 31 48C31 39 38 33 50 33Z"/>
+<path fill="#1f3428" fill-opacity=".38" d="M50 34C46 38 45 46 46 56L50 62L54 56C55 46 54 38 50 34Z"/>
+<path fill="currentColor" d="M35 45C38 43 44 44 46 48C42 50 37 49 35 45ZM65 45C62 43 56 44 54 48C58 50 63 49 65 45Z" fill-opacity=".9"/>
+<path fill="#1f3428" d="M37 46.5C39 45 43 45.6 44.4 48.4C41.4 49.4 38.6 48.6 37 46.5ZM63 46.5C61 45 57 45.6 55.6 48.4C58.6 49.4 61.4 48.6 63 46.5Z"/>
+<circle cx="41.6" cy="46.9" r=".7" fill="#fff"/><circle cx="58.4" cy="46.9" r=".7" fill="#fff"/>
+<path d="M35.5 43.5L45 45.5M64.5 43.5L55 45.5" stroke="#1f3428" stroke-width="1.3" stroke-linecap="round"/>
+<path fill="currentColor" fill-opacity=".95" d="M42 72C42 68 46 66 50 66C54 66 58 68 58 72L57 82C56 87 44 87 43 82Z"/>
+<path fill="#1f3428" d="M43.5 77C43.5 73.5 46.5 72.5 50 72.5C53.5 72.5 56.5 73.5 56.5 77C56.5 80 53.5 81.5 50 81.5C46.5 81.5 43.5 80 43.5 77Z"/>
+<path d="M46 74.6C48 73.8 52 73.8 54 74.6" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-opacity=".8"/>
+<path d="M50 81.5V84.5M46 86Q50 87.5 54 86" fill="none" stroke="#1f3428" stroke-width="1.2" stroke-linecap="round"/>`;
+const PRESTIGE_AVATARS = new Set(["wolf", "zeearend", "edelhert"]);

@@ -19,8 +19,34 @@ const KLEUREN = {
   klaproos: { bg: "#b8352b", fg: "#fde6df", det: "#2e0d0b", naam: "Klaproos" },
   /* alleen uit de adventkalender (update 8) */
   winter:   { bg: "#cfe2ec", fg: "#24485c", licht: "#e7f1f6", naam: "Winter" },
-  hulst:    { bg: "#1d4a32", fg: "#f6d9dc", licht: "#7a9486", naam: "Hulst" }
+  hulst:    { bg: "#1d4a32", fg: "#f6d9dc", licht: "#7a9486", naam: "Hulst" },
+  /* prestige (update 39): edelstenen met diepte, facetten en een glans die af en toe over de steen gaat (edelLaag) */
+  smaragd:  { bg: "#0f6b45", fg: "#e2fff0", licht: "#8fd3b0", naam: "Smaragd", edel: { a: "#5ff0ae", b: "#11804f", c: "#03311d", rand: "#b9ffdc" } },
+  robijn:   { bg: "#a3122f", fg: "#ffe6ec", det: "#2a0610", naam: "Robijn",  edel: { a: "#ff8ba4", b: "#b3163a", c: "#41030e", rand: "#ffd0da" } },
+  diamant:  { bg: "#cfe3ef", fg: "#1d3344", licht: "#eef6fb", naam: "Diamant", edel: { a: "#ffffff", b: "#cfe4f1", c: "#6f93ab", rand: "#ffffff", prisma: true } }
 };
+/* Edelsteen als achtergrond: een briljantslijpsel van 33 facetten rond het midden, belicht van linksboven.
+   Tafel (8-hoek) · 8 sterfacetten · 8 vliegers · 8 randdriehoeken; bij diamant enkele facetten in regenboogtinten. */
+function edelLaag(e, id){
+  const pt = (r, a) => [50 + r * Math.cos(a), 50 + r * Math.sin(a)];
+  const hoek = i => (i * 45 - 112.5) * Math.PI / 180, mid = i => hoek(i) + Math.PI / 8;
+  const P = i => pt(19, hoek(i)), M = i => pt(35, mid(i)), Q = i => pt(64, hoek(i));
+  const poly = (pts, f) => `<polygon points="${pts.map(q => q.map(v => v.toFixed(1)).join(",")).join(" ")}" ${f}/>`;
+  const licht = a => Math.cos(a - (-135 * Math.PI / 180));           // 1 = naar het licht (linksboven)
+  const vul = (a, n) => { const l = licht(a), w = (l * .5 + .5);
+    if (e.prisma && n % 4 === 1 && n % 8 !== 1) return `fill="hsl(${[195, 290, 40, 330][(n >> 3) % 4]} 90% 70%)" fill-opacity="${(.1 + w * .1).toFixed(2)}"`;
+    return l > 0 ? `fill="#fff" fill-opacity="${(.04 + l * (e.prisma ? .55 : .26)).toFixed(2)}"` : `fill="${e.prisma ? "#24465e" : "#000"}" fill-opacity="${(-l * (e.prisma ? .28 : .3)).toFixed(2)}"`; };
+  let f = poly([0,1,2,3,4,5,6,7].map(P), `fill="#fff" fill-opacity=".1"`);
+  for (let i = 0; i < 8; i++){
+    const j = (i + 1) % 8, h = (i + 7) % 8;
+    f += poly([P(i), P(j), M(i)], vul(mid(i), i * 4));
+    f += poly([P(i), M(i), Q(i), M(h)], vul(hoek(i) + .2, i * 4 + 1));
+    f += poly([M(i), Q(i), Q(j)], vul(mid(i) + .5, i * 4 + 2));
+  }
+  return `<defs><radialGradient id="${id}eg" cx=".34" cy=".3" r=".8"><stop offset="0" stop-color="${e.a}"/><stop offset=".5" stop-color="${e.b}"/><stop offset="1" stop-color="${e.c}"/></radialGradient></defs>
+    <g clip-path="url(#${id})"><circle cx="50" cy="50" r="50" fill="url(#${id}eg)"/><g stroke="${e.rand}" stroke-opacity=".38" stroke-width=".5" stroke-linejoin="round">${f}</g>
+    <circle cx="50" cy="50" r="48.6" fill="none" stroke="${e.rand}" stroke-opacity=".55" stroke-width="1.2"/></g>`;
+}
 const LIJSTEN = {
   hout: `<circle cx="50" cy="50" r="47" fill="none" stroke="#7d5330" stroke-width="6"/><circle cx="50" cy="50" r="47" fill="none" stroke="#b07a46" stroke-width="1.6" stroke-dasharray="7 10" stroke-linecap="round"/>`,
   mos: `<circle cx="50" cy="50" r="47" fill="none" stroke="#56742c" stroke-width="6"/><circle cx="50" cy="50" r="47" fill="none" stroke="#a6c95e" stroke-width="2.4" stroke-dasharray="1 5" stroke-linecap="round"/>`,
@@ -73,11 +99,12 @@ function avatarSVG(p, cls){
   p = p || {};
   const k = KLEUREN[p.color] || KLEUREN.groen, id = "av" + (++avNr), teken = p.avatar && AVATARS[p.avatar];
   const medaille = teken && MEDALS.some(t => t.id === p.avatar);
+  const glans = medaille || !!k.edel || (teken && typeof PRESTIGE_AVATARS !== "undefined" && PRESTIGE_AVATARS.has(p.avatar));
   const binnen = teken
     ? avatarTekening(p.avatar, k, id)
     : `<text x="50" y="50" dy=".35em" text-anchor="middle" font-size="46" font-family="Rubik, sans-serif" font-weight="600" fill="${k.fg}">${esc(((p.name || "?").trim()[0] || "?").toUpperCase())}</text>`;
   return `<svg class="${cls || "avatar"}" viewBox="0 0 100 100" aria-hidden="true" style="--av-bg:${k.bg}"><defs><clipPath id="${id}"><circle cx="50" cy="50" r="50"/></clipPath></defs>
-    <circle cx="50" cy="50" r="50" fill="${k.bg}"/>${binnen}${medaille ? MEDAILLE_GLANS(id) : ""}${p.frame && LIJSTEN[p.frame] ? LIJSTEN[p.frame].replaceAll("{id}", id) : ""}${medaille ? MEDAILLE_EMBLEEM : ""}</svg>`;
+    <circle cx="50" cy="50" r="50" fill="${k.bg}"/>${k.edel ? edelLaag(k.edel, id) : ""}${binnen}${glans ? MEDAILLE_GLANS(id) : ""}${p.frame && LIJSTEN[p.frame] ? LIJSTEN[p.frame].replaceAll("{id}", id) : ""}${medaille ? MEDAILLE_EMBLEEM : ""}</svg>`;
 }
 
 const Profiel = (() => {
@@ -366,8 +393,10 @@ const Profiel = (() => {
   }
   /* een keuzeknop; staat: "aan" (in gebruik), "" (kiezen), "koop" (te koop), "heb" (in bezit, in de shop), "dicht" (te verdienen) */
   const PRESTIGE = 1000;     // vanaf zoveel eikels krijgt een item in de shop een gouden prestige-kaart
+  const BIJZONDER = 300;     // update 39: ondertitels van 300 tot 1000 eikels staan in een eigen groep ‘Bijzonder’
+  const prijsTekst = n => Number(n).toLocaleString("nl-NL");
   const knop = (waarde, inhoud, label, staat, item) => `<button class="pfopt${staat === "aan" ? " aan" : ""}${staat === "dicht" ? " dicht" : ""}${item && item.price >= PRESTIGE ? " prestige" : ""}" data-v="${esc(waarde)}"${item ? ` data-item="${esc(item.item)}" data-prijs="${item.price}"` : ""}${staat === "dicht" ? " disabled" : ""}>
-      ${inhoud}<span class="pl">${esc(label)}</span><span class="ps">${staat === "aan" ? "in gebruik" : staat === "koop" ? `${EIKEL} ${item.price}` : staat === "heb" ? "in bezit" : staat === "verdiend" ? "verdiend" : staat === "gratis" ? "gratis" : staat === "dicht" ? "te verdienen" : ""}</span></button>`;
+      ${inhoud}<span class="pl">${esc(label)}</span><span class="ps">${staat === "aan" ? "in gebruik" : staat === "koop" ? `${EIKEL} ${prijsTekst(item.price)}` : staat === "heb" ? "in bezit" : staat === "verdiend" ? "verdiend" : staat === "gratis" ? "gratis" : staat === "dicht" ? "te verdienen" : ""}</span></button>`;
   const heeft = (own, i) => own.has(i.item) || (i.price === 0 && i.for_sale);
   const waardeVan = i => i.item.slice(i.item.indexOf(":") + 1);
   const voorbeeld = (soort, v) => { const me = mijn(); return soort === "titel" ? "" : avatarSVG(Object.assign({}, me, { [VELD[soort]]: v }), "avatar mid"); };
@@ -488,13 +517,20 @@ const Profiel = (() => {
     $("shopTabs").querySelectorAll(".chipbtn").forEach(b => b.onclick = () => { shopTab = b.dataset.t; tekenShop(); });
     $("shopOpties").querySelectorAll("button.pfopt:not(.dicht)").forEach(b => b.onclick = () => koop(b));
   }
+  /* update 39: te koop in groepen: gewoon, ‘Bijzonder’ (alleen ondertitels van 300 tot 1000) en ‘Prestige’ (vanaf 1000) */
+  function koopGroepen(koopbaar){
+    const kaart = i => knop(waardeVan(i), voorbeeld(shopTab, waardeVan(i)), i.label, "koop", i);
+    const groep = i => i.price >= PRESTIGE ? 2 : shopTab === "titel" && i.price >= BIJZONDER ? 1 : 0;
+    return [null, "Bijzonder", "Prestige"].map((kop, g) => { const rij = koopbaar.filter(i => groep(i) === g);
+      return rij.length ? (kop ? `<h4 class="shopkop">${kop}</h4>` : "") + rij.map(kaart).join("") : ""; }).join("");
+  }
   /* gratis (voor iedereen, kost geen eikels), te koop (goedkoop naar duur), dan wat je al hebt, dan wat je alleen kunt verdienen */
   function shopOpties(){
     const me = mijn(), own = bezit(), items = (winkel || []).filter(i => i.kind === shopTab && i.price > 0);
     const gratis = (winkel || []).filter(i => i.kind === shopTab && i.price === 0 && i.for_sale);
     const koopbaar = items.filter(i => i.for_sale && !own.has(i.item)), gekocht = items.filter(i => own.has(i.item));
     let html = gratis.map(i => knop(waardeVan(i), voorbeeld(shopTab, waardeVan(i)), i.label, me[VELD[shopTab]] === waardeVan(i) ? "aan" : "gratis", i)).join("")
-             + koopbaar.map(i => knop(waardeVan(i), voorbeeld(shopTab, waardeVan(i)), i.label, "koop", i)).join("")
+             + koopGroepen(koopbaar)
              + gekocht.map(i => knop(waardeVan(i), voorbeeld(shopTab, waardeVan(i)), i.label, me[VELD[shopTab]] === waardeVan(i) ? "aan" : "heb", i)).join("");
     if (!koopbaar.length) html = `<p class="fine pfnoot">Je hebt alles uit deze rij al.</p>` + html;
     /* verdiend (prijs 0, niet te koop): medaille- en dwaalgast-avatars, en sinds 15 november ook verdiende lijsten,
@@ -521,21 +557,68 @@ const Profiel = (() => {
     }
     return html;
   }
-  /* kopen gaat in twee tikken; daarna is het meteen in gebruik. Iets wat je al hebt, zet je met één tik in gebruik. */
+  /* Update 39: tik op iets wat je nog niet hebt = groot voorbeeld in het midden (de shop vervaagt erachter), met
+     de prijs en een koopknop, of hoeveel eikels je nog nodig hebt. Bij een ondertitel zie je je naamregel zoals in de
+     ranglijst. Iets wat je al hebt of wat gratis is, zet je nog steeds met één tik in gebruik. */
+  const OMSCHRIJVING = {
+    "kleur:smaragd": "Diepgroen met geslepen facetten. Af en toe glanst er licht over de steen.",
+    "kleur:robijn": "Diep rood met geslepen facetten. Af en toe glanst er licht over de steen.",
+    "kleur:diamant": "IJzig helder, met een vleugje regenboog in de facetten. Af en toe glanst er licht over de steen.",
+    "avatar:wolf": "Met gouden ogen en gouden randen langs de oren.",
+    "avatar:zeearend": "Recht van voren, met een gouden snavel en gouden ogen.",
+    "avatar:edelhert": "Met een gouden gewei met kroon en manen in zijn nek."
+  };
+  const SOORTNAAM = { avatar: "avatar", titel: "ondertitel", lijst: "lijst", kleur: "kleur" };
+  let popItem = null, popTerug = null;
   async function koop(b){
-    const item = b.dataset.item, prijs = +b.dataset.prijs || 0, w = wallet() || { saldo: 0 }, msg = $("shopMsg");
-    if (prijs === 0 || bezit().has(item)) return kies(shopTab, b.dataset.v || null, msg);     // gratis of al in bezit: meteen gebruiken
-    if (w.saldo < prijs){                                            // rood op de kaart zelf (daar kijk je al), na 3 seconden weer weg
-      const ps = b.querySelector(".ps"), oud = ps.innerHTML;
-      ps.textContent = `nog ${prijs - w.saldo} nodig`; b.classList.remove("tekort"); void b.offsetWidth; b.classList.add("tekort");
-      msg.textContent = `Je hebt nog ${prijs - w.saldo} eikels nodig.`; msg.classList.add("tekort", "alleenvoorlezen");
-      clearTimeout(b._t); b._t = setTimeout(() => { if (b.isConnected){ ps.innerHTML = oud; b.classList.remove("tekort"); } if (msg.isConnected){ msg.textContent = ""; msg.classList.remove("tekort", "alleenvoorlezen"); } }, 3000); return; }
-    msg.classList.remove("tekort");
-    if (!b.dataset.zeker){ b.dataset.zeker = "1"; b.querySelector(".ps").textContent = `kopen voor ${prijs}?`; setTimeout(() => { if (b.isConnected){ delete b.dataset.zeker; b.querySelector(".ps").innerHTML = `${EIKEL} ${prijs}`; } }, 4000); return; }
-    b.disabled = true; msg.textContent = "Even geduld…";
-    try { await online.rpc("buy_item", args({ p_item: item })); await haalAlles(); }
-    catch(e){ b.disabled = false; msg.textContent = e.status && e.status < 500 ? e.message : "Kopen lukte niet. Controleer je internetverbinding."; return; }
-    if (await kies(shopTab, b.dataset.v || null, msg)) { $("shopMsg").textContent = "Gekocht en in gebruik. Wisselen doe je in Mijn profiel."; }
+    const item = b.dataset.item, prijs = +b.dataset.prijs || 0;
+    if (prijs === 0 || bezit().has(item)) return kies(shopTab, b.dataset.v || null, $("shopMsg"));     // gratis of al in bezit: meteen gebruiken
+    popOpen(b);
+  }
+  function popOpen(b){
+    const i = (winkel || []).find(x => x.item === b.dataset.item); if (!i) return;
+    const me = mijn(), w = wallet() || { saldo: 0 }, v = waardeVan(i), soort = i.kind;
+    popItem = { i, v, soort }; popTerug = b;
+    const pres = i.price >= PRESTIGE, bijz = soort === "titel" && i.price >= BIJZONDER && !pres;
+    $("shopPop").classList.toggle("prestige", pres);
+    $("shopPop").classList.toggle("titel", soort === "titel");
+    $("shopPopSoort").textContent = `${pres ? "Prestige · " : bijz ? "Bijzonder · " : ""}${SOORTNAAM[soort]}`;
+    $("shopPopH").textContent = i.label;
+    const kleurNaam = (KLEUREN[me.color] || KLEUREN.groen).naam;
+    $("shopPopTekst").textContent = OMSCHRIJVING[i.item] ? OMSCHRIJVING[i.item] + (soort === "avatar" ? ` Zo ziet hij eruit met jouw achtergrondkleur (${kleurNaam}).` : "")
+      : soort === "avatar" ? `Zo ziet hij eruit met jouw achtergrondkleur (${kleurNaam}).`
+      : soort === "kleur" ? "Zo ziet je avatar eruit met deze achtergrondkleur." : soort === "lijst" ? "Zo ziet je avatar eruit met deze lijst."
+      : "Zo staat hij onder je naam in de ranglijst, je league en je profielkaart:";
+    $("shopPopBeeld").innerHTML = soort === "titel"
+      ? `<div class="shoppop-rij">${avatarSVG(me, "avatar")}<div><b>${esc(me.name || "")}</b><span>${esc(i.label)}</span></div></div>`
+      : avatarSVG(Object.assign({}, me, { [VELD[soort]]: v }), "avatar shopgroot");
+    $("shopPopPrijs").innerHTML = `${EIKEL} ${prijsTekst(i.price)}`;
+    const tekort = i.price - (w.saldo || 0), knop = $("shopPopKoop");
+    $("shopPopMsg").textContent = tekort > 0 ? `Je hebt nog ${prijsTekst(tekort)} eikels nodig.` : "";
+    $("shopPopMsg").classList.toggle("tekort", tekort > 0);
+    knop.disabled = tekort > 0;
+    knop.textContent = tekort > 0 ? "Nog niet genoeg eikels" : `Kopen voor ${prijsTekst(i.price)}`;
+    $("shopPop").hidden = false;
+    (tekort > 0 ? $("shopPopSluit") : knop).focus({ preventScroll: true });
+  }
+  function popSluit(){
+    $("shopPop").hidden = true; popItem = null;
+    if (popTerug && popTerug.isConnected) popTerug.focus({ preventScroll: true }); popTerug = null;
+  }
+  async function popKoop(){
+    if (!popItem) return;
+    const { i, v, soort } = popItem, knop = $("shopPopKoop"), msg = $("shopPopMsg");
+    knop.disabled = true; msg.classList.remove("tekort"); msg.textContent = "Even geduld…";
+    try { await online.rpc("buy_item", args({ p_item: i.item })); await haalAlles(); }
+    catch(e){ knop.disabled = false; msg.textContent = e.status && e.status < 500 ? e.message : "Kopen lukte niet. Controleer je internetverbinding."; return; }
+    popSluit();
+    if (await kies(soort, v || null, $("shopMsg"))) { const m = $("shopMsg"); if (m) m.textContent = "Gekocht en in gebruik. Wisselen doe je in Mijn profiel."; }
+  }
+  if ($("shopPop")){
+    $("shopPopKoop").addEventListener("click", popKoop);
+    $("shopPopSluit").addEventListener("click", popSluit);
+    $("shopPop").addEventListener("click", e => { if (e.target === $("shopPop")) popSluit(); });
+    document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("shopPop").hidden) popSluit(); });
   }
   /* eikels per niveau [brons, zilver, goud] van een prestatie, of null zolang supabase-003 er nog niet is */
   function beloning(id){ const r = (lees(K.beloning) || []).find(x => x.id === id); return r ? [r.brons, r.zilver, r.goud] : null; }

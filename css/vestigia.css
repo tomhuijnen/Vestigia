@@ -1918,3 +1918,33 @@ html.donker .tabbar button:not(.mid)::before{background:var(--green)}
 @keyframes mijnplek{0%,100%{box-shadow:0 0 0 1px var(--green) inset} 40%{box-shadow:0 0 0 1px var(--green) inset, 0 0 0 5px rgba(75,122,94,.35)}}
 .ranklist li.me.oplicht{animation:mijnplek 1.1s ease 2}
 @media (prefers-reduced-motion:reduce){ .tabbar button:not(.mid)::before{transition:none} .ranklist li.me.oplicht{animation:none} }
+
+/* ── update 39: prestige in de shop ── */
+.shopkop{grid-column:1 / -1; margin:10px 0 0; font:600 .7rem var(--caps); letter-spacing:.09em; text-transform:uppercase; color:var(--ink-2)}
+.overlay.shoppop{-webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); background:rgba(20,36,27,.45)}
+.shoppop .sheet{max-width:360px; width:100%; justify-items:center; text-align:center; gap:10px; border-radius:18px; border-top:6px solid var(--green); padding:22px 20px 20px}
+.shoppop.prestige .sheet{border-top-color:#d4a72c; box-shadow:0 0 0 1.5px #d4a72c inset, 0 18px 50px rgba(0,0,0,.3)}
+.shoppop .caps{font:600 .65rem var(--caps); letter-spacing:.09em; text-transform:uppercase; color:var(--ink-2)}
+.shoppop.prestige .caps{color:#a8731b}
+.shoppop h2{margin:0; font-family:var(--display); font-size:1.5rem}
+.shoppop p{margin:0; color:var(--ink-2); line-height:1.45}
+.shoppop-beeld .shopgroot{width:168px; height:168px}
+.shoppop-rij{display:flex; align-items:center; gap:12px; text-align:left; padding:12px 14px; border-radius:10px; border:1.5px solid var(--green); background:var(--mint); min-width:240px}
+.shoppop-rij .avatar{width:42px; height:42px; flex:0 0 42px}
+.shoppop-rij b{display:block; font-size:.95rem}
+.shoppop-rij span{display:block; font-size:.8rem; font-weight:600; color:var(--green-d)}
+.shoppop-prijs{display:flex; align-items:center; gap:6px; font:700 1.15rem var(--display)}
+.shoppop-prijs .eikel{width:18px; height:18px}
+.shoppop.prestige .shoppop-prijs{color:#8a6416}
+.shoppop-msg:empty{display:none}
+.shoppop-msg.tekort{color:#b3261e; font-weight:700}
+.shoppop-knoppen{display:grid; gap:8px; width:100%; margin-top:4px}
+.shoppop-knoppen .btn{width:100%; min-height:46px}
+.shoppop-knoppen .btn:disabled{opacity:.55; cursor:default}
+html.donker .overlay.shoppop{background:rgba(0,0,0,.55)}
+html.donker .shoppop.prestige .caps, html.donker .shoppop.prestige .shoppop-prijs{color:#e2b84e}
+html.donker .shoppop-msg.tekort{color:#ff8a80}
+html.donker .shoppop-rij{background:var(--mint)}
+/* bij een ondertitel komt de naamregel onder de uitleg (‘Zo staat hij onder je naam…’) */
+.shoppop.titel #shopPopSoort{order:0} .shoppop.titel #shopPopH{order:1} .shoppop.titel #shopPopTekst{order:2} .shoppop.titel .shoppop-beeld{order:3}
+.shoppop.titel .shoppop-prijs{order:4} .shoppop.titel .shoppop-msg{order:5} .shoppop.titel .shoppop-knoppen{order:6}
