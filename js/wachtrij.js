@@ -78,5 +78,32 @@ const Wachtrij = (() => {
   document.addEventListener("click", e => { if (e.target === $("wachtPop")) $("wachtPop").hidden = true; });
   document.addEventListener("keydown", e => { if (e.key === "Escape" && $("wachtPop") && !$("wachtPop").hidden) $("wachtPop").hidden = true; });
 
+  /* ---------- update 43: ondertitel Pionier (verdiend door wie vóór 1 december 2026 speelde; SQL 027) ----------
+     Eén keer per apparaat, zodra de server zegt dat je hem hebt. Wie hem al onder zijn naam heeft, krijgt niets. */
+  const PI = "vestigia:pionierGezien";
+  voeg({ id: "pionier", prio: 2.65,
+    kan(){
+      if (!online.enabled || !online.player()) return false;
+      try { if (localStorage.getItem(PI)) return false; } catch(e){ return false; }
+      let items = []; try { items = JSON.parse(localStorage.getItem("vestigia:items")) || []; } catch(e){}
+      return items.includes("titel:Pionier") && Profiel.mijn().subtitle !== "Pionier";
+    },
+    toon(){
+      try { localStorage.setItem(PI, "1"); } catch(e){}
+      const pop = $("wachtPop");
+      $("wachtBody").innerHTML = `
+        <div class="nw-stap"><span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4"/><path d="M5 4h11l-2 4 2 4H5"/></svg></span>
+          <h2 id="wachtH">Je bent een Pionier</h2>
+          <p>Je speelde Vestigia al in de eerste weken. Daarom krijg je de ondertitel <b>Pionier</b>. Na november kan niemand hem meer verdienen.</p></div>
+        <div class="nw-knoppen"><button class="linklike" id="piLater">Later</button><button class="btn" id="piKies">Zet onder mijn naam</button></div>
+        <p class="fine">Je vindt hem ook in de shop bij Ondertitels.</p>`;
+      const dicht = () => { pop.hidden = true; pop.classList.remove("nieuw"); };
+      $("piLater").onclick = dicht;
+      $("piKies").onclick = async () => { dicht(); if (await Profiel.kiesTitel("Pionier")) toast("Pionier staat nu onder je naam."); else toast("Dat lukte nu niet. Je vindt Pionier in de shop bij Ondertitels."); };
+      pop.classList.add("nieuw");
+      pop.hidden = false;
+      $("piKies").focus();
+    } });
+
   return { voeg, start, ietsOpen };
 })();
