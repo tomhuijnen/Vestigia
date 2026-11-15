@@ -542,15 +542,13 @@ AVATARS["wolf"] = `<defs>${AV_GOUD}</defs>
 <path fill="currentColor" d="M50 50C47 56 42 59 33 60C25 61 19 63 15 66L24 68L19 74L31 72L41 87C45 92 55 92 59 87L69 72L81 74L76 68L85 66C81 63 75 61 67 60C58 59 53 56 50 50Z"/>
 <path fill="currentColor" d="M24 40C28 37 35 37 39 40L36 43C33 41 28 41 24 42ZM76 40C72 37 65 37 61 40L64 43C67 41 72 41 76 42Z"/>
 <path fill="#1f3428" fill-opacity=".55" d="M50 26C47 32 45 40 50 48C55 40 53 32 50 26Z"/>
-<path fill="url(#{id}au)" d="M45 52C41 47 35 44.5 27.5 44C31 49 37.5 52.5 45 52ZM55 52C59 47 65 44.5 72.5 44C69 49 62.5 52.5 55 52Z"/>
-<path fill="#1f3428" d="M39.2 49.2a1.9 1.9 0 1 1-3.6-1.2a1.9 1.9 0 1 1 3.6 1.2ZM60.8 49.2a1.9 1.9 0 1 0 3.6-1.2a1.9 1.9 0 1 0-3.6 1.2Z"/>
-<path fill="#1f3428" d="M48 48.5L25 40.5L27 37.5L49.5 45ZM52 48.5L75 40.5L73 37.5L50.5 45Z"/>
-<path d="M45.5 54L42 59M54.5 54L58 59M47 44L45 38M53 44L55 38" fill="none" stroke="#1f3428" stroke-width="1.3" stroke-linecap="round" stroke-opacity=".75"/>
-<path d="M44 68Q50 66 56 68M43.5 72Q50 70 56.5 72" fill="none" stroke="#1f3428" stroke-width="1.1" stroke-linecap="round" stroke-opacity=".45"/>
+<path fill="url(#{id}au)" d="M45 51.5C41 47.5 35 45.8 28 45.8C31.5 50.2 37.5 52.8 45 51.5ZM55 51.5C59 47.5 65 45.8 72 45.8C68.5 50.2 62.5 52.8 55 51.5Z"/>
+<circle cx="37.6" cy="49" r="1.95" fill="#1f3428"/><circle cx="62.4" cy="49" r="1.95" fill="#1f3428"/><circle cx="38.3" cy="48.3" r=".55" fill="#fff"/><circle cx="63.1" cy="48.3" r=".55" fill="#fff"/>
+<path fill="#1f3428" d="M47.5 46.8L25 42L26.6 39.2L48.8 43.6ZM52.5 46.8L75 42L73.4 39.2L51.2 43.6Z"/>
+<path d="M45.5 54L43 58M54.5 54L57 58" fill="none" stroke="#1f3428" stroke-width="1.2" stroke-linecap="round" stroke-opacity=".5"/>
 <path fill="#1f3428" d="M42.5 78C42.5 74.5 46 73.5 50 73.5C54 73.5 57.5 74.5 57.5 78C57.5 81.5 54 83.5 50 83.5C46 83.5 42.5 81.5 42.5 78Z"/>
 <path d="M45.5 75.5C47 74.8 49 74.6 50.5 74.7" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-opacity=".7"/>
-<path d="M50 83.5V86M43 88Q50 85.5 57 88" fill="none" stroke="#1f3428" stroke-width="1.5" stroke-linecap="round"/>
-<path fill="currentColor" d="M44.5 87.6L45.6 91.4L46.8 87.2ZM55.5 87.6L54.4 91.4L53.2 87.2Z"/>`;
+<path d="M50 83.5V86M43 88Q50 85.5 57 88" fill="none" stroke="#1f3428" stroke-width="1.5" stroke-linecap="round"/>`;
 AVATARS["zeearend"] = `<defs>${AV_GOUD}<linearGradient id="{id}sn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e08e"/><stop offset=".5" stop-color="#dcaa3c"/><stop offset="1" stop-color="#946818"/></linearGradient></defs>
 <path fill="currentColor" fill-opacity=".38" d="M-2 104C0 86 10 76 24 72L50 78L76 72C90 76 100 86 102 104Z"/>
 <path d="M14 88L20 96M26 82L31 92M74 82L69 92M86 88L80 96M38 86L41 96M62 86L59 96" fill="none" stroke="#1f3428" stroke-opacity=".35" stroke-width="1.6" stroke-linecap="round"/>
