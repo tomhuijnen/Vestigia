@@ -91,7 +91,8 @@ const SEIZOEN_LOS_VANAF = 14, SEIZOEN_LOS_KANS = 0.3;
 /* Update 23: vanaf dag 17 (maandag 23 november 2026) bij een herhaling de andere casus. Dagen daarvoor blijven zoals ze waren. */
 const ANDERE_CASUS_VANAF = 17;
 const INSTROOM = [
-  { van: 14, tot: 50, ids: ["gevlekte-witsnuitlibel", "sierlijke-witsnuitlibel", "rivierrombout", "beekrombout", "bosbeekjuffer", "vermiljoenkever", "vliegend-hert"] }
+  { van: 14, tot: 50, ids: ["gevlekte-witsnuitlibel", "sierlijke-witsnuitlibel", "rivierrombout", "beekrombout", "bosbeekjuffer", "vermiljoenkever", "vliegend-hert"] },
+  { van: 14, tot: 40, ids: ["grote-bosmuis"] }          // update 30: de grote bosmuis, tussen vr 20 november en 16 december
 ];
 function pickDaily(d, history){
   const m = new Date(START + d * DAY).getUTCMonth();
@@ -114,12 +115,13 @@ function pickDaily(d, history){
   /* Instroom (update 14): nieuwe soorten komen binnen een paar weken een keer langs. Per dag is de kans twee keer
      ‘nog niet geweest / dagen die nog over zijn’ (zo verspreid over het venster), nooit twee dagen op rij. */
   if (d >= SEIZOEN_LOS_VANAF){
-    const ins = INSTROOM.find(x => d >= x.van && d <= x.tot);
-    if (ins){
+    /* Elk lopend instroomvenster apart (update 30: het venster van de grote bosmuis valt binnen dat van update 14) */
+    for (const [nr, ins] of INSTROOM.entries()){
+      if (d < ins.van || d > ins.tot) continue;
       const geweest = new Set(history.slice(ins.van, d).map(x => x.id));
       const open = ins.ids.filter(id => !geweest.has(id) && !recent.has(id));
       const gisteren = history[d - 1] && ins.ids.includes(history[d - 1].id);       // niet twee dagen op rij een nieuwe soort
-      if (open.length && !gisteren && rng(20261106 + d * 7919 + 2)() < 2 * open.length / (ins.tot - d + 1)){
+      if (open.length && !gisteren && rng(20261106 + d * 7919 + 2 + nr * 104729)() < 2 * open.length / (ins.tot - d + 1)){
         const id = open[Math.floor(rng(20261106 + d * 7919 + 3)() * open.length)], t = BY_ID.get(id);
         const ks = nieuw(t.cs.map((c, k) => ({ id, k })));
         return ks[Math.floor(rng(20261106 + d * 7919 + 4)() * ks.length)];

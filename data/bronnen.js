@@ -26,7 +26,7 @@ const WAARNEMING = {
   "das":383, "otter":417, "bever":375, "hamster":402, "hazelmuis":403, "eikelmuis":391, "boommarter":376, "steenmarter":421,
   "eekhoorn":389, "watervleermuis":430, "laatvlieger":410, "waterspitsmuis":429, "hermelijn":404, "bruinvis":380, "vos":428, "ree":418,
   "edelhert":388, "damhert":382, "wild-zwijn":432, "haas":401, "konijn":409, "egel":390, "wezel":431, "bunzing":381, "gewone-zeehond":395,
-  "wilde-kat":433, "bosmuis":377, "dwergmuis":385, "woelrat":87296, "aardmuis":372, "rosse-woelmuis":200878, "gewone-bosspitsmuis":394,
+  "wilde-kat":433, "bosmuis":377, "grote-bosmuis":399, "dwergmuis":385, "woelrat":87296, "aardmuis":372, "rosse-woelmuis":200878, "gewone-bosspitsmuis":394,
   "huisspitsmuis":405, "gewone-dwergvleermuis":387, "ruige-dwergvleermuis":1702, "rosse-vleermuis":419, "meervleermuis":411,
   "franjestaart":393, "ingekorven-vleermuis":406, "tweekleurige-vleermuis":424, "grijze-grootoorvleermuis":396,
   "gewone-grootoorvleermuis":398, "noordse-woelmuis":200823, "grijze-zeehond":397, "zandhagedis":459, "gladde-slang":443, "adder":437,

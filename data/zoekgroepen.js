@@ -27,10 +27,10 @@ const ZOEKGROEPEN = [
   { naam: "Vleermuizen", w: ["vleermuis", "vleermuizen"], ids: ["watervleermuis", "laatvlieger", "gewone-dwergvleermuis", "ruige-dwergvleermuis",
       "rosse-vleermuis", "meervleermuis", "franjestaart", "ingekorven-vleermuis", "tweekleurige-vleermuis", "grijze-grootoorvleermuis",
       "gewone-grootoorvleermuis", "gewone-baardvleermuis"] },
-  { naam: "Knaagdieren", w: ["knaagdier", "knaagdieren"], ids: ["bever", "hamster", "hazelmuis", "eikelmuis", "eekhoorn", "bosmuis", "dwergmuis",
+  { naam: "Knaagdieren", w: ["knaagdier", "knaagdieren"], ids: ["bever", "hamster", "hazelmuis", "eikelmuis", "eekhoorn", "bosmuis", "grote-bosmuis", "dwergmuis",
       "woelrat", "aardmuis", "rosse-woelmuis", "noordse-woelmuis", "veldmuis", "bruine-rat", "huismuis", "muskusrat", "beverrat"] },
   /* echte muizen, woelmuizen en slaapmuizen; spitsmuizen en vleermuizen vind je via de naam, maar staan lager */
-  { naam: "Muizen", w: ["muis", "muizen"], ids: ["hazelmuis", "eikelmuis", "bosmuis", "dwergmuis", "aardmuis", "rosse-woelmuis", "noordse-woelmuis", "veldmuis", "huismuis"] },
+  { naam: "Muizen", w: ["muis", "muizen"], ids: ["hazelmuis", "eikelmuis", "bosmuis", "grote-bosmuis", "dwergmuis", "aardmuis", "rosse-woelmuis", "noordse-woelmuis", "veldmuis", "huismuis"] },
   { naam: "Woelmuizen", w: ["woelmuis", "woelmuizen"], ids: ["aardmuis", "rosse-woelmuis", "noordse-woelmuis", "veldmuis", "woelrat"] },
   { naam: "Slaapmuizen", w: ["slaapmuis", "slaapmuizen", "relmuis"], ids: ["hazelmuis", "eikelmuis"] },
   { naam: "Spitsmuizen", w: ["spitsmuis", "spitsmuizen"], ids: ["waterspitsmuis", "gewone-bosspitsmuis", "huisspitsmuis"] },

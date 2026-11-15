@@ -46,7 +46,9 @@ const RARITY = { A:"Algemeen", MA:"Minder algemeen", Z:"Zeldzaam", ZZ:"Zeer zeld
 /* Oude namen die ooit in opslag kunnen staan, met de id waar ze nu bij horen. Voorbeeld: "Wezel (oud)": "wezel" */
 const ALIASES = {
   "Kortsnavelboomkruiper": "kortsnavelboomkruiper",   // hernoemd naar taigaboomkruiper in update 15 (11-11-2026)
-  "Korenwolf": "hamster"                              // andere naam voor de hamster: ‘korenwolf’ zoeken vindt de hamster (13-11-2026)
+  "Korenwolf": "hamster",                             // andere naam voor de hamster: ‘korenwolf’ zoeken vindt de hamster (13-11-2026)
+  "Halsbandmuis": "grote-bosmuis",                    // andere namen voor de grote bosmuis, als zoekwoord (update 30, 15-11-2026)
+  "Geelhalsbosmuis": "grote-bosmuis"
 };
 
 const SPECIES = [
@@ -570,10 +572,10 @@ const SPECIES = [
       "Grijsbruin met vage strepen, een zwarte rugstreep tot aan de staart, en een dikke staart met zwarte ringen."
     ] }
   ] },
-{ id:"bosmuis", no:127, g:"Z", n:"Bosmuis", s:"Apodemus sylvaticus", r:"BAL", l:18, zz:null, twin:null,
+{ id:"bosmuis", no:127, g:"Z", n:"Bosmuis", s:"Apodemus sylvaticus", r:"BAL", l:18, zz:null, twin:"grote-bosmuis",
   h:["BOS","HALF"], a:["NACHT"], v:["PLANT","ONG"], b:["HOL"], w:["ACT"],
-  x:"hazelmuis",
-  t:"De hazelmuis laat een gladde rand achter met schuine tandsporen langs de binnenkant en vrijwel geen sporen op het oppervlak. Ze heeft een pluizige staart.",
+  x:"grote-bosmuis",
+  t:"De grote bosmuis is forser, met een scherpe grens tussen de roodbruine rug en de helderwitte buik en een brede gele band over de keel. Hij leeft alleen in Limburg en het oosten van het land.",
   cs:[
     { sl:{ i:3, t:"Lege hazelnoten met tandsporen op de buitenkant rond het gat. De hazelmuis knaagt een glad gat." }, bron:null, wn:[
       "Utrechtse Heuvelrug, oktober.",
@@ -588,6 +590,26 @@ const SPECIES = [
       "Een stapel brandhout en een kist met zaden in een schuur.",
       "Een voorraad zaden in een laars; dieren die met grote sprongen wegschieten.",
       "Een roodbruin muisje met grote oren, grote ogen en een lange staart."
+    ] }
+  ] },
+{ id:"grote-bosmuis", no:128, g:"Z", n:"Grote bosmuis", s:"Apodemus flavicollis", r:"BAL", l:22, zz:"Z", twin:"bosmuis",
+  h:["BOS","HALF"], a:["NACHT"], v:["PLANT","ONG"], b:["HOL","BOOM"], w:["ACT"],
+  x:"bosmuis",
+  t:"De bosmuis is kleiner en lichter, met een vagere grens tussen de bruine rug en de grijzige buik. Hij heeft hooguit een smalle gele vlek op de borst, nooit een band over de hele keel, en een achtervoet korter dan 23 mm.",
+  cs:[
+    { bron:"Zodion, soortpagina grote bosmuis", sl:{ i:2, t:"Een wintervoorraad boomzaden in een nestkast, meters boven de grond. Hij klimt beter dan de bosmuis en haalt zijn voedsel tot hoog in de bomen." }, wn:[
+      "Het oosten van het land, oktober. Bij het schoonmaken van nestkasten.",
+      "Een oud eiken-beukenbos met een rijke struiklaag en weinig kruiden.",
+      "In een mezenkast op vier meter hoogte: een nest van mos en bladeren en een voorraad eikels en beukennootjes.",
+      "Het dier springt eruit, klimt vlot langs de stam omlaag en verdwijnt tussen de wortels van een oude beuk.",
+      "Roodbruin met een helderwitte buik, een scherpe grens daartussen en een brede gele band over de keel."
+    ] },
+    { bron:"Zodion, soortpagina grote bosmuis", sl:{ i:3, t:"Een achtervoet van meer dan 23 mm. Bij een vangst is dat het betrouwbaarste kenmerk, want lang niet elk dier heeft een duidelijke gele halsband." }, wn:[
+      "Een beekdal vlak bij de Duitse grens, juni.",
+      "Een houtwal met els en hazelaar langs de beek, met hoge brandnetels en ruigte.",
+      "In één inloopval een fors dier dat luid piept en van zich af bijt.",
+      "Gemeten: een achtervoet van 25 mm en een staart die iets langer is dan kop en romp samen.",
+      "Kastanjebruin met grote oren en ogen, een witte buik en een gele halsband van de keel tot bijna in de nek."
     ] }
   ] },
 { id:"dwergmuis", no:129, g:"Z", n:"Dwergmuis", s:"Micromys minutus", r:"BAL", l:12, zz:null, twin:null,
