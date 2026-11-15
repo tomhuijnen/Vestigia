@@ -19,8 +19,34 @@ const KLEUREN = {
   klaproos: { bg: "#b8352b", fg: "#fde6df", det: "#2e0d0b", naam: "Klaproos" },
   /* alleen uit de adventkalender (update 8) */
   winter:   { bg: "#cfe2ec", fg: "#24485c", licht: "#e7f1f6", naam: "Winter" },
-  hulst:    { bg: "#1d4a32", fg: "#f6d9dc", licht: "#7a9486", naam: "Hulst" }
+  hulst:    { bg: "#1d4a32", fg: "#f6d9dc", licht: "#7a9486", naam: "Hulst" },
+  /* prestige (update 39): edelstenen met diepte, facetten en een glans die af en toe over de steen gaat (edelLaag) */
+  smaragd:  { bg: "#0f6b45", fg: "#e2fff0", licht: "#8fd3b0", naam: "Smaragd", edel: { a: "#5ff0ae", b: "#11804f", c: "#03311d", rand: "#b9ffdc" } },
+  robijn:   { bg: "#a3122f", fg: "#ffe6ec", det: "#2a0610", naam: "Robijn",  edel: { a: "#ff8ba4", b: "#b3163a", c: "#41030e", rand: "#ffd0da" } },
+  diamant:  { bg: "#cfe3ef", fg: "#1d3344", licht: "#eef6fb", naam: "Diamant", edel: { a: "#ffffff", b: "#cfe4f1", c: "#6f93ab", rand: "#ffffff", prisma: true } }
 };
+/* Edelsteen als achtergrond: een briljantslijpsel van 33 facetten rond het midden, belicht van linksboven.
+   Tafel (8-hoek) · 8 sterfacetten · 8 vliegers · 8 randdriehoeken; bij diamant enkele facetten in regenboogtinten. */
+function edelLaag(e, id){
+  const pt = (r, a) => [50 + r * Math.cos(a), 50 + r * Math.sin(a)];
+  const hoek = i => (i * 45 - 112.5) * Math.PI / 180, mid = i => hoek(i) + Math.PI / 8;
+  const P = i => pt(19, hoek(i)), M = i => pt(35, mid(i)), Q = i => pt(64, hoek(i));
+  const poly = (pts, f) => `<polygon points="${pts.map(q => q.map(v => v.toFixed(1)).join(",")).join(" ")}" ${f}/>`;
+  const licht = a => Math.cos(a - (-135 * Math.PI / 180));           // 1 = naar het licht (linksboven)
+  const vul = (a, n) => { const l = licht(a), w = (l * .5 + .5);
+    if (e.prisma && n % 4 === 1 && n % 8 !== 1) return `fill="hsl(${[195, 290, 40, 330][(n >> 3) % 4]} 90% 70%)" fill-opacity="${(.1 + w * .1).toFixed(2)}"`;
+    return l > 0 ? `fill="#fff" fill-opacity="${(.04 + l * (e.prisma ? .55 : .26)).toFixed(2)}"` : `fill="${e.prisma ? "#24465e" : "#000"}" fill-opacity="${(-l * (e.prisma ? .28 : .3)).toFixed(2)}"`; };
+  let f = poly([0,1,2,3,4,5,6,7].map(P), `fill="#fff" fill-opacity=".1"`);
+  for (let i = 0; i < 8; i++){
+    const j = (i + 1) % 8, h = (i + 7) % 8;
+    f += poly([P(i), P(j), M(i)], vul(mid(i), i * 4));
+    f += poly([P(i), M(i), Q(i), M(h)], vul(hoek(i) + .2, i * 4 + 1));
+    f += poly([M(i), Q(i), Q(j)], vul(mid(i) + .5, i * 4 + 2));
+  }
+  return `<defs><radialGradient id="${id}eg" cx=".34" cy=".3" r=".8"><stop offset="0" stop-color="${e.a}"/><stop offset=".5" stop-color="${e.b}"/><stop offset="1" stop-color="${e.c}"/></radialGradient></defs>
+    <g clip-path="url(#${id})"><circle cx="50" cy="50" r="50" fill="url(#${id}eg)"/><g stroke="${e.rand}" stroke-opacity=".38" stroke-width=".5" stroke-linejoin="round">${f}</g>
+    <circle cx="50" cy="50" r="48.6" fill="none" stroke="${e.rand}" stroke-opacity=".55" stroke-width="1.2"/></g>`;
+}
 const LIJSTEN = {
   hout: `<circle cx="50" cy="50" r="47" fill="none" stroke="#7d5330" stroke-width="6"/><circle cx="50" cy="50" r="47" fill="none" stroke="#b07a46" stroke-width="1.6" stroke-dasharray="7 10" stroke-linecap="round"/>`,
   mos: `<circle cx="50" cy="50" r="47" fill="none" stroke="#56742c" stroke-width="6"/><circle cx="50" cy="50" r="47" fill="none" stroke="#a6c95e" stroke-width="2.4" stroke-dasharray="1 5" stroke-linecap="round"/>`,
@@ -73,11 +99,12 @@ function avatarSVG(p, cls){
   p = p || {};
   const k = KLEUREN[p.color] || KLEUREN.groen, id = "av" + (++avNr), teken = p.avatar && AVATARS[p.avatar];
   const medaille = teken && MEDALS.some(t => t.id === p.avatar);
+  const glans = medaille || !!k.edel || (teken && typeof PRESTIGE_AVATARS !== "undefined" && PRESTIGE_AVATARS.has(p.avatar));
   const binnen = teken
     ? avatarTekening(p.avatar, k, id)
     : `<text x="50" y="50" dy=".35em" text-anchor="middle" font-size="46" font-family="Rubik, sans-serif" font-weight="600" fill="${k.fg}">${esc(((p.name || "?").trim()[0] || "?").toUpperCase())}</text>`;
   return `<svg class="${cls || "avatar"}" viewBox="0 0 100 100" aria-hidden="true" style="--av-bg:${k.bg}"><defs><clipPath id="${id}"><circle cx="50" cy="50" r="50"/></clipPath></defs>
-    <circle cx="50" cy="50" r="50" fill="${k.bg}"/>${binnen}${medaille ? MEDAILLE_GLANS(id) : ""}${p.frame && LIJSTEN[p.frame] ? LIJSTEN[p.frame].replaceAll("{id}", id) : ""}${medaille ? MEDAILLE_EMBLEEM : ""}</svg>`;
+    <circle cx="50" cy="50" r="50" fill="${k.bg}"/>${k.edel ? edelLaag(k.edel, id) : ""}${binnen}${glans ? MEDAILLE_GLANS(id) : ""}${p.frame && LIJSTEN[p.frame] ? LIJSTEN[p.frame].replaceAll("{id}", id) : ""}${medaille ? MEDAILLE_EMBLEEM : ""}</svg>`;
 }
 
 const Profiel = (() => {
