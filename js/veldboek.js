@@ -205,10 +205,11 @@ document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("awardP
 /* Platen in de volgorde van hun vaste nummer (veld no in de soortdata). */
 const DEX = TARGETS.slice().sort((a, b) => a.no - b.no);
 function dexNo(id){ const t = BY_ID.get(id); return String(t && t.no || 0).padStart(3, "0"); }
-let dexFilter = "ALL", dexOnlyFound = false;
+let dexFilter = "ALL", dexOnlyFound = false, dexQ = "";   /* dexQ: zoekveld (update 36) */
 function showDex(focusId){
   if (focusId){ const t = BY_ID.get(focusId); if (t && dexFilter !== "ALL" && dexFilter !== t.g) dexFilter = "ALL"; }
   setView("dex");
+  dexQ = ""; $("dexQ").value = "";   /* elke keer met een leeg zoekveld openen, zodat een uitgelichte plaat er ook staat */
   renderDex(); renderCarry(); Profiel.inVestiarium(); window.scrollTo({ top:0, behavior:"auto" });
   if (focusId) lichtUit(focusId);
 }
@@ -292,8 +293,43 @@ function renderDex(){
     + `<span class="gap"></span><label class="switch-inline"><input type="checkbox" id="onlyFound"${dexOnlyFound ? " checked" : ""}> alleen gedetermineerd</label>`;
   $("dexFilters").querySelectorAll(".chipbtn").forEach(b => b.onclick = () => { dexFilter = b.dataset.g; renderDex(); });
   $("onlyFound").onchange = e => { dexOnlyFound = e.target.checked; renderDex(); };
+  renderDexGrid();
+}
+/* ---------- zoeken in het Vestiarium (update 36) ----------
+   Zoekt alleen in je eigen platen: op naam vind je soorten die je gedetermineerd of waargenomen hebt (een ‘?’-plaat
+   verraadt nooit welke soort het is). Dezelfde zoekregels als bij het raden (js/spel.js): Nederlandse en
+   wetenschappelijke naam, oude namen en zoekwoorden uit ALIASES (‘korenwolf’ → hamster), woordstukjes, tikfouten en
+   groepen uit data/zoekgroepen.js (‘uil’, ‘vleermuis’). Een getal (‘12’, ‘012’, ‘nº 12’, ‘#12’, ‘plaat 12’) zoekt op
+   plaatnummer en toont die plaat altijd, ook als hij nog leeg is. Plaatnummers komen uit `no` in data/soorten.js,
+   dus na het hernummeren (update 46) kloppen ze vanzelf. De filters (diergroep, alleen gedetermineerd) blijven gelden. */
+function dexZoekNummer(v){
+  const m = String(v).trim().toLowerCase().match(/^(?:plaat\s*|n[º°o]?\.?\s*|nr\.?\s*|#\s*)?0*(\d{1,3})$/);
+  return m ? Number(m[1]) : null;
+}
+/* geeft de lijst platen voor deze zoekopdracht, beste eerst; null = er wordt niet gezocht */
+function dexZoek(v, lijst, dex){
+  const nr = dexZoekNummer(v);
+  if (nr !== null) return lijst.filter(t => t.no === nr);
+  const q = norm(v);
+  if (!q) return null;
+  const inGroep = new Set(zoekGroepen(q).flatMap(z => [...z.ids]));
+  return lijst.filter(t => dex[t.id])
+    .map(t => { const s = zoekScore(q, t); return { t, s: inGroep.has(t.id) ? (s < 0 ? 1.5 : Math.min(s, 1.5)) : s }; })
+    .filter(o => o.s >= 0).sort((a, b) => a.s - b.s || a.t.no - b.t.no).map(o => o.t);
+}
+function renderDexGrid(){
+  const st = store.get(), dex = st.dex || {};
   const medalIds = new Set(medalSpecies(st).map(t => t.id));
-  const list = DEX.filter(t => (dexFilter === "ALL" || t.g === dexFilter) && (!dexOnlyFound || (dex[t.id] && dex[t.id].w > 0)));
+  const gefilterd = DEX.filter(t => (dexFilter === "ALL" || t.g === dexFilter) && (!dexOnlyFound || (dex[t.id] && dex[t.id].w > 0)));
+  const gezocht = dexZoek(dexQ, gefilterd, dex), list = gezocht || gefilterd;
+  $("dexQx").hidden = !dexQ;
+  const uit = $("dexQuit"), filterAan = dexFilter !== "ALL" || dexOnlyFound;
+  const binnen = filterAan ? ` binnen ${[dexFilter !== "ALL" ? GROUPS[dexFilter] : "", dexOnlyFound ? "alleen gedetermineerd" : ""].filter(Boolean).join(" · ").toLowerCase()}` : "";
+  uit.hidden = !gezocht || !gezocht.length;
+  if (gezocht && gezocht.length) uit.innerHTML = `<b>${gezocht.length}</b> ${gezocht.length === 1 ? "plaat" : "platen"} gevonden${esc(binnen)}`;
+  const leeg = !gezocht ? `<p class="dexempty">Nog geen platen in deze selectie. Speel een casus om je ${NAAM.vestiarium} te vullen.</p>`
+    : dexZoekNummer(dexQ) !== null ? `<p class="dexempty">Er is geen plaat nº ${esc(String(dexZoekNummer(dexQ)).padStart(3, "0"))}${esc(binnen)}.${filterAan ? ` <button class="linkbtn dexalles" id="dexAlles">Zoek in alle platen</button>` : ""}</p>`
+    : `<p class="dexempty">Geen eigen plaat gevonden voor ‘${esc(dexQ.trim())}’${esc(binnen)}. Je zoekt alleen in soorten die je al gedetermineerd of waargenomen hebt.${filterAan ? ` <button class="linkbtn dexalles" id="dexAlles">Zoek in alle platen</button>` : ""}</p>`;
   $("dexGrid").innerHTML = list.length ? list.map(t => {
     const e = dex[t.id], no = dexNo(t.id), band = `<div class="band" style="background:var(--g-${t.g})"><span>${GROUPS[t.g]}</span><b>nº ${no}</b></div>`;
     if (!e) return `<div class="plate unknown" aria-label="Plaat ${no}: nog niet waargenomen">${band}<div class="mid"><span class="q">?</span><span class="sc">nog niet waargenomen</span></div><div class="ft"><span>&nbsp;</span></div></div>`;
@@ -301,9 +337,19 @@ function renderDex(){
     const best = won ? [e.b ? `beste ${e.b}${e.b <= MAX ? "/" + MAX : ""}` : "", e.bx ? `expert ${e.bx}` : ""].filter(Boolean).join(" · ") : "&nbsp;";   /* de stempel ‘waargenomen’ zegt het al */
     return `<button class="plate${won ? "" : " seen"}${won && medalIds.has(t.id) ? " rare" : ""}" data-n="${esc(t.id)}">${band}<div class="mid"><span class="nm${t.n.length > 19 ? " xl" : t.n.length > 15 ? " l" : ""}">${esc(t.n)}</span><span class="sc">${esc(t.s)}</span></div>
       <span class="stamp">${won ? "gedetermineerd" : "waargenomen"}</span><div class="ft"><span>${best}</span><span>${won ? `<b>${e.w}×</b>` : ""}</span></div></button>`;
-  }).join("") : `<p class="dexempty">Nog geen platen in deze selectie. Speel een casus om je ${NAAM.vestiarium} te vullen.</p>`;
+  }).join("") : leeg;
   $("dexGrid").querySelectorAll("button.plate").forEach(b => b.onclick = () => openPlate(b.dataset.n, b));
+  const alles = $("dexAlles");
+  if (alles) alles.onclick = () => { dexFilter = "ALL"; dexOnlyFound = false; renderDex(); };
 }
+$("dexQ").addEventListener("input", e => { dexQ = e.target.value; renderDexGrid(); });
+$("dexQ").addEventListener("keydown", e => {
+  if (e.key === "Escape" && dexQ){ e.preventDefault(); e.stopPropagation(); dexZoekLeeg(); }
+  if (e.key === "Enter") e.target.blur();   /* op de telefoon: toetsenbord weg, uitkomst in beeld */
+});
+$("dexQx").addEventListener("click", () => { dexZoekLeeg(); $("dexQ").focus(); });
+function dexZoekLeeg(){ dexQ = ""; $("dexQ").value = ""; renderDexGrid(); }
+
 let plateReturn = null;
 function openPlate(n, from){
   const t = BY_ID.get(n), e = (store.get().dex || {})[n] || {}, xs = BY_ID.get(t.x);

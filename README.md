@@ -18,7 +18,7 @@ Determinatiespel over beschermde fauna van Nederland: herken de soort aan habita
 | `data/dagschema.js` | de vaste dagcasus per dag; niet met de hand wijzigen |
 | `js/kern.js` | soorten, dagschema, opslag en de omzetting van oude opslag, titels, logboek |
 | `js/spel.js` | het spel: casus spelen, tabel, invoer, modi |
-| `js/veldboek.js` | veldboek, trofeeën, voortgangscode |
+| `js/veldboek.js` | veldboek, trofeeën, voortgangscode; zoekveld boven de platen (update 36): alleen in je eigen platen, op naam (zelfde zoekregels als bij het raden) en op plaatnummer |
 | `js/melden.js` | ‘Meld een fout’ |
 | `js/kop.js` | kop met tegels, schakelaar klassiek/expert, menu onder je avatar, schermwissels en de smalle balk bij scrollen |
 | `js/spelen.js` | tabbalk onderin (Ranglijst · Spelen · Vestiarium), speelkring met bolletjes boven Spelen, oefenkader per diergroep, uitleg over tweelingsoorten |
