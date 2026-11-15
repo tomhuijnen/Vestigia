@@ -72,15 +72,16 @@ for (const [oud, id] of Object.entries(ALIASES)){
 /* Platennummers in blokken per diergroep (update 46, 15 november 2026): zoogdieren 101–199, reptielen 201–299, amfibieën
    301–399, vissen 401–499, vogels 501–599, vlinders 601–699, libellen 701–799, kevers 801–899 (de volgorde van GROUPS).
    Een nieuwe soort krijgt het eerstvolgende nummer van zijn eigen blok; zo schuift er nooit meer een nummer op.
-   GERESERVEERD: nummers die al vastliggen voor een soort die nog komt (128 = grote bosmuis, update 30, direct na de bosmuis). */
-const GERESERVEERD = new Set([128]);
+   GERESERVEERD: nummers die vooraf zijn vastgelegd voor een bepaalde soort (nummer → id); die soort mag dat nummer ook
+   later nog krijgen, buiten de regel ‘achteraan in het blok’. */
+const GERESERVEERD = { 128: "grote-bosmuis" };   // in gebruik sinds update 30; blijft staan, zodat de controle klopt
 const blokVan = g => (Object.keys(V.GROUPS).indexOf(g) + 1) * 100;
 for (const g of Object.keys(V.GROUPS)){
   const b = blokVan(g), lijst = TARGETS.filter(t => t.g === g && Number.isInteger(t.no));
   for (const t of lijst) if (t.no <= b || t.no >= b + 100) FOUT(`${t.n}: platennummer ${t.no} valt buiten het blok van ${V.GROUPS[g]} (${b + 1}–${b + 99})`);
-  for (const t of lijst) if (GERESERVEERD.has(t.no)) INFO(`Gereserveerd nummer ${t.no} is nu in gebruik door ${t.n}; haal het uit GERESERVEERD`);
+  for (const t of lijst) if (GERESERVEERD[t.no] && GERESERVEERD[t.no] !== t.id) FOUT(`${t.n}: nummer ${t.no} is gereserveerd voor ${GERESERVEERD[t.no]}`);
   const nos = new Set(lijst.map(t => t.no)), hoogste = Math.max(b, ...nos);
-  const gaten = []; for (let n = b + 1; n < hoogste; n++) if (!nos.has(n) && !GERESERVEERD.has(n)) gaten.push(n);
+  const gaten = []; for (let n = b + 1; n < hoogste; n++) if (!nos.has(n) && !GERESERVEERD[n]) gaten.push(n);
   if (gaten.length) LETOP(`${V.GROUPS[g]}: platennummers lopen niet aaneengesloten (ontbreekt: ${gaten.join(", ")})`);
 }
 
@@ -100,7 +101,7 @@ else {
   }
   for (const t of TARGETS) if (!vast.soorten[t.id] || !vast.soorten[t.id].no){
     const maxNo = maxIn(blokVan(t.g));
-    if (t.no <= maxNo && !GERESERVEERD.has(t.no)) FOUT(`${t.n}: nieuwe plaat moet achteraan in het blok van ${V.GROUPS[t.g]} komen (nummer hoger dan ${maxNo}), of op een gereserveerd nummer`);
+    if (t.no <= maxNo && GERESERVEERD[t.no] !== t.id) FOUT(`${t.n}: nieuwe plaat moet achteraan in het blok van ${V.GROUPS[t.g]} komen (nummer hoger dan ${maxNo}), of op een gereserveerd nummer`);
     else INFO(`Nieuwe plaat: nº ${t.no} ${t.n}`);
   }
   const ds = vast.dagschema || [];
