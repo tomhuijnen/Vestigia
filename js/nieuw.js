@@ -7,6 +7,18 @@
    op de plek waar het onderdeel voor het eerst in beeld komt. */
 "use strict";
 
+/* Nieuwe soorten eerst als dagcasus (15 november): tekst over wanneer, en alleen een oefenknop als alles al te oefenen is */
+function wanneer(id){
+  const d = vrijVanaf(id), nu = todayIndex();
+  if (nu > d) return "Hij was al dagcasus, dus je kunt hem nu ook oefenen.";
+  if (nu === d) return "Vandaag is hij voor het eerst dagcasus. Vanaf morgen kun je hem ook oefenen.";
+  return `Hij is op ${dagNaam(d)} voor het eerst dagcasus. Vanaf de dag erna kun je hem ook oefenen.`;
+}
+function nieuwOefenen(ids){
+  if (!ids.every(id => oefenbaar(id))) return null;
+  const label = ids.length > 1 ? "Oefen de nieuwe soorten" : ids[0] === "patrijs" ? "Oefen de patrijs" : "Oefen de grote bosmuis";
+  return { label, run: () => startFree({ g: null, nieuw: false, ids }) };
+}
 const Nieuw = (() => {
   const KEY = id => "vestigia:nieuw:" + id;
   const gezien = id => { try { return !!localStorage.getItem(KEY(id)); } catch(e){ return true; } };
@@ -103,10 +115,11 @@ const Nieuw = (() => {
         { ic: "pop", kop: "Nieuw bij Winter", tekst: "Na elke determinatie vergelijkt Vestigia jouw soort met de gezochte soort in een tabel. De kolom Winter in die tabel kent nu ook ‘Als ei, larve of pop’. Dat geldt voor de libellen en kevers, en voor de vlinders die als rups of pop overwinteren." }
       ] },
     /* update 30 en 47: de grote bosmuis en de patrijs, samen in één melding (via de wachtrij, hieronder) */
-    { id: "nieuwesoorten", titel: "Nieuwe soorten", actie: { label: "Oefen de nieuwe soorten", run: () => startFree({ g: null, nieuw: false, ids: ["grote-bosmuis", "patrijs"] }) },
+    /* Sinds 15 november (18:58) pas te oefenen na de eerste dagcasus: zolang dat nog niet zo is, geen oefenknop */
+    { id: "nieuwesoorten", titel: "Nieuwe soorten", actie: nieuwOefenen(["grote-bosmuis", "patrijs"]),
       stappen: [
-        { ic: "poot", wat: "grotebosmuis", kop: "Nieuwe soort: de grote bosmuis", tekst: `De tweelingsoort van de bosmuis staat nu in je ${NAAM.vestiarium}, als plaat nº 128, direct na de bosmuis. Hij heeft twee casussen. Gok je ‘bosmuis’ terwijl het een grote bosmuis is (of andersom), dan kost je dat geen poging.` },
-        { ic: "veer", wat: "patrijs", kop: "Nieuwe soort: de patrijs", tekst: `De patrijs staat nu in je ${NAAM.vestiarium}, als plaat nº 559. Hij heeft twee casussen. Oefen hem nu, of wacht tot hij als dagcasus langskomt.` }
+        { ic: "poot", wat: "grotebosmuis", kop: "Nieuwe soort: de grote bosmuis", tekst: `De tweelingsoort van de bosmuis staat nu in je ${NAAM.vestiarium}, als plaat nº 128, direct na de bosmuis. Hij heeft twee casussen. ${wanneer("grote-bosmuis")} Gok je ‘bosmuis’ terwijl het een grote bosmuis is (of andersom), dan kost je dat geen poging.` },
+        { ic: "veer", wat: "patrijs", kop: "Nieuwe soort: de patrijs", tekst: `De patrijs staat nu in je ${NAAM.vestiarium}, als plaat nº 559. Hij heeft twee casussen. ${wanneer("patrijs")}` }
       ] },
     { id: "levels", titel: "Levels", verborgen: () => !(typeof Levels !== "undefined" && Levels.zichtbaar()),   // pas vanaf de startdatum
       stappen: [
@@ -222,7 +235,7 @@ Wachtrij.voeg({ id: "nieuwesoorten", prio: 2.61,
     const een = st.length === 1;
     return Nieuw.toon(Object.assign({}, o, { id: k.patrijs ? "patrijs" : "grotebosmuis", stappen: st,
       titel: een ? (ids[0] === "patrijs" ? "Patrijs" : "Grote bosmuis") : o.titel,
-      actie: { label: een ? (ids[0] === "patrijs" ? "Oefen de patrijs" : "Oefen de grote bosmuis") : o.actie.label, run: () => startFree({ g: null, nieuw: false, ids }) } }));
+      actie: nieuwOefenen(ids) }));
   } });
 
 /* update 14: één keer ‘Nieuw: libellen en kevers’, na de dwaalgast, het duel, de levels, de adventkalender en de uitleg
