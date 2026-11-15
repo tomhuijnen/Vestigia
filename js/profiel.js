@@ -400,7 +400,7 @@ const Profiel = (() => {
   const TABS = [["avatar", "Avatar"], ["titel", "Ondertitel"], ["lijst", "Lijst"], ["kleur", "Kleur"]];
   const VELD = { avatar: "avatar", titel: "subtitle", lijst: "frame", kleur: "color" };
   const OPBOUW = [["dagcasus", "Dagcasussen"], ["reeksen", "Reeksen van 7 dagen"], ["veldweken", "Veldweken"], ["platen", `Platen in het ${NAAM.vestiarium}`],
-                  ["trofeeen", "Titels en medailles"], ["uitnodigingen", "Uitgenodigde spelers"], ["prestaties", "Prestaties"], ["mijlpalen", "Mijlpalen"], ["minispellen", "Minigames"], ["spelersduels", "Spelersduels"], ["advent", "Adventkalender"], ["dwaalgasten", "Dwaalgasten"], ["levels", "Levels"]];
+                  ["trofeeen", "Titels en medailles"], ["uitnodigingen", "Uitgenodigde spelers"], ["prestaties", "Prestaties"], ["mijlpalen", "Mijlpalen"], ["minispellen", "Minigames"], ["spelersduels", "Spelersduels"], ["advent", "Adventkalender"], ["dwaalgasten", "Dwaalgasten"], ["levels", "Levels"], ["weekprijzen", "Weekprijzen"]];
   const zonderNaam = (body, wat) => {
     body.innerHTML = `<div class="playerbox"><p><b>Kies eerst een spelersnaam.</b> ${wat}</p>
       <div class="row2"><button class="btn" id="pfNaam">Kies een spelersnaam</button></div>
@@ -442,7 +442,7 @@ const Profiel = (() => {
         <span class="msg" id="pfMsg"></span>
       </section>
       <section class="pfsec" aria-labelledby="pfEikH"><h3 id="pfEikH">Eikels</h3>
-        <p class="fine">Eikels verdien je met de dagcasus, reeksen, veldweken, platen, trofeeën, prestaties, mijlpalen${Levels.zichtbaar() ? ", levels" : ""} en uitgenodigde spelers. Je saldo wordt steeds opnieuw uitgerekend uit wat je gespeeld hebt, dus het raakt nooit kwijt.</p>
+        <p class="fine">Eikels verdien je met de dagcasus, reeksen, veldweken, platen, trofeeën, prestaties, mijlpalen${Levels.zichtbaar() ? ", levels" : ""}, weekprijzen (top 10 van de weekranglijst) en uitgenodigde spelers. Je saldo wordt steeds opnieuw uitgerekend uit wat je gespeeld hebt, dus het raakt nooit kwijt.</p>
         <div class="actions"><button class="btn line" id="pfNaarShop">Naar de shop</button></div>
       </section>
       ${klapSec("prest", "pfPrH", "Prestaties", "", `<div class="prlist">${prestatieLijst()}</div>`)}

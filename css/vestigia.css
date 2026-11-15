@@ -2104,3 +2104,31 @@ html.donker .boostbanner .bb-glans{background:linear-gradient(105deg, transparen
 @keyframes laurierFonkel{0%,72%,100%{opacity:0; transform:scale(.4)} 80%{opacity:1; transform:scale(1)}}
 @media (prefers-reduced-motion:reduce){ .laurier-fonkel{animation:none} }
 .ranklist .rav .laurier{display:grid}
+
+/* update 58: weekprijs – bekertje in je eigen rij (Iedereen, Deze week) en het venster met de prijzen */
+.ranklist .pts.metbeker{position:relative; padding-left:38px}
+.wpknop{position:absolute; left:0; top:50%; transform:translateY(-50%); width:34px; height:34px; border-radius:17px; border:1.5px solid #e2c77a; background:#fff8e3; display:grid; place-items:center; cursor:pointer; padding:0}
+.wpknop:hover{background:#fdeec0}
+.wpknop:focus-visible{outline:2px solid var(--green); outline-offset:2px}
+.wpknop .wpbeker{width:20px; height:20px}
+html.donker .wpknop{background:#2e2a17; border-color:#8a6d27}
+html.donker .wpknop:hover{background:#3a3418}
+.wpkop{padding:16px 18px 20px}
+.wpkop h2{margin:6px 0 4px; font-family:var(--display); font-size:1.35rem; color:#fff}
+.wpkop p{margin:0; color:#edfbe2; line-height:1.4}
+.wpkop p b{color:#fff}
+.wpgroot{width:64px; height:64px; margin:10px auto 0; border-radius:32px; background:rgba(255,248,227,.95); display:grid; place-items:center; box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.wpgroot .wpbeker{width:38px; height:38px}
+.wpbody{padding:16px 18px 18px; display:grid; gap:12px}
+.wpbody .wplijst{list-style:none; margin:0; padding:0; display:grid; gap:6px}
+.wplijst li{display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--rule); border-radius:8px; background:var(--paper)}
+.wplijst li.p1{border-color:#d4a72c} .wplijst li.p2{border-color:#9aa5ab} .wplijst li.p3{border-color:#b0723f}
+.wplijst li.jij{background:var(--mint); box-shadow:0 0 0 1.5px var(--green) inset; border-color:var(--green)}
+.wpplek{font-weight:600; flex:1}
+.wpjij{font-family:var(--caps); text-transform:uppercase; letter-spacing:.06em; font-size:.62rem; font-weight:700; color:#fff; background:var(--green); border-radius:10px; padding:2px 8px}
+.wpeik{display:inline-flex; align-items:center; gap:5px; font-family:var(--display); font-weight:700; font-variant-numeric:tabular-nums; color:#7d5330}
+.wpbody .fine{margin:0}
+html.donker .wplijst li{background:#1d2a22}
+html.donker .wplijst li.jij{background:#24382b}
+html.donker .wpeik{color:#e0b766}
+.belrij .wkic.wpbeker{width:30px; height:30px}
