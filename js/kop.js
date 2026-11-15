@@ -28,6 +28,9 @@ function kopLabel(){
   } else { const n = SCHERMNAAM[VIEW]; groot = typeof n === "function" ? n() : n || ""; klein = groot.toLowerCase(); }
   $("fSeries").textContent = groot; $("fSeries").hidden = !groot;
   $("slimSeries").textContent = klein;
+  /* update 44: op de schermen (niet bij een casus) staat de naam in een omlijnd label, zodat je ziet waar je bent */
+  const scherm = VIEW !== "game";
+  $("fSeries").classList.toggle("scherm", scherm); $("slimSeries").classList.toggle("scherm", scherm && !!klein);
 }
 /* Oefenen krijgt een bruine kop, zodat je altijd ziet dat het niet om de dagcasus gaat. */
 function kleurKop(){
