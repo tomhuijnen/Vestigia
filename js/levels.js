@@ -49,10 +49,10 @@ const Levels = (() => {
   }
   const eikelsVoor = l => 10 + (l % 20 === 0 ? 50 : 0);   // bij het bereiken van level l (mijlpaal elke 20 levels)
   const SOORT = { dagcasus: "Dagcasus", dagbonus: "Dagbonus", oefenen: "Oefencasus", herkansing: "Herkansing", nieuw: "Nieuwe soort",
-                  dwaalgast: "Dwaalgast", minigame: "Minigame", advent: "Adventkalender" };
-  const VOLGORDE = ["dagcasus", "dagbonus", "oefenen", "herkansing", "nieuw", "dwaalgast", "minigame", "advent"];
+                  dwaalgast: "Dwaalgast", minigame: "Minigame", advent: "Adventkalender", boost: "XP-boost" };
+  const VOLGORDE = ["dagcasus", "dagbonus", "oefenen", "herkansing", "nieuw", "boost", "dwaalgast", "minigame", "advent"];
   const WEEKNAAM = { dagcasus: "Dagcasussen", dagbonus: "Dagbonus", oefenen: "Oefencasussen", herkansing: "Herkansingen", nieuw: "Nieuwe soorten",
-                     dwaalgast: "Dwaalgasten", minigame: "Minigames", advent: "Adventkalender" };
+                     dwaalgast: "Dwaalgasten", minigame: "Minigames", advent: "Adventkalender", boost: "XP-boosts" };
 
   /* ---------- stand ---------- */
   let stand = speler() ? lees(K.stand) : null;
@@ -145,6 +145,8 @@ const Levels = (() => {
     toonInResultaat();
     const blok = $("xpBlok");
     if (typeof uitslagScroll !== "undefined") await uitslagScroll;     // update 19b: eerst stilstaan, dan vliegen
+    /* update 48: een XP-boost eerst als banner, dan pas de vlucht naar de ring */
+    if (som.boost && typeof Boost !== "undefined") await Boost.naSpel();
     await vlieg(blok && !blok.hidden ? blok.querySelector(".xptot") : null, n, voor);
     /* stil (update 13): Profiel.naSpel toont level omhoog zelf, samen met prestaties en mijlpalen in één pop-up */
     if (opts && opts.stil) return levelSprong(na);
@@ -306,7 +308,8 @@ const Levels = (() => {
         <p>Je ervaringspunten van de afgelopen dagen tellen mee: ${s.xp} XP. Je rang is <b>${esc(s.rang)}</b>.</p></div>
       <div class="lvzo" id="lvZo"><span class="caps">Zo verdien je XP</span>
         <dl><dt>Dagcasus</dt><dd>10 + 5 per punt</dd><dt>Dagbonus</dt><dd>5 per dag van je reeks, tot 35</dd>
-        <dt>Oefencasus</dt><dd>10, niet gevonden 3</dd><dt>Herkansing</dt><dd>+15</dd><dt>Nieuwe soort</dt><dd>+10</dd><dt>Dwaalgast</dt><dd>+50</dd></dl></div>
+        <dt>Oefencasus</dt><dd>10, niet gevonden 3</dd><dt>Herkansing</dt><dd>+15</dd><dt>Nieuwe soort</dt><dd>+10</dd><dt>Dwaalgast</dt><dd>+50</dd>
+        <dt>XP-boost</dt><dd>+100 bij de 1e, 5e, 10e … keer in één poging goed</dd></dl></div>
       <div class="lvbuitlijst" id="lvBuit">
         ${w.eikels ? rij(eik(), `${w.eikels} eikels`, "voor de levels die je al haalde") : ""}
         ${s.level >= 5 ? rij(LINT, `Ondertitel ${s.rang}`, "staat klaar in Mijn profiel") : ""}
@@ -367,7 +370,7 @@ const Levels = (() => {
       ${wk.length ? `<h4 class="caps">Waar je XP deze week vandaan komt</h4><div class="lvherkomst">${wk.map(k => `<span>${WEEKNAAM[k]}</span><span class="tb"><i style="width:${Math.round(100 * week[k] / max)}%"></i></span><b>${week[k]}</b>`).join("")}</div>` : ""}
       <h4 class="caps">Rangen</h4>
       <ol class="lvrangen">${RANGEN.map(([n, r]) => `<li class="${s.level >= n ? "ok" : ""}${rangVan(s.level) === r ? " nu" : ""}"><span>${n >= 20 && n % 20 === 0 ? `<span class="lvbol lvt${trede(n)}" title="Ring ${ringNaam(n)}${sterren(n) ? " + sterretje" : ""}" aria-hidden="true"></span>` : `<span class="lvbol leeg" aria-hidden="true"></span>`}${esc(r)}</span><span>level ${n}${s.level >= n ? " ✓" : ""}</span></li>`).join("")}</ol>
-      <p class="fine">XP krijg je voor determineren, oefenen, het herstellen van eerdere fouten, nieuwe soorten en dwaalgasten. Elk level levert 10 eikels op. Elke 20 levels is een mijlpaal: een nieuwe rang, een nieuwe ringkleur (na level 100 een sterretje), 50 eikels extra en een hersteltoken.</p>
+      <p class="fine">XP krijg je voor determineren, oefenen, het herstellen van eerdere fouten, nieuwe soorten en dwaalgasten. Een casus in één poging goed (klassiek) levert de 1e, 5e, 10e, 15e … keer een XP-boost van 100 op. Elk level levert 10 eikels op. Elke 20 levels is een mijlpaal: een nieuwe rang, een nieuwe ringkleur (na level 100 een sterretje), 50 eikels extra en een hersteltoken.</p>
     </section>`;
   }
   /* rangen die nog te verdienen zijn, voor de shop (rij Ondertitels) */

@@ -2,7 +2,7 @@
    Er staat nooit meer dan één pop-up tegelijk in beeld. Bij het openen van de app (na de openingsanimatie, de uitleg,
    de vraag om een naam en een leaguelink) kijkt de wachtrij welke pop-ups nu iets te melden hebben, en toont alleen
    de belangrijkste. De rest schuift door naar de volgende keer dat je de app opent.
-   Volgorde (laag = eerst): 1 dwaalgast (update 9), 1,5 levels (update 10) en spelersduel (update 16: een uitslag die
+   Volgorde (laag = eerst): 1 dwaalgast (update 9), 1,4 gemiste XP-boosts (update 48, daarna gaat de wachtrij door), 1,5 levels (update 10) en spelersduel (update 16: een uitslag die
    binnen is, of een nieuwe uitdaging), 1,8 je week in Vestigia (update 25, alleen maandag en dinsdag), 2 adventkalender, 3 herinnering om een avatar te kiezen.
    Een dwaalgast gaat dus altijd vóór een duel-uitnodiging. Uitzondering: wie de app opent via een duellink, ziet die
    uitdaging meteen (daar kwam je voor); de dwaalgast komt dan de volgende keer.
