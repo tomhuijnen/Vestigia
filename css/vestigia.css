@@ -2105,6 +2105,9 @@ html.donker .boostbanner .bb-glans{background:linear-gradient(105deg, transparen
 @keyframes laurierFonkel{0%,72%,100%{opacity:0; transform:scale(.4)} 80%{opacity:1; transform:scale(1)}}
 @media (prefers-reduced-motion:reduce){ .laurier-fonkel{animation:none} }
 .ranklist .rav .laurier{display:grid}
+/* avatarknop rechtsboven met een medaille-avatar: takken om de knop heen (onder het levelbolletje) */
+.avbtn.metlaurier{position:relative; overflow:visible}
+.avbtn > .laurier-tak{position:absolute; inset:-24%; width:148%; height:148%; pointer-events:none; overflow:visible; z-index:1; filter:drop-shadow(0 .5px .6px rgba(0,0,0,.45))}
 
 /* update 58: weekprijs – bekertje in je eigen rij (Iedereen, Deze week) en het venster met de prijzen */
 .ranklist .pts.metbeker{position:relative; padding-left:38px}
