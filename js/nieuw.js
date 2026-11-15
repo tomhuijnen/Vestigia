@@ -25,7 +25,7 @@ const Nieuw = (() => {
     levels: "2026-11-16", spelersduel: "2026-11-23", advent: "2026-12-01",
     soorten14: "2026-11-13",           // update 14: libellen en kevers; de dag dat ze live gaan
     grotebosmuis: "2026-11-15",        // update 30: de grote bosmuis
-    patrijs: "2026-11-16"              // update 47: de patrijs (bij de livegang op de livedag zetten)
+    patrijs: "2026-11-15"              // update 47: de patrijs (live 15 november)
   };
   const WIJZIGING = new Set(["zoekgroepen", "bronnen", "statistiek-na-casus", "verward-statistiek", "soorten14", "grotebosmuis", "patrijs"]);
   /* speelde je al een dagcasus vóór die dag? (het logboek gaat via Supabase mee naar je andere apparaten) */
