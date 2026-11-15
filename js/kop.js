@@ -239,7 +239,10 @@ function renderMenu(){
   const sleutel = p ? JSON.stringify(Profiel.mijn()) : "";
   ["menuBtn", "slimMenu"].forEach(id => {
     if ($(id).dataset.av === sleutel && $(id).firstChild) return;
-    $(id).innerHTML = p ? avatarSVG(Profiel.mijn(), "avatar kop") : POPPETJE; $(id).dataset.av = sleutel;
+    /* medaille-avatar: lauriertakken om de knop in plaats van het medaille-embleem (zoals in profiel en ranglijst) */
+    const me = p ? Profiel.mijn() : null, lauw = !!me && isMedaille(me);
+    $(id).innerHTML = p ? avatarSVG(me, "avatar kop", lauw) + (lauw ? laurierTakken("klein") : "") : POPPETJE; $(id).dataset.av = sleutel;
+    $(id).classList.toggle("metlaurier", lauw);
   });
   /* levels (update 10): de rand om je avatar is een voortgangsring met een levelbolletje */
   if (typeof Levels !== "undefined") ["menuBtn", "slimMenu"].forEach(id => Levels.knop($(id)));

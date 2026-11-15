@@ -96,8 +96,13 @@ const isMedaille = p => !!(p && p.avatar && AVATARS[p.avatar] && MEDALS.some(t =
 /* html = de avatar (eventueel met levelring); maat = "groot" of "klein" */
 function metLaurier(html, p, maat){
   if (!isMedaille(p)) return html;
+  const m = maat === "klein" ? "klein" : "groot";
+  return `<span class="laurier ${m}">${html}${laurierTakken(m)}</span>`;
+}
+/* alleen de takken (los svg), bv. voor de avatarknop rechtsboven */
+function laurierTakken(maat){
   const id = "lr" + (++laurNr), m = maat === "klein" ? "klein" : "groot";
-  return `<span class="laurier ${m}">${html}<svg class="laurier-tak" viewBox="-15 -15 130 130" aria-hidden="true" focusable="false"><defs><linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1b8"/><stop offset=".35" stop-color="#e9c35a"/><stop offset=".7" stop-color="#b8862a"/><stop offset="1" stop-color="#f3d27a"/></linearGradient></defs>${LAURIER[m].replaceAll("{id}", id)}<path class="laurier-fonkel" d="M102 29.8l.9 3.3 3.3.9-3.3.9-.9 3.3-.9-3.3-3.3-.9 3.3-.9Z" fill="#fff"/></svg></span>`;
+  return `<svg class="laurier-tak" viewBox="-15 -15 130 130" aria-hidden="true" focusable="false"><defs><linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1b8"/><stop offset=".35" stop-color="#e9c35a"/><stop offset=".7" stop-color="#b8862a"/><stop offset="1" stop-color="#f3d27a"/></linearGradient></defs>${LAURIER[m].replaceAll("{id}", id)}<path class="laurier-fonkel" d="M102 29.8l.9 3.3 3.3.9-3.3.9-.9 3.3-.9-3.3-3.3-.9 3.3-.9Z" fill="#fff"/></svg>`;
 }
 const EIKEL = `<svg class="eikel" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path d="M8 2.6V1.2" stroke="#7d5330" stroke-width="1.4" stroke-linecap="round"/><path d="M2.8 6.6C2.8 4.1 5.1 2.6 8 2.6s5.2 1.5 5.2 4Z" fill="#7d5330"/><path d="M3.9 7.1h8.2c0 3.6-1.8 6.6-4.1 6.6S3.9 10.7 3.9 7.1Z" fill="#d9a441"/></svg>`;
 let avNr = 0;
