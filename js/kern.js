@@ -95,6 +95,24 @@ const INSTROOM = [
   { van: 14, tot: 40, ids: ["grote-bosmuis"] },         // update 30: de grote bosmuis, tussen vr 20 november en 16 december
   { van: 31, tot: 58, ids: ["patrijs"] }                // update 47: de patrijs, tussen ma 7 december en zo 3 januari
 ];
+/* Nieuwe soorten eerst als dagcasus (Tom, 15 november 18:58): de grote bosmuis en de patrijs zijn pas te oefenen vanaf
+   de dag na hun eerste dagcasus. Tot dan kiest oefenen ze nooit (ook niet via ‘Vaakst verward’ of een filter).
+   Gokken mag wel, en wie hem al oefende, houdt zijn plaat. Komt de soort in zijn venster niet langs, dan is hij vrij
+   vanaf de dag na het venster. */
+const OEFENEN_NA_DAGCASUS = ["grote-bosmuis", "patrijs"];
+const _vrijDag = new Map();
+function vrijVanaf(id){
+  if (!OEFENEN_NA_DAGCASUS.includes(id)) return 0;
+  if (!_vrijDag.has(id)){
+    const ins = INSTROOM.find(x => x.ids.includes(id)), tot = ins ? ins.tot : 60;
+    let d = 0; while (d <= tot && daily(d).id !== id) d++;
+    _vrijDag.set(id, d);
+  }
+  return _vrijDag.get(id);
+}
+function oefenbaar(id){ return todayIndex() > vrijVanaf(id); }     // vanaf de dag ná de eerste dagcasus
+/* ‘zondag 6 december’ */
+function dagNaam(d){ return new Date(START + d * DAY).toLocaleDateString("nl-NL", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" }); }
 function pickDaily(d, history){
   const m = new Date(START + d * DAY).getUTCMonth();
   const recent = new Set(history.slice(Math.max(0, d - 21), d).map(x => x.id));

@@ -64,7 +64,7 @@ const Statistiek = (() => {
     const paren = verwarringen(store.get()).slice(0, 6);
     const kop = `<h3 id="stVerwH">Vaakst verward</h3><p class="fine">Soorten die op elkaar lijken en die je door elkaar haalde: tweelingsoorten, soorten uit ‘Verwar niet met’ en soorten met bijna hetzelfde profiel.</p>`;
     if (!paren.length) return `<section class="st-blok fouten" id="stVerward" aria-labelledby="stVerwH">${kop}<p class="fine">Nog niets. Haal je twee soorten door elkaar die op elkaar lijken, dan zie je ze hier, met een knop om juist die te oefenen.</p></section>`;
-    const ids = [...new Set(paren.flatMap(p => [p.a, p.b]))].filter(id => TARGETS.some(t => t.id === id));
+    const ids = [...new Set(paren.flatMap(p => [p.a, p.b]))].filter(id => TARGETS.some(t => t.id === id) && oefenbaar(id));
     return `<section class="st-blok fouten" id="stVerward" aria-labelledby="stVerwH">${kop}
       <ul class="foutlijst">${paren.map(p => { const a = BY_ID.get(p.a), b = BY_ID.get(p.b);
         return `<li><span class="paar"><b>${esc(a.n)}</b><span class="tussen" aria-label="en">⇄</span><b>${esc(b.n)}</b></span><span class="keer">${p.n}× verward</span></li>`; }).join("")}</ul>

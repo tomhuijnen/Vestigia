@@ -71,12 +71,12 @@ function randomFree(exclude, f){
   f = f || {};
   const st = store.get(), recent = st.recent || [], dex = st.dex || {};
   const upcoming = new Set(Array.from({length:8}, (_, k) => daily(todayIndex() + k).id));
-  const groep = TARGETS.filter(t => (!f.g || t.g === f.g) && (!f.ids || f.ids.includes(t.id)));     // ids: alleen deze soorten (je verwarringen)
+  const groep = TARGETS.filter(t => oefenbaar(t.id) && (!f.g || t.g === f.g) && (!f.ids || f.ids.includes(t.id)));     // ids: alleen deze soorten (je verwarringen)
   const open = groep.filter(t => !(dex[t.id] && dex[t.id].w > 0));
   const vers = t => t.id !== exclude && !recent.includes(t.id) && !upcoming.has(t.id);
   const nietBinnenkort = t => t.id !== exclude && !upcoming.has(t.id);
   const stappen = (f.nieuw ? [[open, vers], [open, nietBinnenkort]] : [])
-    .concat([[groep, vers], [groep, nietBinnenkort], [groep, t => t.id !== exclude], [groep, () => true], [TARGETS, () => true]]);
+    .concat([[groep, vers], [groep, nietBinnenkort], [groep, t => t.id !== exclude], [groep, () => true], [TARGETS.filter(t => oefenbaar(t.id)), () => true]]);
   let pool = [], stap = 0;
   for (; stap < stappen.length; stap++){ pool = stappen[stap][0].filter(stappen[stap][1]); if (pool.length) break; }
   const t = pool[Math.floor(Math.random() * pool.length)];
@@ -637,7 +637,11 @@ function startFree(keuze){
   S = newGame("free", pref.expert, f.id, f.k, 0);
   S.groep = keuze.g || null; S.nieuw = !!keuze.nieuw; S.ids = keuze.ids || null;
   showGame(); inBeeld($("gameView")); window.scrollTo({ top:0, behavior:"auto" });
-  if (f.alles) toast(`Je hebt alle ${keuze.g ? GROUPS[keuze.g].toLowerCase() : "soorten"} al in je ${NAAM.vestiarium}. Deze ken je dus al.`);
+  if (f.alles) {
+    const dex = store.get().dex || {}, wacht = TARGETS.filter(t => !oefenbaar(t.id) && (!keuze.g || t.g === keuze.g) && !(dex[t.id] && dex[t.id].w > 0));
+    toast(wacht.length ? `De rest van de ${keuze.g ? GROUPS[keuze.g].toLowerCase() : "soorten"} heb je al. ${wacht.map(t => t.n.charAt(0).toUpperCase() + t.n.slice(1)).join(" en ")} kun je pas oefenen na ${wacht.length > 1 ? "hun" : "zijn"} eerste dagcasus.`
+      : `Je hebt alle ${keuze.g ? GROUPS[keuze.g].toLowerCase() : "soorten"} al in je ${NAAM.vestiarium}. Deze ken je dus al.`);
+  }
 }
 function goDaily(){ if (S.mode === "daily") showGame(); else startDaily(); }
 function goFree(){ if (S.mode !== "free" || S.status !== "playing") startFree(); else showGame(); }

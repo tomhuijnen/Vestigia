@@ -20,7 +20,7 @@ const Spelen = (() => {
     return groep ? `alle ${groep}` : "alle soorten";
   }
   const gevonden = id => { const d = (store.get().dex || {})[id]; return !!(d && d.w > 0); };
-  const nogOpen = g => TARGETS.filter(t => (!g || t.g === g) && !gevonden(t.id)).length;
+  const nogOpen = g => TARGETS.filter(t => oefenbaar(t.id) && (!g || t.g === g) && !gevonden(t.id)).length;
   const reduce = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ---------- de speelkring ---------- */
