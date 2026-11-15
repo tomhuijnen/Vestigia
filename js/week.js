@@ -267,7 +267,7 @@ const Week = (() => {
       const jij = pos && pos >= van && pos <= tot;
       return `<li class="${jij ? "jij" : ""}${van <= 3 ? " p" + van : ""}"><span class="wpplek">${label}</span>${jij ? `<span class="wpjij">jij</span>` : ""}<span class="wpeik">${EIKEL} ${prijsVoor(t, van)}</span></li>`;
     };
-    $("prijsPopBody").innerHTML = `<div class="spkop wpkop"><span class="caps">Weekprijs</span><button class="spsluit" id="prijsSluit" aria-label="Sluiten">×</button>
+    $("prijsPopBody").innerHTML = `<div class="spkop wpkop"><span class="caps">Weekprijs</span><button class="spsluit" id="prijsSluit" aria-label="Sluiten"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
         <div class="wpgroot">${BEKER}</div><h2 id="prijsPopH">${h}</h2><p>${zin}</p></div>
       <div class="wpbody">
         <ul class="wplijst">${rij(1, 1, "1e plaats")}${rij(2, 2, "2e plaats")}${rij(3, 3, "3e plaats")}${rij(4, 10, "4e t/m 10e plaats")}</ul>
