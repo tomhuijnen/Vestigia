@@ -148,6 +148,7 @@ const Profiel = (() => {
   let winkel = null;                 // shop(): alle items met prijs
   let beschikbaar = null;            // null = onbekend, false = functies staan nog niet in Supabase
   const anderen = new Map();         // profielen van andere spelers (ranglijst, league)
+  const PROFIEL_VERS = 5 * 60000;     // update 69: daarna een profiel opnieuw ophalen
 
   const wallet = () => p() ? lees(K.wallet) : null;
   const mijn = () => Object.assign({ name: p() && p().name }, (p() && lees(K.mij)) || {});
@@ -188,7 +189,7 @@ const Profiel = (() => {
         .then(r => { zet(K.beloning, r || []); inVestiarium(); if (VIEW === "profiel") teken(); }).catch(() => {});
       mijlBelofte = haalMijlpalen(true);
       Levels.haal().catch(() => {});
-      const me = (prof || [])[0]; if (me) { zet(K.mij, { avatar: me.avatar, subtitle: me.subtitle, frame: me.frame, color: me.color }); anderen.set(me.name.toLowerCase(), me); }
+      const me = (prof || [])[0]; if (me) { zet(K.mij, { avatar: me.avatar, subtitle: me.subtitle, frame: me.frame, color: me.color }); anderen.set(me.name.toLowerCase(), Object.assign(me, { t: Date.now() })); }
       saldoInKop(); renderMenu();
       return true;
     } catch(e){
@@ -371,17 +372,24 @@ const Profiel = (() => {
   /* ---------- ranglijst en league: avatar en ondertitel bij de namen ---------- */
   async function versier(list){
     const lis = [...list.querySelectorAll("li[data-n]")]; if (!lis.length) return;
-    const nodig = [...new Set(lis.map(li => li.dataset.n))].filter(n => !anderen.has(n.toLowerCase()));
+    /* update 69: een profiel uit het geheugen is hooguit PROFIEL_VERS oud; daarna opnieuw ophalen, anders bleef het level
+       en de ring van de hele sessie staan (Tom zag 16 november level 9 · 93% terwijl hij al level 10 was) */
+    const oud = n => { const r = anderen.get(n.toLowerCase()); return !r || !r.t || Date.now() - r.t > PROFIEL_VERS; };
+    const nodig = [...new Set(lis.map(li => li.dataset.n))].filter(oud);
     if (nodig.length) {
-      try { (await online.rpc("player_profiles", { p_names: nodig.slice(0, 300) }) || []).forEach(r => anderen.set(r.name.toLowerCase(), r)); }
-      catch(e){ return; }
-      nodig.forEach(n => { if (!anderen.has(n.toLowerCase())) anderen.set(n.toLowerCase(), { name: n }); });
+      try { (await online.rpc("player_profiles", { p_names: nodig.slice(0, 300) }) || []).forEach(r => anderen.set(r.name.toLowerCase(), Object.assign(r, { t: Date.now() }))); }
+      catch(e){ if (nodig.some(n => !anderen.has(n.toLowerCase()))) return; }
+      nodig.forEach(n => { if (!anderen.has(n.toLowerCase())) anderen.set(n.toLowerCase(), { name: n, t: Date.now() }); });
     }
+    const ik = ((online.player() || {}).name || "").toLowerCase();
     list.classList.add("met-av");
     for (const li of lis){
       if (li.querySelector(".rav")) continue;
       const pr = anderen.get(li.dataset.n.toLowerCase()) || { name: li.dataset.n };
-      li.querySelector(".pos").insertAdjacentHTML("afterend", `<span class="rav">${metLaurier(Levels.ring(avatarSVG(pr, "avatar klein", true), pr.level, pr.pct || 0, "klein"), pr, "klein")}</span>`);
+      /* update 69: je eigen ring komt uit dezelfde stand als Mijn profiel (xp_status), niet uit de bewaarde pct van de server */
+      const eigen = ik && li.dataset.n.toLowerCase() === ik && Levels.zichtbaar();
+      const av = avatarSVG(pr, "avatar klein", true);
+      li.querySelector(".pos").insertAdjacentHTML("afterend", `<span class="rav">${metLaurier(eigen ? Levels.mijnRing(av, "klein") : Levels.ring(av, pr.level, pr.pct || 0, "klein"), pr, "klein")}</span>`);
       const regel = li.querySelector(".who > span");
       if (pr.subtitle && regel){ regel.title = regel.textContent; regel.textContent = pr.subtitle; regel.classList.add("sub"); }
     }
