@@ -2207,3 +2207,22 @@ button.award:focus-visible{outline:2px solid var(--green); outline-offset:2px}
 .speigen{margin:0 0 10px; text-align:center; font-size:.85rem; color:var(--ink-2)}
 /* update 76: uitleg direct onder een kop in de shop */
 .pfnoot.shopnoot{grid-column:1 / -1; margin:0 0 2px}
+/* ---------- update 77 (16 november): opvallender levelringen ----------
+   Tom: de ring is zo smal dat je de kleurwissel per 20 levels nauwelijks ziet als je geen felle achtergrondkleur hebt.
+   Daarom: een dikkere ring, per trede een helder verloop in plaats van één effen (vaak donkere) kleur, en een zachte
+   gloed in de kleur van de trede. Blad was bijna gelijk aan de standaard groene avatar; nu fris bladgroen. */
+.lvring{padding:8px; --band:8px; box-shadow:0 0 10px -1px color-mix(in srgb, var(--lv-licht) 55%, transparent)}
+.lvring.groot{padding:11px; --band:11px; --sg:13px}
+.lvring.klein{padding:4px; width:38px; height:38px; --band:4px; box-shadow:0 0 6px -1px color-mix(in srgb, var(--lv-licht) 55%, transparent)}
+.dukies .lvring{padding:4px; --band:4px}
+.avbtn.metlevel{padding:6px; --band:6px; box-shadow:0 0 10px -2px color-mix(in srgb, var(--lv-ring) 70%, transparent)}
+.slimbar .avbtn.metlevel{padding:5px; --band:5px}
+.lvt0{--lv-vul:conic-gradient(from 210deg, #3f9a35, #8fd14f, #c2e86f, #8fd14f, #3f9a35); --lv-vulkop:conic-gradient(from 210deg, #9fdc5c, #d9f59a, #9fdc5c)}
+.lvt1{--lv-vul:conic-gradient(from 210deg, #0b9c86, #3fd6b5, #8ef0d8, #3fd6b5, #0b9c86); --lv-vulkop:conic-gradient(from 210deg, #45dcb9, #a6f5e2, #45dcb9)}
+.lvt2{--lv-vul:conic-gradient(from 210deg, #0874c4, #22b0ef, #7fdcff, #ff8c3a 82%, #0874c4); --lv-vulkop:conic-gradient(from 210deg, #3cbcf5, #a6e6ff, #ffa45c 82%, #3cbcf5)}
+.lvt3{--lv-vul:conic-gradient(from 210deg, #2338c9, #5a6cff, #9a7cff, #5a6cff, #2338c9); --lv-vulkop:conic-gradient(from 210deg, #7f92ff, #c0a8ff, #7f92ff)}
+.lvt5{--lv-vul:conic-gradient(#1fc77e, #12b3c4, #3f7cff, #9b6bff, #1fc77e)}
+html.donker .lvt0{--lv-vul:conic-gradient(from 210deg, #6cc04a, #b5e86a, #d9f59a, #b5e86a, #6cc04a)}
+html.donker .lvt1{--lv-vul:conic-gradient(from 210deg, #22c4a2, #6fe8cc, #a6f5e2, #6fe8cc, #22c4a2)}
+html.donker .lvt2{--lv-vul:conic-gradient(from 210deg, #1f9fe6, #57c8f7, #a6e6ff, #ff9b4d 82%, #1f9fe6)}
+html.donker .lvt3{--lv-vul:conic-gradient(from 210deg, #5468ff, #8a8cff, #b9a2ff, #8a8cff, #5468ff)}
