@@ -255,7 +255,8 @@ const Profiel = (() => {
     duelreeks: n => `${mv(n, "spelersduel", "spelersduels")} op rij gewonnen`,
     duelwinst: n => `${mv(n, "spelersduel", "spelersduels")} gewonnen`,
     revanche: n => n === 1 ? "Een revanche gewonnen" : `${n} revanches gewonnen`,
-    alles1: () => "Elke soort minstens één keer in één poging goed"
+    alles1: () => "Elke soort minstens één keer in één poging goed",
+    medaille: n => `${n} verschillende medailles in je Vestiarium`   // update 75: Halve vitrine en Volle vitrine
   };
   function mijlZin(m){
     const sleutel = m.id === "alles1" ? "alles1" : String(m.id || "").replace(/_\d+$/, "");
