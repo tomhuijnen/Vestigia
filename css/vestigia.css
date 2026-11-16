@@ -382,14 +382,26 @@ details.register[open] summary .caps::after{content:" ↑"}
 .sheet ol.cl{margin:0; padding-left:22px; display:grid; gap:6px}
 .sheet ol.cl li::marker{color:var(--ochre); font-weight:700}
 /* felicitatie */
-.award-pop{max-width:440px; text-align:center; justify-items:center; position:relative; overflow:hidden; padding:30px 28px 24px}
+.award-pop{max-width:440px; text-align:center; justify-items:center; position:relative; overflow:hidden auto; max-height:88vh; max-height:88dvh; overscroll-behavior:contain; padding:30px 28px 24px}
+/* lage schermen (telefoon met adresbalk, liggend): compacter, zodat beide knoppen in beeld blijven; anders kun je scrollen */
+@media (max-height:760px){
+  .award-pop{padding:22px 22px 18px; gap:8px}
+  .award-pop .badge svg{width:112px; height:112px}
+  .award-pop h2{font-size:1.65rem}
+  .award-pop .nm{font-size:1.25rem}
+  .award-pop .awardavatar{margin:2px 0 4px}
+  .award-pop .actions{bottom:-18px; margin-bottom:-18px; padding-bottom:18px}
+}
 .award-pop .badge svg{width:150px; height:150px; display:block; animation:popin .6s cubic-bezier(.2,1.4,.4,1) both}
 .award-pop .kind{font-family:var(--caps); text-transform:uppercase; letter-spacing:.1em; font-size:.75rem; color:var(--green)}
 .award-pop h2{font-family:var(--display); font-weight:700; font-size:2rem; margin:0; color:var(--ink)}
 .award-pop .nm{font-family:var(--display); font-weight:600; font-size:1.45rem; color:var(--green); margin:0}
 .award-pop p{margin:0; max-width:34ch}
 .award-pop .actions{justify-content:center; margin-top:6px}
-.award-pop .queue{font-size:.85rem; color:var(--ink-2)}
+/* knoppen plakken onderaan het venster als de inhoud niet past, zodat ze altijd te zien zijn */
+.award-pop .actions{position:sticky; bottom:-24px; z-index:1; justify-self:stretch; margin-bottom:-24px; padding:10px 0 24px; background:#fff; box-shadow:0 -12px 12px -8px rgba(255,255,255,.95)}
+html.donker .award-pop .actions{background:#1d2a22; box-shadow:0 -12px 12px -8px rgba(29,42,34,.95)}
+.award-pop .queue{font-size:.85rem; color:var(--ink-2); flex-basis:100%; text-align:center}
 @keyframes popin{0%{transform:scale(.3) rotate(-25deg); opacity:0} 100%{transform:none; opacity:1}}
 .confetti{position:absolute; inset:0; pointer-events:none; overflow:hidden}
 .confetti i{position:absolute; top:-12px; width:9px; height:14px; border-radius:2px; opacity:.9; animation:fall 1.9s ease-in forwards}
