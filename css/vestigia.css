@@ -2217,12 +2217,12 @@ button.award:focus-visible{outline:2px solid var(--green); outline-offset:2px}
 .dukies .lvring{padding:4px; --band:4px}
 .avbtn.metlevel{padding:6px; --band:6px; box-shadow:0 0 10px -2px color-mix(in srgb, var(--lv-ring) 70%, transparent)}
 .slimbar .avbtn.metlevel{padding:5px; --band:5px}
-.lvt0{--lv-vul:conic-gradient(from 210deg, #3f9a35, #8fd14f, #c2e86f, #8fd14f, #3f9a35); --lv-vulkop:conic-gradient(from 210deg, #9fdc5c, #d9f59a, #9fdc5c)}
-.lvt1{--lv-vul:conic-gradient(from 210deg, #0b9c86, #3fd6b5, #8ef0d8, #3fd6b5, #0b9c86); --lv-vulkop:conic-gradient(from 210deg, #45dcb9, #a6f5e2, #45dcb9)}
-.lvt2{--lv-vul:conic-gradient(from 210deg, #0874c4, #22b0ef, #7fdcff, #ff8c3a 82%, #0874c4); --lv-vulkop:conic-gradient(from 210deg, #3cbcf5, #a6e6ff, #ffa45c 82%, #3cbcf5)}
-.lvt3{--lv-vul:conic-gradient(from 210deg, #2338c9, #5a6cff, #9a7cff, #5a6cff, #2338c9); --lv-vulkop:conic-gradient(from 210deg, #7f92ff, #c0a8ff, #7f92ff)}
-.lvt5{--lv-vul:conic-gradient(#1fc77e, #12b3c4, #3f7cff, #9b6bff, #1fc77e)}
-html.donker .lvt0{--lv-vul:conic-gradient(from 210deg, #6cc04a, #b5e86a, #d9f59a, #b5e86a, #6cc04a)}
-html.donker .lvt1{--lv-vul:conic-gradient(from 210deg, #22c4a2, #6fe8cc, #a6f5e2, #6fe8cc, #22c4a2)}
-html.donker .lvt2{--lv-vul:conic-gradient(from 210deg, #1f9fe6, #57c8f7, #a6e6ff, #ff9b4d 82%, #1f9fe6)}
-html.donker .lvt3{--lv-vul:conic-gradient(from 210deg, #5468ff, #8a8cff, #b9a2ff, #8a8cff, #5468ff)}
+/* één kleurverloop per trede, overal hetzelfde: rechtsboven, in Mijn profiel, op de profielkaart, in de ranglijst en in
+   de pop-ups (Tom, 16 november: de kleuren kwamen niet overeen; de kop gebruikte --lv-vulkop, de pagina --lv-vul) */
+.lvt0{--lv-vul:conic-gradient(from 210deg, #4aa93a, #8fd14f, #bde76c, #8fd14f, #4aa93a)}
+.lvt1{--lv-vul:conic-gradient(from 210deg, #14b294, #4fdcbc, #94f0da, #4fdcbc, #14b294)}
+.lvt2{--lv-vul:conic-gradient(from 210deg, #1789d6, #3cc0f4, #96e2ff, #ff8c3a 82%, #1789d6)}
+.lvt3{--lv-vul:conic-gradient(from 210deg, #3a4fe0, #6f7dff, #a98cff, #6f7dff, #3a4fe0)}
+.lvt4{--lv-vul:var(--lv-vulkop)}
+.lvt5{--lv-vul:conic-gradient(#3fd98f, #1fc4cf, #4a86ff, #a07cff, #3fd98f)}
+.avbtn.metlevel::before, .lvbol, .lvkaart .lvbol, .lvcirkel, .lvnieuw{background:var(--lv-vul, var(--lv-vulkop, var(--lv-ring)))}
