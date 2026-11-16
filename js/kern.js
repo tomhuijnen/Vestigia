@@ -111,8 +111,7 @@ function vrijVanaf(id){
   return _vrijDag.get(id);
 }
 function oefenbaar(id){ return todayIndex() > vrijVanaf(id); }     // vanaf de dag ná de eerste dagcasus
-/* ‘zondag 6 december’ */
-function dagNaam(d){ return new Date(START + d * DAY).toLocaleDateString("nl-NL", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" }); }
+/* vrijVanaf() verraadt op welke dag een soort dagcasus is: alleen hier gebruiken, nooit in tekst in beeld (tools/controle.mjs) */
 function pickDaily(d, history){
   const m = new Date(START + d * DAY).getUTCMonth();
   const recent = new Set(history.slice(Math.max(0, d - 21), d).map(x => x.id));

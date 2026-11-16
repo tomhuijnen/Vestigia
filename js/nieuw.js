@@ -7,12 +7,13 @@
    op de plek waar het onderdeel voor het eerst in beeld komt. */
 "use strict";
 
-/* Nieuwe soorten eerst als dagcasus (15 november): tekst over wanneer, en alleen een oefenknop als alles al te oefenen is */
+/* Nieuwe soorten eerst als dagcasus (15 november): tekst over oefenen.
+   NOOIT een datum noemen, en ook niet ‘vandaag’ of ‘morgen’: dan verklapt de melding welke soort op die dag de dagcasus is
+   (Tom, 16 november: ‘dit mag nooit meer gebeuren’). Daarom alleen oefenbaar() (wordt pas waar de dag ná de eerste
+   dagcasus), geen datum uit het dagschema. tools/controle.mjs bewaakt dit. */
 function wanneer(id){
-  const d = vrijVanaf(id), nu = todayIndex();
-  if (nu > d) return "Hij was al dagcasus, dus je kunt hem nu ook oefenen.";
-  if (nu === d) return "Vandaag is hij voor het eerst dagcasus. Vanaf morgen kun je hem ook oefenen.";
-  return `Hij is op ${dagNaam(d)} voor het eerst dagcasus. Vanaf de dag erna kun je hem ook oefenen.`;
+  return oefenbaar(id) ? "Hij was al dagcasus, dus je kunt hem nu ook oefenen."
+    : "Je kunt hem pas oefenen nadat hij voor het eerst dagcasus is geweest.";
 }
 function nieuwOefenen(ids){
   if (!ids.every(id => oefenbaar(id))) return null;

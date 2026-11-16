@@ -242,6 +242,16 @@ if (TARGETS.length > 500) FOUT(`Er zijn ${TARGETS.length} soorten met casus, maa
 const trofeeen = Object.keys(V.TITLES).length + 1 + V.MEDALS.length;
 if (trofeeen > 100) FOUT(`Er zijn ${trofeeen} titels en medailles, maar save_progress kapt het aantal trofeeën af op 100 (supabase-002). Verhoog die grens eerst in Supabase`);
 
+/* ---------- nooit de dagcasus verklappen (16 november 2026) ----------
+   Een melding mag nooit zeggen op welke dag een soort dagcasus is (‘Hij is op zondag 6 december voor het eerst dagcasus’,
+   ‘Vandaag is hij dagcasus’). vrijVanaf() en datums uit het dagschema horen alleen in js/kern.js. */
+for (const f of fs.readdirSync(path.join(ROOT, "js")).filter(f => f.endsWith(".js") && f !== "kern.js")){
+  const code = fs.readFileSync(path.join(ROOT, "js", f), "utf8");
+  if (/\bvrijVanaf\s*\(/.test(code)) FOUT(`js/${f} gebruikt vrijVanaf(): daarmee kan een melding verklappen op welke dag een soort dagcasus is. Gebruik oefenbaar()`);
+  if (/\bdagNaam\s*\(/.test(code)) FOUT(`js/${f} gebruikt dagNaam(): noem nooit de dag waarop een soort dagcasus is`);
+  if (/(vandaag|morgen)[^`"\n]{0,40}voor het eerst dagcasus/i.test(code)) FOUT(`js/${f}: een tekst zegt wanneer een soort voor het eerst dagcasus is; dat verklapt de dagcasus`);
+}
+
 /* ---------- uitkomst ---------- */
 const blok = (kop, lijst) => { if (lijst.length){ console.log(`\n${kop} (${lijst.length})`); for (const m of lijst) console.log("  · " + m); } };
 console.log(`Vestigia-controle: ${SPECIES.length} soorten, ${TARGETS.length} met casus, ${TARGETS.reduce((n, t) => n + t.cs.length, 0)} casussen`);
