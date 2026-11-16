@@ -27,7 +27,7 @@ function rosette(color, on, label){
 const MEDAL_CROP = {
   "tweekleurige-vleermuis": [50, 54, 98], "grijze-grootoorvleermuis": [48, 56, 82], "noordse-woelmuis": [52, 64, 76],
   "knoflookpad": [50, 58, 88], "gestippelde-alver": [48, 50, 84], "europese-steur": [51, 52, 94], "zwarte-wouw": [50, 52, 92],
-  "hop": [56, 54, 92], "kleine-vliegenvanger": [58, 56, 84], "ruigpootuil": [50, 50, 80]
+  "hop": [56, 54, 92], "kleine-vliegenvanger": [58, 56, 84], "ruigpootuil": [50, 52, 96]
 };
 let medalNr = 0;
 function medal(on, no, id){
