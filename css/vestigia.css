@@ -2125,6 +2125,10 @@ html.donker .boostbanner .bb-glans{background:linear-gradient(105deg, transparen
 /* avatarknop rechtsboven met een medaille-avatar: takken om de knop heen (onder het levelbolletje) */
 .avbtn.metlaurier{position:relative; overflow:visible}
 .avbtn > .laurier-tak{position:absolute; inset:-24%; width:148%; height:148%; pointer-events:none; overflow:visible; z-index:1; filter:drop-shadow(0 .5px .6px rgba(0,0,0,.45))}
+/* update 78 (16 november): sinds de dikkere levelring (update 77) steken de takken ~13px buiten de knop en raakten ze
+   de eikelknop bijna. Extra ruimte links van een avatar met takken, zodat er ~8px lucht tussen blad en eikels zit. */
+.mh-bar .avbtn.metlaurier{margin-left:8px}
+.slimbar .avbtn.metlaurier{margin-left:6px}
 
 /* update 58: weekprijs – bekertje in je eigen rij (Iedereen, Deze week) en het venster met de prijzen */
 .ranklist .pts.metbeker{position:relative; padding-left:38px}
@@ -2226,3 +2230,21 @@ button.award:focus-visible{outline:2px solid var(--green); outline-offset:2px}
 .lvt4{--lv-vul:var(--lv-vulkop)}
 .lvt5{--lv-vul:conic-gradient(#3fd98f, #1fc4cf, #4a86ff, #a07cff, #3fd98f)}
 .avbtn.metlevel::before, .lvbol, .lvkaart .lvbol, .lvcirkel, .lvnieuw{background:var(--lv-vul, var(--lv-vulkop, var(--lv-ring)))}
+/* update 78: in december kunnen naast de eikels ook het cadeautje (advent) en de dwaalgast-knop in de kop staan. Op een
+   telefoon paste dat niet meer (360 px: ~45 px te breed, de avatar viel deels uit beeld). Alleen als die extra knoppen
+   er echt staan: kleinere tussenruimtes en, op de smalste telefoons, kleinere knoppen en een iets kleinere titel. */
+@media (max-width:430px){
+  .mh-bar:has(.dwaalbtn:not([hidden]), .kerstbtn:not([hidden])){gap:6px}
+  .mh-bar:has(.dwaalbtn:not([hidden]), .kerstbtn:not([hidden])) .mh-title{margin-right:6px}
+  .mh-bar:has(.dwaalbtn:not([hidden]), .kerstbtn:not([hidden])) .dwaalbtn,
+  .mh-bar:has(.dwaalbtn:not([hidden]), .kerstbtn:not([hidden])) .kerstbtn{width:34px; height:34px}
+  .mh-bar:has(.dwaalbtn:not([hidden]), .kerstbtn:not([hidden])) .eikelbtn{gap:5px; padding:0 10px 0 8px}
+  .mh-bar:has(.dwaalbtn:not([hidden]), .kerstbtn:not([hidden])) .avbtn.metlevel{margin-left:2px}
+  .mh-bar:has(.dwaalbtn:not([hidden]), .kerstbtn:not([hidden])) .avbtn.metlaurier{margin-left:14px}
+}
+@media (max-width:380px){
+  .mh-bar:has(.dwaalbtn:not([hidden]), .kerstbtn:not([hidden])) .mh-name{font-size:1.35rem}
+  .mh-bar:has(.dwaalbtn:not([hidden]), .kerstbtn:not([hidden])) .dwaalbtn,
+  .mh-bar:has(.dwaalbtn:not([hidden]), .kerstbtn:not([hidden])) .kerstbtn{width:32px; height:32px}
+  .mh-bar:has(.dwaalbtn:not([hidden]), .kerstbtn:not([hidden])) .eikelbtn{padding:0 8px 0 7px}
+}
