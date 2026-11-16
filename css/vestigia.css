@@ -2205,3 +2205,24 @@ button.award:focus-visible{outline:2px solid var(--green); outline-offset:2px}
 /* update 75: knop ‘Bekijk je profielkaart’ in Mijn profiel, en de uitleg bovenaan je eigen kaart */
 .pfkaart .btn.klein{margin-top:8px; min-height:34px; padding:6px 12px; font-size:.72rem; white-space:nowrap}
 .speigen{margin:0 0 10px; text-align:center; font-size:.85rem; color:var(--ink-2)}
+/* update 76: uitleg direct onder een kop in de shop */
+.pfnoot.shopnoot{grid-column:1 / -1; margin:0 0 2px}
+/* ---------- update 77 (16 november): opvallender levelringen ----------
+   Tom: de ring is zo smal dat je de kleurwissel per 20 levels nauwelijks ziet als je geen felle achtergrondkleur hebt.
+   Daarom: een dikkere ring, per trede een helder verloop in plaats van één effen (vaak donkere) kleur, en een zachte
+   gloed in de kleur van de trede. Blad was bijna gelijk aan de standaard groene avatar; nu fris bladgroen. */
+.lvring{padding:8px; --band:8px; box-shadow:0 0 10px -1px color-mix(in srgb, var(--lv-licht) 55%, transparent)}
+.lvring.groot{padding:11px; --band:11px; --sg:13px}
+.lvring.klein{padding:4px; width:38px; height:38px; --band:4px; box-shadow:0 0 6px -1px color-mix(in srgb, var(--lv-licht) 55%, transparent)}
+.dukies .lvring{padding:4px; --band:4px}
+.avbtn.metlevel{padding:6px; --band:6px; box-shadow:0 0 10px -2px color-mix(in srgb, var(--lv-ring) 70%, transparent)}
+.slimbar .avbtn.metlevel{padding:5px; --band:5px}
+/* één kleurverloop per trede, overal hetzelfde: rechtsboven, in Mijn profiel, op de profielkaart, in de ranglijst en in
+   de pop-ups (Tom, 16 november: de kleuren kwamen niet overeen; de kop gebruikte --lv-vulkop, de pagina --lv-vul) */
+.lvt0{--lv-vul:conic-gradient(from 210deg, #4aa93a, #8fd14f, #bde76c, #8fd14f, #4aa93a)}
+.lvt1{--lv-vul:conic-gradient(from 210deg, #14b294, #4fdcbc, #94f0da, #4fdcbc, #14b294)}
+.lvt2{--lv-vul:conic-gradient(from 210deg, #1789d6, #3cc0f4, #96e2ff, #ff8c3a 82%, #1789d6)}
+.lvt3{--lv-vul:conic-gradient(from 210deg, #3a4fe0, #6f7dff, #a98cff, #6f7dff, #3a4fe0)}
+.lvt4{--lv-vul:var(--lv-vulkop)}
+.lvt5{--lv-vul:conic-gradient(#3fd98f, #1fc4cf, #4a86ff, #a07cff, #3fd98f)}
+.avbtn.metlevel::before, .lvbol, .lvkaart .lvbol, .lvcirkel, .lvnieuw{background:var(--lv-vul, var(--lv-vulkop, var(--lv-ring)))}

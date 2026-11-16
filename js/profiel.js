@@ -618,22 +618,30 @@ const Profiel = (() => {
     const standaard = shopTab === "avatar" ? "" : knop("", voorbeeld(shopTab, null), shopTab === "kleur" ? "Groen" : shopTab === "lijst" ? "Geen lijst" : "Geen ondertitel", me[VELD[shopTab]] ? "gratis" : "aan");
     let html = standaard + gratis.map(i => knop(waardeVan(i), voorbeeld(shopTab, waardeVan(i)), i.label, me[VELD[shopTab]] === waardeVan(i) ? "aan" : "gratis", i)).join("")
              + koopGroepen(koopbaar)
+             /* update 76 (16 november): wat je al hebt onder een eigen kop, zodat het niet onder ‘Prestige’ lijkt te vallen */
+             + (gekocht.length ? `<h4 class="shopkop">In bezit</h4>` : "")
              + gekocht.map(i => knop(waardeVan(i), voorbeeld(shopTab, waardeVan(i)), i.label, me[VELD[shopTab]] === waardeVan(i) ? "aan" : "heb", i)).join("");
     if (!koopbaar.length) html = `<p class="fine pfnoot">Je hebt alles uit deze rij al.</p>` + html;
     /* verdiend (prijs 0, niet te koop): medaille- en dwaalgast-avatars, en sinds 15 november ook verdiende lijsten,
        kleuren en ondertitels (Dwaalgast, Dwaalgastjager, kerstlijst, Adventkampioen, rangen, prestatietitels).
        Eerst stonden alleen de avatars hier; de rest was alleen in Mijn profiel te kiezen. */
     const verdiend = (winkel || []).filter(i => i.kind === shopTab && !i.for_sale && i.price === 0 && own.has(i.item));
-    html += verdiend.map(i => knop(waardeVan(i), voorbeeld(shopTab, waardeVan(i)), i.label, me[VELD[shopTab]] === waardeVan(i) ? "aan" : "verdiend", i)).join("");
-    if (shopTab === "titel"){
-      const inWinkel = new Set((winkel || []).map(i => i.item));
-      const los = [...own].filter(x => x.startsWith("titel:") && !inWinkel.has(x)).map(x => x.slice(6)).sort((a, b) => a.localeCompare(b, "nl"));
-      html += los.map(t => knop(t, "", t, me.subtitle === t ? "aan" : "verdiend")).join("");
-    }
+    /* update 76: bij avatars krijgen de medaille-avatars een eigen kop (verdiend + nog te verdienen, met de stand),
+       de overige verdiende avatars (dwaalgasten, kerstavondcadeau) staan onder ‘Verdiend’ */
+    const isMed = i => i.kind === "avatar" && MEDALS.some(m => m.id === i.item.slice(7));
+    const verdiendRij = shopTab === "avatar" ? verdiend.filter(i => !isMed(i)) : verdiend;
+    const losTitels = shopTab === "titel" ? (() => { const inW = new Set((winkel || []).map(i => i.item));
+      return [...own].filter(x => x.startsWith("titel:") && !inW.has(x)).map(x => x.slice(6)).sort((a, b) => a.localeCompare(b, "nl")); })() : [];
+    if (verdiendRij.length || losTitels.length) html += `<h4 class="shopkop">Verdiend</h4>`;
+    html += verdiendRij.map(i => knop(waardeVan(i), voorbeeld(shopTab, waardeVan(i)), i.label, me[VELD[shopTab]] === waardeVan(i) ? "aan" : "verdiend", i)).join("");
+    html += losTitels.map(t => knop(t, "", t, me.subtitle === t ? "aan" : "verdiend")).join("");
     if (shopTab === "avatar"){
+      const medHeb = verdiend.filter(isMed);
       const medailles = (winkel || []).filter(i => i.kind === "avatar" && !i.for_sale && !own.has(i.item) && !i.item.startsWith("avatar:dg-") && !i.item.startsWith("avatar:winter-"));   // dwaalgasten en het kerstavondcadeau blijven een verrassing
-      html += medailles.map(i => knop(waardeVan(i), `<span class="pfgeheim">?</span>`, "Medaille-avatar", "dicht", i)).join("")
-            + `<p class="fine pfnoot">Medaille-avatars koop je niet: je krijgt ze als je een van de ${telwoord(MEDALS.length)} meest zeldzame soorten determineert.</p>`;
+      html += `<h4 class="shopkop">Medaille-avatars · ${medHeb.length} van ${MEDALS.length}</h4>`
+            + `<p class="fine pfnoot shopnoot">Medaille-avatars koop je niet: je krijgt ze als je een van de ${telwoord(MEDALS.length)} meest zeldzame soorten determineert.</p>`
+            + medHeb.map(i => knop(waardeVan(i), voorbeeld(shopTab, waardeVan(i)), i.label, me[VELD[shopTab]] === waardeVan(i) ? "aan" : "verdiend", i)).join("")
+            + medailles.map(i => knop(waardeVan(i), `<span class="pfgeheim">?</span>`, "Medaille-avatar", "dicht", i)).join("");
     }
     if (shopTab === "titel"){
       const heb = [...own].filter(x => x.startsWith("titel:")).map(x => x.slice(6)), pr = lees(K.prest) || [];
