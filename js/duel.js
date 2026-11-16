@@ -195,7 +195,7 @@ const Duel = (() => {
       <div class="actions"><button class="btn" id="duVolgende">Volgende casus</button></div>`;
     if (d.ik === "uitdager"){
       return `${kop}<p>Je drie casussen zijn gespeeld. ${d.tegen ? `Nu heeft ${tegen} 48 uur om dezelfde casussen te spelen.` : "Deel nu de link: wie hem als eerste opent, speelt tegen je."}</p>
-        <div class="actions">${wachtOpServer ? `<button class="btn" disabled>Even geduld…</button>` : `<button class="btn" id="duDeel">${d.tegen ? `Laat het ${tegen} weten` : "Deel de link"}</button><button class="btn line" id="duNaar">Naar je duels</button>`}<span class="msg" id="duMsg"></span></div>`;
+        <div class="actions">${wachtOpServer ? `<button class="btn" disabled>Even geduld…</button>` : (d.code ? `<a class="btn wa" id="duWa" href="${esc(waLink(deelTekst(d)))}" target="_blank" rel="noopener">${WA_IC}WhatsApp</a><button class="btn line" id="duDeel">${deelAnders()}</button><button class="linklike" id="duNaar">Naar je duels</button>` : `<button class="btn line" id="duNaar">Naar je duels</button>`)}<span class="msg" id="duMsg"></span></div>`;
     }
     const klaar = d.status === "klaar";
     return `${kop}<p>Je drie casussen zijn gespeeld. ${klaar ? "De uitslag is binnen." : wachtOpServer ? "Even geduld, je laatste casus wordt verstuurd." : ""}</p>
@@ -316,7 +316,7 @@ const Duel = (() => {
     return `<article class="lgcard duelkaart">
       <div class="dk-top">${av(d.tegen || null)}<div><h4>${d.tegen ? `Wacht op ${esc(d.tegen)}` : "Duel met een link"}</h4>
         <p class="fine">${esc(modus(d))} · ${d.tegen ? (n ? `${esc(d.tegen)} speelde ${n} van 3` : "nog niet begonnen") : "nog door niemand aangenomen"} · ${esc(nogTijd(d.verloopt))}</p></div></div>
-      <div class="actions"><button class="btn line" data-du="deel" data-id="${esc(d.id)}">${d.tegen ? `Laat het ${esc(d.tegen)} weten` : "Deel de link"}</button><span class="msg"></span></div></article>`;
+      <div class="actions"><a class="btn line wa" href="${esc(waLink(deelTekst(d)))}" target="_blank" rel="noopener">${WA_IC}WhatsApp</a><button class="btn line" data-du="deel" data-id="${esc(d.id)}">${deelAnders()}</button><span class="msg"></span></div></article>`;
   }
   function kaartKlaar(d){
     const pu = som(d.mijn), ph = som(d.hun);

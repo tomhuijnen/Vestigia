@@ -338,6 +338,13 @@ function shareOut({ text, url, kaal }, msgEl, boxParent){
   try { navigator.clipboard.writeText(full).then(() => { msgEl.textContent = "Gekopieerd."; }, fallback); } catch(e){ fallback(); }
 }
 
+/* update 73: rechtstreeks naar WhatsApp (app op de telefoon, WhatsApp Web op de laptop), met het bericht al ingevuld.
+   WhatsApp maakt van de link een kaartje met de deelkaart uit index.html (og-tags). */
+function waLink({ text, url }){ return "https://wa.me/?text=" + encodeURIComponent(`${text}\n${url}`); }
+const WA_IC = `<svg class="waic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2c-4.9 0-8.8 3.6-8.8 8.1 0 1.7.6 3.3 1.6 4.6L4 20.6l4.9-1.5c1 .4 2 .6 3.1.6 4.9 0 8.8-3.6 8.8-8.1S16.9 3.2 12 3.2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.6 10.4h6.8M8.6 13.4h4.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+/* tekst van de tweede deelknop: op de telefoon het deelmenu, op de laptop kopiëren */
+const deelAnders = () => navigator.share && matchMedia("(pointer: coarse)").matches ? "Andere app" : "Kopieer link";
+
 /* Ontdekkingsmoment: een nieuwe plaat kleurt in en krijgt een stempel, zoals een stempel in een paspoort */
 function ontdekPlaat(t){
   const dex = store.get().dex || {}, n = TARGETS.filter(x => dex[x.id] && dex[x.id].w > 0).length;
