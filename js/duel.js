@@ -82,10 +82,12 @@ const Duel = (() => {
   /* ---------- profielen van tegenstanders (avatar) ---------- */
   const profielen = new Map();
   async function haalProfielen(namen){
-    const nodig = [...new Set(namen.filter(Boolean))].filter(n => !profielen.has(n.toLowerCase()));
+    /* update 69: na 5 minuten opnieuw ophalen, zodat level en ring van een tegenstander niet de hele sessie blijven staan */
+    const oud = n => { const r = profielen.get(n.toLowerCase()); return !r || !r.t || Date.now() - r.t > 5 * 60000; };
+    const nodig = [...new Set(namen.filter(Boolean))].filter(oud);
     if (!nodig.length) return;
-    try { (await rpc("player_profiles", { p_names: nodig.slice(0, 100) }) || []).forEach(r => profielen.set(r.name.toLowerCase(), r)); } catch(e){ return; }
-    nodig.forEach(n => { if (!profielen.has(n.toLowerCase())) profielen.set(n.toLowerCase(), { name: n }); });
+    try { (await rpc("player_profiles", { p_names: nodig.slice(0, 100) }) || []).forEach(r => profielen.set(r.name.toLowerCase(), Object.assign(r, { t: Date.now() }))); } catch(e){ return; }
+    nodig.forEach(n => { if (!profielen.has(n.toLowerCase())) profielen.set(n.toLowerCase(), { name: n, t: Date.now() }); });
   }
   function av(naam, cls){
     if (naam === null) return `<span class="duav leeg" aria-hidden="true">?</span>`;
