@@ -478,7 +478,7 @@ details.carry summary{padding:10px 14px; cursor:pointer; font-weight:700; color:
 .opts li.optgroep{cursor:default; position:sticky; top:-4px; z-index:1; background:inherit; padding:6px 14px 5px; border-bottom:1px solid var(--rule)}
 .opts li.optgroep span{font-family:var(--caps); font-weight:600; font-size:.74rem; letter-spacing:.06em; text-transform:uppercase; color:var(--green)}
 .opts li.optgroep i{font-size:.8rem}
-.opts li.optgroep.los{border-top:1px solid var(--rule); margin-top:4px}
+.opts li.optgroep.los, .opts li.optgroep.neven{border-top:1px solid var(--rule); margin-top:4px}
 .opts li.optgroep.los span{color:var(--ink-2, #5b6b60); text-transform:none; letter-spacing:0; font-family:var(--body); font-weight:600; font-size:.8rem}
 .ranklist .who b{font-family:var(--display); font-weight:600}
 .ranklist .who span{display:block; font-size:.85rem; color:var(--ink-2)}
@@ -2190,3 +2190,18 @@ a.btn{display:inline-flex; align-items:center; text-decoration:none}
 /* update 74: in het vak onder een duelcasus passen ‘WhatsApp’ en ‘Andere app’ zo naast elkaar op de telefoon */
 .duelvervolg .actions{gap:8px}
 .duelvervolg .actions .btn{padding-left:12px; padding-right:12px}
+
+/* update 75: medailles in het Vestiarium: verdiende medaille is een knop (groot bekijken); uitlichten na de felicitatie */
+button.award{font:inherit; color:inherit; border:0; cursor:pointer; width:100%; transition:transform .15s ease}
+button.award:hover{transform:translateY(-2px)}
+button.award:focus-visible{outline:2px solid var(--green); outline-offset:2px}
+.award.uitlicht{animation:uitlicht 1.8s ease-in-out; position:relative; z-index:2}
+.medalrow .award.uitlicht{--green:#c98d26}
+@media (prefers-reduced-motion:reduce){ .award.uitlicht{animation:none; box-shadow:0 0 0 3px var(--green)} button.award:hover{transform:none} }
+.medpop-beeld svg{width:200px; height:200px; display:block; filter:drop-shadow(0 8px 18px rgba(0,0,0,.22))}
+.medpop .sheet{animation:medpopIn .32s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes medpopIn{from{transform:scale(.85); opacity:0} to{transform:scale(1); opacity:1}}
+@media (prefers-reduced-motion:reduce){ .medpop .sheet{animation:none} }
+/* update 75: knop ‘Bekijk je profielkaart’ in Mijn profiel, en de uitleg bovenaan je eigen kaart */
+.pfkaart .btn.klein{margin-top:8px; min-height:34px; padding:6px 12px; font-size:.72rem; white-space:nowrap}
+.speigen{margin:0 0 10px; text-align:center; font-size:.85rem; color:var(--ink-2)}

@@ -129,6 +129,8 @@ const League = (() => {
       : `Speel Vestigia mee: elke dag een beschermde soort determineren aan de hand van waarnemingen en sporen.`;
     return { text, url: appLink(params) };
   }
+  /* update 75: ook bij ‘Speler uitnodigen’ een WhatsApp-knop (zoals bij het duel, update 73), met dezelfde tekst als bij delen */
+  const waUitnodiging = u => waLink({ text: u.text, url: `Speel mee: ${u.url}` });
   function openUitnodigen(){
     const box = $("leaguePop"), me = p();
     $("leaguePopBody").innerHTML = `
@@ -137,8 +139,8 @@ const League = (() => {
         ? `<p>De speler die je uitnodigt, krijgt een link met jouw naam erin. Kiest die speler een spelersnaam en determineert hij of zij een eerste casus, dan krijg jij 10 eikels. Speelt die speler daarna op drie verschillende dagen de dagcasus, dan komen er nog 10 bij (voor maximaal vijf spelers).</p>`
         : `<p>De speler die je uitnodigt, krijgt een link naar Vestigia. Kies eerst zelf een spelersnaam, dan staat jouw naam in de link en tellen de uitnodigingen voor jou.</p>`}
       ${cached().length ? `<p class="fine">Wil je iemand in een league? Deel dan de uitnodiging bij die league, onder Leagues in het menu.</p>` : ""}
-      <div class="actions"><button class="btn" id="lpDeel">Deel uitnodiging</button>${me ? "" : `<button class="btn line" id="lpNaam">Kies een spelersnaam</button>`}<span class="msg" id="lpMsg"></span></div>`;
-    box.hidden = false; $("lpDeel").focus();
+      <div class="actions"><a class="btn wa" id="lpWa" href="${esc(waUitnodiging(uitnodiging(null)))}" target="_blank" rel="noopener">${WA_IC}WhatsApp</a><button class="btn line" id="lpDeel">${deelAnders()}</button>${me ? "" : `<button class="btn line" id="lpNaam">Kies een spelersnaam</button>`}<span class="msg" id="lpMsg"></span></div>`;
+    box.hidden = false; $("lpWa").focus();
     $("lpX").onclick = () => { box.hidden = true; };
     $("lpDeel").onclick = () => shareOut(uitnodiging(null), $("lpMsg"), $("leaguePopBody"));
     if (!me) $("lpNaam").onclick = () => { box.hidden = true; MENU_GO.player(); };
