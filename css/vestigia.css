@@ -2187,3 +2187,6 @@ html.donker .titelzet{background:#1d2a22}
 a.btn{display:inline-flex; align-items:center; text-decoration:none}
 .btn.wa{gap:8px}
 .btn.wa .waic{width:18px; height:18px; flex:0 0 18px}
+/* update 74: in het vak onder een duelcasus passen ‘WhatsApp’ en ‘Andere app’ zo naast elkaar op de telefoon */
+.duelvervolg .actions{gap:8px}
+.duelvervolg .actions .btn{padding-left:12px; padding-right:12px}
