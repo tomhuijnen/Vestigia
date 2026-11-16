@@ -286,7 +286,7 @@ const Profiel = (() => {
       if (r.niveau > was){
         const e = beloning(r.id), erbij = e ? e.slice(was, r.niveau).reduce((a, b) => a + b, 0) : 0;
         const zin = prestatieZin(r, r.niveau), tit = r.niveau === 3 && r.goud_titel ? ` · ondertitel ${r.goud_titel}` : "";
-        uit.push({ soort: "prestatie", niv: r.niveau, ic: MEDAILLE(r.niveau, 30), groot: MEDAILLE(r.niveau, 84), kop: r.label,
+        uit.push({ soort: "prestatie", niv: r.niveau, titel: r.niveau === 3 ? r.goud_titel || null : null, ic: MEDAILLE(r.niveau, 30), groot: MEDAILLE(r.niveau, 84), kop: r.label,
           sub: `Prestatie · ${zin ? `${zin} · ` : ""}${NIV[r.niveau]}${tit}`, eikels: erbij,
           toast: `Prestatie behaald: ${r.label} · ${zin ? `${zin} · ` : ""}${NIV[r.niveau]}${erbij ? ` · +${erbij} eikels` : ""}${tit}` });
       }
@@ -294,14 +294,15 @@ const Profiel = (() => {
     if (oudM && oudM.length) for (const m of nuM || []){
       const was = oudM.find(o => o.id === m.id);
       if (m.behaald && was && !was.behaald)
-        uit.push({ soort: "mijlpaal", ic: LINT(true).replace('class="mplint"', 'class="mplint" width="30" height="38"'), groot: LINT(true).replace('class="mplint"', 'class="mplint" width="84" height="105"'),
+        uit.push({ soort: "mijlpaal", titel: m.titel || null, ic: LINT(true).replace('class="mplint"', 'class="mplint" width="30" height="38"'), groot: LINT(true).replace('class="mplint"', 'class="mplint" width="84" height="105"'),
           kop: m.label, sub: mijlSub(m), eikels: m.eikels || 0, toast: mijlToast(m) });
     }
     return uit;
   }
   /* één pop-up voor alle grote momenten; met een level omhoog is het de level-pop-up, met de rest eronder */
   async function groteMomenten(groot, lv){
-    const rijen = groot.map(g => eikRij(g.ic, g.kop, g.sub, g.eikels)).join("");
+    const titels = [...new Set(groot.map(g => g.titel).filter(Boolean))];
+    const rijen = groot.map(g => eikRij(g.ic, g.kop, g.sub, g.eikels)).join("") + titels.map(titelZet).join("");
     let dicht;
     if (lv) dicht = Levels.levelOmhoog(lv.a, lv.s, rijen);
     else {
@@ -316,6 +317,7 @@ const Profiel = (() => {
         <div class="lvbuitlijst">${rijen}</div>
         <button class="btn" id="lvVerder">Verder</button>`, "belpop");
     }
+    bindTitelZet($("wachtBody"));
     /* de eikels vliegen pas als de pop-up staat; rij voor rij */
     await wachtMs(rustigNu() ? 0 : 750);
     for (const r of $("wachtBody").querySelectorAll("[data-eik]")){
@@ -539,6 +541,43 @@ const Profiel = (() => {
     } catch(e){ if (msg) msg.textContent = e.status && e.status < 500 ? e.message : "Opslaan lukte niet. Controleer je internetverbinding."; return false; }
   }
 
+  /* ---------- update 71: een net verdiende ondertitel meteen onder je naam zetten ----------
+     In de pop-ups waar je een ondertitel verdient (titel van het Vestiarium, goud bij een prestatie, een mijlpaal,
+     een nieuwe rang) staat een voorbeeld van je naamregel met de knop ‘Zet deze titel aan’ (Tom, 16 november 10:46).
+     Daarna ‘✓ Deze titel staat aan’ met ‘Terugzetten’ (naar je vorige ondertitel). Avatar, lijst en kleur blijven zoals ze zijn. */
+  function titelZet(titel){
+    if (!titel || !online.enabled) return "";
+    if (!p()) return `<div class="titelzet zonder"><p>Kies een spelersnaam om <b>${esc(titel)}</b> als ondertitel te gebruiken.</p></div>`;
+    const al = mijn().subtitle === titel;
+    return `<div class="titelzet" data-titel="${esc(titel)}"><span class="tz-naam"><b>${esc(p().name)}</b><span>${esc(titel)}</span></span>
+      <span class="tz-actie">${al ? `<span class="tz-ok">✓ Deze titel staat aan</span>` : `<button class="btn line tz-knop" type="button">Zet deze titel aan</button>`}</span></div>`;
+  }
+  /* de server kent een titel van het Vestiarium pas als je voortgang er is; daarom nog een keer proberen */
+  async function zetTitel(titel){
+    for (let i = 0; i < 3; i++){
+      if (await kies("titel", titel || "", null)) return true;
+      online.syncSoon(); await new Promise(r => setTimeout(r, 1500));
+    }
+    return false;
+  }
+  function bindTitelZet(root){
+    (root || document).querySelectorAll(".titelzet[data-titel]").forEach(el => {
+      const titel = el.dataset.titel, actie = el.querySelector(".tz-actie");
+      const knop = () => { actie.innerHTML = `<button class="btn line tz-knop" type="button">Zet deze titel aan</button>`; bind(); };
+      const bind = () => { const b = actie.querySelector(".tz-knop"); if (!b) return;
+        b.onclick = async () => {
+          const vorige = mijn().subtitle || "";
+          b.disabled = true; b.textContent = "Even geduld…";
+          if (!(await zetTitel(titel))){ actie.innerHTML = `<span class="tz-fout">Dat lukte nu niet. Je vindt hem in Mijn profiel.</span>`; return; }
+          actie.innerHTML = `<span class="tz-ok">✓ Deze titel staat aan</span>${vorige !== titel ? `<button class="linklike tz-terug" type="button">Terugzetten</button>` : ""}`;
+          const t = actie.querySelector(".tz-terug");
+          if (t) t.onclick = async () => { t.disabled = true; if (await zetTitel(vorige)) knop(); else t.disabled = false; };
+        };
+      };
+      bind();
+    });
+  }
+
   /* ---------- Shop: kopen, per soort van goedkoop naar duur ---------- */
   async function renderShop(t){
     if (t) shopTab = t;
@@ -754,7 +793,7 @@ const Profiel = (() => {
     setTimeout(() => groteMomenten(nieuwBehaald(oud, nu, oudM, nuM), null).catch(() => {}), 1500);
   }
 
-  return { kiesTitel: t => kies("titel", t, null), mijlRij, mijlToast, vliegUit, mijlpalenKlaar: () => mijlBelofte || Promise.resolve(null), render, renderShop, naSpel, toonWinst, versier, saldoInKop, codeTip, start, mijn, inVestiarium, haalAlles, herteken: () => teken(),
+  return { kiesTitel: t => kies("titel", t, null), titelZet, bindTitelZet, mijlRij, mijlToast, vliegUit, mijlpalenKlaar: () => mijlBelofte || Promise.resolve(null), render, renderShop, naSpel, toonWinst, versier, saldoInKop, codeTip, start, mijn, inVestiarium, haalAlles, herteken: () => teken(),
            naNaam(){ codeTip(); haalAlles(); } };
 })();
 
