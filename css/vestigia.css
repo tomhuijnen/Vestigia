@@ -2153,3 +2153,18 @@ html.donker .wplijst li{background:#1d2a22}
 html.donker .wplijst li.jij{background:#24382b}
 html.donker .wpeik{color:#e0b766}
 .belrij .wkic.wpbeker{width:30px; height:30px}
+
+/* update 61: kaart ‘Verder spelen’ onder de balk na de dagcasus */
+.verder{background:var(--leaf); border-radius:10px; box-shadow:0 0 0 1px var(--rule) inset; padding:14px 16px; display:grid; gap:10px}
+.verder .caps{color:var(--ink-2)}
+.verder p{margin:0; font-size:.95rem; line-height:1.4}
+.verder .vd-rij{display:flex; align-items:center; gap:10px 16px; flex-wrap:wrap}
+.verder .vd-rij .btn{white-space:nowrap}
+.verder .vd-rij .linklike{font-size:.9rem; font-weight:500}
+.verder .vd-naam{display:grid; gap:8px; padding-bottom:12px; border-bottom:1px solid var(--rule)}
+.verder .vd-naam p b{color:var(--green-d)}
+.verder.in{animation:vdIn .5s .25s both cubic-bezier(.2,.9,.3,1)}
+@keyframes vdIn{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+@media (max-width:520px){ .verder .vd-rij .btn{flex:1 1 100%} .verder .vd-rij .linklike{margin:0 auto} }
+@media (prefers-reduced-motion:reduce){ .verder.in{animation:none} }
+html.donker .verder{background:#1d2a22}

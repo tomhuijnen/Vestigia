@@ -180,7 +180,7 @@ function renderBalk(){
   const balk = $("uitslagBalk"), rij = document.querySelector(".det-row");
   const klaar = S.status !== "playing";
   rij.hidden = klaar;
-  if (!klaar){ balk.hidden = true; balk.innerHTML = ""; return; }
+  if (!klaar){ balk.hidden = true; balk.innerHTML = ""; renderVerder(); return; }
   const t = BY_ID.get(S.target), won = S.status === "won", vers = !balk.hidden ? false : freshResult;
   balk.className = "uitslagbalk" + (won ? "" : " mis") + (vers && !rustigeBeweging() ? " in" : "");
   balk.innerHTML = `<span class="ub-ic" aria-hidden="true">${won
@@ -189,9 +189,42 @@ function renderBalk(){
     <span class="ub-tekst"><small>${won ? "Gedetermineerd" : "Niet gedetermineerd, het was"}</small><b>${esc(t.n)}</b><i>${esc(t.s)}</i></span>
     <span class="ub-knoppen"><button class="btn" type="button" id="ubBekijk">Bekijk uitslag</button>${S.mode === "free" ? `<button class="btn line ubnieuw" type="button" id="ubNieuw">Nieuwe casus <span aria-hidden="true">→</span></button>` : ""}</span>`;
   balk.hidden = false;
+  renderVerder();
   /* update 21: bij oefenen meteen door, zonder eerst naar beneden te scrollen */
   if ($("ubNieuw")) $("ubNieuw").onclick = () => startFree();
   $("ubBekijk").onclick = () => { naarUitslag(); setTimeout(() => { const h = $("resultCard").querySelector("h3"); if (h){ h.tabIndex = -1; h.focus({ preventScroll: true }); } }, rustigeBeweging() ? 0 : 1500); };
+}
+/* Update 61: ‘Verder spelen’ direct onder de balk na de dagcasus. Wie alleen de dagcasus speelt, zag de knop naar
+   oefenen nooit (die stond ±3 schermen lager). Eén knop: oefenen met de diergroep van vandaag, maar alleen bij een
+   grote groep (vanaf VERDER_MIN soorten); bij een kleine groep (kevers 2, libellen 5 …) zou je de plaat bijna gratis
+   krijgen, dan ‘alle soorten’. Bewust geen ‘oefen het verschil’ met alleen de soort en zijn lijker: dan weet je dat het
+   één van de twee is. Soorten op slot (update 59) vallen af via randomFree/oefenbaar(); er staat hier nooit een datum.
+   Zonder spelersnaam: eerst de oproep om een naam te kiezen (de dagcasus van vandaag en gisteren telt dan alsnog mee,
+   zie queueRecentDaily in js/online.js). Alleen bij de dagcasus; bij oefenen staat ‘Nieuwe casus’ al in de balk. */
+const VERDER_MIN = 15;
+function renderVerder(){
+  const el = $("verderKaart"); if (!el) return;
+  if (!S || S.mode !== "daily" || S.status === "playing"){ el.hidden = true; el.innerHTML = ""; return; }
+  const t = BY_ID.get(S.target), won = S.status === "won", st = store.get(), dex = st.dex || {};
+  const groep = TARGETS.filter(x => x.g === t.g);
+  const groot = groep.length >= VERDER_MIN && groep.some(x => oefenbaar(x.id));
+  const lijst = groot ? groep : TARGETS, heb = lijst.filter(x => dex[x.id] && dex[x.id].w > 0).length;
+  const wat = groot ? GROUPS[t.g].toLowerCase() : "soorten";
+  const keuze = { g: groot ? t.g : null, nieuw: false };
+  const p = points(), dag = S.caseNo - 1;
+  const naam = won && p > 0 && online.enabled && !online.player() && eersteModus(st, dag) === !!S.expert && dag >= todayIndex() - 1;
+  const zin = won ? `Je hebt nu <b>${heb} van de ${lijst.length} ${wat}</b> in je ${NAAM.vestiarium}.`
+                  : `Je hebt <b>${heb} van de ${lijst.length} ${wat}</b> in je ${NAAM.vestiarium}. Met oefenen leer je ze beter uit elkaar te houden.`;
+  const animeer = el.hidden && freshResult && !rustigeBeweging();
+  el.className = "verder" + (animeer ? " in" : "");
+  el.innerHTML = (naam ? `<div class="vd-naam"><p><b>Je ${p} ${p === 1 ? "punt telt" : "punten tellen"} nog niet mee.</b> Kies een spelersnaam, dan ${p === 1 ? "staat hij" : "staan ze"} in de ranglijst van deze week. Je hebt geen account of e-mailadres nodig.</p>
+      <div class="vd-rij"><button class="btn line" type="button" id="vdNaam">Kies een spelersnaam</button></div></div>` : "")
+    + `<span class="caps">Verder spelen</span><p>${zin}</p>
+    <div class="vd-rij"><button class="btn" type="button" id="vdOefen">${groot ? `Oefen met ${esc(wat)}` : "Oefen met alle soorten"} <span aria-hidden="true">→</span></button><button class="linklike" type="button" id="vdKies">of kies zelf wat je oefent</button></div>`;
+  el.hidden = false;
+  $("vdOefen").onclick = () => startFree(keuze);
+  $("vdKies").onclick = () => { startFree(keuze); Spelen.wijzig(); };
+  if ($("vdNaam")) $("vdNaam").onclick = () => MENU_GO.player();
 }
 function moreClue(){
   if (!S.expert || S.status !== "playing" || S.revealed >= MAX) return;
