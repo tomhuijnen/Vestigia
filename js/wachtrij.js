@@ -38,6 +38,8 @@ const Wachtrij = (() => {
   async function kies(){
     await wacht(500);
     try { if (window.__swKlaar) await window.__swKlaar; } catch(e){}
+    /* eerst ophalen wat je op je andere apparaten al zag (hooguit 4 s wachten) */
+    if (typeof online !== "undefined" && online.voortgangKlaar) await online.voortgangKlaar(4000);
     if (ietsOpen() || update()) return;
     for (const k of kandidaten.slice().sort((a, b) => a.prio - b.prio)){
       let ok = false;
