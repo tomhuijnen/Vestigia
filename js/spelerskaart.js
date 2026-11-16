@@ -41,12 +41,13 @@ const Spelerskaart = (() => {
     const duels = du.gewonnen + du.gelijk + du.verloren, pct = n => duels ? (100 * n / duels).toFixed(1) : 0;
     const av = avatarSVG(k, "avatar groot", true);
     return `
-      <div class="spkop"><span class="caps">Spelersprofiel</span><button class="spsluit" id="spelerSluit" aria-label="Sluiten">${X}</button></div>
+      <div class="spkop"><span class="caps">${eigen ? "Jouw profielkaart" : "Spelersprofiel"}</span><button class="spsluit" id="spelerSluit" aria-label="Sluiten">${X}</button></div>
       <div class="spav">${metLaurier(k.level ? Levels.ring(av, k.level, k.pct || 0, "groot") : av, k, "groot")}</div>
       <div class="spnaam"><h2 id="spelerPopH">${naam}</h2>${k.subtitle ? `<p class="sub">${esc(k.subtitle)}</p>` : ""}
         ${k.rang ? `<span class="rang">${esc(k.rang)}</span>` : ""}${k.sinds ? `<span class="sinds">Speler sinds ${datum(k.sinds)}</span>` : ""}
         ${k.vandaag == null ? "" : `<span class="spvandaag${k.vandaag ? " ja" : ""}">${k.vandaag ? `${VINK}Dagcasus van vandaag gespeeld` : "Dagcasus van vandaag nog niet gespeeld"}</span>`}</div>
       <div class="spbody">
+        ${eigen ? `<p class="speigen">Zo zien andere spelers je profiel als ze in de ranglijst op je naam tikken.</p>` : ""}
         <div class="sptegels">
           ${tegel("Reeks nu", `${k.reeks ? VLAM : ""}${k.reeks} <small>${k.reeks === 1 ? "dag" : "dagen"}</small>`, `langste: ${k.reeks_max} ${k.reeks_max === 1 ? "dag" : "dagen"}`)}
           ${tegel("Dagcasussen", getal(k.dagcasussen), "gespeeld")}
@@ -62,7 +63,7 @@ const Spelerskaart = (() => {
           <div class="spbalans"><div><b>${du.gewonnen}</b><span>gewonnen</span></div><div><b>${du.gelijk}</b><span>gelijk</span></div><div><b>${du.verloren}</b><span>verloren</span></div></div>
           ${duels ? `<div class="spbalk" aria-hidden="true"><i class="w" style="width:${pct(du.gewonnen)}%"></i><i class="g" style="width:${pct(du.gelijk)}%"></i><i class="v" style="width:${pct(du.verloren)}%"></i></div>` : ""}
         </section>
-        ${online.player() ? `<div class="spknop"><button class="btn duel" id="spelerDaag">${ZWAARD}Daag ${naam} uit</button></div>` : ""}`
+        ${online.player() && !eigen ? `<div class="spknop"><button class="btn duel" id="spelerDaag">${ZWAARD}Daag ${naam} uit</button></div>` : ""}`
         : `<p class="spnog">Vanaf maandag 23 november kun je ${naam} hier uitdagen voor een spelersduel.</p>`}
       </div>`;
   }
@@ -78,10 +79,14 @@ const Spelerskaart = (() => {
     const d = $("spelerDaag");
     if (d) d.onclick = () => { sluit(); Duel.open({ uitdaag: true, tegen: k.name }); };
   }
-  async function open(naam, van){
+  /* update 75: met { eigen: true } (knop ‘Bekijk je profielkaart’ in Mijn profiel) opent je eigen kaart, precies zoals
+     andere spelers hem zien, maar zonder ‘Daag uit’. Tikken op je eigen naam in de ranglijst opent nog steeds Mijn profiel. */
+  let eigen = false;
+  async function open(naam, van, opt){
     if (!naam) return;
     const me = online.player();
-    if (me && me.name && String(me.name).toLowerCase() === naam.toLowerCase()){ showProfiel(); return; }
+    eigen = !!(opt && opt.eigen);
+    if (!eigen && me && me.name && String(me.name).toLowerCase() === naam.toLowerCase()){ showProfiel(); return; }
     terug = van || document.activeElement;
     const p = pop(), nr = ++bezig, sleutel = naam.toLowerCase(), c = cache.get(sleutel);
     body().innerHTML = `<div class="spkop"><span class="caps">Spelersprofiel</span><button class="spsluit" id="spelerSluit" aria-label="Sluiten">${X}</button></div>
@@ -90,7 +95,7 @@ const Spelerskaart = (() => {
     p.hidden = false; p.scrollTop = 0; body().scrollTop = 0;
     $("spelerSluit").focus({ preventScroll: true });
     try {
-      const k = c && Date.now() - c.t < 60000 ? c.k : await online.rpc("player_card", { p_name: naam });
+      const k = c && Date.now() - c.t < 60000 && !eigen ? c.k : await online.rpc("player_card", { p_name: naam });
       if (nr !== bezig || p.hidden) return;
       if (!k){ body().querySelector(".spleeg").textContent = `${naam} staat niet (meer) in de ranglijst.`; return; }
       cache.set(sleutel, { t: Date.now(), k });

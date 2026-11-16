@@ -54,24 +54,54 @@ function renderTrophies(st){
   const dex = st.dex || {}, got = id => dex[id] && dex[id].w > 0, have = earned(st);
   const cells = Object.entries(TITLES).map(([g, name]) => {
     const all = TARGETS.filter(t => t.g === g), f = all.filter(t => got(t.id)).length, on = have.includes("T:" + g);
-    return `<div class="award${on ? " got" : " locked"}">${rosette(`var(--g-${g})`, on, all.length)}<span class="an">${name}</span>
+    return `<div class="award${on ? " got" : " locked"}" data-award="T:${g}">${rosette(`var(--g-${g})`, on, all.length)}<span class="an">${name}</span>
       <span class="ac">${on ? "Alle " + GROUPS[g].toLowerCase() + " gedetermineerd" : `${f} van ${all.length} ${GROUPS[g].toLowerCase()}`}</span>
       <span class="ap"><i style="width:${100*f/all.length}%; background:var(--g-${g})"></i></span></div>`;
   });
   const fAll = TARGETS.filter(t => got(t.id)).length, onAll = have.includes("T:ALL");
-  cells.push(`<div class="award${onAll ? " got" : " locked"}">${rosette("var(--ink)", onAll, TARGETS.length)}<span class="an">${TITLE_ALL}</span>
+  cells.push(`<div class="award${onAll ? " got" : " locked"}" data-award="T:ALL">${rosette("var(--ink)", onAll, TARGETS.length)}<span class="an">${TITLE_ALL}</span>
     <span class="ac">${onAll ? `Je ${NAAM.vestiarium} is compleet` : `${fAll} van ${TARGETS.length} soorten`}</span>
     <span class="ap"><i style="width:${100*fAll/TARGETS.length}%; background:var(--ink)"></i></span></div>`);
   $("titleRow").innerHTML = cells.join("");
   const medals = medalSpecies(st);
   $("medalRow").innerHTML = medals.map(t => {
     const on = have.includes("M:" + t.id);
-    return `<div class="award${on ? " got" : " locked"}">${medal(on, dexNo(t.id), t.id)}<span class="an">${on ? esc(t.n) : "Zeldzame soort"}</span>
-      <span class="ac">${on ? "<i>" + esc(t.s) + "</i>" : "Nog niet gevonden"}</span></div>`;
+    /* update 75: een verdiende medaille is een knop die hem groot laat zien, net als in de shop */
+    return on
+      ? `<button type="button" class="award got medaille" data-award="M:${esc(t.id)}" aria-haspopup="dialog" aria-label="Medaille ${esc(t.n)} groot bekijken">${medal(on, dexNo(t.id), t.id)}<span class="an">${esc(t.n)}</span>
+      <span class="ac"><i>${esc(t.s)}</i></span></button>`
+      : `<div class="award locked" data-award="M:${esc(t.id)}">${medal(on, dexNo(t.id), t.id)}<span class="an">Zeldzame soort</span>
+      <span class="ac">Nog niet gevonden</span></div>`;
   }).join("");
   $("medalWord").textContent = telwoord(medals.length);
   $("trophCount").textContent = `${have.length} van ${Object.keys(TITLES).length + 1 + medals.length} behaald`;
+  $("medalRow").querySelectorAll("button.medaille").forEach(b => b.onclick = () => medaillePop(b.dataset.award.slice(2), b));
 }
+
+/* ---------- update 75: een verdiende medaille groot bekijken (16 november 2026) ----------
+   Zelfde soort pop-up als het grote voorbeeld in de shop (update 39): in het midden, de rest vervaagt erachter.
+   Met de datum waarop je hem verdiende, en een knop naar de plaat van de soort. */
+let medTerug = null;
+const MAANDNAAM = ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"];
+function medaillePop(id, van){
+  const t = BY_ID.get(id), st = store.get(), d = (st.awards || {})["M:" + id]; if (!t) return;
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(d || ""), wanneer = m ? `${+m[3]} ${MAANDNAAM[+m[2] - 1]} ${m[1]}` : "";
+  medTerug = van || document.activeElement;
+  $("medPopSoort").textContent = `Medaille · nº${dexNo(id)}`;
+  $("medPopBeeld").innerHTML = medal(true, dexNo(id), id); $("medPopBeeld").dataset.id = id;
+  $("medPopH").textContent = t.n;
+  $("medPopTekst").innerHTML = `<i>${esc(t.s)}</i><br>Een van de ${telwoord(medalSpecies(st).length)} meest zeldzame soorten van Vestigia.${wanneer ? ` Verdiend op ${wanneer}.` : ""}`;
+  $("medPop").hidden = false;
+  $("medPopSluit").focus({ preventScroll: true });
+}
+function medaillePopSluit(){
+  $("medPop").hidden = true;
+  if (medTerug && medTerug.isConnected) medTerug.focus({ preventScroll: true }); medTerug = null;
+}
+$("medPopSluit").onclick = medaillePopSluit;
+$("medPopPlaat").onclick = () => { const id = $("medPopBeeld").dataset.id; medTerug = null; $("medPop").hidden = true; showDex(id); };
+$("medPop").addEventListener("click", e => { if (e.target === $("medPop")) medaillePopSluit(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("medPop").hidden){ e.preventDefault(); medaillePopSluit(); } });
 
 /* ---------- voortgangscode ---------- */
 /* De voortgang als één object, voor de voortgangscode en voor Supabase (save_progress).
@@ -254,7 +284,9 @@ function nextAward(){
   $("awardPop").hidden = false;
   $("awardNext").focus();
   $("awardNext").onclick = nextAward;
-  $("awardDex").onclick = () => { awardQueue = []; $("awardPop").hidden = true; showDex(); };
+  /* update 75: ‘Bekijk Vestiarium’ scrollt naar de titel of medaille die je net verdiende en licht hem uit */
+  $("awardDex").onclick = () => { awardQueue = []; $("awardPop").hidden = true; showDex();
+    lichtUitEl(document.querySelector(`.trophies [data-award="${CSS.escape(k)}"]`)); };
   if ($("awardProf")) $("awardProf").onclick = () => { awardQueue = []; $("awardPop").hidden = true; showProfiel(); };
 }
 $("awardPop").addEventListener("click", e => { if (e.target === $("awardPop")) nextAward(); });

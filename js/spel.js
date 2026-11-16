@@ -617,12 +617,29 @@ function openOpts(){
   /* Update 19: onder de groepskop alleen soorten die echt in de groep horen. Soorten die er alleen via hun naam bij komen
      (de kleine ijsvogelvlinder bij ‘vogel’, de bruinvis bij ‘vis’, de vroedmeesterpad bij ‘mees’) en soorten die
      alleen met een tikfout passen, staan los eronder, onder ‘Andere soorten’. */
-  const leden = gs.length ? optList.filter(x => inGroep.has(x.id)) : [], los = gs.length ? optList.filter(x => !inGroep.has(x.id)) : optList;
-  optList = leden.concat(los);
+  const leden = gs.length ? optList.filter(x => inGroep.has(x.id)) : [];
+  let los = gs.length ? optList.filter(x => !inGroep.has(x.id)) : optList;
+  /* Update 75 (16 november): soorten uit een verwante groep waarvan het groepswoord je zoekwoord bevat, krijgen een eigen
+     kop in plaats van ‘Andere soorten’. Typ je ‘muis’, dan staan na de muizen de spitsmuizen en de vleermuizen elk onder
+     hun eigen kop. Spitsmuizen horen biologisch niet bij de muizen, dus ze blijven een aparte groep. */
+  const neven = [];
+  if (leden.length){
+    const kandidaten = ZG.filter(z => !gs.includes(z) && z.wn.some(w => w.includes(q)));
+    for (const z of kandidaten){
+      const ids = los.filter(x => z.ids.has(x.id));
+      if (!ids.length) continue;
+      neven.push({ z, ids }); los = los.filter(x => !z.ids.has(x.id));
+    }
+    neven.sort((a, b) => Math.min(...a.ids.map(x => score(x))) - Math.min(...b.ids.map(x => score(x))) || a.ids.length - b.ids.length);
+  }
+  optList = leden.concat(...neven.map(n => n.ids), los);
   const li = (x, i) => `<li role="option" id="opt${i}" data-n="${esc(x.id)}" aria-selected="${i === optIdx}"><span>${esc(x.n)}</span><i>${esc(x.s)}</i></li>`;
-  const kop = leden.length ? `<li class="optgroep" role="presentation"><span>${esc(gs.map((z, i) => i ? z.naam.toLowerCase() : z.naam).join(" en "))}</span><i>${leden.length} ${leden.length === 1 ? "soort" : "soorten"}</i></li>` : "";
-  const kop2 = leden.length && los.length ? `<li class="optgroep los" role="presentation"><span>Andere soorten</span></li>` : "";
-  ul.innerHTML = kop + leden.map(li).join("") + kop2 + los.map((x, i) => li(x, leden.length + i)).join("");
+  const groepKop = (naam, n, cls) => `<li class="optgroep${cls ? " " + cls : ""}" role="presentation"><span>${esc(naam)}</span><i>${n} ${n === 1 ? "soort" : "soorten"}</i></li>`;
+  let html = leden.length ? groepKop(gs.map((z, i) => i ? z.naam.toLowerCase() : z.naam).join(" en "), leden.length) + leden.map(li).join("") : "", nr = leden.length;
+  for (const n of neven){ html += groepKop(n.z.naam, n.ids.length, "neven") + n.ids.map(x => li(x, nr++)).join(""); }
+  if (leden.length && los.length) html += `<li class="optgroep los" role="presentation"><span>Andere soorten</span></li>`;
+  html += los.map(x => li(x, nr++)).join("");
+  ul.innerHTML = html;
   ul.hidden = false; $("gInput").setAttribute("aria-expanded","true"); $("gInput").setAttribute("aria-activedescendant","opt0");
 }
 function moveOpt(d){

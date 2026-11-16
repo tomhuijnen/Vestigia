@@ -255,7 +255,8 @@ const Profiel = (() => {
     duelreeks: n => `${mv(n, "spelersduel", "spelersduels")} op rij gewonnen`,
     duelwinst: n => `${mv(n, "spelersduel", "spelersduels")} gewonnen`,
     revanche: n => n === 1 ? "Een revanche gewonnen" : `${n} revanches gewonnen`,
-    alles1: () => "Elke soort minstens één keer in één poging goed"
+    alles1: () => "Elke soort minstens één keer in één poging goed",
+    medaille: n => `${n} verschillende medailles in je Vestiarium`   // update 75: Halve vitrine en Volle vitrine
   };
   function mijlZin(m){
     const sleutel = m.id === "alles1" ? "alles1" : String(m.id || "").replace(/_\d+$/, "");
@@ -449,7 +450,7 @@ const Profiel = (() => {
     $("pfSaldo").innerHTML = saldoHtml(w);
     const geenDb = beschikbaar === false;
     body.innerHTML = `
-      <div class="pfkaart">${metLaurier(Levels.mijnRing(avatarSVG(me, "avatar groot", true), "groot"), me, "groot")}<div><h3>${esc(me.name)}</h3><p class="pfsub">${me.subtitle ? esc(me.subtitle) : "Nog geen ondertitel"}</p></div></div>
+      <div class="pfkaart">${metLaurier(Levels.mijnRing(avatarSVG(me, "avatar groot", true), "groot"), me, "groot")}<div><h3>${esc(me.name)}</h3><p class="pfsub">${me.subtitle ? esc(me.subtitle) : "Nog geen ondertitel"}</p>${typeof Spelerskaart !== "undefined" && !geenDb ? `<button class="btn line klein" id="pfKaart" type="button" aria-haspopup="dialog">Bekijk je profielkaart</button>` : ""}</div></div>
       ${typeof Apparaat !== "undefined" ? Apparaat.sectie() : ""}
       ${typeof Veld !== "undefined" && Veld.aan() ? `<p class="rankempty"><b>Veldmodus.</b> Zonder internet laden je eikels, de shop en je prestaties niet. Je speelt gewoon verder; alles wordt bijgewerkt zodra je weer online bent.</p>` : ""}
       ${geenDb ? `<p class="rankempty">Eikels, de shop en prestaties komen beschikbaar zodra de database van Vestigia is bijgewerkt.</p>` : `
@@ -482,6 +483,7 @@ const Profiel = (() => {
     if (!geenDb){
       $("pfTabs").querySelectorAll(".chipbtn").forEach(b => b.onclick = () => { tab = b.dataset.t; teken(); });
       $("pfNaarShop").onclick = () => showShop(tab);
+      if ($("pfKaart")) $("pfKaart").onclick = () => Spelerskaart.open(mijn().name, $("pfKaart"), { eigen: true });   // update 75
       $("pfOpties").querySelectorAll("button.pfopt").forEach(b => b.onclick = () => b.dataset.shop ? showShop(tab) : kies(tab, b.dataset.v || null, $("pfMsg")));
     }
   }
