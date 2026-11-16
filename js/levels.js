@@ -259,7 +259,7 @@ const Levels = (() => {
       <span class="caps lvlabel">Level omhoog</span>
       ${cirkel(b, a)}
       <div class="lvtekst"><h2 id="wachtH">${nieuweRang ? `Je bent nu ${esc(nieuweRang)}` : `Je bent nu level ${b}`}</h2>
-        <p>${nieuweRang ? "Een nieuwe rang. De ondertitel staat klaar in je profiel." : b - a > 1 ? `Je bent ${b - a} levels gestegen.` : `Goed bezig! Op naar level ${b + 1}.`}</p></div>
+        <p>${nieuweRang ? "Een nieuwe rang, met de ondertitel die erbij hoort." : b - a > 1 ? `Je bent ${b - a} levels gestegen.` : `Goed bezig! Op naar level ${b + 1}.`}</p></div>
       <div class="lvbuitlijst">
         ${w.eikels ? rij(eik(), `${w.eikels} eikels`, "10 per level, en 50 extra bij level 20, 40, 60 enzovoort", w.eikels) : ""}
         ${w.rangen.map(r => rij(LINT, `Ondertitel ${r}`, "Niet te koop: alleen via je level")).join("")}
@@ -267,8 +267,10 @@ const Levels = (() => {
         ${ringRij}
         ${extra || ""}
       </div>
+      ${nieuweRang && typeof Profiel !== "undefined" && !(extra || "").includes(`data-titel="${esc(nieuweRang)}"`) ? Profiel.titelZet(nieuweRang) : ""}
       ${s.volgende_rang ? `<p class="fine lvvolgende">Volgende rang: ${esc(s.volgende_rang)} op level ${s.volgende_rang_level}</p>` : ""}
       <button class="btn" id="lvVerder">Verder</button>`, "lvt" + trede(wissel ? a : b));
+    if (typeof Profiel !== "undefined") Profiel.bindTitelZet($("wachtBody"));
     if (wissel) ringWissel(a, b, p);
     return p;
   }
