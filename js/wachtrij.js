@@ -7,7 +7,11 @@
    Een dwaalgast gaat dus altijd vóór een duel-uitnodiging. Uitzondering: wie de app opent via een duellink, ziet die
    uitdaging meteen (daar kwam je voor); de dwaalgast komt dan de volgende keer.
    Uitleg bij een nieuw onderdeel (js/nieuw.js) komt net vóór dat onderdeel; daarna gaat de wachtrij door.
-   Staat er al iets open (uitleg, een league-vraag, een melding), dan wacht alles tot de volgende keer. */
+   Staat er al iets open (uitleg, een league-vraag, een melding), dan wacht alles tot de volgende keer.
+   Update 60 (16 november 2026): ook terugkomen in een app die al openstaat telt als openen, als je minstens
+   15 minuten weg was (ander tabblad of venster, scherm uit) of als er intussen een nieuwe dag is begonnen.
+   Zo blijft een pop-up (zoals de weekpop-up na de levels) niet hangen in een tabblad dat dagen openstaat.
+   Nooit midden in een casus: dan komt hij na de volgende keer terugkomen. */
 "use strict";
 
 const Wachtrij = (() => {
@@ -18,12 +22,20 @@ const Wachtrij = (() => {
   const ietsOpen = () => !!document.querySelector(".uitleg") || !!document.querySelector("#opening")
     || [...document.querySelectorAll(".overlay, #speelKring")].some(el => !el.hidden);
   const wacht = ms => new Promise(r => setTimeout(r, ms));
+  let draait = false, laatsteDag = null, weg = null;
 
   /* Staat er een nieuwe versie klaar (melding ‘Vernieuwen’), dan geen pop-ups: die komen na het vernieuwen.
      Eerst even wachten tot de controle op een nieuwe versie klaar is (js/app.js, window.__swKlaar). */
   const update = () => !!window.__nieuweVersie;
   async function start(){
     if (gedaan) return; gedaan = true;
+    await ronde();
+  }
+  async function ronde(){
+    draait = true;
+    try { await kies(); } finally { draait = false; laatsteDag = todayIndex(); }
+  }
+  async function kies(){
     await wacht(500);
     try { if (window.__swKlaar) await window.__swKlaar; } catch(e){}
     if (ietsOpen() || update()) return;
@@ -42,6 +54,27 @@ const Wachtrij = (() => {
       return;                                   // nooit twee tegelijk
     }
   }
+
+  /* ---------- update 60: terugkomen in een app die al openstaat ---------- */
+  const TERUG_NA = 15 * 60 * 1000;
+  /* midden in een casus = al minstens één gok gedaan en nog niet klaar (een casus die alleen klaarstaat telt niet) */
+  const inCasus = () => typeof S !== "undefined" && !!S && S.status === "playing" && !!(S.guesses && S.guesses.length);
+  function terug(nieuweDag){
+    if (!gedaan || draait || document.visibilityState !== "visible") return;
+    const lang = weg != null && Date.now() - weg >= TERUG_NA;
+    const dag = laatsteDag != null && todayIndex() !== laatsteDag;
+    if (!(nieuweDag ? dag : (lang || dag))){ if (!nieuweDag) weg = null; return; }   // kort weg geweest: telt niet
+    if (inCasus()) return;                       // weg blijft staan: bij de volgende keer terugkomen opnieuw proberen
+    weg = null;
+    ronde();
+  }
+  const weggaan = () => { if (weg == null) weg = Date.now(); };
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") weggaan(); else terug(false); });
+  window.addEventListener("blur", weggaan);
+  window.addEventListener("focus", () => terug(false));
+  window.addEventListener("pageshow", e => { if (e.persisted) terug(false); });
+  /* een venster dat de hele nacht in beeld blijft: na middernacht bij de eerstvolgende minuut (niet midden in een casus) */
+  setInterval(() => terug(true), 60 * 1000);
 
   /* ---------- herinnering: kies een avatar (na 3 gespeelde dagcasussen) ----------
      Alleen met een spelersnaam en zolang je geen avatar hebt. Hooguit één keer per dag en drie keer in totaal. */
