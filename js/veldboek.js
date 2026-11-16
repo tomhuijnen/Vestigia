@@ -190,8 +190,8 @@ function nextAward(){
   $("awardSheet").innerHTML = `<div class="confetti" aria-hidden="true">${conf}</div>
     <span class="kind">${kind}</span><div class="badge">${badge}</div>
     <h2 id="awardH">Gefeliciteerd!</h2><p class="nm">${esc(name)}</p><p>${text}</p>${extra}
-    <div class="actions"><button class="btn" id="awardNext">${awardQueue.length ? "Volgende" : "Verder spelen"}</button><button class="btn line" id="awardDex">Bekijk ${NAAM.vestiarium}</button></div>
-    ${awardQueue.length ? `<span class="queue">Nog ${awardQueue.length} andere trofee${awardQueue.length > 1 ? "ën" : ""}</span>` : ""}`;
+    <div class="actions"><button class="btn" id="awardNext">${awardQueue.length ? "Volgende" : "Verder spelen"}</button><button class="btn line" id="awardDex">Bekijk ${NAAM.vestiarium}</button>
+    ${awardQueue.length ? `<span class="queue">Nog ${awardQueue.length} andere trofee${awardQueue.length > 1 ? "ën" : ""}</span>` : ""}</div>`;
   $("awardPop").hidden = false;
   $("awardNext").focus();
   $("awardNext").onclick = nextAward;
