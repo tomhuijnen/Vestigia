@@ -2168,3 +2168,17 @@ html.donker .wpeik{color:#e0b766}
 @media (max-width:520px){ .verder .vd-rij .btn{flex:1 1 100%} .verder .vd-rij .linklike{margin:0 auto} }
 @media (prefers-reduced-motion:reduce){ .verder.in{animation:none} }
 html.donker .verder{background:#1d2a22}
+
+/* update 71: net verdiende ondertitel meteen onder je naam zetten */
+.titelzet{display:flex; align-items:center; justify-content:space-between; gap:10px 14px; flex-wrap:wrap; text-align:left;
+  background:var(--leaf); border-radius:10px; box-shadow:0 0 0 1px var(--rule) inset; padding:10px 12px; margin:4px 0}
+.titelzet .tz-naam{display:grid; line-height:1.25; min-width:0}
+.titelzet .tz-naam b{font-family:var(--display); font-weight:600; font-size:1rem; color:var(--ink)}
+.titelzet .tz-naam span{font-size:.85rem; color:var(--green-d); font-style:italic}
+.titelzet .tz-actie{display:flex; align-items:center; gap:12px; margin-left:auto}
+.titelzet .tz-knop{padding:8px 14px; font-size:.8rem; white-space:nowrap}
+.titelzet .tz-ok{font-family:var(--caps); font-weight:600; font-size:.8rem; color:var(--green-d)}
+.titelzet .tz-terug{font-size:.85rem; font-weight:500}
+.titelzet .tz-fout{font-size:.85rem; color:var(--ink-2)}
+.titelzet.zonder p{margin:0; font-size:.9rem}
+html.donker .titelzet{background:#1d2a22}

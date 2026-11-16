@@ -180,10 +180,12 @@ function nextAward(){
   } else if (k === "T:ALL"){
     badge = rosette("#2f3b40", true, TARGETS.length); kind = "Eindtitel"; name = TITLE_ALL;
     text = `Alle ${TARGETS.length} soorten staan in je ${NAAM.vestiarium}. Een groter compliment heeft Vestigia niet.`;
+    extra = typeof Profiel !== "undefined" ? Profiel.titelZet(TITLE_ALL) : "";
   } else {
     const g = k.slice(2), n = TARGETS.filter(t => t.g === g).length;
     badge = rosette(`var(--g-${g})`, true, n); kind = "Nieuwe titel"; name = TITLES[g];
     text = `Je hebt alle ${n} ${GROUPS[g].toLowerCase()} gedetermineerd. Vanaf nu ben je officieel <b>${esc(TITLES[g])}</b>.`;
+    extra = typeof Profiel !== "undefined" ? Profiel.titelZet(TITLES[g]) : "";
   }
   const colors = ["#4b7a5e","#edfbe2","#e2b84e","#7a4e34","#2e7267","#a8731b"];
   const conf = Array.from({length:26}, (_, i) => `<i style="left:${(i*37)%100}%; background:${colors[i % colors.length]}; animation-delay:${(i%9)*0.07}s; transform:rotate(${i*23}deg)"></i>`).join("");
@@ -192,6 +194,7 @@ function nextAward(){
     <h2 id="awardH">Gefeliciteerd!</h2><p class="nm">${esc(name)}</p><p>${text}</p>${extra}
     <div class="actions"><button class="btn" id="awardNext">${awardQueue.length ? "Volgende" : "Verder spelen"}</button><button class="btn line" id="awardDex">Bekijk ${NAAM.vestiarium}</button>
     ${awardQueue.length ? `<span class="queue">Nog ${awardQueue.length} andere trofee${awardQueue.length > 1 ? "ën" : ""}</span>` : ""}</div>`;
+  if (typeof Profiel !== "undefined") Profiel.bindTitelZet($("awardSheet"));
   $("awardPop").hidden = false;
   $("awardNext").focus();
   $("awardNext").onclick = nextAward;
