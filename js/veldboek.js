@@ -77,6 +77,60 @@ function renderTrophies(st){
 /* De voortgang als één object, voor de voortgangscode en voor Supabase (save_progress).
    dex staat er ook op Nederlandse naam in, zodat een oudere versie van de app (vóór versie 2) hem nog kan lezen;
    nieuwe versies gebruiken dexId. Het logboek gaat alleen mee naar Supabase, niet in de code om over te typen. */
+/* ---------- ‘al gezien’ voor al je apparaten (16 november 2026) ----------
+   Of je een pop-up, uitleg of melding al zag, stond alleen op het apparaat zelf. Wie op zijn telefoon de pop-ups
+   (levels, weekpop-up, XP-boost, Pionier, ‘nieuwe soorten’ …) wegklikte, kreeg ze op de laptop opnieuw. Nu gaan deze
+   sleutels mee in de voortgang (save_progress/get_progress) en worden ze samengevoegd: een getal (level, week, dag)
+   neemt de hoogste waarde, een vlag blijft staan zodra één apparaat hem heeft. Alleen wat over de speler gaat; wat
+   per apparaat hoort (pushmeldingen, installeren, thema, openingsanimatie) blijft op het apparaat. */
+const GEZIEN_MAX = ["vestigia:xpLevelGezien", "vestigia:boostGezien", "vestigia:weekPop", "vestigia:adventGetoond", "vestigia:dwaalLater"];
+const GEZIEN_VLAG = ["vestigia:pionierGezien", "vestigia:tutorial", "vestigia:codeBewaard", "vestigia:tweeling-uitleg"];
+const GEZIEN_OBJ = ["vestigia:avatarHerinnering"];       // { n, dag }: per veld de hoogste
+const isGezien = k => GEZIEN_MAX.includes(k) || GEZIEN_VLAG.includes(k) || GEZIEN_OBJ.includes(k) || /^vestigia:nieuw:[\w-]+$/.test(k);
+function gezienData(){
+  const out = {};
+  try {
+    for (let i = 0; i < localStorage.length; i++){
+      const k = localStorage.key(i); if (!isGezien(k)) continue;
+      const v = localStorage.getItem(k); if (v == null) continue;
+      if (GEZIEN_MAX.includes(k)){ const n = Number(JSON.parse(v)); if (Number.isFinite(n)) out[k] = n; }
+      else if (GEZIEN_OBJ.includes(k)){ try { const o = JSON.parse(v); if (o && typeof o === "object") out[k] = o; } catch(e){} }
+      else out[k] = String(v).slice(0, 40);
+    }
+  } catch(e){}
+  return out;
+}
+let gezienStil = false;                                   // tijdens het samenvoegen niet opnieuw uploaden
+function gezienSamenvoegen(g){
+  if (!g || typeof g !== "object") return;
+  gezienStil = true;
+  try {
+    for (const [k, v] of Object.entries(g)){
+      if (!isGezien(k)) continue;
+      const nu = localStorage.getItem(k);
+      if (GEZIEN_MAX.includes(k)){
+        const n = Number(v); if (!Number.isFinite(n)) continue;
+        let m = NaN; try { m = Number(JSON.parse(nu)); } catch(e){}
+        if (nu == null || !Number.isFinite(m) || n > m) localStorage.setItem(k, k === "vestigia:adventGetoond" || k === "vestigia:dwaalLater" ? String(n) : JSON.stringify(n));
+      } else if (GEZIEN_OBJ.includes(k)){
+        if (!v || typeof v !== "object") continue;
+        let o = {}; try { o = JSON.parse(nu) || {}; } catch(e){}
+        const m = { n: Math.max(+o.n || 0, +v.n || 0), dag: Math.max(+o.dag || 0, +v.dag || 0) };
+        if (m.n !== (+o.n || 0) || m.dag !== (+o.dag || 0)) localStorage.setItem(k, JSON.stringify(m));
+      } else if (nu == null && v != null) localStorage.setItem(k, String(v));
+    }
+  } catch(e){} finally { gezienStil = false; }
+}
+/* zodra een van deze sleutels verandert (pop-up gezien), gaat de voortgang kort daarna naar Supabase */
+(() => {
+  try {
+    const zet = Storage.prototype.setItem;
+    Storage.prototype.setItem = function(k, v){
+      zet.call(this, k, v);
+      try { if (this === window.localStorage && !gezienStil && isGezien(k) && typeof online !== "undefined") online.syncSoon(); } catch(e){}
+    };
+  } catch(e){}
+})();
 function progressData(st, withLog){
   const out = { v: STORE_V, dex: dexToNames(st.dex), dexId: st.dex || {}, stats: st.stats || null, statsX: st.statsX || null, awards: st.awards || {} };
   if (withLog){
@@ -85,6 +139,7 @@ function progressData(st, withLog){
     const i = todayIndex(), g = {};
     for (const [k, v] of Object.entries(st.games || {})) if (v && v.status !== "playing" && +(k.match(/^d(\d+)/) || [, -9])[1] >= i - 1) g[k] = v;
     out.games = g;
+    out.gezien = gezienData();
   }
   return out;
 }
@@ -114,6 +169,7 @@ function mergeProgressData(data){
   }
   checkAwards(st, true);
   store.set(st);
+  gezienSamenvoegen(data.gezien);
 }
 function mergeProgress(code){
   const raw = code.trim().replace(/^VESTIGIA-/, "");

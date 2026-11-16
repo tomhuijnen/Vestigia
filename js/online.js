@@ -280,9 +280,16 @@ const online = (() => {
   /* Voortgang van je andere apparaten ophalen en samenvoegen (platen, trofeeën, statistieken, logboek).
      Bij het openen en als de app weer op de voorgrond komt (hooguit eens per minuut); daarna gaat de
      samengevoegde voortgang weer naar Supabase, zodat geen apparaat de platen van een ander overschrijft. */
-  let laatsteHaal = 0;
-  async function haalVoortgang(){
-    const p = account(); if (!enabled || !p || Date.now() - laatsteHaal < 60000) return;
+  let laatsteHaal = 0, haalBezig = null;
+  /* de pop-ups (wachtrij) en de uitleg wachten hierop, zodat ‘al gezien’ van je andere apparaten er eerst is */
+  function voortgangKlaar(max){ return Promise.race([haalBezig || Promise.resolve(), new Promise(r => setTimeout(r, max || 4000))]).catch(() => {}); }
+  function haalVoortgang(){
+    if (haalBezig) return haalBezig;
+    const p = account(); if (!enabled || !p || Date.now() - laatsteHaal < 60000) return Promise.resolve();
+    haalBezig = haalVoortgangNu(p).finally(() => { haalBezig = null; });
+    return haalBezig;
+  }
+  async function haalVoortgangNu(p){
     laatsteHaal = Date.now();
     try {
       /* koos je op een ander apparaat een naam voor dit gekoppelde account, dan speel je hier nu ook onder die naam */
@@ -335,7 +342,7 @@ const online = (() => {
     setPlayer(Object.assign({}, p, { name: naam })); renderRank(); renderMenu();
     return rest;
   }
-  return { enabled, rpc, player, appApart, hernoem, account, koppeling, koppelcode, koppel, naKoppel, afterGame, haalVoortgang, flush, syncSoon, renderRank, refreshWeek, renderScope, setScope,
+  return { enabled, rpc, player, appApart, hernoem, account, koppeling, koppelcode, koppel, naKoppel, afterGame, haalVoortgang, voortgangKlaar, flush, syncSoon, renderRank, refreshWeek, renderScope, setScope,
            setMode: (m, s) => { rankMode = m; if (s !== undefined) setScope(s); else renderRank(); } };
 })();
 
