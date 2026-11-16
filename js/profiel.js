@@ -543,14 +543,14 @@ const Profiel = (() => {
 
   /* ---------- update 71: een net verdiende ondertitel meteen onder je naam zetten ----------
      In de pop-ups waar je een ondertitel verdient (titel van het Vestiarium, goud bij een prestatie, een mijlpaal,
-     een nieuwe rang) staat een voorbeeld van je naamregel met de knop ‘Zet onder mijn naam’. Daarna ‘✓ Staat onder
-     je naam’ met ‘Terugzetten’ (naar je vorige ondertitel). Avatar, lijst en kleur blijven zoals ze zijn. */
+     een nieuwe rang) staat een voorbeeld van je naamregel met de knop ‘Zet deze titel aan’ (Tom, 16 november 10:46).
+     Daarna ‘✓ Deze titel staat aan’ met ‘Terugzetten’ (naar je vorige ondertitel). Avatar, lijst en kleur blijven zoals ze zijn. */
   function titelZet(titel){
     if (!titel || !online.enabled) return "";
     if (!p()) return `<div class="titelzet zonder"><p>Kies een spelersnaam om <b>${esc(titel)}</b> als ondertitel te gebruiken.</p></div>`;
     const al = mijn().subtitle === titel;
     return `<div class="titelzet" data-titel="${esc(titel)}"><span class="tz-naam"><b>${esc(p().name)}</b><span>${esc(titel)}</span></span>
-      <span class="tz-actie">${al ? `<span class="tz-ok">✓ Staat onder je naam</span>` : `<button class="btn line tz-knop" type="button">Zet onder mijn naam</button>`}</span></div>`;
+      <span class="tz-actie">${al ? `<span class="tz-ok">✓ Deze titel staat aan</span>` : `<button class="btn line tz-knop" type="button">Zet deze titel aan</button>`}</span></div>`;
   }
   /* de server kent een titel van het Vestiarium pas als je voortgang er is; daarom nog een keer proberen */
   async function zetTitel(titel){
@@ -563,13 +563,13 @@ const Profiel = (() => {
   function bindTitelZet(root){
     (root || document).querySelectorAll(".titelzet[data-titel]").forEach(el => {
       const titel = el.dataset.titel, actie = el.querySelector(".tz-actie");
-      const knop = () => { actie.innerHTML = `<button class="btn line tz-knop" type="button">Zet onder mijn naam</button>`; bind(); };
+      const knop = () => { actie.innerHTML = `<button class="btn line tz-knop" type="button">Zet deze titel aan</button>`; bind(); };
       const bind = () => { const b = actie.querySelector(".tz-knop"); if (!b) return;
         b.onclick = async () => {
           const vorige = mijn().subtitle || "";
           b.disabled = true; b.textContent = "Even geduld…";
           if (!(await zetTitel(titel))){ actie.innerHTML = `<span class="tz-fout">Dat lukte nu niet. Je vindt hem in Mijn profiel.</span>`; return; }
-          actie.innerHTML = `<span class="tz-ok">✓ Staat onder je naam</span>${vorige !== titel ? `<button class="linklike tz-terug" type="button">Terugzetten</button>` : ""}`;
+          actie.innerHTML = `<span class="tz-ok">✓ Deze titel staat aan</span>${vorige !== titel ? `<button class="linklike tz-terug" type="button">Terugzetten</button>` : ""}`;
           const t = actie.querySelector(".tz-terug");
           if (t) t.onclick = async () => { t.disabled = true; if (await zetTitel(vorige)) knop(); else t.disabled = false; };
         };
