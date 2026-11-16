@@ -6,6 +6,19 @@
 <title>Vestigia</title>
 <meta name="description" content="Determinatiespel over beschermde fauna van Nederland: herken de soort aan habitat en sporen.">
 <meta name="theme-color" content="#4b7a5e">
+<!-- update 73: kaartje als de link in WhatsApp, Teams enz. gedeeld wordt (voor elke link hetzelfde; GitHub Pages is statisch) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Vestigia">
+<meta property="og:title" content="Vestigia – determineer beschermde diersoorten">
+<meta property="og:description" content="Herken beschermde Nederlandse diersoorten aan hun habitat en sporen. Speel de dagcasus, oefen, of daag iemand uit voor een duel.">
+<meta property="og:url" content="https://tomhuijnen.github.io/Vestigia/">
+<meta property="og:image" content="https://tomhuijnen.github.io/Vestigia/icons/deelkaart.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Vestigia: determineer beschermde diersoorten aan hun sporen">
+<meta property="og:locale" content="nl_NL">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="manifest" href="app.webmanifest">
 <link rel="icon" href="icons/app.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -77,7 +90,7 @@ html.opent body>:not(#opening){visibility:hidden}
 #opening{position:fixed;inset:0;z-index:60;background:#4b7a5e}
 html.donker #opening{background:#7fb894}
 </style>
-<link rel="stylesheet" href="css/vestigia.css?v=202611161050">
+<link rel="stylesheet" href="css/vestigia.css?v=202611161106">
 </head>
 <body>
 <script>/* installatievraag zo vroeg mogelijk opvangen: de browser kan hem sturen voordat app.js geladen is */
@@ -495,41 +508,41 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
 </div>
 
 <script src="config.js"></script>
-<script src="data/teksten.js?v=202611161050"></script>
-<script src="data/soorten.js?v=202611161050"></script>
-<script src="data/sporen.js?v=202611161050"></script>
-<script src="data/dagschema.js?v=202611161050"></script>
-<script src="data/veldweken.js?v=202611161050"></script>
-<script src="data/toelichting.js?v=202611161050"></script>
-<script src="data/zoekgroepen.js?v=202611161050"></script>
-<script src="data/bronnen.js?v=202611161050"></script>
-<script src="js/kern.js?v=202611161050"></script>
-<script src="js/spel.js?v=202611161050"></script>
-<script src="js/veldboek.js?v=202611161050"></script>
-<script src="js/melden.js?v=202611161050"></script>
-<script src="js/kop.js?v=202611161050"></script>
-<script src="js/spelen.js?v=202611161050"></script>
-<script src="js/opening.js?v=202611161050"></script>
-<script src="js/uitleg.js?v=202611161050"></script>
-<script src="js/online.js?v=202611161050"></script>
-<script src="js/league.js?v=202611161050"></script>
-<script src="data/avatars.js?v=202611161050"></script>
-<script src="js/profiel.js?v=202611161050"></script>
-<script src="data/advent.js?v=202611161050"></script>
-<script src="js/wachtrij.js?v=202611161050"></script>
-<script src="js/kerst.js?v=202611161050"></script>
-<script src="data/dwaalgasten.js?v=202611161050"></script>
-<script src="js/dwaalgast.js?v=202611161050"></script>
-<script src="js/nieuw.js?v=202611161050"></script>
-<script src="js/levels.js?v=202611161050"></script>
-<script src="js/boost.js?v=202611161050"></script>
-<script src="js/statistiek.js?v=202611161050"></script>
-<script src="js/duel.js?v=202611161050"></script>
-<script src="js/spelerskaart.js?v=202611161050"></script>
-<script src="js/qrcode.js?v=202611161050"></script>
-<script src="js/apparaat.js?v=202611161050"></script>
-<script src="js/push.js?v=202611161050"></script>
-<script src="js/week.js?v=202611161050"></script>
-<script src="js/app.js?v=202611161050"></script>
+<script src="data/teksten.js?v=202611161106"></script>
+<script src="data/soorten.js?v=202611161106"></script>
+<script src="data/sporen.js?v=202611161106"></script>
+<script src="data/dagschema.js?v=202611161106"></script>
+<script src="data/veldweken.js?v=202611161106"></script>
+<script src="data/toelichting.js?v=202611161106"></script>
+<script src="data/zoekgroepen.js?v=202611161106"></script>
+<script src="data/bronnen.js?v=202611161106"></script>
+<script src="js/kern.js?v=202611161106"></script>
+<script src="js/spel.js?v=202611161106"></script>
+<script src="js/veldboek.js?v=202611161106"></script>
+<script src="js/melden.js?v=202611161106"></script>
+<script src="js/kop.js?v=202611161106"></script>
+<script src="js/spelen.js?v=202611161106"></script>
+<script src="js/opening.js?v=202611161106"></script>
+<script src="js/uitleg.js?v=202611161106"></script>
+<script src="js/online.js?v=202611161106"></script>
+<script src="js/league.js?v=202611161106"></script>
+<script src="data/avatars.js?v=202611161106"></script>
+<script src="js/profiel.js?v=202611161106"></script>
+<script src="data/advent.js?v=202611161106"></script>
+<script src="js/wachtrij.js?v=202611161106"></script>
+<script src="js/kerst.js?v=202611161106"></script>
+<script src="data/dwaalgasten.js?v=202611161106"></script>
+<script src="js/dwaalgast.js?v=202611161106"></script>
+<script src="js/nieuw.js?v=202611161106"></script>
+<script src="js/levels.js?v=202611161106"></script>
+<script src="js/boost.js?v=202611161106"></script>
+<script src="js/statistiek.js?v=202611161106"></script>
+<script src="js/duel.js?v=202611161106"></script>
+<script src="js/spelerskaart.js?v=202611161106"></script>
+<script src="js/qrcode.js?v=202611161106"></script>
+<script src="js/apparaat.js?v=202611161106"></script>
+<script src="js/push.js?v=202611161106"></script>
+<script src="js/week.js?v=202611161106"></script>
+<script src="js/app.js?v=202611161106"></script>
 </body>
 </html>

@@ -2182,3 +2182,8 @@ html.donker .verder{background:#1d2a22}
 .titelzet .tz-fout{font-size:.85rem; color:var(--ink-2)}
 .titelzet.zonder p{margin:0; font-size:.9rem}
 html.donker .titelzet{background:#1d2a22}
+
+/* update 73: WhatsApp-knop bij het delen van een duel (een <a> die eruitziet als .btn) */
+a.btn{display:inline-flex; align-items:center; text-decoration:none}
+.btn.wa{gap:8px}
+.btn.wa .waic{width:18px; height:18px; flex:0 0 18px}
