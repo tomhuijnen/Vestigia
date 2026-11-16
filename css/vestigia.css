@@ -1897,7 +1897,12 @@ html.donker .lvring.lvt0 .lvnr{color:#1f3a2a}
 .lvringnaam .lvbol{width:18px; height:18px; -webkit-mask:radial-gradient(circle, transparent 4.5px, #000 5px); mask:radial-gradient(circle, transparent 4.5px, #000 5px)}
 .lvringnaam b{color:var(--ink)}
 .lvrangen .lvbol{width:12px; height:12px; margin-right:7px; vertical-align:-1px; -webkit-mask:radial-gradient(circle, transparent 2.5px, #000 3px); mask:radial-gradient(circle, transparent 2.5px, #000 3px)}
-.lvrangen .lvbol.leeg{background:none; box-shadow:none}
+/* op de pagina (profielkaart): de paginakleur van de trede, zoals de ring om je avatar daar (lv-licht / lv-vul),
+   zodat IJsvogel, Diepzee en Noorderlicht ook als klein bolletje goed van elkaar te onderscheiden zijn */
+.lvkaart .lvbol{background:var(--lv-vul, var(--lv-licht))}
+/* rangenlijst na level 100: zelfde ring, met het aantal sterretjes achter de naam */
+.lvrangen .lvster{margin-left:6px; font-size:.68rem; letter-spacing:1px; color:#c9a23a; vertical-align:1px; white-space:nowrap}
+html.donker .lvrangen .lvster{color:#e8c25a}
 /* level-pop-up: de ring in de kleur van de trede, en bij een wissel de nieuwe kleur die rondloopt */
 #wachtPop.levelpop .sheet{transition:border-color .4s}
 .lvcirkel{background:var(--lv-vulkop, var(--lv-ring)); isolation:isolate; --band:7px; --sg:16px; --stap:19deg; transition:transform .45s cubic-bezier(.3,1.4,.5,1), box-shadow .5s}
