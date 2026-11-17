@@ -5,7 +5,7 @@
    t    het weetje: één zin, ±15–25 woorden, geen herhaling van de toelichting van dezelfde casus
    bron de goedgekeurde bron (Sovon, RAVON, Zodion, Vogelbescherming, BIJ12, De Vlinderstichting, EIS); staat klein onder het weetje
    Een casus zonder weetje toont nog het oude vak ‘Typisch’, tot zijn diergroep is goedgekeurd.
-   Goedgekeurd door Tom, per diergroep: reptielen (17 november 2026, 09:32), amfibieën (09:41), vissen, vlinders, libellen en kevers (09:50), zoogdieren deel 1 (09:57) */
+   Goedgekeurd door Tom, per diergroep: reptielen (17 november 2026, 09:32), amfibieën (09:41), vissen, vlinders, libellen en kevers (09:50), zoogdieren deel 1 (09:57), zoogdieren deel 2 (10:04) */
 "use strict";
 const WEETJES = {
   /* ---------- Reptielen (RAVON, soortpagina's) ---------- */
@@ -150,7 +150,7 @@ const WEETJES = {
   "egel:1": { t:"Tijdens de winterslaap zakt zijn lichaamstemperatuur van zo'n 35 naar 10 °C, en hij verliest ongeveer 30 procent van zijn gewicht.", bron:"Zodion, soortpagina egel" },
   "wezel:0": { t:"Hij is het kleinste roofdier van Europa: een volwassen wezel weegt 40 tot 150 gram.", bron:"Zodion, soortpagina wezel" },
   "wezel:1": { t:"Anders dan de hermelijn wordt de wezel in Nederland 's winters nooit wit.", bron:"Zodion, soortpagina wezel" },
-  "bunzing:0": { t:"Na een vrouwtjeskikker braakt hij de eierstokken weer uit; dat slijmerige hoopje heet sterrenschot.", bron:"Zodion, soortpagina bunzing" },
+  "bunzing:0": { t:"Na het eten van een vrouwtjeskikker braakt hij de eierstokken weer uit; dat slijmerige hoopje heet sterrenschot.", bron:"Zodion, soortpagina bunzing" },
   "bunzing:1": { t:"Verwilderde fretten paren met bunzingen, waardoor de genetische zuiverheid van de bunzing onder druk staat.", bron:"Zodion, soortpagina bunzing" },
   "gewone-zeehond:0": { t:"Een pup van twee dagen oud kan al twee minuten onder water blijven.", bron:"Zodion, soortpagina gewone zeehond" },
   "gewone-zeehond:1": { t:"Hij drinkt geen zeewater, maar haalt zijn vocht uit de 4 tot 8 kilo vis die hij per dag eet.", bron:"Zodion, soortpagina gewone zeehond" },
@@ -159,5 +159,51 @@ const WEETJES = {
   "bosmuis:0": { t:"In de nazomer leven er 13 tot 60 bosmuizen per hectare, tegen 4 tot 7 in het voorjaar.", bron:"Zodion, soortpagina bosmuis" },
   "bosmuis:1": { t:"Gemiddeld wordt een bosmuis maar drie maanden oud, al kan hij in het wild 18 maanden halen.", bron:"Zodion, soortpagina bosmuis" },
   "grote-bosmuis:0": { t:"Hij graaft zelden zelf een hol en neemt liever de holen van mol, konijn, woelmuis of das over.", bron:"Zodion, soortpagina grote bosmuis" },
-  "grote-bosmuis:1": { t:"Onderling roepen grote bosmuizen in ultrasone tonen van 40 tot 60 kHz, die je met een batdetector kunt horen.", bron:"Zodion, soortpagina grote bosmuis" }
+  "grote-bosmuis:1": { t:"Onderling roepen grote bosmuizen in ultrasone tonen van 40 tot 60 kHz, die je met een batdetector kunt horen.", bron:"Zodion, soortpagina grote bosmuis" },
+  "dwergmuis:0": { t:"Zijn kraamnest is zo elastisch dat het meegroeit met de jongen.", bron:"Zodion, soortpagina dwergmuis" },
+  "dwergmuis:1": { t:"Een pasgeboren dwergmuis weegt maar 0,7 gram, en in één seizoen kunnen zich wel vier generaties voortplanten.", bron:"Zodion, soortpagina dwergmuis" },
+  "woelrat:0": { t:"Een woelrat eet per dag zo'n 80 procent van zijn eigen lichaamsgewicht, vooral plantenstengels.", bron:"Zodion, soortpagina woelrat" },
+  "woelrat:1": { t:"Hij kan anderhalve minuut duiken en onder water zo'n 7 meter afleggen.", bron:"Zodion, soortpagina woelrat" },
+  "aardmuis:0": { t:"Ongeveer elke 3 tot 5 jaar ontstaat een piek in de aantallen, die daarna vanzelf weer instort.", bron:"Zodion, soortpagina aardmuis" },
+  "aardmuis:1": { t:"Aardmuizen zijn vrij luidruchtig: ze maken lage, kwetterende en soms knorrende geluiden.", bron:"Zodion, soortpagina aardmuis" },
+  "rosse-woelmuis:0": { t:"Hij knaagt schors af tot wel vijf meter hoogte.", bron:"Zodion, soortpagina rosse woelmuis" },
+  "rosse-woelmuis:1": { t:"In de herfst legt hij voedselvoorraden aan, soms in boomholten en oude vogelnesten.", bron:"Zodion, soortpagina rosse woelmuis" },
+  "gewone-bosspitsmuis:0": { t:"Per dag eet hij 80 tot 90 procent van zijn lichaamsgewicht, en na drie uur zonder voedsel sterft hij al.", bron:"Zodion, soortpagina gewone bosspitsmuis" },
+  "gewone-bosspitsmuis:1": { t:"Hij wordt hooguit 14 à 16 maanden oud en haalt nooit een tweede winter.", bron:"Zodion, soortpagina gewone bosspitsmuis" },
+  "huisspitsmuis:0": { t:"Hij eet ook zijn eigen uitwerpselen opnieuw, omdat zijn prooien vaak maar half verteerd zijn.", bron:"Zodion, soortpagina huisspitsmuis" },
+  "huisspitsmuis:1": { t:"Hij houdt geen echte winterslaap, maar bij kou kan zijn lichaamstemperatuur onder de 18 °C zakken.", bron:"Zodion, soortpagina huisspitsmuis" },
+  "gewone-dwergvleermuis:0": { t:"De oudst bekende gewone dwergvleermuis werd 16 jaar, terwijl hij maar 3,5 tot 8 gram weegt.", bron:"Zodion, soortpagina gewone dwergvleermuis" },
+  "gewone-dwergvleermuis:1": { t:"In de winter hangen er soms honderden dwergvleermuizen bij elkaar in één verblijf.", bron:"Zodion, soortpagina gewone dwergvleermuis" },
+  "ruige-dwergvleermuis:0": { t:"Mannetjes houden een territorium en verzamelen daar groepjes van 2 tot 10 vrouwtjes om zich heen.", bron:"Zodion, soortpagina ruige dwergvleermuis" },
+  "ruige-dwergvleermuis:1": { t:"Hij trekt meer dan 2000 kilometer tussen zomer- en wintergebied, soms ruim 170 kilometer over zee.", bron:"Zodion, soortpagina ruige dwergvleermuis" },
+  "rosse-vleermuis:0": { t:"Zijn lage plop-signalen rond 20 kHz zijn zo luid dat mensen met een goed gehoor ze zonder detector kunnen horen.", bron:"Zodion, soortpagina rosse vleermuis" },
+  "rosse-vleermuis:1": { t:"Meestal jaagt hij rond 13 meter hoogte, maar soms op honderden meters boven de grond.", bron:"Zodion, soortpagina rosse vleermuis" },
+  "meervleermuis:0": { t:"Kraamkolonies vind je bijna alleen in Nederland, de Baltische staten en Rusland; in ons land leven er naar schatting 10.000.", bron:"Zodion, soortpagina meervleermuis" },
+  "meervleermuis:1": { t:"In de winter verdwijnt het grootste deel op raadselachtige wijze; dan worden er in Nederland maar zo'n 400 geteld.", bron:"Zodion, soortpagina meervleermuis" },
+  "franjestaart:0": { t:"De oudst bekende franjestaarten werden 23 en 21 jaar, terwijl ze maar 5 tot 12 gram wegen.", bron:"Zodion, soortpagina franjestaart" },
+  "franjestaart:1": { t:"Hij kan spinnen uit hun web plukken zonder het web zelf te raken.", bron:"Zodion, soortpagina franjestaart" },
+  "ingekorven-vleermuis:0": { t:"Hij vliegt pas ongeveer een uur na zonsondergang uit, wat hem extra lastig te zien maakt.", bron:"Zodion, soortpagina ingekorven vleermuis" },
+  "ingekorven-vleermuis:1": { t:"In 2020 overwinterden er zo'n 1500 in de Zuid-Limburgse mergelgroeven, deels dieren uit Duitsland.", bron:"Zodion, soortpagina ingekorven vleermuis" },
+  "tweekleurige-vleermuis:0": { t:"Vrouwtjes hebben vier tepels, uniek onder de Europese vleermuizen, en krijgen meestal een tweeling.", bron:"Zodion, soortpagina tweekleurige vleermuis" },
+  "tweekleurige-vleermuis:1": { t:"Er zijn trekafstanden van 1440 en 1787 kilometer bekend; de dieren in kuststeden zijn waarschijnlijk op doortrek.", bron:"Zodion, soortpagina tweekleurige vleermuis" },
+  "grijze-grootoorvleermuis:0": { t:"Nachtvlinders vormen 70 tot 100 procent van zijn menu.", bron:"Zodion, soortpagina grijze grootoorvleermuis" },
+  "grijze-grootoorvleermuis:1": { t:"Op de Rode Lijst ging hij van bedreigd in 1994 naar thans niet bedreigd in 2020.", bron:"Zodion, soortpagina grijze grootoorvleermuis" },
+  "gewone-grootoorvleermuis:0": { t:"Zijn echolocatie is zo zacht dat nachtvlinders hem niet horen aankomen; hij jaagt vooral op het geritsel van prooien.", bron:"Zodion, soortpagina gewone grootoorvleermuis" },
+  "gewone-grootoorvleermuis:1": { t:"Zijn oren zijn 3 tot 4 centimeter lang: ruim half zo lang als zijn hele lichaam.", bron:"Zodion, soortpagina gewone grootoorvleermuis" },
+  "noordse-woelmuis:0": { t:"De Nederlandse noordse woelmuis is een aparte ondersoort die nergens anders ter wereld voorkomt.", bron:"Zodion, soortpagina noordse woelmuis" },
+  "noordse-woelmuis:1": { t:"Hij zwemt en duikt ook vrijwillig, en is op eilandjes daardoor vaak de enige woelmuis.", bron:"Zodion, soortpagina noordse woelmuis" },
+  "grijze-zeehond:0": { t:"Een pup wordt maar 16 tot 21 dagen gezoogd, maar komt in die tijd 1,5 tot 2 kilo per dag aan.", bron:"Zodion, soortpagina grijze zeehond" },
+  "grijze-zeehond:1": { t:"Recent is ontdekt dat grijze zeehonden ook bruinvissen en gewone zeehonden doden.", bron:"Zodion, soortpagina grijze zeehond" },
+  "veldmuis:0": { t:"Veldmuisurine geeft ultraviolet licht af, en dat kunnen roofvogels zien.", bron:"Zodion, soortpagina veldmuis" },
+  "veldmuis:1": { t:"In een piekjaar kunnen er tot 1400 veldmuizen per hectare leven.", bron:"Zodion, soortpagina veldmuis" },
+  "gewone-baardvleermuis:0": { t:"Hij is in het veld en met een detector bijna niet te onderscheiden van de vleermuis van Brandt; zekerheid geeft pas een blik op de tanden.", bron:"Zodion, soortpagina gewone baardvleermuis" },
+  "gewone-baardvleermuis:1": { t:"Gemiddeld wordt hij 3,5 tot 5 jaar oud, maar de oudst bekende gewone baardvleermuis werd 23.", bron:"Zodion, soortpagina gewone baardvleermuis" },
+  "tuimelaar:0": { t:"Op de Rode Lijst geldt de tuimelaar als in het wild verdwenen uit Nederland.", bron:"Zodion, Basisrapport Rode Lijst Zoogdieren 2020" },
+  "tuimelaar:1": { t:"Tussen 1900 en 1997 spoelden er 387 tuimelaars aan, en tussen 1998 en 2007 nog maar één.", bron:"Zodion, Lutra 51(2)" },
+  "witsnuitdolfijn:0": { t:"Het aantal strandingen daalde van gemiddeld 6 per jaar (1990–2009) naar 0,6 per jaar (2010–2023).", bron:"Zodion, soortpagina witsnuitdolfijn" },
+  "witsnuitdolfijn:1": { t:"Vóór 1940 kwam hij vrijwel niet voor in Nederlandse wateren.", bron:"Zodion, soortpagina witsnuitdolfijn" },
+  "wolf:0": { t:"Vóór de terugkeer in 2015 was de laatste wolf in Nederland in 1869 gezien; in september 2024 waren er al 11 roedels.", bron:"Zodion, soortpagina wolf" },
+  "wolf:1": { t:"Een wolf hoort het huilen van andere wolven nog op 6 tot 10 kilometer afstand.", bron:"Zodion, soortpagina wolf" },
+  "goudjakhals:0": { t:"Hij is erg goed in het vangen van muskusratten en beverratten.", bron:"Zodion, soortpagina goudjakhals" },
+  "goudjakhals:1": { t:"Jonge goudjakhalzen blijven zo'n twee jaar bij hun ouders voordat ze een eigen territorium zoeken.", bron:"Zodion, soortpagina goudjakhals" }
 };
