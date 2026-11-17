@@ -5,7 +5,7 @@
    t    het weetje: één zin, ±15–25 woorden, geen herhaling van de toelichting van dezelfde casus
    bron de goedgekeurde bron (Sovon, RAVON, Zodion, Vogelbescherming, BIJ12, De Vlinderstichting, EIS); staat klein onder het weetje
    Een casus zonder weetje toont nog het oude vak ‘Typisch’, tot zijn diergroep is goedgekeurd.
-   Goedgekeurd door Tom, per diergroep: reptielen (17 november 2026, 09:32), amfibieën (09:41), vissen, vlinders, libellen en kevers (09:50), zoogdieren deel 1 (09:57), zoogdieren deel 2 (10:04), zoogdieren deel 3 (10:12) */
+   Goedgekeurd door Tom, per diergroep: reptielen (17 november 2026, 09:32), amfibieën (09:41), vissen, vlinders, libellen en kevers (09:50), zoogdieren deel 1 (09:57), zoogdieren deel 2 (10:04), zoogdieren deel 3 (10:12), vogels deel 1 (10:20) */
 "use strict";
 const WEETJES = {
   /* ---------- Reptielen (RAVON, soortpagina's) ---------- */
@@ -237,5 +237,35 @@ const WEETJES = {
   "sperwer:0": { t:"Het vrouwtje is een stuk groter dan het mannetje en vangt daardoor ook grotere prooien, tot het formaat van een Turkse tortel.", bron:"Vogelbescherming, vogelgids sperwer" },
   "sperwer:1": { t:"Een sperwer bouwt elk jaar een nieuw nest, zodat er in een oud territorium vaak veel oude nesten liggen.", bron:"Vogelbescherming, vogelgids sperwer" },
   "wespendief:0": { t:"In Nederland broeden maar zo'n 330 tot 400 paren wespendieven.", bron:"Vogelbescherming, vogelgids wespendief" },
-  "wespendief:1": { t:"Drie Natura 2000-gebieden zijn speciaal voor hem aangewezen, waaronder de Brabantse Wal.", bron:"Vogelbescherming, vogelgids wespendief" }
+  "wespendief:1": { t:"Drie Natura 2000-gebieden zijn speciaal voor hem aangewezen, waaronder de Brabantse Wal.", bron:"Vogelbescherming, vogelgids wespendief" },
+  "boomvalk:0": { t:"Jonge boomvalken worden na het uitvliegen nog tot vijf weken door hun ouders gevoerd.", bron:"Vogelbescherming, vogelgids boomvalk" },
+  "boomvalk:1": { t:"Het aantal boomvalken daalt al zo'n dertig jaar; er broeden er nog 400 tot 600 paren in Nederland.", bron:"Vogelbescherming, vogelgids boomvalk" },
+  "grote-gele-kwikstaart:0": { t:"Het aantal broedparen steeg van zo'n 110 tot 175 in de jaren zeventig naar 300 tot 400 nu.", bron:"Vogelbescherming, vogelgids grote gele kwikstaart" },
+  "grote-gele-kwikstaart:1": { t:"In zachte winters overwinteren er in Limburg flinke aantallen grote gele kwikstaarten.", bron:"Vogelbescherming, vogelgids grote gele kwikstaart" },
+  "bosuil:0": { t:"Het mannetje roept het bekende hoge, uitgerekte 'hoe-hoe', het vrouwtje juist een luid 'ke-wiek!'.", bron:"Vogelbescherming, vogelgids bosuil" },
+  "bosuil:1": { t:"Kom je te dicht bij het nest, dan kan een bosuil je fel en gevaarlijk aanvallen.", bron:"Vogelbescherming, vogelgids bosuil" },
+  "torenvalk:0": { t:"De torenvalk was ooit de talrijkste roofvogel van Nederland; nu is dat de buizerd.", bron:"Vogelbescherming, vogelgids torenvalk" },
+  "torenvalk:1": { t:"Sinds 2017 staat de torenvalk op de Rode Lijst, vooral doordat intensief beheerd grasland veel minder veldmuizen heeft.", bron:"Vogelbescherming, vogelgids torenvalk" },
+  "boerenzwaluw:0": { t:"Het herstel van de laatste jaren hangt samen met zo'n vijf keer zoveel geschikte nestplekken, vooral in paardenstallen.", bron:"Vogelbescherming, vogelgids boerenzwaluw" },
+  "boerenzwaluw:1": { t:"In de winter blijven er hooguit een of twee boerenzwaluwen in Nederland; de rest zit in Afrika.", bron:"Vogelbescherming, vogelgids boerenzwaluw" },
+  "huiszwaluw:0": { t:"Een modderplas moet binnen 100 tot 200 meter van het nest liggen.", bron:"Vogelbescherming, vogelgids huiszwaluw" },
+  "huiszwaluw:1": { t:"Sinds eind jaren zestig is het aantal huiszwaluwen in Nederland met minstens 75 procent gedaald.", bron:"Vogelbescherming, vogelgids huiszwaluw" },
+  "blauwe-reiger:0": { t:"In 1963 broedden er nog maar zo'n 3500 paren; nu zijn het er 11.000 tot 12.000.", bron:"Vogelbescherming, vogelgids blauwe reiger" },
+  "blauwe-reiger:1": { t:"In Artis in Amsterdam leeft een wilde kolonie die de vis van de pinguïns en jan-van-genten inpikt.", bron:"Vogelbescherming, vogelgids blauwe reiger" },
+  "zwarte-specht:0": { t:"Hij broedt pas sinds rond 1913 in Nederland, nadat hier grote naaldbossen waren aangeplant.", bron:"Vogelbescherming, vogelgids zwarte specht" },
+  "zwarte-specht:1": { t:"Elk jaar hakt hij een nieuw nesthol uit, vaak in een oude beuk.", bron:"Vogelbescherming, vogelgids zwarte specht" },
+  "groene-specht:0": { t:"Een groene specht roffelt maar zelden, en dan zwak.", bron:"Vogelbescherming, vogelgids groene specht" },
+  "groene-specht:1": { t:"Tussen 1975 en 2000 verdween hij uit veel grote bossen, maar sinds 1990 neemt hij weer flink toe.", bron:"Vogelbescherming, vogelgids groene specht" },
+  "tapuit:0": { t:"Rond 1975 broedden er nog ruim 2000 paren; in 2024 waren het er 300 tot 340.", bron:"Vogelbescherming, vogelgids tapuit" },
+  "tapuit:1": { t:"Hij is de zangvogel met de langste bekende trekroute: tapuiten uit Alaska vliegen via Azië naar Afrika.", bron:"Vogelbescherming, vogelgids tapuit" },
+  "kievit:0": { t:"Omdat kieviten hun nest fel verdedigen, broeden andere vogels graag onder hun bescherming.", bron:"Vogelbescherming, vogelgids kievit" },
+  "kievit:1": { t:"Hij trappelt met zijn tenen op de grond om regenwormen naar boven te lokken, soms ook op maanverlichte nachten.", bron:"Vogelbescherming, vogelgids kievit" },
+  "spreeuw:0": { t:"Golfbanen en voetbalclubs hangen soms nestkasten op voor spreeuwen, omdat die emelten uit het gras eten.", bron:"Vogelbescherming, vogelgids spreeuw" },
+  "spreeuw:1": { t:"Een spreeuw kan tegelijk hoge en lage tonen zingen.", bron:"Vogelbescherming, vogelgids spreeuw" },
+  "boomklever:0": { t:"In de laatste 25 jaar van de twintigste eeuw is het aantal broedparen ruim verdubbeld, dankzij ouder en gevarieerder bos.", bron:"Vogelbescherming, vogelgids boomklever" },
+  "boomklever:1": { t:"Zijn drang om te metselen is zo sterk dat hij soms ook een nestopening dichtsmeert die al de goede maat heeft.", bron:"Vogelbescherming, vogelgids boomklever" },
+  "kauw:0": { t:"Hij broedt in boomholtes, muren en schoorstenen, maar soms zelfs in een konijnenhol.", bron:"Vogelbescherming, vogelgids kauw" },
+  "kauw:1": { t:"In de winter zitten er 300.000 tot 500.000 kauwen in Nederland, en er trekken er tot een miljoen door.", bron:"Vogelbescherming, vogelgids kauw" },
+  "zwarte-kraai:0": { t:"Zwarte kraaien profiteren van de vele verkeersslachtoffers op Nederlandse wegen.", bron:"Vogelbescherming, vogelgids zwarte kraai" },
+  "zwarte-kraai:1": { t:"In nesten van zwarte kraaien zijn ook papier en ijzerdraad gevonden.", bron:"Vogelbescherming, vogelgids zwarte kraai" }
 };
