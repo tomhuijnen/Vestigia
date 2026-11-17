@@ -256,7 +256,8 @@ const Profiel = (() => {
     duelwinst: n => `${mv(n, "spelersduel", "spelersduels")} gewonnen`,
     revanche: n => n === 1 ? "Een revanche gewonnen" : `${n} revanches gewonnen`,
     alles1: () => "Elke soort minstens één keer in één poging goed",
-    medaille: n => `${n} verschillende medailles in je Vestiarium`   // update 75: Halve vitrine en Volle vitrine
+    medaille: n => `${n} verschillende medailles in je Vestiarium`,   // update 75: Halve vitrine en Volle vitrine
+    tweelingen: n => `Van alle ${telwoord(n)} tweelingparen beide soorten in je Vestiarium`   // update 51: Zie ik dubbel? (SQL 040)
   };
   function mijlZin(m){
     const sleutel = m.id === "alles1" ? "alles1" : String(m.id || "").replace(/_\d+$/, "");
