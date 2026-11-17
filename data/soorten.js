@@ -3179,7 +3179,7 @@ const SPECIES = [
       "In de schemering vliegt iets groots en zwaars brommend rond de boom; aan het sap zitten er een paar te drinken.",
       "Tot zo'n 8 cm; het mannetje heeft enorme roodbruine kaken in de vorm van een gewei, het vrouwtje is kleiner en mist ze."
     ] },
-    { bron:"Natura 2000-profiel H1083; EIS Kenniscentrum Insecten (vliegend hert)", sl:{ i:2, t:"De larve leeft vier tot acht jaar in door witrot aangetast eikenhout van grote stronken en ondergrondse wortels. Zonder dat dode, vochtige eikenhout is er geen populatie." }, wn:[
+    { bron:"Natura 2000-profiel H1083; EIS Kenniscentrum Insecten (vliegend hert)", sl:{ i:2, t:"De larve leeft zo'n drie jaar in door witrot aangetast eikenhout van grote stronken en ondergrondse wortels. Zonder dat dode, vochtige eikenhout is er geen populatie." }, wn:[
       "Limburg, eind juni. Een warme avond in het heuvelland.",
       "Een holle weg met hellingbos en houtwallen tussen akkers en boomgaarden.",
       "Een paar grote, oude eikenstronken die al jaren wegrotten, deels onder de grond, in een warme, halfopen hoek.",

@@ -5,7 +5,7 @@
    t    het weetje: één zin, ±15–25 woorden, geen herhaling van de toelichting van dezelfde casus
    bron de goedgekeurde bron (Sovon, RAVON, Zodion, Vogelbescherming, BIJ12, De Vlinderstichting, EIS); staat klein onder het weetje
    Een casus zonder weetje toont nog het oude vak ‘Typisch’, tot zijn diergroep is goedgekeurd.
-   Goedgekeurd door Tom, per diergroep: reptielen (17 november 2026, 09:32), amfibieën (09:41) */
+   Goedgekeurd door Tom, per diergroep: reptielen (17 november 2026, 09:32), amfibieën (09:41), vissen, vlinders, libellen en kevers (09:50) */
 "use strict";
 const WEETJES = {
   /* ---------- Reptielen (RAVON, soortpagina's) ---------- */
@@ -76,7 +76,7 @@ const WEETJES = {
   /* ---------- Vlinders (De Vlinderstichting) ---------- */
   "pimpernelblauwtje:0": { t:"In 1990 werden zo'n 86 vlinders uitgezet; 25 jaar later vlogen er weer zo'n 1500 rond.", bron:"De Vlinderstichting, nieuwsbericht 25 jaar pimpernelblauwtje" },
   "pimpernelblauwtje:1": { t:"In één mierennest kan meestal maar één rups van het pimpernelblauwtje overleven.", bron:"De Vlinderstichting, soortpagina pimpernelblauwtje" },
-  "teunisbloempijlstaart:0": { t:"Zijn geslachtsnaam Proserpinus verwijst naar Proserpina, de godin wier terugkeer op aarde de lente brengt.", bron:"De Vlinderstichting, soortpagina teunisbloempijlstaart" },
+  "teunisbloempijlstaart:0": { t:"Hij is een van maar twee nachtvlinders die in Nederland wettelijk beschermd zijn; de andere is de spaanse vlag.", bron:"De Vlinderstichting, Meetnet Nachtvlinders" },
   "teunisbloempijlstaart:1": { t:"Lang waren er alleen een paar waarnemingen van vóór 1900 bekend; nu breidt hij zich vanuit Zuid-Limburg uit.", bron:"De Vlinderstichting, soortpagina teunisbloempijlstaart" },
   "grote-vos:0": { t:"Onlangs werden er in een voorjaar zelfs meer grote dan kleine vossen gezien, iets wat tien jaar eerder ondenkbaar was.", bron:"De Vlinderstichting, nieuwsbericht ‘meer grote dan kleine vossen’" },
   "grote-vos:1": { t:"Om te overwinteren kruipt hij weg in een grot of holle boom, en soms zelfs in een nestkast.", bron:"De Vlinderstichting, soortpagina grote vos" },
