@@ -5,7 +5,7 @@
    t    het weetje: één zin, ±15–25 woorden, geen herhaling van de toelichting van dezelfde casus
    bron de goedgekeurde bron (Sovon, RAVON, Zodion, Vogelbescherming, BIJ12, De Vlinderstichting, EIS); staat klein onder het weetje
    Een casus zonder weetje toont nog het oude vak ‘Typisch’, tot zijn diergroep is goedgekeurd.
-   Goedgekeurd door Tom, per diergroep: reptielen (17 november 2026, 09:32), amfibieën (09:41), vissen, vlinders, libellen en kevers (09:50), zoogdieren deel 1 (09:57), zoogdieren deel 2 (10:04) */
+   Goedgekeurd door Tom, per diergroep: reptielen (17 november 2026, 09:32), amfibieën (09:41), vissen, vlinders, libellen en kevers (09:50), zoogdieren deel 1 (09:57), zoogdieren deel 2 (10:04), zoogdieren deel 3 (10:12) */
 "use strict";
 const WEETJES = {
   /* ---------- Reptielen (RAVON, soortpagina's) ---------- */
@@ -205,5 +205,37 @@ const WEETJES = {
   "wolf:0": { t:"Vóór de terugkeer in 2015 was de laatste wolf in Nederland in 1869 gezien; in september 2024 waren er al 11 roedels.", bron:"Zodion, soortpagina wolf" },
   "wolf:1": { t:"Een wolf hoort het huilen van andere wolven nog op 6 tot 10 kilometer afstand.", bron:"Zodion, soortpagina wolf" },
   "goudjakhals:0": { t:"Hij is erg goed in het vangen van muskusratten en beverratten.", bron:"Zodion, soortpagina goudjakhals" },
-  "goudjakhals:1": { t:"Jonge goudjakhalzen blijven zo'n twee jaar bij hun ouders voordat ze een eigen territorium zoeken.", bron:"Zodion, soortpagina goudjakhals" }
+  "goudjakhals:1": { t:"Jonge goudjakhalzen blijven zo'n twee jaar bij hun ouders voordat ze een eigen territorium zoeken.", bron:"Zodion, soortpagina goudjakhals" },
+
+  /* ---------- Vogels (Vogelbescherming en Sovon) ---------- */
+  "steenuil:0": { t:"Veel steenuilen verdrinken in drinkbakken voor vee; daarom is er een bak met een uitstapje voor uilen ontworpen.", bron:"Vogelbescherming, vogelgids steenuil" },
+  "steenuil:1": { t:"De meeste jonge steenuilen vestigen zich op minder dan 10 kilometer van hun geboorteplek.", bron:"Vogelbescherming, vogelgids steenuil" },
+  "gierzwaluw:0": { t:"Voor hun jongen verzamelen gierzwaluwen tot enkele honderden insecten in één voedselbal.", bron:"Vogelbescherming, vogelgids gierzwaluw" },
+  "gierzwaluw:1": { t:"Ze overwinteren in een groot gebied in Afrika, ergens tussen Mali en Congo.", bron:"Vogelbescherming, vogelgids gierzwaluw" },
+  "kerkuil:0": { t:"In jaren met veel veldmuizen kan een legsel tot 12 eieren tellen; bij voedseltekort broedt hij soms helemaal niet.", bron:"Vogelbescherming, vogelgids kerkuil" },
+  "kerkuil:1": { t:"Halverwege de jaren zestig was hij bijna uit Nederland verdwenen; sinds 2017 staat hij niet meer op de Rode Lijst.", bron:"Vogelbescherming, vogelgids kerkuil" },
+  "ooievaar:0": { t:"Halverwege de jaren zeventig was hij als broedvogel bijna verdwenen; nu broeden er zo'n 1900 tot 2200 paren.", bron:"Vogelbescherming, vogelgids ooievaar" },
+  "ooievaar:1": { t:"Minstens een vijfde van de Nederlandse ooievaars trekt helemaal niet weg en blijft hier de winter over.", bron:"Vogelbescherming, vogelgids ooievaar" },
+  "ijsvogel:0": { t:"Een strenge winter kan tot de helft van alle Nederlandse ijsvogels doden.", bron:"Vogelbescherming, vogelgids ijsvogel" },
+  "ijsvogel:1": { t:"Vrouwtjes hebben een oranjerode onderkant van de snavel; bij mannetjes is de snavel helemaal zwart.", bron:"Vogelbescherming, vogelgids ijsvogel" },
+  "roek:0": { t:"Een roekenkolonie kan uitgroeien tot zo'n 1000 nesten.", bron:"Vogelbescherming, vogelgids roek" },
+  "roek:1": { t:"Vroeger werden dode roeken opgehangen om andere roeken te verjagen, maar daar zijn roeken te slim voor.", bron:"Vogelbescherming, vogelgids roek" },
+  "oeverzwaluw:0": { t:"Zijn nesttunnel kan tot 120 centimeter diep zijn, ongeveer negen keer zo lang als de vogel zelf.", bron:"Vogelbescherming, vogelgids oeverzwaluw" },
+  "oeverzwaluw:1": { t:"Hoeveel er in Nederland broeden, hangt sterk af van de droogte in de Sahel, waar ze overwinteren.", bron:"Vogelbescherming, vogelgids oeverzwaluw" },
+  "slechtvalk:0": { t:"Bij een duikvlucht raakt hij zijn prooi met meer dan 200 kilometer per uur.", bron:"Vogelbescherming, vogelgids slechtvalk" },
+  "slechtvalk:1": { t:"Sinds 1990 groeit het aantal broedparen in Nederland met meer dan 5 procent per jaar.", bron:"Vogelbescherming, vogelgids slechtvalk" },
+  "ransuil:0": { t:"In de winter zitten er in Nederland 7000 tot 12.000 ransuilen, vaak in groepen op vaste roestplaatsen.", bron:"Vogelbescherming, vogelgids ransuil" },
+  "ransuil:1": { t:"Sinds 1990 daalt het aantal broedende ransuilen met meer dan 5 procent per jaar.", bron:"Vogelbescherming, vogelgids ransuil" },
+  "huismus:0": { t:"Sinds begin jaren negentig is het aantal broedende huismussen met meer dan de helft gedaald.", bron:"Vogelbescherming, vogelgids huismus" },
+  "huismus:1": { t:"In de broedtijd eten huismussen vooral insecten, en een paar kan twee of drie legsels per jaar hebben.", bron:"Vogelbescherming, vogelgids huismus" },
+  "oehoe:0": { t:"Jonge oehoes vestigen zich gemiddeld zo'n 80 kilometer van hun nest; één vestigde zich zelfs meer dan 300 kilometer verderop.", bron:"Vogelbescherming, vogelgids oehoe" },
+  "oehoe:1": { t:"Jonge oehoes hebben 3 tot 5 maanden nodig om goed te leren jagen.", bron:"Vogelbescherming, vogelgids oehoe" },
+  "buizerd:0": { t:"Een buizerdnest kan een meter breed en 60 centimeter diep zijn; zo'n groot roofvogelnest heet een horst.", bron:"Vogelbescherming, vogelgids buizerd" },
+  "buizerd:1": { t:"Veel Noorse en Zweedse buizerds trekken in de herfst door Nederland naar het zuiden.", bron:"Vogelbescherming, vogelgids buizerd" },
+  "havik:0": { t:"In de jaren zestig leefde de havik bijna alleen in grote, rustige bossen; nu broedt hij in het hele land, zelfs in steden.", bron:"Vogelbescherming, vogelgids havik" },
+  "havik:1": { t:"Jonge haviken worden na het uitvliegen soms nog tot 90 dagen door hun ouders gevoerd.", bron:"Vogelbescherming, vogelgids havik" },
+  "sperwer:0": { t:"Het vrouwtje is een stuk groter dan het mannetje en vangt daardoor ook grotere prooien, tot het formaat van een Turkse tortel.", bron:"Vogelbescherming, vogelgids sperwer" },
+  "sperwer:1": { t:"Een sperwer bouwt elk jaar een nieuw nest, zodat er in een oud territorium vaak veel oude nesten liggen.", bron:"Vogelbescherming, vogelgids sperwer" },
+  "wespendief:0": { t:"In Nederland broeden maar zo'n 330 tot 400 paren wespendieven.", bron:"Vogelbescherming, vogelgids wespendief" },
+  "wespendief:1": { t:"Drie Natura 2000-gebieden zijn speciaal voor hem aangewezen, waaronder de Brabantse Wal.", bron:"Vogelbescherming, vogelgids wespendief" }
 };
