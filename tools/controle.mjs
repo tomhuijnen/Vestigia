@@ -234,6 +234,13 @@ if (args.has("--woorden")){
       const leden = new Set(kies.map(t => t.id));
       const los = SPECIES.filter(t => t.r !== "NB" && !t.lk && !leden.has(t.id) && z.w.some(w => nrm(t.n).includes(w) || nrm(t.s).includes(w)));
       if (los.length) INFO(`zoekgroep ${z.naam}: los eronder, alleen via de naam: ${los.map(t => t.n).join(", ")}`);
+      /* update 79: een groepswoord in waarneming 1–4 verraadt de soort als er maar één of twee te raden soorten in die groep zitten
+         (‘een grote duif’ = de houtduif, want hij is de enige duif in het spel). Groepen met een hele diergroep vallen onder GROEPWOORD. */
+      const raad = kies.filter(t => t.cs && t.cs.length);
+      if (!z.g && raad.length && raad.length <= 2) for (const t of raad) t.cs.forEach((c, k) => c.wn.slice(0, 4).forEach((w, i) => {
+        const hit = z.w.find(x => new RegExp("\\b" + x + "\\b", "i").test(nrm(w)));
+        if (hit) (raad.length === 1 ? FOUT : LETOP)(`${t.n}, casus ${k + 1}: waarneming ${i + 1} noemt ‘${hit}’, en ${raad.length === 1 ? "dat is de enige soort" : "er zijn maar twee soorten"} in de groep ${z.naam}`);
+      }));
     }
   }
 }

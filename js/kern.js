@@ -100,6 +100,23 @@ const INSTROOM = [
    Gokken mag wel, en wie hem al oefende, houdt zijn plaat. Komt de soort in zijn venster niet langs, dan is hij vrij
    vanaf de dag na het venster. */
 const OEFENEN_NA_DAGCASUS = ["grote-bosmuis", "patrijs"];
+/* Update 79 (Tom, 17 november): oefenen kiest uit vier groepen in plaats van acht diergroepen. Met een kleine diergroep
+   (kevers 2, libellen 5, vlinders 6, reptielen 7, vissen 8) wist je het antwoord bijna, en kreeg je de plaat en een
+   XP-boost cadeau. Elke oefengroep heeft minstens 13 soorten. Volgorde zoals de plaatnummers. Het Vestiarium houdt
+   de acht diergroepen. KORT = in de smalle kop. */
+const OEFENGROEPEN = {
+  Z:   { naam: "Zoogdieren", g: ["Z"] },
+  RAF: { naam: "Reptielen, amfibieën en vissen", kort: "Rept., amf. en vissen", g: ["R", "A", "F"] },
+  B:   { naam: "Vogels", g: ["B"] },
+  I:   { naam: "Insecten", g: ["V", "L", "K"] }
+};
+const OEFENGROEP_VAN = { Z: "Z", R: "RAF", A: "RAF", F: "RAF", B: "B", V: "I", L: "I", K: "I" };
+/* een oude bewaarde keuze (‘K’ = kevers) wordt de oefengroep waar hij nu in zit (‘I’ = insecten) */
+const oefengroep = g => !g ? null : OEFENGROEPEN[g] ? g : OEFENGROEP_VAN[g] || null;
+const inOefengroep = (t, og) => !og || !!(OEFENGROEPEN[og] && OEFENGROEPEN[og].g.includes(t.g));
+/* Een oefencasus komt altijd uit minstens MIN_KEUZE soorten. Zijn er met ‘alleen nog niet in je Vestiarium’ minder over,
+   dan komen die tussen de rest van de groep door; een korte lijst (je verwarde soorten) krijgt er lijkers bij. */
+const MIN_KEUZE = 5;
 const _vrijDag = new Map();
 function vrijVanaf(id){
   if (!OEFENEN_NA_DAGCASUS.includes(id)) return 0;

@@ -2,25 +2,25 @@
    De tabbalk heeft drie knoppen: Ranglijst · Spelen · Vestiarium. Spelen laat in een halve cirkel bolletjes
    opkomen: Dagcasus en Oefenen, en grijs de minispellen die nog komen. Wat erachter open stond, vervaagt.
    Oefenen begint altijd met alle soorten door elkaar. In het oefenscherm zelf staat een bruin kader waarin je
-   een diergroep kiest, of alleen soorten die nog niet in je Vestiarium staan; die keuze geldt tot je weer
-   via Spelen begint. Hier staat ook de uitleg over tweelingsoorten. */
+   een oefengroep kiest (update 79: zoogdieren · reptielen, amfibieën en vissen · vogels · insecten), of alleen soorten
+   die nog niet in je Vestiarium staan; die keuze geldt tot je weer via Spelen begint. Hier staat ook de uitleg over tweelingsoorten. */
 "use strict";
 
 const Spelen = (() => {
   const KEY = "vestigia:oefenen", TWEELING = "vestigia:tweeling-uitleg";
   const lees = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e){ return {}; } };
   /* g: diergroep of null (alle), nieuw: alleen soorten die nog niet in je Vestiarium staan */
-  function keuze(){ const k = lees(); return { g: GROUPS[k.g] ? k.g : null, nieuw: !!k.nieuw }; }
-  function bewaar(k){ try { localStorage.setItem(KEY, JSON.stringify({ g: k.g || null, nieuw: !!k.nieuw })); } catch(e){} }
+  function keuze(){ const k = lees(); return { g: oefengroep(k.g), nieuw: !!k.nieuw }; }      // update 79: oefengroepen
+  function bewaar(k){ try { localStorage.setItem(KEY, JSON.stringify({ g: oefengroep(k.g), nieuw: !!k.nieuw })); } catch(e){} }
   const ALLES = { g: null, nieuw: false };
   function omschrijving(k){
     if (k.ids) return "de soorten die je het vaakst verwart";
-    const groep = k.g && GROUPS[k.g] ? GROUPS[k.g].toLowerCase() : null;
+    const og = oefengroep(k.g), groep = og ? OEFENGROEPEN[og].naam.toLowerCase() : null;
     if (k.nieuw) return groep ? `${groep} die je nog niet hebt` : "soorten die je nog niet hebt";
     return groep ? `alle ${groep}` : "alle soorten";
   }
   const gevonden = id => { const d = (store.get().dex || {})[id]; return !!(d && d.w > 0); };
-  const nogOpen = g => TARGETS.filter(t => oefenbaar(t.id) && (!g || t.g === g) && !gevonden(t.id)).length;
+  const nogOpen = g => TARGETS.filter(t => oefenbaar(t.id) && inOefengroep(t, oefengroep(g)) && !gevonden(t.id)).length;
   const reduce = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ---------- de speelkring ---------- */
@@ -96,6 +96,8 @@ const Spelen = (() => {
   function nogRegel(k){
     if (k.ids) return "";
     const n = nogOpen(k.g);
+    /* update 79: met het vinkje en minder dan MIN_KEUZE over, komen ze tussen de rest door (zie randomFree) */
+    if (k.nieuw && n && n < MIN_KEUZE) return `nog ${n} niet in je ${esc(NAAM.vestiarium)} · ze komen tussen de rest door`;
     return n ? `${n} nog niet in je ${esc(NAAM.vestiarium)}` : `alles in je ${esc(NAAM.vestiarium)}`;
   }
   function oefenKader(){
@@ -103,7 +105,7 @@ const Spelen = (() => {
     el.hidden = !oefen;
     if (!oefen) return;
     const k = { g: S.groep || null, nieuw: !!S.nieuw, ids: S.ids || null };
-    const groepen = [[null, "Alle"]].concat(Object.entries(GROUPS).filter(([g]) => TARGETS.some(t => t.g === g)));
+    const groepen = [[null, "Alle"]].concat(Object.entries(OEFENGROEPEN).filter(([og]) => TARGETS.some(t => inOefengroep(t, og))).map(([og, o]) => [og, o.naam]));
     el.open = kaderOpen;
     el.innerHTML = `
       <summary><span class="caps">Oefenen · telt niet voor de ranglijst</span><span class="okeuze">${esc(omschrijving(k).replace(/^./, c => c.toUpperCase()))}</span><span class="onog">${nogRegel(k)}</span></summary>

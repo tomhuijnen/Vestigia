@@ -339,7 +339,7 @@ const Levels = (() => {
     const j = levelSprong(na);
     if (j) levelOmhoog(j.a, j.s);
   }
-  Wachtrij.voeg({ id: "levels", prio: 1.5,
+  Wachtrij.voeg({ id: "levels", prio: 1.7,     // update 79: na advent, duel en weekpop-up (die verlopen wel)
     async kan(){
       if (!speler()) return false;
       try { await haal(); } catch(e){}

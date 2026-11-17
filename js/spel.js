@@ -67,26 +67,50 @@ function recordStats(){
   s.last = i; st[key] = s; store.set(st);
 }
 /* Oefenen: een soort die niet net geweest is en niet binnenkort dagcasus wordt, met bij voorkeur een casus die je nog niet kent.
-   f.g = alleen deze diergroep (GROUPS), f.nieuw = alleen soorten die nog niet in je Vestiarium staan.
-   Heb je in die keuze alles al, dan komt er toch een soort uit de groep, en meldt ‘alles’ dat. */
+   f.g = alleen deze oefengroep (OEFENGROEPEN, update 79), f.nieuw = alleen soorten die nog niet in je Vestiarium staan.
+   Heb je in die keuze alles al, dan komt er toch een soort uit de groep, en meldt ‘alles’ dat.
+   Update 79: de keuze is nooit kleiner dan MIN_KEUZE soorten, anders weet je het antwoord al (Tom, 17 november).
+   Minder dan MIN_KEUZE nog niet in je Vestiarium: die komen tussen de rest van de groep door (geen voorrang).
+   Een lijst van minder dan MIN_KEUZE soorten (je verwarde soorten): aangevuld met hun lijkers en tweelingen, daarna
+   met soorten uit dezelfde oefengroep. */
+function aanvullen(ids){
+  const kies = new Set(ids.filter(id => BY_ID.has(id) && oefenbaar(id)));
+  if (kies.size >= MIN_KEUZE) return [...kies];
+  const kan = id => { const t = BY_ID.get(id); return t && TARGETS.includes(t) && oefenbaar(id); };
+  const lijkers = [...kies].flatMap(id => { const t = BY_ID.get(id); return [t.x, t.twin].concat(TARGETS.filter(o => o.x === id || o.twin === id).map(o => o.id)); });
+  for (const id of lijkers) if (kies.size < MIN_KEUZE && id && kan(id)) kies.add(id);
+  const ogs = new Set([...kies].map(id => OEFENGROEP_VAN[BY_ID.get(id).g]));
+  const rest = TARGETS.filter(t => !kies.has(t.id) && oefenbaar(t.id) && [...ogs].some(og => inOefengroep(t, og))).sort(() => Math.random() - .5);
+  for (const t of rest) if (kies.size < MIN_KEUZE) kies.add(t.id);
+  return [...kies];
+}
 function randomFree(exclude, f){
   f = f || {};
+  const og = oefengroep(f.g);
   const st = store.get(), recent = st.recent || [], dex = st.dex || {};
   const upcoming = new Set(Array.from({length:8}, (_, k) => daily(todayIndex() + k).id));
-  const groep = TARGETS.filter(t => oefenbaar(t.id) && (!f.g || t.g === f.g) && (!f.ids || f.ids.includes(t.id)));     // ids: alleen deze soorten (je verwarringen)
-  const open = groep.filter(t => !(dex[t.id] && dex[t.id].w > 0));
+  const ids = f.ids ? aanvullen(f.ids) : null;      // ids: alleen deze soorten (je verwarringen), aangevuld tot MIN_KEUZE
+  const groep = TARGETS.filter(t => oefenbaar(t.id) && inOefengroep(t, og) && (!ids || ids.includes(t.id)));
+  const open0 = groep.filter(t => !(dex[t.id] && dex[t.id].w > 0));
+  const open = f.nieuw && open0.length < MIN_KEUZE ? groep : open0;
   const vers = t => t.id !== exclude && !recent.includes(t.id) && !upcoming.has(t.id);
   const nietBinnenkort = t => t.id !== exclude && !upcoming.has(t.id);
-  const stappen = (f.nieuw ? [[open, vers], [open, nietBinnenkort]] : [])
+  /* update 79: met ‘alleen nog niet in je Vestiarium’ eerst álle open soorten proberen, ook de soort die net openstond en een
+     soort die binnenkort dagcasus is. Eerder viel de enige open kever weg als hij net de casus was (of binnenkort dagcasus),
+     en zei de app ten onrechte ‘Je hebt alle kevers al’. Dat verraadde bovendien dat die soort binnenkort dagcasus is. */
+  const stappen = (f.nieuw ? [[open, vers], [open, nietBinnenkort], [open, t => t.id !== exclude], [open, () => true]] : [])
     .concat([[groep, vers], [groep, nietBinnenkort], [groep, t => t.id !== exclude], [groep, () => true], [TARGETS.filter(t => oefenbaar(t.id)), () => true]]);
   let pool = [], stap = 0;
   for (; stap < stappen.length; stap++){ pool = stappen[stap][0].filter(stappen[stap][1]); if (pool.length) break; }
   const t = pool[Math.floor(Math.random() * pool.length)];
   st.recent = [t.id].concat(recent.filter(x => x !== t.id)).slice(0, Math.min(20, TARGETS.length - 2)); store.set(st);
   const seen = new Set(((st.dex || {})[t.id] || {}).ks || []);
-  const fresh = t.cs.map((c, k) => k).filter(k => !seen.has(k));
-  const ks = fresh.length ? fresh : t.cs.map((c, k) => k);
-  return { id: t.id, k: ks[Math.floor(Math.random() * ks.length)], alles: !!f.nieuw && stap >= 2 };
+  const alle = t.cs.map((c, k) => k), fresh = alle.filter(k => !seen.has(k));
+  let ks = fresh.length ? fresh : alle;
+  /* dezelfde soort als net: liefst een andere casus dan die op het scherm stond */
+  if (t.id === exclude && S && S.target === exclude && ks.length > 1) ks = ks.filter(k => k !== S.k);
+  else if (t.id === exclude && S && S.target === exclude && alle.length > 1) ks = alle.filter(k => k !== S.k);
+  return { id: t.id, k: ks[Math.floor(Math.random() * ks.length)], alles: !!f.nieuw && !open0.length };
 }
 
 function points(){
@@ -208,11 +232,11 @@ function renderVerder(){
   const el = $("verderKaart"); if (!el) return;
   if (!S || S.mode !== "daily" || S.status === "playing"){ el.hidden = true; el.innerHTML = ""; return; }
   const t = BY_ID.get(S.target), won = S.status === "won", st = store.get(), dex = st.dex || {};
-  const groep = TARGETS.filter(x => x.g === t.g);
+  const og = OEFENGROEP_VAN[t.g], groep = TARGETS.filter(x => inOefengroep(x, og));     // update 79: de oefengroep van de soort
   const groot = groep.length >= VERDER_MIN && groep.some(x => oefenbaar(x.id));
   const lijst = groot ? groep : TARGETS, heb = lijst.filter(x => dex[x.id] && dex[x.id].w > 0).length;
-  const wat = groot ? GROUPS[t.g].toLowerCase() : "soorten";
-  const keuze = { g: groot ? t.g : null, nieuw: false };
+  const wat = groot ? OEFENGROEPEN[og].naam.toLowerCase() : "soorten";
+  const keuze = { g: groot ? og : null, nieuw: false };
   const p = points(), dag = S.caseNo - 1;
   const naam = won && p > 0 && online.enabled && !online.player() && eersteModus(st, dag) === !!S.expert && dag >= todayIndex() - 1;
   const zin = won ? `Je hebt nu <b>${heb} van de ${lijst.length} ${wat}</b> in je ${NAAM.vestiarium}.`
@@ -695,12 +719,13 @@ function startFree(keuze){
   keuze = keuze || (S && S.mode === "free" ? { g: S.groep || null, nieuw: !!S.nieuw, ids: S.ids || null } : { g: null, nieuw: false });
   const f = randomFree(S && S.target, keuze);
   S = newGame("free", pref.expert, f.id, f.k, 0);
-  S.groep = keuze.g || null; S.nieuw = !!keuze.nieuw; S.ids = keuze.ids || null;
+  S.groep = oefengroep(keuze.g); S.nieuw = !!keuze.nieuw; S.ids = keuze.ids || null;
   showGame(); inBeeld($("gameView")); window.scrollTo({ top:0, behavior:"auto" });
   if (f.alles) {
-    const dex = store.get().dex || {}, wacht = TARGETS.filter(t => !oefenbaar(t.id) && (!keuze.g || t.g === keuze.g) && !(dex[t.id] && dex[t.id].w > 0));
-    toast(wacht.length ? `De rest van de ${keuze.g ? GROUPS[keuze.g].toLowerCase() : "soorten"} heb je al. ${wacht.map(t => t.n.charAt(0).toUpperCase() + t.n.slice(1)).join(" en ")} kun je pas oefenen na ${wacht.length > 1 ? "hun" : "zijn"} eerste dagcasus.`
-      : `Je hebt alle ${keuze.g ? GROUPS[keuze.g].toLowerCase() : "soorten"} al in je ${NAAM.vestiarium}. Deze ken je dus al.`);
+    const og = oefengroep(keuze.g), wat = og ? OEFENGROEPEN[og].naam.toLowerCase() : "soorten";
+    const dex = store.get().dex || {}, wacht = TARGETS.filter(t => !oefenbaar(t.id) && inOefengroep(t, og) && !(dex[t.id] && dex[t.id].w > 0));
+    toast(wacht.length ? `De rest van de ${wat} heb je al. ${wacht.map(t => t.n.charAt(0).toUpperCase() + t.n.slice(1)).join(" en ")} kun je pas oefenen na ${wacht.length > 1 ? "hun" : "zijn"} eerste dagcasus.`
+      : `Je hebt alle ${wat} al in je ${NAAM.vestiarium}. Deze ken je dus al.`);
   }
 }
 function goDaily(){ if (S.mode === "daily") showGame(); else startDaily(); }

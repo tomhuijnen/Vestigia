@@ -52,6 +52,9 @@ const Nieuw = (() => {
     for (let i = 0; i < dag - 3; i++) if (finished(st, i, false) || finished(st, i, true)) return true;
     return false;
   }
+  /* update 79: een melding over iets nieuws komt hooguit 4 weken na VANAF nog vanzelf (wie later terugkomt, krijgt hem niet meer) */
+  const HOUDBAAR = 28 * DAY;
+  function vers(id){ const d = VANAF[id]; return !d || Date.now() < Date.parse(d + "T00:00:00+01:00") + HOUDBAAR; }
   /* ‘Nieuw: het spelersduel!’ → ‘Het spelersduel!’ */
   const zonderNieuw = t => { const r = String(t).replace(/^Nieuw:\s*/, ""); return r.charAt(0).toUpperCase() + r.slice(1); };
 
@@ -109,7 +112,7 @@ const Nieuw = (() => {
         { ic: "koppel", wat: "koppel", kop: "Koppel je apparaten", tekst: `Speel je op je telefoon én op een laptop of tablet? Koppel ze met een korte code of een QR-code. Dan blijven je naam, eikels en ${NAAM.vestiarium} overal gelijk. Kijk in Mijn profiel bij ‘Koppel je apparaten’.` }
       ] },
     /* update 14: alleen voor wie al speelde voordat de nieuwe soorten er waren (via de wachtrij, hieronder) */
-    { id: "soorten14", titel: "Libellen en kevers", actie: { label: "Oefen een libel", run: () => startFree({ g: "L", nieuw: false }) },
+    { id: "soorten14", titel: "Libellen en kevers", actie: { label: "Oefen met insecten", run: () => startFree({ g: "I", nieuw: false }) },
       stappen: [
         { ic: "libel", kop: "Nieuw: libellen en kevers", tekst: "Er zijn twee nieuwe diergroepen. Vijf beschermde libellen: de gevlekte en de sierlijke witsnuitlibel, de rivierrombout, de beekrombout en de bosbeekjuffer. En twee kevers: de vermiljoenkever en het vliegend hert." },
         { ic: "kever", kop: "Zeven nieuwe platen", tekst: `Ze staan in je ${NAAM.vestiarium} als nº 701 tot en met 705 (libellen) en nº 801 en 802 (kevers), elk met twee casussen. Heb je alle libellen, dan ben je Vleugelvorst; met alle kevers word je Schildknaap. Oefen ze nu, of wacht tot ze als dagcasus langskomen.` },
@@ -213,7 +216,7 @@ const Nieuw = (() => {
     });
   }
   knoppen();
-  return { toon, blokjes, knoppen, veteraan, ONDERDELEN };
+  return { toon, blokjes, knoppen, veteraan, vers, ONDERDELEN };
 })();
 
 /* update 30 en 47: één melding ‘Nieuwe soorten’, direct na die van update 14. De kaart van de grote bosmuis krijgt wie al een
@@ -222,7 +225,7 @@ const Nieuw = (() => {
 Wachtrij.voeg({ id: "nieuwesoorten", prio: 2.61,
   kaarten(){
     let al = true; try { al = !!localStorage.getItem("vestigia:nieuw:grotebosmuis"); } catch(e){}
-    return { grotebosmuis: !al && Nieuw.veteraan("grotebosmuis"), patrijs: Nieuw.veteraan("patrijs") };
+    return { grotebosmuis: !al && Nieuw.vers("grotebosmuis") && Nieuw.veteraan("grotebosmuis"), patrijs: Nieuw.vers("patrijs") && Nieuw.veteraan("patrijs") };
   },
   kan(){
     try { if (localStorage.getItem("vestigia:nieuw:nieuwesoorten")) return false; } catch(e){ return false; }
@@ -244,7 +247,7 @@ Wachtrij.voeg({ id: "nieuwesoorten", prio: 2.61,
 Wachtrij.voeg({ id: "soorten14", prio: 2.6,
   kan(){
     try { if (localStorage.getItem("vestigia:nieuw:soorten14")) return false; } catch(e){ return false; }
-    return Nieuw.veteraan("soorten14");
+    return Nieuw.vers("soorten14") && Nieuw.veteraan("soorten14");
   },
   toon(){
     try { localStorage.setItem("vestigia:nieuw:soorten14", "1"); } catch(e){}

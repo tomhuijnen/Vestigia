@@ -68,7 +68,7 @@ const Statistiek = (() => {
     return `<section class="st-blok fouten" id="stVerward" aria-labelledby="stVerwH">${kop}
       <ul class="foutlijst">${paren.map(p => { const a = BY_ID.get(p.a), b = BY_ID.get(p.b);
         return `<li><span class="paar"><b>${esc(a.n)}</b><span class="tussen" aria-label="en">⇄</span><b>${esc(b.n)}</b></span><span class="keer">${p.n}× verward</span></li>`; }).join("")}</ul>
-      ${ids.length ? `<button class="btn line" id="oefenFouten" data-ids='${esc(JSON.stringify(ids))}'>Oefen deze ${ids.length} soorten</button>` : ""}</section>`;
+      ${ids.length ? `<button class="btn line" id="oefenFouten" data-ids='${esc(JSON.stringify(ids))}'>Oefen deze ${ids.length} soorten${ids.length < MIN_KEUZE ? " en hun lijkers" : ""}</button>` : ""}</section>`;
   }
 
   function render(){

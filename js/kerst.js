@@ -428,7 +428,7 @@ const Kerst = (() => {
   MENU_GO.advent = () => { closeMenu(true); open(); };
 
   /* in de wachtrij: het vakje van vandaag is nog dicht; hooguit één keer per dag vanzelf */
-  Wachtrij.voeg({ id: "advent", prio: 2,
+  Wachtrij.voeg({ id: "advent", prio: 1.2,      // update 79: vóór duel en weekpop-up, want een gemist vakje is weg
     async kan(){
       if (!kalenderDag()) return false;
       if (!demo() && !speler()) return false;

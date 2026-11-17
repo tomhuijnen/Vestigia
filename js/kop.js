@@ -23,7 +23,7 @@ function kopLabel(){
   let groot = "", klein = "";
   if (VIEW === "game"){
     if (S && S.mode === "duel"){ groot = `Spelersduel · casus ${S.duel.ronde + 1} van 3`; klein = "duel"; }
-    else if (S && S.mode === "free"){ groot = `Oefencasus${S.ids ? " · je verwarde soorten" : S.groep && GROUPS[S.groep] ? " · " + GROUPS[S.groep] : ""}`; klein = "oefenen"; }
+    else if (S && S.mode === "free"){ groot = `Oefencasus${S.ids ? " · je verwarde soorten" : S.groep && OEFENGROEPEN[S.groep] ? " · " + (OEFENGROEPEN[S.groep].kort || OEFENGROEPEN[S.groep].naam) : ""}`; klein = "oefenen"; }
     else if (S) klein = `#${S.caseNo}`;
   } else { const n = SCHERMNAAM[VIEW]; groot = typeof n === "function" ? n() : n || ""; klein = groot.toLowerCase(); }
   $("fSeries").textContent = groot; $("fSeries").hidden = !groot;
