@@ -359,6 +359,14 @@ const Levels = (() => {
   });
 
   /* ---------- Mijn profiel: levelkaart ---------- */
+  /* update 67: de rangenlijst is inklapbaar en staat standaard dicht (Tom, 16 november). Dicht zie je je rang en de volgende.
+     Open of dicht blijft bewaard zolang de app open is, ook als Mijn profiel opnieuw getekend wordt. */
+  let rangOpen = false;
+  document.addEventListener("toggle", e => { if (e.target.classList && e.target.classList.contains("lvklap")) rangOpen = e.target.open; }, true);
+  function volgendeRang(s){
+    const nu = rangVan(s.level), volg = RANGEN.find(([n]) => n > s.level);
+    return volg ? `<b>${esc(nu)}</b> → ${esc(volg[1])} op level ${volg[0]}` : `<b>${esc(nu)}</b> · de hoogste rang`;
+  }
   function kaartHtml(){
     if (!zichtbaar()) return "";
     const s = stand, week = s.week || {}, wk = VOLGORDE.filter(k => week[k] > 0), max = Math.max(1, ...wk.map(k => week[k]));
@@ -370,9 +378,11 @@ const Levels = (() => {
       <div class="lvtegels"><div><b>${s.xp.toLocaleString("nl-NL")}</b><span>XP in totaal</span></div><div><b>${weekTot.toLocaleString("nl-NL")}</b><span>deze week</span></div><div><b>${s.tokens} / 2</b><span>hersteltokens</span></div></div>
       ${!s.actief ? `<p class="fine">Voorbeeld: levels gaan op ${new Date(s.vanaf + "T12:00").toLocaleDateString("nl-NL", { weekday: "long", day: "numeric", month: "long" })} voor iedereen aan.</p>` : ""}
       ${wk.length ? `<h4 class="caps">Waar je XP deze week vandaan komt</h4><div class="lvherkomst">${wk.map(k => `<span>${WEEKNAAM[k]}</span><span class="tb"><i style="width:${Math.round(100 * week[k] / max)}%"></i></span><b>${week[k]}</b>`).join("")}</div>` : ""}
-      <h4 class="caps">Rangen</h4>
+      <details class="lvklap"${rangOpen ? " open" : ""}>
+        <summary><span class="lvklapkop"><h4 class="caps">Rangen</h4><span class="lvvolg">${volgendeRang(s)}</span></span></summary>
       <ol class="lvrangen">${RANGEN.map(([n, r]) => `<li class="${s.level >= n ? "ok" : ""}${rangVan(s.level) === r ? " nu" : ""}"><span><span class="lvbol lvt${trede(n)}" aria-hidden="true"></span>${esc(r)}${sterren(n) ? `<span class="lvster" aria-label="Ring ${ringNaam(n)} met ${sterren(n) === 1 ? "1 sterretje" : sterren(n) + " sterretjes"}">${"★".repeat(sterren(n))}</span>` : ""}</span><span>level ${n}${s.level >= n ? " ✓" : ""}</span></li>`).join("")}</ol>
       <p class="fine">XP krijg je voor determineren, oefenen, het herstellen van eerdere fouten, nieuwe soorten en dwaalgasten. Een casus in één poging goed (klassiek) levert de 1e, 5e, 10e, 15e … keer een XP-boost van 100 op. Elk level levert 10 eikels op. Elke 20 levels is een mijlpaal: een nieuwe rang, een nieuwe ringkleur (na level 100 een sterretje), 50 eikels extra en een hersteltoken.</p>
+      </details>
     </section>`;
   }
   /* rangen die nog te verdienen zijn, voor de shop (rij Ondertitels) */

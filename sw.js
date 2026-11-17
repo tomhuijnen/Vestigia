@@ -3,7 +3,7 @@
    Zo haalt een geïnstalleerde app na een update nooit een nieuwe pagina met oude scripts uit de cache. */
 const VERSION = "vestigia-202611171038";
 const STAMP = VERSION.slice("vestigia-".length);
-const ASSETS = ["css/vestigia.css", "data/teksten.js", "data/soorten.js", "data/sporen.js", "data/dagschema.js", "data/veldweken.js", "data/toelichting.js", "data/weetjes.js", "data/zoekgroepen.js", "data/bronnen.js",
+const ASSETS = ["css/vestigia.css", "js/fouten.js", "data/teksten.js", "data/soorten.js", "data/sporen.js", "data/dagschema.js", "data/veldweken.js", "data/toelichting.js", "data/weetjes.js", "data/zoekgroepen.js", "data/bronnen.js",
   "js/kern.js", "js/spel.js", "js/veldboek.js", "js/melden.js", "js/kop.js", "js/spelen.js", "js/opening.js", "js/uitleg.js", "js/online.js", "js/league.js", "data/avatars.js", "js/profiel.js", "data/advent.js", "js/wachtrij.js", "js/kerst.js", "data/dwaalgasten.js", "js/dwaalgast.js", "js/nieuw.js", "js/levels.js", "js/boost.js", "js/statistiek.js", "js/duel.js", "js/spelerskaart.js", "js/qrcode.js", "js/apparaat.js", "js/push.js", "js/week.js", "js/app.js"];
 const SHELL = ["./", "index.html", "config.js", "app.webmanifest",
   "icons/app.svg", "icons/app-192.png", "icons/app-512.png", "icons/maskable-512.png", "icons/apple-touch-icon.png"]

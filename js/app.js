@@ -178,7 +178,15 @@ window.addEventListener("appinstalled", () => { $("installBtn").hidden = true; t
 /* Nieuwe versie: nooit tegelijk met een pop-up (12 november 2026). De wachtrij wacht op deze controle (window.__swKlaar)
    en toont niets als er een nieuwe versie klaarstaat; staat er toch al iets open, dan komt ‘Vernieuwen’ pas als dat dicht is. */
 let swKlaar; window.__swKlaar = new Promise(r => { swKlaar = r; setTimeout(r, 4000); });
+/* update 67 (A2.2): een nieuwe speler (nog geen enkel spel op dit apparaat) kreeg ‘Er is een nieuwe versie’ als hij de app
+   eerder al eens had geopend, bijvoorbeeld via een uitnodigingslink, en er sindsdien een update was. De melding klopt dan wel,
+   maar zegt een nieuwe speler niets. Voor hem gaat de nieuwe versie stil in: geen melding, niet herladen (dat zou de
+   openingsanimatie of de uitleg onderbreken); de volgende keer dat hij de app opent, draait de nieuwe versie.
+   Bij een eerste bezoek zonder eerdere versie kwam de melding al nooit (dan is er nog geen service worker die de pagina beheert). */
+let stilBijgewerkt = false;
+const nieuweSpeler = () => { try { return !Object.keys(store.get().games || {}).length; } catch(e){ return false; } };
 function meldNieuweVersie(nw){
+  if (nieuweSpeler()){ stilBijgewerkt = true; nw.postMessage("skipWaiting"); return; }
   window.__nieuweVersie = true;
   const open = () => typeof Wachtrij !== "undefined" && Wachtrij.ietsOpen();
   const toon = () => open() ? setTimeout(toon, 800) : toast("Er is een nieuwe versie van Vestigia.", { label: "Vernieuwen", run: () => nw.postMessage("skipWaiting") });
@@ -201,7 +209,7 @@ if ("serviceWorker" in navigator && (location.protocol === "https:" || location.
   let reloaded = false;
   /* update 18: tik op het seintje terwijl de app al open is → naar de dagcasus */
   navigator.serviceWorker.addEventListener("message", e => { if (e.data === "dagcasus" && typeof MENU_GO !== "undefined" && MENU_GO.daily) MENU_GO.daily(); });
-  navigator.serviceWorker.addEventListener("controllerchange", () => { if (hadController && !reloaded){ reloaded = true; location.reload(); } });
+  navigator.serviceWorker.addEventListener("controllerchange", () => { if (hadController && !reloaded && !stilBijgewerkt){ reloaded = true; location.reload(); } });
 }
 
 if (!("serviceWorker" in navigator)) swKlaar();
