@@ -172,6 +172,26 @@ if (gelijk.length) INFO(`Identiek kenmerkenprofiel, ook met nevenwaarden (telt i
   }
 }
 
+/* ---------- 4c. ‘Wist je dat?’ per casus (data/weetjes.js, update 37) ---------- */
+{
+  const wf = path.join(ROOT, "data/weetjes.js");
+  if (fs.existsSync(wf)){
+    const WJ = new Function(fs.readFileSync(wf, "utf8") + "; return WEETJES;")();
+    const BRONNEN_OK = /^(Sovon|RAVON|Zodion|Vogelbescherming|BIJ12|De Vlinderstichting|EIS)/;
+    const gezien = new Map();
+    for (const [k, w] of Object.entries(WJ)){
+      const [id, i] = k.split(":");
+      if (!BY_ID.has(id) || !(BY_ID.get(id).cs || [])[+i]) FOUT(`weetje "${k}" hoort bij geen bestaande casus`);
+      if (!w || !w.t || String(w.t).length < 30) FOUT(`weetje "${k}": t moet een zin van minstens 30 tekens zijn`);
+      else if (w.t.split(/\s+/).length > 30) LETOP(`weetje "${k}": langer dan 30 woorden (afspraak: één zin van ±15–25 woorden)`);
+      if (!w || !w.bron || !BRONNEN_OK.test(w.bron)) FOUT(`weetje "${k}": bron ontbreekt of is geen goedgekeurde bron`);
+      if (w && w.t){ if (gezien.has(w.t)) FOUT(`weetje "${k}" is gelijk aan "${gezien.get(w.t)}" (per casus een ander weetje)`); gezien.set(w.t, k); }
+    }
+    const zonder = TARGETS.reduce((n, t) => n + t.cs.filter((c, i) => !WJ[`${t.id}:${i}`]).length, 0);
+    if (zonder) INFO(`‘Wist je dat?’: ${Object.keys(WJ).length} casussen klaar, ${zonder} tonen nog ‘Typisch’`);
+  }
+}
+
 /* ---------- 5. verraderwoorden ---------- */
 const STOP = new Set(("aan alle als bij dan dat die dit door een eens elke en er een geen het hier hij hun in is je kan langs maar met na naar niet nog of om onder op over tegen tot tussen uit van veel voor waar wat wel zijn ze zich zo zonder ook meer twee drie vier vijf eerste vooral").split(" "));
 const words = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z\s-]/g, " ").split(/\s+/).filter(w => w.length >= 5 && !STOP.has(w) && !V.MONTHS.includes(w));
