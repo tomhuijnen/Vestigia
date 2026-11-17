@@ -5,7 +5,7 @@
    t    het weetje: één zin, ±15–25 woorden, geen herhaling van de toelichting van dezelfde casus
    bron de goedgekeurde bron (Sovon, RAVON, Zodion, Vogelbescherming, BIJ12, De Vlinderstichting, EIS); staat klein onder het weetje
    Een casus zonder weetje toont nog het oude vak ‘Typisch’, tot zijn diergroep is goedgekeurd.
-   Goedgekeurd door Tom, per diergroep: reptielen (17 november 2026, 09:32), amfibieën (09:41), vissen, vlinders, libellen en kevers (09:50), zoogdieren deel 1 (09:57), zoogdieren deel 2 (10:04), zoogdieren deel 3 (10:12), vogels deel 1 (10:20), vogels deel 2 (10:24) */
+   Goedgekeurd door Tom, per diergroep: reptielen (17 november 2026, 09:32), amfibieën (09:41), vissen, vlinders, libellen en kevers (09:50), zoogdieren deel 1 (09:57), zoogdieren deel 2 (10:04), zoogdieren deel 3 (10:12), vogels deel 1 (10:20), vogels deel 2 (10:24), vogels deel 3 (10:30) */
 "use strict";
 const WEETJES = {
   /* ---------- Reptielen (RAVON, soortpagina's) ---------- */
@@ -297,5 +297,33 @@ const WEETJES = {
   "eidereend:0": { t:"In de winter van 1999/2000 stierven in de Waddenzee massaal eidereenden van de honger, in een gebied waar intensief op schelpdieren werd gevist.", bron:"Sovon, Broedsucces van kustbroedvogels in de Waddenzee" },
   "eidereend:1": { t:"Terpvondsten laten zien dat hij in de middeleeuwen al hier broedde; daarna verdween hij, waarschijnlijk door overexploitatie.", bron:"Vogelbescherming, Beschermingsplan duin- en kustvogels" },
   "ekster:0": { t:"Jonge eksters leven tot hun derde jaar in jeugdbendes, waar ze de ervaring opdoen die ze later nodig hebben.", bron:"Vogelbescherming, vogelgids ekster" },
-  "ekster:1": { t:"Het verhaal dat eksters sieraden stelen klopt niet: ze zijn vooral nieuwsgierig naar alles wat afwijkt.", bron:"Vogelbescherming, vogelgids ekster" }
+  "ekster:1": { t:"Het verhaal dat eksters sieraden stelen klopt niet: ze zijn vooral nieuwsgierig naar alles wat afwijkt.", bron:"Vogelbescherming, vogelgids ekster" },
+  "gekraagde-roodstaart:0": { t:"Hij nestelt meestal maar een paar meter boven de grond, en soms zelfs óp de grond.", bron:"Vogelbescherming, vogelgids gekraagde roodstaart" },
+  "gekraagde-roodstaart:1": { t:"De meeste Nederlandse gekraagde roodstaarten overwinteren in de Sahel, en ze trekken vooral 's nachts.", bron:"Vogelbescherming, vogelgids gekraagde roodstaart" },
+  "glanskop:0": { t:"Zijn verspreiding valt vrijwel precies samen met die van de beuk, van welke zaden hij in de winter vooral leeft.", bron:"Vogelbescherming, vogelgids glanskop" },
+  "glanskop:1": { t:"Om te broeden heeft hij minstens 4 hectare ouder loofbos nodig.", bron:"Vogelbescherming, vogelgids glanskop" },
+  "grauwe-vliegenvanger:0": { t:"Sinds 1990 is hij met meer dan 5 procent per jaar afgenomen, en hij staat op de Rode Lijst.", bron:"Vogelbescherming, vogelgids grauwe vliegenvanger" },
+  "grauwe-vliegenvanger:1": { t:"Hij komt pas eind april terug, en sommige vogels bereiken hun wintergebied pas half november.", bron:"Vogelbescherming, vogelgids grauwe vliegenvanger" },
+  "grote-bonte-specht:0": { t:"Er bestaan 27 ondersoorten, van het Atlasgebergte in Marokko tot in Mongolië.", bron:"Vogelbescherming, vogelgids grote bonte specht" },
+  "grote-bonte-specht:1": { t:"Beide ouders hakken elk jaar samen een nieuw nesthol, meestal in zacht hout zoals berk.", bron:"Vogelbescherming, vogelgids grote bonte specht" },
+  "hop:0": { t:"Bij gevaar spuiten het vrouwtje en de jongen indringers onder met een stinkende vloeistof.", bron:"Vogelbescherming, vogelgids hop" },
+  "hop:1": { t:"Met zijn lange snavel prikt hij in de grond naar grote insecten, zoals engerlingen en zelfs veenmollen.", bron:"Vogelbescherming, vogelgids hop" },
+  "kleine-bonte-specht:0": { t:"Zijn aantal neemt toe, dankzij ouder bos en meer dood hout.", bron:"Vogelbescherming, vogelgids kleine bonte specht" },
+  "kleine-bonte-specht:1": { t:"Zijn roffel duurt langer dan die van de grote bonte specht en klinkt meer als een naaimachine.", bron:"Vogelbescherming, vogelgids kleine bonte specht" },
+  "kleine-vliegenvanger:0": { t:"Hij overwintert ver weg: in Oman, Pakistan en India.", bron:"Vogelbescherming, vogelgids kleine vliegenvanger" },
+  "kleine-vliegenvanger:1": { t:"Een broedgeval is in Nederland nog nooit vastgesteld; de dichtstbijzijnde broedgebieden liggen in Duitsland.", bron:"Vogelbescherming, vogelgids kleine vliegenvanger" },
+  "koolmees:0": { t:"Het vrouwtje begint pas te broeden als er 8 tot 10 eieren in het nest liggen.", bron:"Vogelbescherming, vogelgids koolmees" },
+  "koolmees:1": { t:"In de winter zitten er 1 tot 2 miljoen koolmezen in Nederland.", bron:"Vogelbescherming, vogelgids koolmees" },
+  "pimpelmees:0": { t:"In de winter kunnen er wel 2 miljoen pimpelmezen in Nederland zijn.", bron:"Vogelbescherming, vogelgids pimpelmees" },
+  "pimpelmees:1": { t:"Een legsel van de pimpelmees telt gemiddeld zo'n 10 eieren.", bron:"Vogelbescherming, vogelgids pimpelmees" },
+  "raaf:0": { t:"In 1944 broedde de laatste raaf in Nederland; pas in 1976 broedden er weer wilde raven, na een uitzetting.", bron:"Vogelbescherming, vogelgids raaf" },
+  "raaf:1": { t:"Ondanks zijn formaat en zijn schorre stem hoort de raaf bij de zangvogels.", bron:"Vogelbescherming, vogelgids raaf" },
+  "ruigpootuil:0": { t:"In 2008 werden in Drenthe twee zekere broedgevallen vastgesteld, de eerste sinds 1977.", bron:"Sovon, Broedvogels in Nederland in 2008" },
+  "ruigpootuil:1": { t:"De meeste zingende mannetjes in Nederland zijn waarschijnlijk ongepaard, en die zingen soms door tot in juni.", bron:"Sovon, soortpagina ruigpootuil" },
+  "zeearend:0": { t:"Met een spanwijdte tot 2,44 meter wordt hij ook wel een vliegende deur genoemd.", bron:"Vogelbescherming, vogelgids zeearend" },
+  "zeearend:1": { t:"In 2014 broedden er 5 paren zeearenden in Nederland, in 2025 al 45.", bron:"Vogelbescherming, vogelgids zeearend" },
+  "zwarte-mees:0": { t:"In jaren met weinig dennenzaad kan hij in grote invasies naar Nederland komen, met vogels tot uit Rusland.", bron:"Vogelbescherming, vogelgids zwarte mees" },
+  "zwarte-mees:1": { t:"In verzuurde naaldbossen leidt kalkgebrek bij zwarte mezen tot dunne eierschalen en misvormde jongen.", bron:"Vogelbescherming, vogelgids zwarte mees" },
+  "zwarte-roodstaart:0": { t:"Hij zingt het liefst vanaf 20 meter of hoger, zoals een dakrand, een kraan of een antenne.", bron:"Vogelbescherming, vogelgids zwarte roodstaart" },
+  "zwarte-roodstaart:1": { t:"Vaak zingt hij al zo'n twee uur voor zonsopkomst.", bron:"Vogelbescherming, vogelgids zwarte roodstaart" }
 };
