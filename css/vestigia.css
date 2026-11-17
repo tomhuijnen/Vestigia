@@ -2255,3 +2255,21 @@ button.award:focus-visible{outline:2px solid var(--green); outline-offset:2px}
 .playerbox .pal .linklike{justify-self:start; text-align:left}
 .playerbox .pal p{margin:0}
 html.donker .playerbox .pal{background:#1d2a22}
+
+/* update 63: smalle kop buiten de dagcasus. Zelfde opbouw als de balk bij scrollen: naam met het label ernaast. */
+.kopklein .tiles{display:none}
+.kopklein .mh-in{padding-top:calc(8px + env(safe-area-inset-top)); padding-bottom:8px; gap:0}
+.kopklein .mh-bar .mh-title{flex-direction:row; align-items:baseline; gap:10px}
+.kopklein .mh-bar .mh-title .series{order:2}
+.kopklein .mh-bar .mh-name{font-size:1.45rem}
+.kopklein .mh-bar .menubtn{width:40px; height:40px; flex-basis:40px}
+@media (min-width:881px){ .kopklein .mh-bar .mh-name{font-size:1.7rem} }
+/* oefenen: de keuze en hoeveel soorten nog niet in je Vestiarium staan, op één regel */
+.oefenkader summary .onog{flex-basis:100%; margin-top:-6px; font-size:.82rem; color:#8a5e26}
+html.donker .oefenkader summary .onog{color:#d9b98a}
+/* update 63: nog niet geopende waarnemingen op één smalle regel */
+.clue.locked{padding:7px 0 8px; align-items:center}
+.clue.locked .num{font-size:1rem}
+.clue.locked > div{display:flex; align-items:center; gap:12px}
+.clue.locked .lab{margin:0; white-space:nowrap}
+.clue.locked p{flex:1; height:.7em}
