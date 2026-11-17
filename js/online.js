@@ -224,8 +224,9 @@ const online = (() => {
       box.innerHTML = `<p><b>Doe mee aan de ranglijst.</b> Kies een spelersnaam. Je hebt geen account of e-mailadres nodig.</p>
         <div class="row2"><input id="pName" maxlength="20" placeholder="Bijvoorbeeld Tom of Dassenjager" autocomplete="nickname"><button class="btn" id="pJoin">Meedoen</button></div>
         <span class="msg" id="pMsg"></span>
-        <details id="pCodeBox"${appApart() ? " open" : ""}><summary>Ik heb al een spelers- of koppelcode</summary>
-          <p style="margin:8px 0 0;font-size:.9em;opacity:.85">${appApart() ? "Speelde je eerder op de webpagina? De app op je beginscherm heeft een eigen geheugen. Open Vestigia op de webpagina, ga naar Mijn profiel → Koppel je apparaten → Koppel een nieuw apparaat, en typ de code van 6 tekens hier in. Kies dus geen nieuwe naam." : "Maak op je andere apparaat een koppelcode: Mijn profiel → Koppel je apparaten. Typ de 6 tekens hier in, of plak je lange spelerscode."}</p>
+        <div class="pal" id="pAl" hidden aria-live="polite"></div>
+        <details id="pCodeBox"${appApart() ? " open" : ""}><summary>Ik speel al op een ander apparaat of in een andere browser</summary>
+          <p id="pCodeUitleg" style="margin:8px 0 0;font-size:.9em;opacity:.85">${appApart() ? "Speelde je eerder op de webpagina? De app op je beginscherm heeft een eigen geheugen. Open Vestigia op de webpagina, ga naar Mijn profiel → Koppel je apparaten → Koppel een nieuw apparaat, en typ de code van 6 tekens hier in. Kies dus geen nieuwe naam." : "Maak op je andere apparaat een koppelcode: Mijn profiel → Koppel je apparaten. Typ de 6 tekens hier in, of plak je lange spelerscode."}</p>
           <div class="row2" style="margin-top:8px"><input id="pCode" placeholder="ABC 234 of VSP-…" autocapitalize="characters" spellcheck="false"><button class="btn line" id="pLogin">Verder spelen</button></div>
         </details>`;
       $("pJoin").onclick = join;
@@ -233,29 +234,103 @@ const online = (() => {
       $("pLogin").onclick = login;
     }
   }
-  async function join(){
-    const name = $("pName").value.trim();
-    if (name.length < 2){ $("pMsg").textContent = "Kies een naam van minstens 2 tekens."; return; }
-    $("pJoin").disabled = true; $("pMsg").textContent = "Even geduld…";
+  /* update 62: een aanmelding die onderweg is. De app maakt zelf de sleutel en bewaart hem vóór het versturen,
+     zodat opnieuw proberen met dezelfde naam je eigen account teruggeeft (ook als het antwoord de eerste keer
+     niet aankwam) in plaats van 'bezet' en een tweede account. Een dag geldig. */
+  const AKEY = "vestigia:aanmelding";
+  const aanmelding = () => { try { const a = JSON.parse(localStorage.getItem(AKEY)); return a && Date.now() - a.t < 864e5 ? a : null; } catch(e){ return null; } };
+  const setAanmelding = a => { try { a ? localStorage.setItem(AKEY, JSON.stringify(a)) : localStorage.removeItem(AKEY); } catch(e){} };
+  const nieuweSleutel = () => { const b = new Uint8Array(32); crypto.getRandomValues(b); return Array.from(b, x => x.toString(16).padStart(2, "0")).join(""); };
+  const zelfdeNaam = (a, b) => String(a || "").trim().replace(/\s+/g, " ").toLowerCase() === String(b || "").trim().replace(/\s+/g, " ").toLowerCase();
+  let toch = "";                                     /* naam waarvoor de speler zei: 'nee, ik ben iemand anders' */
+  async function aanmelden(name){
+    let a = aanmelding();
+    if (!a || !zelfdeNaam(a.name, name)){ a = { name, key: nieuweSleutel(), t: Date.now() }; setAanmelding(a); }
     try {
-      let r;
+      const r = await rpc("register_player2", { p_name: name, p_key: a.key, p_toch: zelfdeNaam(toch, name) });
+      if (r && r.ok) return { id: r.id, key: a.key, name: r.name || name };
+      return r || { ok: false };
+    } catch(e){
+      if (e.status !== 404) throw e;
+      /* SQL 038 nog niet in Supabase: de oude manier */
+      const rows = await rpc("register_player", { p_name: name }), r = Array.isArray(rows) ? rows[0] : rows;
+      return { id: r.id, key: r.key, name };
+    }
+  }
+  /* bij het openen: kwam een aanmelding van gisteren of vandaag nooit aan in de app, dan haalt de app hem stil op */
+  async function herstelAanmelding(){
+    const a = aanmelding();
+    if (!enabled || player() || !a || koppeling()) return;
+    try {
+      const r = await rpc("register_player2", { p_name: a.name, p_key: a.key, p_herstel: true });
+      if (r && r.ok){ welkom({ id: r.id, key: a.key, name: r.name }); }
+      else if (r && r.reden === "bezet") setAanmelding(null);        /* iemand anders heeft die naam: niets te herstellen */
+    } catch(e){}
+  }
+  /* naam gekozen en account binnen: vanaf hier kan de aanmelding niet meer mislukken */
+  async function welkom(r){
+    setPlayer({ id: r.id, key: r.key, name: r.name }); setAanmelding(null); toch = "";
+    const nap = (f) => { try { const x = f(); return x && x.catch ? x.catch(() => {}) : x; } catch(e){} };
+    try { $("welcome").hidden = true; } catch(e){}
+    /* eerst een uitnodiging en league uit een link: de server neemt een uitnodiging alleen aan vóór je eerste resultaat */
+    let extra = "";
+    try { extra = (await League.naNaam(true)) || ""; } catch(e){}
+    nap(() => Profiel.naNaam());
+    if (typeof Duel !== "undefined") nap(() => Duel.naNaam());
+    nap(queueRecentDaily); nap(syncSoon); nap(() => flush().then(() => refreshWeek()));
+    nap(renderRank); nap(renderMenu);
+    toast(`Welkom, ${r.name}! Je doet nu mee aan de ranglijst.${extra}`);
+  }
+  /* 'Speel je al als …?': koppelen met de code van 6 tekens, of (alleen bij 'lijkt') toch deze naam */
+  function alSpeler(naam, mijnNaam, bezet){
+    const box = $("pAl"); if (!box) return;
+    box.hidden = false;
+    box.innerHTML = `<p><b>Speel je al als ${esc(naam)}?</b> ${bezet ? "Die naam is al bezet." : "Er speelt al iemand met een naam die hier sterk op lijkt."}
+      Ben jij dat, in een andere browser of op een ander apparaat? Kies dan geen nieuwe naam, maar koppel dit apparaat:</p>
+      <ol><li>Open Vestigia waar je al speelt.</li><li>Ga naar <b>Mijn profiel → Koppel je apparaten → Koppel een nieuw apparaat</b>.</li><li>Typ de code van 6 tekens hieronder in.</li></ol>
+      ${bezet ? `<p class="fine">Ben je iemand anders? Kies dan een andere naam.</p>` : `<button class="linklike" id="pToch">Nee, ik ben iemand anders: gebruik toch ‘${esc(mijnNaam)}’</button>`}`;
+    if ($("pCodeBox")){ $("pCodeBox").open = true; if ($("pCodeUitleg")) $("pCodeUitleg").hidden = true; }
+    if (!bezet) $("pToch").onclick = () => { toch = mijnNaam; box.hidden = true; join(); };
+    $("pMsg").textContent = "";
+  }
+  async function join(){
+    if (player()){ renderPlayerBox(); return; }        /* al aangemeld: nooit een tweede account */
+    const name = $("pName").value.trim().replace(/\s+/g, " ");
+    if (name.length < 2){ $("pMsg").textContent = "Kies een naam van minstens 2 tekens."; return; }
+    $("pJoin").disabled = true; $("pMsg").textContent = "Even geduld…"; if ($("pAl")) $("pAl").hidden = true; if ($("pCodeUitleg")) $("pCodeUitleg").hidden = false;
+    let r;
+    try {
       const k = koppeling();
-      if (k){ await rpc("claim_name", { p_id: k.id, p_key: k.key, p_name: name }); r = k; setKoppeling(null); }
-      else { const rows = await rpc("register_player", { p_name: name }); r = Array.isArray(rows) ? rows[0] : rows; }
-      setPlayer({ id: r.id, key: r.key, name });
-      $("welcome").hidden = true;
-      /* eerst een uitnodiging en league uit een link: de server neemt een uitnodiging alleen aan vóór je eerste resultaat */
-      const extra = await League.naNaam(true);
-      Profiel.naNaam();
-      if (typeof Duel !== "undefined") Duel.naNaam();
-      queueRecentDaily(); syncSoon(); flush().then(() => refreshWeek()).catch(() => {}); renderRank(); renderMenu(); toast(`Welkom, ${name}! Je doet nu mee aan de ranglijst.${extra}`);
+      if (k){
+        if (!zelfdeNaam(toch, name)){
+          let lijkt = null; try { lijkt = await rpc("naam_lijkt", { p_name: name }); } catch(e){}
+          if (lijkt){ $("pJoin").disabled = false; alSpeler(lijkt, name, false); return; }
+        }
+        try { await rpc("claim_name", { p_id: k.id, p_key: k.key, p_name: name }); }
+        catch(e){
+          /* kwam het antwoord de vorige keer niet aan, dan heeft dit account de naam al */
+          const nu = /al een spelersnaam/i.test(e.message || "") ? await rpc("player_name", { p_id: k.id, p_key: k.key }).catch(() => null) : null;
+          if (!nu || !zelfdeNaam(nu, name)) throw e;
+        }
+        setKoppeling(null); r = { id: k.id, key: k.key, name };
+      } else {
+        r = await aanmelden(name);
+        if (!r.id){
+          $("pJoin").disabled = false;
+          if (r.reden === "bezet" || r.reden === "lijkt"){ alSpeler(r.naam || name, name, r.reden === "bezet"); return; }
+          $("pMsg").textContent = "Aanmelden lukte niet. Probeer het nog eens.";
+          return;
+        }
+      }
     } catch(e){
       $("pJoin").disabled = false;
       const bezet = e.status && e.status < 500 && /bezet/i.test(e.message || "");
-      $("pMsg").textContent = bezet ? "Deze naam is al bezet. Is het jouw naam van een ander apparaat of van de webpagina? Plak dan hieronder je spelerscode (te vinden in Mijn profiel op dat apparaat)."
-        : e.status && e.status < 500 ? e.message : "Aanmelden lukte niet. Controleer je internetverbinding.";
-      if (bezet && $("pCodeBox")){ $("pCodeBox").open = true; $("pCode").focus(); }
+      if (bezet){ alSpeler(name, name, true); return; }
+      $("pMsg").textContent = e.status && e.status < 500 ? e.message
+        : "Aanmelden lukte niet. Controleer je internetverbinding en probeer het met dezelfde naam opnieuw.";
+      return;
     }
+    await welkom(r);
   }
   async function login(){
     const waarde = $("pCode").value.trim();
@@ -342,7 +417,7 @@ const online = (() => {
     setPlayer(Object.assign({}, p, { name: naam })); renderRank(); renderMenu();
     return rest;
   }
-  return { enabled, rpc, player, appApart, hernoem, account, koppeling, koppelcode, koppel, naKoppel, afterGame, haalVoortgang, voortgangKlaar, flush, syncSoon, renderRank, refreshWeek, renderScope, setScope,
+  return { enabled, rpc, player, appApart, herstelAanmelding, hernoem, account, koppeling, koppelcode, koppel, naKoppel, afterGame, haalVoortgang, voortgangKlaar, flush, syncSoon, renderRank, refreshWeek, renderScope, setScope,
            setMode: (m, s) => { rankMode = m; if (s !== undefined) setScope(s); else renderRank(); } };
 })();
 
@@ -445,5 +520,7 @@ window.addEventListener("online", () => { Veld.zet(false); online.flush(); });
 window.addEventListener("offline", () => Veld.zet(true));
 if (navigator.onLine === false) setTimeout(() => Veld.zet(true), 0);   // na het laden van app.js (toast)
 online.haalVoortgang().then(() => online.flush()).then(() => online.refreshWeek()).catch(() => {});
-document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") online.haalVoortgang(); });
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible"){ online.herstelAanmelding(); online.haalVoortgang(); } });
+/* update 62: een aanmelding waarvan het antwoord nooit aankwam, alsnog ophalen (na het laden van de andere onderdelen) */
+setTimeout(() => online.herstelAanmelding(), 1500);
 
