@@ -5,7 +5,7 @@
    t    het weetje: één zin, ±15–25 woorden, geen herhaling van de toelichting van dezelfde casus
    bron de goedgekeurde bron (Sovon, RAVON, Zodion, Vogelbescherming, BIJ12, De Vlinderstichting, EIS); staat klein onder het weetje
    Een casus zonder weetje toont nog het oude vak ‘Typisch’, tot zijn diergroep is goedgekeurd.
-   Goedgekeurd door Tom, per diergroep: reptielen (17 november 2026, 09:32), amfibieën (09:41), vissen, vlinders, libellen en kevers (09:50), zoogdieren deel 1 (09:57), zoogdieren deel 2 (10:04), zoogdieren deel 3 (10:12), vogels deel 1 (10:20) */
+   Goedgekeurd door Tom, per diergroep: reptielen (17 november 2026, 09:32), amfibieën (09:41), vissen, vlinders, libellen en kevers (09:50), zoogdieren deel 1 (09:57), zoogdieren deel 2 (10:04), zoogdieren deel 3 (10:12), vogels deel 1 (10:20), vogels deel 2 (10:24) */
 "use strict";
 const WEETJES = {
   /* ---------- Reptielen (RAVON, soortpagina's) ---------- */
@@ -246,8 +246,8 @@ const WEETJES = {
   "bosuil:1": { t:"Kom je te dicht bij het nest, dan kan een bosuil je fel en gevaarlijk aanvallen.", bron:"Vogelbescherming, vogelgids bosuil" },
   "torenvalk:0": { t:"De torenvalk was ooit de talrijkste roofvogel van Nederland; nu is dat de buizerd.", bron:"Vogelbescherming, vogelgids torenvalk" },
   "torenvalk:1": { t:"Sinds 2017 staat de torenvalk op de Rode Lijst, vooral doordat intensief beheerd grasland veel minder veldmuizen heeft.", bron:"Vogelbescherming, vogelgids torenvalk" },
-  "boerenzwaluw:0": { t:"Het herstel van de laatste jaren hangt samen met zo'n vijf keer zoveel geschikte nestplekken, vooral in paardenstallen.", bron:"Vogelbescherming, vogelgids boerenzwaluw" },
-  "boerenzwaluw:1": { t:"In de winter blijven er hooguit een of twee boerenzwaluwen in Nederland; de rest zit in Afrika.", bron:"Vogelbescherming, vogelgids boerenzwaluw" },
+  "boerenzwaluw:0": { t:"Dat het de laatste jaren weer wat beter gaat, komt vooral doordat er veel nieuwe nestplekken zijn bijgekomen, met name in paardenstallen.", bron:"Vogelbescherming, vogelgids boerenzwaluw" },
+  "boerenzwaluw:1": { t:"Een boerenzwaluw in de winter is in Nederland een grote uitzondering: vrijwel alle vogels overwinteren in Afrika.", bron:"Vogelbescherming, vogelgids boerenzwaluw" },
   "huiszwaluw:0": { t:"Een modderplas moet binnen 100 tot 200 meter van het nest liggen.", bron:"Vogelbescherming, vogelgids huiszwaluw" },
   "huiszwaluw:1": { t:"Sinds eind jaren zestig is het aantal huiszwaluwen in Nederland met minstens 75 procent gedaald.", bron:"Vogelbescherming, vogelgids huiszwaluw" },
   "blauwe-reiger:0": { t:"In 1963 broedden er nog maar zo'n 3500 paren; nu zijn het er 11.000 tot 12.000.", bron:"Vogelbescherming, vogelgids blauwe reiger" },
@@ -267,5 +267,35 @@ const WEETJES = {
   "kauw:0": { t:"Hij broedt in boomholtes, muren en schoorstenen, maar soms zelfs in een konijnenhol.", bron:"Vogelbescherming, vogelgids kauw" },
   "kauw:1": { t:"In de winter zitten er 300.000 tot 500.000 kauwen in Nederland, en er trekken er tot een miljoen door.", bron:"Vogelbescherming, vogelgids kauw" },
   "zwarte-kraai:0": { t:"Zwarte kraaien profiteren van de vele verkeersslachtoffers op Nederlandse wegen.", bron:"Vogelbescherming, vogelgids zwarte kraai" },
-  "zwarte-kraai:1": { t:"In nesten van zwarte kraaien zijn ook papier en ijzerdraad gevonden.", bron:"Vogelbescherming, vogelgids zwarte kraai" }
+  "zwarte-kraai:1": { t:"In nesten van zwarte kraaien zijn ook papier en ijzerdraad gevonden.", bron:"Vogelbescherming, vogelgids zwarte kraai" },
+  "grauwe-gans:0": { t:"In de jaren tachtig overwinterde zo'n 80 procent van de Europese grauwe ganzen in Spanje; nu is Nederland het belangrijkste wintergebied.", bron:"Vogelbescherming, vogelgids grauwe gans" },
+  "grauwe-gans:1": { t:"Minder dan veertig jaar geleden was hij hier een zeer zeldzame broedvogel, die zelfs werd uitgezet om te voorkomen dat hij verdween.", bron:"Vogelbescherming, vogelgids grauwe gans" },
+  "witte-kwikstaart:0": { t:"Nederlandse witte kwikstaarten trekken in de herfst via het Iberisch Schiereiland naar Marokko.", bron:"Vogelbescherming, vogelgids witte kwikstaart" },
+  "witte-kwikstaart:1": { t:"Als ze in maart terugkomen, heeft vrijwel elke boerderij weer zijn eigen paartje.", bron:"Vogelbescherming, vogelgids witte kwikstaart" },
+  "roodborsttapuit:0": { t:"Hij kan wel drie legsels per jaar grootbrengen en begint al in maart te broeden.", bron:"Vogelbescherming, vogelgids roodborsttapuit" },
+  "roodborsttapuit:1": { t:"Waar een ruilverkaveling werd uitgevoerd, verdween hij vaak meteen.", bron:"Vogelbescherming, vogelgids roodborsttapuit" },
+  "grutto:0": { t:"Sommige grutto's vliegen in één keer over de Sahara naar Senegal en Guinee-Bissau.", bron:"Vogelbescherming, vogelgids grutto" },
+  "grutto:1": { t:"Ongeveer 90 procent van alle grutto's van Noordwest-Europa broedt in Nederland.", bron:"Vogelbescherming, vogelgids grutto" },
+  "merel:0": { t:"Tussen 2017 en 2019 verdween bijna een derde van de merels, waarschijnlijk door het usutuvirus.", bron:"Vogelbescherming, vogelgids merel" },
+  "merel:1": { t:"Met 500.000 tot 900.000 broedparen is de merel de talrijkste broedvogel van Nederland.", bron:"Vogelbescherming, vogelgids merel" },
+  "houtduif:0": { t:"In de herfst en winter verzamelen houtduiven zich soms met duizenden tegelijk in eikenbossen om eikels te eten.", bron:"Vogelbescherming, vogelgids houtduif" },
+  "houtduif:1": { t:"De jongen krijgen de eerste week duivenmelk uit de krop van hun ouders.", bron:"Vogelbescherming, vogelgids houtduif" },
+  "patrijs:0": { t:"In 2017 is de patrijs van de lijst met bejaagbare soorten gehaald; de jacht was al sinds 1998 gesloten.", bron:"Sovon, soortpagina patrijs" },
+  "patrijs:1": { t:"Patrijzenkuikens kunnen al na ongeveer 14 dagen vliegen.", bron:"Sovon en Vogelbescherming, soortpagina's patrijs" },
+  "zwarte-wouw:0": { t:"In 2025 broedden er volgens Sovon maar 8 paren zwarte wouwen in Nederland.", bron:"Vogelbescherming, vogelgids zwarte wouw" },
+  "zwarte-wouw:1": { t:"Hij broedt pas sinds 2009 ieder jaar in Nederland; daarvoor was hij een zeer zeldzame broedvogel.", bron:"Vogelbescherming, vogelgids zwarte wouw" },
+  "bonte-vliegenvanger:0": { t:"Soms zetten bonte vliegenvangers koolmezen uit hun nestkast.", bron:"Vogelbescherming, vogelgids bonte vliegenvanger" },
+  "bonte-vliegenvanger:1": { t:"Hij vliegt in 40 tot 60 uur zonder te stoppen over de Sahara naar West-Afrika.", bron:"Vogelbescherming, vogelgids bonte vliegenvanger" },
+  "boomkruiper:0": { t:"Op koude nachten kruipen boomkruipers dicht tegen elkaar aan; soms steken er tien staartjes uit één verenbal.", bron:"Vogelbescherming, vogelgids boomkruiper" },
+  "boomkruiper:1": { t:"Zijn stijve staartveren gebruikt hij als steun bij het klimmen, waardoor de punten vaak flink versleten zijn.", bron:"Vogelbescherming, vogelgids boomkruiper" },
+  "kortsnavelboomkruiper:0": { t:"In Nederland broedt alleen de ondersoort met de korte snavel; daar komt zijn oude naam kortsnavelboomkruiper vandaan.", bron:"Vogelbescherming, vogelgids taigaboomkruiper" },
+  "kortsnavelboomkruiper:1": { t:"Hij broedt pas sinds 1993 in Nederland, in het begin vooral in Zuid-Limburg.", bron:"Vogelbescherming, vogelgids taigaboomkruiper" },
+  "brilduiker:0": { t:"In Nederland is de driehoeksmossel een belangrijk voedsel voor de brilduiker.", bron:"Vogelbescherming, vogelgids brilduiker" },
+  "brilduiker:1": { t:"Voor een eend broedt hij op een opvallende plek: in boomholtes, vaak in oude holen van de zwarte specht.", bron:"Vogelbescherming, vogelgids brilduiker" },
+  "draaihals:0": { t:"Hij dankt zijn naam aan zijn soepele nek, die hij in vreemde bochten kan draaien.", bron:"Vogelbescherming, vogelgids draaihals" },
+  "draaihals:1": { t:"Draaihalzen trekken vooral 's nachts, op weg naar hun wintergebied ten zuiden van de Sahara.", bron:"Vogelbescherming, vogelgids draaihals" },
+  "eidereend:0": { t:"In de winter van 1999/2000 stierven in de Waddenzee massaal eidereenden van de honger, in een gebied waar intensief op schelpdieren werd gevist.", bron:"Sovon, Broedsucces van kustbroedvogels in de Waddenzee" },
+  "eidereend:1": { t:"Terpvondsten laten zien dat hij in de middeleeuwen al hier broedde; daarna verdween hij, waarschijnlijk door overexploitatie.", bron:"Vogelbescherming, Beschermingsplan duin- en kustvogels" },
+  "ekster:0": { t:"Jonge eksters leven tot hun derde jaar in jeugdbendes, waar ze de ervaring opdoen die ze later nodig hebben.", bron:"Vogelbescherming, vogelgids ekster" },
+  "ekster:1": { t:"Het verhaal dat eksters sieraden stelen klopt niet: ze zijn vooral nieuwsgierig naar alles wat afwijkt.", bron:"Vogelbescherming, vogelgids ekster" }
 };
