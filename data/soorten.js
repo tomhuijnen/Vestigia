@@ -2826,7 +2826,7 @@ const SPECIES = [
       "Klein, met een grote ronde kop, een wit gezicht met donkere rand, gele ogen en dicht bevederde poten."
     ] },
     { bron:"Vogelbescherming, vogelgids ruigpootuil", sl:{ i:4, t:"Een grote, vierkante kop en een wit gezicht met donkere rand. Zijn roep is een snelle reeks zachte 'poe-poe-poe'." }, wn:[
-      "Veluwe, juni. Een warme nacht.",
+      "Drenthe, juni. Een warme nacht.",
       "Een groot naaldbos.",
       "Een speciale nestkast hoog in een den.",
       "Jongen kijken 's nachts uit de kast.",
@@ -2885,7 +2885,7 @@ const SPECIES = [
       "Een krassend liedje dat klinkt alsof er grind wordt geschud; een staart die steeds trilt.",
       "Roetgrijs tot zwart, met een roestrode staart en (bij de man) een witte vleugelvlek."
     ] },
-    { bron:"Vogelbescherming, vogelgids zwarte roodstaart", sl:{ i:4, t:"Roetgrijs met een roestrode staart. Hij zingt al bij zonsopkomst vanaf de hoogste punt van een dak." }, wn:[
+    { bron:"Vogelbescherming, vogelgids zwarte roodstaart", sl:{ i:4, t:"Roetgrijs met een roestrode staart. Hij zingt al voor zonsopkomst vanaf het hoogste punt van een dak." }, wn:[
       "Zuid-Nederland, april. Vroeg in de ochtend.",
       "Een dorp met oude huizen.",
       "De nok van een dak.",

@@ -5,7 +5,7 @@
    t    het weetje: één zin, ±15–25 woorden, geen herhaling van de toelichting van dezelfde casus
    bron de goedgekeurde bron (Sovon, RAVON, Zodion, Vogelbescherming, BIJ12, De Vlinderstichting, EIS); staat klein onder het weetje
    Een casus zonder weetje toont nog het oude vak ‘Typisch’, tot zijn diergroep is goedgekeurd.
-   Goedgekeurd door Tom, per diergroep: reptielen (17 november 2026, 09:32), amfibieën (09:41), vissen, vlinders, libellen en kevers (09:50), zoogdieren deel 1 (09:57), zoogdieren deel 2 (10:04), zoogdieren deel 3 (10:12), vogels deel 1 (10:20), vogels deel 2 (10:24), vogels deel 3 (10:30) */
+   Goedgekeurd door Tom, per diergroep: reptielen (17 november 2026, 09:32), amfibieën (09:41), vissen, vlinders, libellen en kevers (09:50), zoogdieren deel 1 (09:57), zoogdieren deel 2 (10:04), zoogdieren deel 3 (10:12), vogels deel 1 (10:20), vogels deel 2 (10:24), vogels deel 3 (10:30), vogels deel 4 (10:37); alles live op Toms ‘mogen live’ (10:37) */
 "use strict";
 const WEETJES = {
   /* ---------- Reptielen (RAVON, soortpagina's) ---------- */
