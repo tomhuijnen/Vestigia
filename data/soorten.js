@@ -2375,14 +2375,14 @@ const SPECIES = [
       "Zeeland, november. Een oogstakker na de herfstbewerking.",
       "Akkerland met bomenrijen en kleine bosjes.",
       "Een dunne, doorzichtige ‘vlonder’ van takjes in een conifeer.",
-      "Grote groepen op een koolveld; het klapperen van vleugels bij het opvliegen en een zacht ‘roe-koe-koe’.",
+      "Grote groepen op een koolveld; bij het opvliegen klapperen de vleugels luid.",
       "Blauwgrijs, met een roze borst, witte halsvlek en in de vlucht een witte vleugelband."
     ] },
     { bron:"Vogelbescherming, vogelgids houtduif", sl:{ i:4, t:"Bij de balts klimt hij omhoog, klapt luid met de vleugels en glijdt dan omlaag. Hij is de grootste duif van Nederland." }, wn:[
       "Haarlem, mei. Een zonnige dag.",
       "Een park met grote bomen.",
       "Een plataan langs een vijver.",
-      "Een grote duif klimt in de lucht omhoog, klapt luid met de vleugels en glijdt dan omlaag.",
+      "Hij klimt steil omhoog in de lucht, klapt luid met de vleugels en glijdt dan omlaag.",
       "Blauwgrijs, met een witte halsvlek en witte vleugelband."
     ] }
   ] },

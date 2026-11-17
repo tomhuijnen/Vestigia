@@ -177,7 +177,8 @@ async function installApp(){
 window.addEventListener("appinstalled", () => { $("installBtn").hidden = true; toast("Vestigia is geïnstalleerd. Je vindt hem bij je apps."); });
 /* Nieuwe versie: nooit tegelijk met een pop-up (12 november 2026). De wachtrij wacht op deze controle (window.__swKlaar)
    en toont niets als er een nieuwe versie klaarstaat; staat er toch al iets open, dan komt ‘Vernieuwen’ pas als dat dicht is. */
-let swKlaar; window.__swKlaar = new Promise(r => { swKlaar = r; setTimeout(r, 4000); });
+let swKlaarR; window.__swKlaar = new Promise(r => { swKlaarR = r; setTimeout(r, 4000); });
+const swKlaar = () => swKlaarR();      // update 79: lost steeds de laatste controle op (zie zoekUpdates)
 /* update 67 (A2.2): een nieuwe speler (nog geen enkel spel op dit apparaat) kreeg ‘Er is een nieuwe versie’ als hij de app
    eerder al eens had geopend, bijvoorbeeld via een uitnodigingslink, en er sindsdien een update was. De melding klopt dan wel,
    maar zegt een nieuwe speler niets. Voor hem gaat de nieuwe versie stil in: geen melding, niet herladen (dat zou de
@@ -185,12 +186,18 @@ let swKlaar; window.__swKlaar = new Promise(r => { swKlaar = r; setTimeout(r, 40
    Bij een eerste bezoek zonder eerdere versie kwam de melding al nooit (dan is er nog geen service worker die de pagina beheert). */
 let stilBijgewerkt = false;
 const nieuweSpeler = () => { try { return !Object.keys(store.get().games || {}).length; } catch(e){ return false; } };
+let wachtendeVersie = null;
 function meldNieuweVersie(nw){
   if (nieuweSpeler()){ stilBijgewerkt = true; nw.postMessage("skipWaiting"); return; }
-  window.__nieuweVersie = true;
+  window.__nieuweVersie = true; wachtendeVersie = nw;
   const open = () => typeof Wachtrij !== "undefined" && Wachtrij.ietsOpen();
   const toon = () => open() ? setTimeout(toon, 800) : toast("Er is een nieuwe versie van Vestigia.", { label: "Vernieuwen", run: () => nw.postMessage("skipWaiting") });
   toon();
+}
+/* update 79: de melding ‘Vernieuwen’ kan verdwijnen doordat een andere melding hem vervangt. Zolang de nieuwe versie
+   klaarstaat, wacht de wachtrij (geen pop-ups); daarom komt hij terug zodra je de app weer in beeld haalt. */
+function nogmaalsNieuweVersie(){
+  if (wachtendeVersie && wachtendeVersie.state === "installed" && $("toast").hidden) meldNieuweVersie(wachtendeVersie);
 }
 if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")){
   navigator.serviceWorker.register("sw.js").then(reg => {
@@ -202,6 +209,7 @@ if ("serviceWorker" in navigator && (location.protocol === "https:" || location.
     else if (reg.installing) volg(reg.installing);
     reg.addEventListener("updatefound", () => volg(reg.installing));
     if (!reg.installing && !reg.waiting) setTimeout(swKlaar, 2500);   // geen update gevonden: de wachtrij mag
+    zoekUpdates(reg);
   }).catch(() => swKlaar());
   /* Alleen herladen bij een update. Bij het allereerste bezoek neemt de service worker de pagina ook over
      (controllerchange), maar dan is er niets te vernieuwen; herladen brak toen de openingsanimatie af. */
@@ -212,6 +220,27 @@ if ("serviceWorker" in navigator && (location.protocol === "https:" || location.
   navigator.serviceWorker.addEventListener("controllerchange", () => { if (hadController && !reloaded && !stilBijgewerkt){ reloaded = true; location.reload(); } });
 }
 
+/* update 79 (Tom, 17 november): een browser zoekt alleen naar een nieuwe versie als de pagina opnieuw laadt. Een telefoon sluit
+   de app vaak zelf, dus daar kwam ‘Vernieuwen’ vanzelf; een app op de laptop die de hele dag openstaat, zag hem pas na opnieuw
+   opstarten. Nu zoekt de app zelf: bij terugkomen (als de vorige keer minstens 10 minuten geleden is) en elk halfuur dat hij in
+   beeld is. De wachtrij wacht bij terugkomen eerst op die controle (window.__swKlaar), zodat er nooit een pop-up en
+   ‘Vernieuwen’ tegelijk komen. Kost één klein verzoek (sw.js) per keer. */
+function zoekUpdates(reg){
+  const MIN = 10 * 60 * 1000;
+  let vorige = Date.now();
+  const zoek = (dwing) => {
+    if (document.visibilityState !== "visible") return;
+    nogmaalsNieuweVersie();
+    if (window.__nieuweVersie || (!dwing && Date.now() - vorige < MIN) || !navigator.onLine) return;
+    vorige = Date.now();
+    window.__swKlaar = new Promise(r => { swKlaarR = r; setTimeout(r, 4000); });
+    /* vindt reg.update() iets, dan volgt ‘updatefound’ → volg() de nieuwe versie en roept swKlaar() aan als hij klaarstaat */
+    reg.update().then(() => { if (!reg.installing && !reg.waiting) swKlaar(); }).catch(() => swKlaar());
+  };
+  document.addEventListener("visibilitychange", () => zoek(false));
+  window.addEventListener("focus", () => zoek(false));
+  setInterval(() => zoek(true), 30 * 60 * 1000);
+}
 if (!("serviceWorker" in navigator)) swKlaar();
 start();
 koppelUitLink();

@@ -166,7 +166,7 @@ const Week = (() => {
 
   /* ---------- wachtrij ---------- */
   let klaar = null;
-  Wachtrij.voeg({ id: "week", prio: 1.8,
+  Wachtrij.voeg({ id: "week", prio: 1.6,       // update 79: vóór de levels (die verlopen niet), na advent en duel
     async kan(){
       klaar = null;
       if (demo){ klaar = nepUitslag(+demo || 3); return true; }
