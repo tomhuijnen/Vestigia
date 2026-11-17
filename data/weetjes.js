@@ -5,7 +5,7 @@
    t    het weetje: één zin, ±15–25 woorden, geen herhaling van de toelichting van dezelfde casus
    bron de goedgekeurde bron (Sovon, RAVON, Zodion, Vogelbescherming, BIJ12, De Vlinderstichting, EIS); staat klein onder het weetje
    Een casus zonder weetje toont nog het oude vak ‘Typisch’, tot zijn diergroep is goedgekeurd.
-   Goedgekeurd door Tom, per diergroep: reptielen (17 november 2026, 09:32), amfibieën (09:41), vissen, vlinders, libellen en kevers (09:50) */
+   Goedgekeurd door Tom, per diergroep: reptielen (17 november 2026, 09:32), amfibieën (09:41), vissen, vlinders, libellen en kevers (09:50), zoogdieren deel 1 (09:57) */
 "use strict";
 const WEETJES = {
   /* ---------- Reptielen (RAVON, soortpagina's) ---------- */
@@ -129,5 +129,35 @@ const WEETJES = {
   "waterspitsmuis:0": { t:"Zijn speeksel bevat een gif dat prooien verlamt, zodat hij ook grotere prooien aankan.", bron:"Zodion, soortpagina waterspitsmuis" },
   "waterspitsmuis:1": { t:"Hij eet per dag minstens zijn eigen lichaamsgewicht en rust nooit langer dan een uur achter elkaar.", bron:"Zodion, soortpagina waterspitsmuis" },
   "hermelijn:0": { t:"Of een hermelijn 's winters wit wordt, hangt af van een gen dat vaker bij vrouwtjes voorkomt.", bron:"Zodion, soortpagina hermelijn" },
-  "hermelijn:1": { t:"Vrouwtjes kunnen al een paar weken na hun geboorte bevrucht worden, soms door hetzelfde mannetje als hun moeder.", bron:"Zodion, soortpagina hermelijn" }
+  "hermelijn:1": { t:"Vrouwtjes kunnen al een paar weken na hun geboorte bevrucht worden, soms door hetzelfde mannetje als hun moeder.", bron:"Zodion, soortpagina hermelijn" },
+  "bruinvis:0": { t:"Een bruinvis eet per dag zo'n 5 kilo vis, ongeveer een tiende van zijn eigen gewicht.", bron:"Zodion, soortpagina bruinvis" },
+  "bruinvis:1": { t:"In de zeventiende eeuw heetten bruinvissen zeevarkens, om hun vette uiterlijk en hun knorrende geluiden.", bron:"Zodion, soortpagina bruinvis" },
+  "vos:0": { t:"Een vos verstopt prooien als voorraad en vindt die soms zelfs maanden later terug.", bron:"Zodion, soortpagina vos" },
+  "vos:1": { t:"In de stad kan een vos rondkomen met een territorium van maar 20 hectare, terwijl het meestal 100 tot 400 hectare is.", bron:"Zodion, soortpagina vos" },
+  "ree:0": { t:"Na de bronst rust het embryo maandenlang en gaat het pas eind december groeien; dat heet kiemrust.", bron:"Zodion, soortpagina ree" },
+  "ree:1": { t:"Een ree kan over korte afstand 60 kilometer per uur rennen en 5 meter ver springen.", bron:"Zodion, soortpagina ree" },
+  "edelhert:0": { t:"Na de bronst kan een hert tot 30 procent van zijn gewicht kwijt zijn, omdat hij zo'n maand bijna niets eet.", bron:"Zodion, soortpagina edelhert" },
+  "edelhert:1": { t:"Een week na het afwerpen begint het nieuwe gewei al te groeien, en rond juli is het weer hard.", bron:"Zodion, soortpagina edelhert" },
+  "damhert:0": { t:"Het is nu het meest verspreide hert ter wereld, terwijl de oorspronkelijke wilde populatie in Turkije bijna verdwenen is.", bron:"Zodion, soortpagina damhert" },
+  "damhert:1": { t:"Binnen één roedel kunnen dieren voorkomen van helemaal zwart tot helemaal wit.", bron:"Zodion, soortpagina damhert" },
+  "wild-zwijn:0": { t:"Hij ziet slecht, maar ruikt zo goed dat hij voedsel onder de grond op geur vindt.", bron:"Zodion, soortpagina wild zwijn" },
+  "wild-zwijn:1": { t:"Frislingen worden al met hoek- en snijtanden geboren, gemiddeld zeven in een worp.", bron:"Zodion, soortpagina wild zwijn" },
+  "haas:0": { t:"In de paartijd boksen hazen rechtop tegen elkaar, vaak een vrouwtje dat een opdringerig mannetje afweert.", bron:"Zodion, soortpagina haas" },
+  "haas:1": { t:"Jonge hazen worden met vacht en open ogen geboren, en de moeder komt elke avond maar een kwartiertje langs om ze te zogen.", bron:"Zodion, soortpagina haas" },
+  "konijn:0": { t:"Het konijn eet een deel van zijn eigen zachte keutels op, om de voedingsstoffen er nog een keer uit te halen.", bron:"Zodion, soortpagina konijn" },
+  "konijn:1": { t:"Het konijn komt van oorsprong van het Iberisch Schiereiland en werd in de vroege middeleeuwen in Nederland ingevoerd.", bron:"Zodion, soortpagina konijn" },
+  "egel:0": { t:"Een egel kan tot 40 huisjesslakken per nacht eten, huisje en al.", bron:"Zodion, soortpagina egel" },
+  "egel:1": { t:"Tijdens de winterslaap zakt zijn lichaamstemperatuur van zo'n 35 naar 10 °C, en hij verliest ongeveer 30 procent van zijn gewicht.", bron:"Zodion, soortpagina egel" },
+  "wezel:0": { t:"Hij is het kleinste roofdier van Europa: een volwassen wezel weegt 40 tot 150 gram.", bron:"Zodion, soortpagina wezel" },
+  "wezel:1": { t:"Anders dan de hermelijn wordt de wezel in Nederland 's winters nooit wit.", bron:"Zodion, soortpagina wezel" },
+  "bunzing:0": { t:"Na een vrouwtjeskikker braakt hij de eierstokken weer uit; dat slijmerige hoopje heet sterrenschot.", bron:"Zodion, soortpagina bunzing" },
+  "bunzing:1": { t:"Verwilderde fretten paren met bunzingen, waardoor de genetische zuiverheid van de bunzing onder druk staat.", bron:"Zodion, soortpagina bunzing" },
+  "gewone-zeehond:0": { t:"Een pup van twee dagen oud kan al twee minuten onder water blijven.", bron:"Zodion, soortpagina gewone zeehond" },
+  "gewone-zeehond:1": { t:"Hij drinkt geen zeewater, maar haalt zijn vocht uit de 4 tot 8 kilo vis die hij per dag eet.", bron:"Zodion, soortpagina gewone zeehond" },
+  "wilde-kat:0": { t:"Waarschijnlijk was hij sinds de middeleeuwen uit Nederland verdwenen, tot hij in 1999 weer werd gemeld.", bron:"Zodion, soortpagina wilde kat" },
+  "wilde-kat:1": { t:"Hij vangt soms vissen door ze vanaf een uitkijkpost uit het water te slaan.", bron:"Zodion, soortpagina wilde kat" },
+  "bosmuis:0": { t:"In de nazomer leven er 13 tot 60 bosmuizen per hectare, tegen 4 tot 7 in het voorjaar.", bron:"Zodion, soortpagina bosmuis" },
+  "bosmuis:1": { t:"Gemiddeld wordt een bosmuis maar drie maanden oud, al kan hij in het wild 18 maanden halen.", bron:"Zodion, soortpagina bosmuis" },
+  "grote-bosmuis:0": { t:"Hij graaft zelden zelf een hol en neemt liever de holen van mol, konijn, woelmuis of das over.", bron:"Zodion, soortpagina grote bosmuis" },
+  "grote-bosmuis:1": { t:"Onderling roepen grote bosmuizen in ultrasone tonen van 40 tot 60 kHz, die je met een batdetector kunt horen.", bron:"Zodion, soortpagina grote bosmuis" }
 };
