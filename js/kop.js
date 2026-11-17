@@ -35,6 +35,8 @@ function kopLabel(){
 /* Oefenen krijgt een bruine kop, zodat je altijd ziet dat het niet om de dagcasus gaat. */
 function kleurKop(){
   document.body.classList.toggle("oefenen", VIEW === "game" && !!S && S.mode === "free");
+  /* update 63: de vier tegels alleen bij de dagcasus; elders een smalle kop, zodat je meer ziet zonder te scrollen */
+  document.body.classList.toggle("kopklein", !(VIEW === "game" && (!S || S.mode === "daily")));
   /* update 16: blauw in een duel en op het scherm Spelersduel (zoals groen voor de dagcasus en bruin voor oefenen) */
   document.body.classList.toggle("induel", (VIEW === "game" && !!S && S.mode === "duel") || VIEW === "duel");
 }
