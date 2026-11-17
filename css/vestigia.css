@@ -767,6 +767,7 @@ body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
 .bronregel a{color:inherit}
 .sleutelbox{border-left:3px solid var(--moss); background:var(--mint); padding:8px 12px; border-radius:0 6px 6px 0; margin:10px 0}
 .sleutelbox p{margin:2px 0 0}
+.wjbron{display:block; margin-top:4px; font-size:.78rem; color:var(--ink-2)}
 .ontdek{display:grid; grid-template-columns:156px 1fr; gap:14px; align-items:center; margin:12px 0; padding:12px; background:var(--leaf); border-radius:10px}
 .ontdek p{margin:2px 0 4px}
 .ontdekplaat{min-height:150px; cursor:default; pointer-events:none}

@@ -49,7 +49,8 @@ const ALIASES = {
   "Kortsnavelboomkruiper": "kortsnavelboomkruiper",   // hernoemd naar taigaboomkruiper in update 15 (11-11-2026)
   "Korenwolf": "hamster",                             // andere naam voor de hamster: ‘korenwolf’ zoeken vindt de hamster (13-11-2026)
   "Halsbandmuis": "grote-bosmuis",                    // andere namen voor de grote bosmuis, als zoekwoord (update 30, 15-11-2026)
-  "Geelhalsbosmuis": "grote-bosmuis"
+  "Geelhalsbosmuis": "grote-bosmuis",
+  "Middelste groene kikker": "middelste-groene-kikker"  // hernoemd naar bastaardkikker, de naam van RAVON (update 37, 17-11-2026)
 };
 
 const SPECIES = [
@@ -2259,19 +2260,19 @@ const SPECIES = [
   h:["BEB","HALF"], a:["NACHT","SCHEMER"], v:["GEW"], b:["GEB"], w:["ACT"] },
 { id:"beverrat", no:null, g:"Z", n:"Beverrat", s:"Myocastor coypus", r:"NB", l:90, zz:null, twin:null,
   h:["STIL","MOER"], a:["SCHEMER","NACHT"], v:["PLANT"], b:["HOL"], w:["ACT"] },
-{ id:"middelste-groene-kikker", no:315, g:"A", n:"Middelste groene kikker", s:"Pelophylax kl. esculentus", r:"BAL", l:9, zz:"A", twin:"poelkikker",
+{ id:"middelste-groene-kikker", no:315, g:"A", n:"Bastaardkikker", s:"Pelophylax kl. esculentus", r:"BAL", l:9, zz:"A", twin:"poelkikker",
   h:["STIL","MOER"], a:["DAG"], v:["ONG"], b:["WATER"], w:["SLAAP"],
   x:"meerkikker",
   t:"De meerkikker is groter, vaak olijfbruiner, heeft grijze tot donkere kwaakblazen en zit vooral in grote, voedselrijke wateren. Het tweelingsoortverschil met de poelkikker zit in de hielknobbel: bij de poelkikker groot en halfrond.",
   cs:[
-    { sl:{ i:4, t:"Een middelgrote hielknobbel: precies tussen poel- en meerkikker in." }, bron:"RAVON, soortpagina middelste groene kikker", wn:[
+    { sl:{ i:4, t:"Een middelgrote hielknobbel: precies tussen poel- en meerkikker in." }, bron:"RAVON, soortpagina bastaardkikker", wn:[
       "Bij Den Bosch, mei. Een warme middag.",
       "Een boerensloot en een poel in een weidegebied met houtwallen.",
       "Een zonnige oever met kroos en drijvende waterplanten.",
-      "Luid gekwaak in koor; mannetjes met witte kwaakblazen naast de mondhoeken.",
+      "Luid gekwaak in koor; mannetjes met lichtgrijze kwaakblazen naast de mondhoeken.",
       "Groen met donkere vlekken en een lichte rugstreep; middelgrote hielknobbel."
     ] },
-    { bron:"RAVON, soortpagina middelste groene kikker", sl:{ i:4, t:"Hij is een kruising tussen poel- en meerkikker, en zijn kenmerken liggen daar precies tussenin." }, wn:[
+    { bron:"RAVON, soortpagina bastaardkikker", sl:{ i:4, t:"Hij is een kruising tussen poel- en meerkikker, en zijn kenmerken liggen daar precies tussenin." }, wn:[
       "Utrecht, augustus. Een warme dag.",
       "Een veenweidepolder met smalle sloten.",
       "Een slootkant met kroos en waterlelies.",
@@ -2825,7 +2826,7 @@ const SPECIES = [
       "Klein, met een grote ronde kop, een wit gezicht met donkere rand, gele ogen en dicht bevederde poten."
     ] },
     { bron:"Vogelbescherming, vogelgids ruigpootuil", sl:{ i:4, t:"Een grote, vierkante kop en een wit gezicht met donkere rand. Zijn roep is een snelle reeks zachte 'poe-poe-poe'." }, wn:[
-      "Veluwe, juni. Een warme nacht.",
+      "Drenthe, juni. Een warme nacht.",
       "Een groot naaldbos.",
       "Een speciale nestkast hoog in een den.",
       "Jongen kijken 's nachts uit de kast.",
@@ -2884,7 +2885,7 @@ const SPECIES = [
       "Een krassend liedje dat klinkt alsof er grind wordt geschud; een staart die steeds trilt.",
       "Roetgrijs tot zwart, met een roestrode staart en (bij de man) een witte vleugelvlek."
     ] },
-    { bron:"Vogelbescherming, vogelgids zwarte roodstaart", sl:{ i:4, t:"Roetgrijs met een roestrode staart. Hij zingt al bij zonsopkomst vanaf de hoogste punt van een dak." }, wn:[
+    { bron:"Vogelbescherming, vogelgids zwarte roodstaart", sl:{ i:4, t:"Roetgrijs met een roestrode staart. Hij zingt al voor zonsopkomst vanaf het hoogste punt van een dak." }, wn:[
       "Zuid-Nederland, april. Vroeg in de ochtend.",
       "Een dorp met oude huizen.",
       "De nok van een dak.",
@@ -3178,7 +3179,7 @@ const SPECIES = [
       "In de schemering vliegt iets groots en zwaars brommend rond de boom; aan het sap zitten er een paar te drinken.",
       "Tot zo'n 8 cm; het mannetje heeft enorme roodbruine kaken in de vorm van een gewei, het vrouwtje is kleiner en mist ze."
     ] },
-    { bron:"Natura 2000-profiel H1083; EIS Kenniscentrum Insecten (vliegend hert)", sl:{ i:2, t:"De larve leeft vier tot acht jaar in door witrot aangetast eikenhout van grote stronken en ondergrondse wortels. Zonder dat dode, vochtige eikenhout is er geen populatie." }, wn:[
+    { bron:"Natura 2000-profiel H1083; EIS Kenniscentrum Insecten (vliegend hert)", sl:{ i:2, t:"De larve leeft zo'n drie jaar in door witrot aangetast eikenhout van grote stronken en ondergrondse wortels. Zonder dat dode, vochtige eikenhout is er geen populatie." }, wn:[
       "Limburg, eind juni. Een warme avond in het heuvelland.",
       "Een holle weg met hellingbos en houtwallen tussen akkers en boomgaarden.",
       "Een paar grote, oude eikenstronken die al jaren wegrotten, deels onder de grond, in een warme, halfopen hoek.",

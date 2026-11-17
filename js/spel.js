@@ -9,6 +9,8 @@ const usedTries = () => S.guesses.filter(id => !isTwin(id)).length;
 const curCase = () => caseOf(S.target, S.k);
 /* toelichting bij de huidige casus (data/toelichting.js), of "" als die er niet is */
 const toelichting = () => (typeof TOELICHTING !== "undefined" && TOELICHTING[`${S.target}:${S.k || 0}`]) || "";
+/* update 37: ‘Wist je dat?’ bij de huidige casus (data/weetjes.js), of null; zonder weetje blijft het oude vak ‘Typisch’ */
+const weetje = () => (typeof WEETJES !== "undefined" && WEETJES[`${S.target}:${S.k || 0}`]) || null;
 
 function newGame(mode, expert, targetId, k, caseNo){
   return { mode, expert, target: targetId, k: k || 0, guesses: [], revealed: 1, status: "playing", caseNo };
@@ -132,7 +134,7 @@ function naarUitslag(){
   if (rustigeBeweging()) window.scrollTo({ top: uitslagDoel(), behavior: "instant" }); else schuifRustig(uitslagDoel());
 }
 /* Update 19b: bij goed blijft de balk ‘Gedetermineerd’ staan; de pagina schuift pas als je op ‘Bekijk uitslag’ tikt.
-   Bij fout schuift de pagina na 1,4 s vanzelf naar de uitslag, want daar staat wat je kunt leren (Typisch, Verwar niet met).
+   Bij fout schuift de pagina na 1,4 s vanzelf naar de uitslag, want daar staat wat je kunt leren (Wist je dat?, Verwar niet met).
    Het schuiven gaat trager dan het standaard ‘smooth’ van de browser. Eikels en XP vliegen pas als de pagina stilstaat
    (uitslagScroll), zodat het saldo rechtsboven niet verspringt terwijl ze vliegen. Tik of scrol je zelf, dan stopt het
    schuiven meteen. */
@@ -419,7 +421,8 @@ function renderResult(){
     ${S.mode === "free" ? `<div class="oefenverder"><button class="btn line" type="button" id="nieuwBoven">Nieuwe casus <span aria-hidden="true">→</span></button></div>` : ""}
     <details class="status-line"><summary><span class="caps">Status</span> <b>${esc(LABELS.r[t.r])}</b><span class="meer">uitleg</span></summary><p>${esc(REGIME_INFO[t.r])}</p></details>
     <dl class="traits">${traits}</dl>
-    ${curCase().sl ? `<div class="sleutelbox"><span class="caps">Typisch ${esc(/^Europese/.test(t.n) ? t.n : t.n.toLowerCase())}</span><p>${esc(curCase().sl.t)}</p></div>` : ""}
+    ${weetje() ? `<div class="sleutelbox weetje"><span class="caps">Wist je dat?</span><p>${esc(weetje().t)}</p>${weetje().bron ? `<span class="wjbron">Bron: ${esc(weetje().bron)}</span>` : ""}</div>`
+      : curCase().sl ? `<div class="sleutelbox"><span class="caps">Typisch ${esc(/^Europese/.test(t.n) ? t.n : t.n.toLowerCase())}</span><p>${esc(curCase().sl.t)}</p></div>` : ""}
     <div class="confuse"><span class="caps">Verwar niet met</span><p><b>${esc(xs.n)}.</b> ${S.guesses.includes(t.x) ? "Die soort heb je in deze casus ook geprobeerd. " : ""}${esc(t.t)}</p></div>
     ${bronRij(t)}
     ${(S.newAwards || []).map(k => { const [kind, name] = awardLabel(k); return `<div class="awardnote"><span class="caps">Nieuwe ${kind.toLowerCase()}</span><b>${esc(name)}</b></div>`; }).join("")}

@@ -21,7 +21,7 @@ const BRON_SITES = {
 };
 /* soortnummers op waarneming.nl (waarneming.nl/species/<nummer>/). Let op: waarneming.nl gebruikt soms een andere
    wetenschappelijke naam (laatvlieger Cnephaeus serotinus, noordse woelmuis Alexandromys oeconomus, kauw Coloeus monedula,
-   middelste groene kikker = bastaardkikker). Een nieuwe soort krijgt hier ook een nummer; tools/controle.mjs waarschuwt anders. */
+   bastaardkikker Pelophylax esculentus). Een nieuwe soort krijgt hier ook een nummer; tools/controle.mjs waarschuwt anders. */
 const WAARNEMING = {
   "das":383, "otter":417, "bever":375, "hamster":402, "hazelmuis":403, "eikelmuis":391, "boommarter":376, "steenmarter":421,
   "eekhoorn":389, "watervleermuis":430, "laatvlieger":410, "waterspitsmuis":429, "hermelijn":404, "bruinvis":380, "vos":428, "ree":418,
