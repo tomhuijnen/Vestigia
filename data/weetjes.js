@@ -5,7 +5,7 @@
    t    het weetje: één zin, ±15–25 woorden, geen herhaling van de toelichting van dezelfde casus
    bron de goedgekeurde bron (Sovon, RAVON, Zodion, Vogelbescherming, BIJ12, De Vlinderstichting, EIS); staat klein onder het weetje
    Een casus zonder weetje toont nog het oude vak ‘Typisch’, tot zijn diergroep is goedgekeurd.
-   Goedgekeurd door Tom, per diergroep: reptielen (17 november 2026, 09:32) */
+   Goedgekeurd door Tom, per diergroep: reptielen (17 november 2026, 09:32), amfibieën (09:41) */
 "use strict";
 const WEETJES = {
   /* ---------- Reptielen (RAVON, soortpagina's) ---------- */
@@ -55,5 +55,51 @@ const WEETJES = {
   "meerkikker:0": { t:"Een vrouwtje kan per seizoen tot 12.000 eieren leggen, verdeeld over meerdere klompen.", bron:"RAVON, soortpagina meerkikker" },
   "meerkikker:1": { t:"Er is zelfs een meerkikker gezien die een kuiken van de zwarte stern opat.", bron:"RAVON, soortpagina meerkikker" },
   "middelste-groene-kikker:0": { t:"Eieren, larven en jonge groene kikkers zijn meestal niet op soort te brengen; bij twijfel noteer je 'groene kikker onbepaald'.", bron:"RAVON, soortpagina bastaardkikker" },
-  "middelste-groene-kikker:1": { t:"Zijn zekerste kenmerk is een scheve graafknobbel die 40 tot 50 procent zo lang is als de teen ernaast.", bron:"RAVON, soortpagina bastaardkikker" }
+  "middelste-groene-kikker:1": { t:"Zijn zekerste kenmerk is een scheve graafknobbel die 40 tot 50 procent zo lang is als de teen ernaast.", bron:"RAVON, soortpagina bastaardkikker" },
+  /* ---------- Vissen (RAVON) ---------- */
+  "grote-modderkruiper:0": { t:"De vlekken op zijn kop en flanken verschillen per dier, zodat je individuele vissen kunt herkennen.", bron:"RAVON, soortpagina grote modderkruiper" },
+  "grote-modderkruiper:1": { t:"Valt een sloot droog, dan graaft hij zich in de modder in, zet hij zijn lichaam op een laag pitje en ademt hij door zijn huid.", bron:"RAVON, soortpagina grote modderkruiper" },
+  "beekprik:0": { t:"De larven leven zo'n zeven jaar in het slib voordat ze een volwassen prik worden.", bron:"RAVON, soortpagina beekprik" },
+  "beekprik:1": { t:"Na de metamorfose eet hij niets meer: hij leeft dan alleen nog om te paaien.", bron:"RAVON, soortpagina beekprik" },
+  "kwabaal:0": { t:"Voor een geslaagde paai moet het water rond de 4 °C zijn.", bron:"RAVON, soortpagina kwabaal" },
+  "kwabaal:1": { t:"In Nederland wordt hij zo'n 70 centimeter, maar in het buitenland zijn exemplaren tot anderhalve meter gevangen.", bron:"RAVON, soortpagina kwabaal" },
+  "elrits:0": { t:"Hij eet niet alleen plankton en waterbeestjes, maar ook eitjes en larven van andere vissen.", bron:"RAVON, soortpagina elrits" },
+  "elrits:1": { t:"Bij de inheemse elrits begint de rugvin duidelijk achter de buikvinnen; bij de uitgezette dikkopelrits staan ze op gelijke hoogte.", bron:"RAVON, soortpagina elrits" },
+  "beekdonderpad:0": { t:"Het mannetje waaiert de eitjes met zijn borstvinnen steeds vers, zuurstofrijk water toe.", bron:"RAVON, soortpagina beekdonderpad" },
+  "beekdonderpad:1": { t:"Uitheemse grondels lijken op hem, maar hun buikvinnen zijn vergroeid tot een zuignap; bij donderpadden staan ze los.", bron:"RAVON, soortpagina's beekdonderpad en zwartbekgrondel" },
+  "gestippelde-alver:0": { t:"Zijn verspreidingsgebied loopt van Frankrijk tot diep in Rusland, en zelfs tot in Pakistan.", bron:"RAVON, soortpagina gestippelde alver" },
+  "gestippelde-alver:1": { t:"Een vrouwtje kan tussen mei en juli meerdere keren paaien, steeds in kleine groepjes boven het grind.", bron:"RAVON, soortpagina gestippelde alver" },
+  "noordzeehouting:0": { t:"Lang werd hij voor wereldwijd uitgestorven gehouden, tot genetisch onderzoek liet zien dat uitgezette 'grote marenen' dezelfde soort waren.", bron:"RAVON, soortpagina noordzeehouting" },
+  "noordzeehouting:1": { t:"In de twintigste eeuw stierf hij uit in de Rijn; hij kwam terug dankzij jongen die gekweekt werden uit een kleine Deense populatie.", bron:"RAVON, soortpagina noordzeehouting" },
+  "europese-steur:0": { t:"De laatste steur in Nederlands zoet water werd in 1952 gevangen: 2,6 meter lang en 150 kilo zwaar.", bron:"RAVON, soortpagina Europese steur" },
+  "europese-steur:1": { t:"Een vrouwtje kan anderhalf miljoen eieren dragen, maar paait pas vanaf haar 13e tot 18e jaar, en dan eens in de vier jaar.", bron:"RAVON, soortpagina Europese steur" },
+  /* ---------- Vlinders (De Vlinderstichting) ---------- */
+  "pimpernelblauwtje:0": { t:"In 1990 werden zo'n 86 vlinders uitgezet; 25 jaar later vlogen er weer zo'n 1500 rond.", bron:"De Vlinderstichting, nieuwsbericht 25 jaar pimpernelblauwtje" },
+  "pimpernelblauwtje:1": { t:"In één mierennest kan meestal maar één rups van het pimpernelblauwtje overleven.", bron:"De Vlinderstichting, soortpagina pimpernelblauwtje" },
+  "teunisbloempijlstaart:0": { t:"Zijn geslachtsnaam Proserpinus verwijst naar Proserpina, de godin wier terugkeer op aarde de lente brengt.", bron:"De Vlinderstichting, soortpagina teunisbloempijlstaart" },
+  "teunisbloempijlstaart:1": { t:"Lang waren er alleen een paar waarnemingen van vóór 1900 bekend; nu breidt hij zich vanuit Zuid-Limburg uit.", bron:"De Vlinderstichting, soortpagina teunisbloempijlstaart" },
+  "grote-vos:0": { t:"Onlangs werden er in een voorjaar zelfs meer grote dan kleine vossen gezien, iets wat tien jaar eerder ondenkbaar was.", bron:"De Vlinderstichting, nieuwsbericht ‘meer grote dan kleine vossen’" },
+  "grote-vos:1": { t:"Om te overwinteren kruipt hij weg in een grot of holle boom, en soms zelfs in een nestkast.", bron:"De Vlinderstichting, soortpagina grote vos" },
+  "donker-pimpernelblauwtje:0": { t:"Vroeger heette hij roerblauwtje, omdat hij zo algemeen was in het dal van de Roer.", bron:"De Vlinderstichting, soortpagina donker pimpernelblauwtje" },
+  "donker-pimpernelblauwtje:1": { t:"Een mier neemt zijn rups meestal binnen een kwartier mee; bij het pimpernelblauwtje duurt dat een à twee uur.", bron:"De Vlinderstichting, soortpagina donker pimpernelblauwtje" },
+  "grote-weerschijnvlinder:0": { t:"Tijdens de paring geeft het mannetje niet alleen sperma maar ook zout door, dat helpt bij de ontwikkeling van de eitjes.", bron:"De Vlinderstichting, soortpagina grote weerschijnvlinder" },
+  "grote-weerschijnvlinder:1": { t:"Hij leeft in zulke lage dichtheden dat je op de meeste vliegplaatsen maar één vlinder tegelijk ziet.", bron:"De Vlinderstichting, soortpagina grote weerschijnvlinder" },
+  "kleine-ijsvogelvlinder:0": { t:"Jonge rupsen eten een blad van de top naar beneden en laten de middennerf staan, een herkenbaar vraatbeeld.", bron:"De Vlinderstichting, soortpagina kleine ijsvogelvlinder" },
+  "kleine-ijsvogelvlinder:1": { t:"Rond 2000 was er nog maar een kwart over van de vlinders van 1992; dankzij natuurbeheer is hij weer terug op dat niveau.", bron:"De Vlinderstichting, soortpagina kleine ijsvogelvlinder" },
+  /* ---------- Libellen (De Vlinderstichting) ---------- */
+  "gevlekte-witsnuitlibel:0": { t:"Een paar Nederlandse populaties zijn zo groot dat dat in Europa uniek is.", bron:"De Vlinderstichting, soortpagina gevlekte witsnuitlibel" },
+  "gevlekte-witsnuitlibel:1": { t:"In Castricum werd jarenlang bijna elk jaar een gevlekte witsnuitlibel gezien op de ijsbaan in de duinen.", bron:"De Vlinderstichting, soortpagina gevlekte witsnuitlibel" },
+  "sierlijke-witsnuitlibel:0": { t:"Een eitje is maar een halve bij 0,4 millimeter groot en heeft geen geleilaagje eromheen.", bron:"De Vlinderstichting, soortpagina sierlijke witsnuitlibel" },
+  "sierlijke-witsnuitlibel:1": { t:"In Midden-Europa is hij grotendeels verdwenen of sterk bedreigd, en op de Britse Eilanden komt hij niet voor.", bron:"De Vlinderstichting, soortpagina sierlijke witsnuitlibel" },
+  "rivierrombout:0": { t:"Vroeger hoorde hij bij het geslacht Gomphus, maar hij is nauwer verwant aan Noord-Amerikaanse Stylurus-soorten.", bron:"De Vlinderstichting, soortpagina rivierrombout" },
+  "rivierrombout:1": { t:"Het vrouwtje laat haar piepkleine eitjes, met een bultje aan één kant, gewoon op het open water vallen.", bron:"De Vlinderstichting, soortpagina rivierrombout" },
+  "beekrombout:0": { t:"Zijn naam vulgatissimus betekent ongeveer 'de allergewoonste'; voor Linnaeus was hij blijkbaar een heel gewone libel.", bron:"De Vlinderstichting, soortpagina beekrombout" },
+  "beekrombout:1": { t:"Een vrouwtje laat haar eitjes in klompjes van enkele honderden tegelijk in het open water vallen.", bron:"De Vlinderstichting, soortpagina beekrombout" },
+  "bosbeekjuffer:0": { t:"Vroeger heette hij beeknimf; zijn wetenschappelijke naam Calopteryx virgo betekent ongeveer 'mooie vleugel' en 'maagd'.", bron:"De Vlinderstichting, soortpagina bosbeekjuffer" },
+  "bosbeekjuffer:1": { t:"Vrouwtjes hebben een witte vlek in de vleugelpunt waar de aders doorheen lopen; mannetjes hebben helemaal geen vleugelvlek.", bron:"De Vlinderstichting, soortpagina bosbeekjuffer" },
+  /* ---------- Kevers (EIS Kenniscentrum Insecten) ---------- */
+  "vermiljoenkever:0": { t:"Niet alleen staande dode bomen: ook losse of opgestapelde boomstammen kunnen door hem gekoloniseerd worden.", bron:"EIS Kenniscentrum Insecten, soortpagina vermiljoenkever" },
+  "vermiljoenkever:1": { t:"In januari 2012 werd hij bij Eindhoven voor het eerst in Nederland gevonden, terwijl de dichtstbijzijnde bekende vindplaats in Baden-Württemberg lag.", bron:"EIS Kenniscentrum Insecten, Tentakel 11" },
+  "vliegend-hert:0": { t:"Zijn wetenschappelijke naam Lucanus cervus verwijst naar herten, net als die van het edelhert: Cervus elaphus.", bron:"EIS Kenniscentrum Insecten, aandachtsoorten" },
+  "vliegend-hert:1": { t:"Op een ontmoetingsboom drinken de vrouwtjes sap uit boomwondjes, terwijl de mannetjes elkaar de boom uit vechten.", bron:"EIS Kenniscentrum Insecten, Meetnet Vliegend hert" }
 };
