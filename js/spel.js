@@ -115,7 +115,7 @@ function randomFree(exclude, f){
 
 function points(){
   if (S.status !== "won") return 0;
-  return S.expert ? Math.max(1, 7 - S.revealed) : Math.max(1, 6 - usedTries());
+  return S.expert ? expertPunten(S.revealed, usedTries(), S.mode === "daily" ? S.caseNo - 1 : null) : Math.max(1, 6 - usedTries());
 }
 
 /* ---------- acties ---------- */
@@ -128,7 +128,9 @@ function submitGuess(id){
   freshRow = true;
   if (id === S.target){ S.status = "won"; }
   else if (isTwin(id)){ S.revealed = MAX; freshClue = MAX - 1; setTimeout(() => Spelen.tweelingEersteKeer(BY_ID.get(id)), 650); }
-  else if (S.expert || usedTries() >= MAX){ S.status = "lost"; }
+  else if (S.expert && usedTries() >= EXPERT_POGINGEN){ S.status = "lost"; }
+  else if (S.expert){ S.revealed = MAX; freshClue = MAX - 1; }      /* update 45: vangnet, alles open en nog één gok */
+  else if (usedTries() >= MAX){ S.status = "lost"; }
   else { S.revealed = Math.min(MAX, S.revealed + 1); freshClue = S.revealed - 1; }
   /* update 19: waar stond het invoerveld op het scherm? De balk met de uitslag komt precies daar */
   const invoerOpScherm = S.status !== "playing" ? $("gInput").getBoundingClientRect().top : null;
@@ -270,9 +272,11 @@ function renderClues(){
     return `<li class="clue${open ? "" : " locked"}${fresh}${sleutel}"><span class="num">${i+1}</span><div><span class="lab caps">${CLUE_TYPES[i]}${sleutel ? ` <span class="sltag">typisch</span>` : ""}</span><p>${open ? esc(txt) : "nog niet waargenomen"}</p></div></li>`;
   }).join("") + (showAll && c.bron ? `<li class="bronregel"><span class="caps">Bron</span> ${c.url ? `<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.bron)}</a>` : esc(c.bron)}</li>` : "");
   $("clueCount").textContent = (showAll ? MAX : S.revealed) + " van " + MAX;
-  $("notesFoot").hidden = !(S.expert && S.status === "playing");
+  $("notesFoot").hidden = !(S.expert && S.status === "playing" && !usedTries());
   $("moreClue").disabled = S.revealed >= MAX;
-  $("expertHint").textContent = `Je score is het aantal geopende waarnemingen: nu ${S.revealed}.`;
+  /* update 45: wat een goede determinatie nu oplevert, en wat de volgende waarneming kost */
+  const dag = S.mode === "daily" ? S.caseNo - 1 : null, nu = expertPunten(S.revealed, 0, dag);
+  $("expertHint").textContent = S.revealed >= MAX ? `Goed nu: ${nu} punten.` : `Goed nu: ${nu} punten. De volgende waarneming kost een punt.`;
   freshClue = -1;
 }
 
@@ -519,20 +523,21 @@ function renderResult(){
 }
 
 function renderPips(){
-  const n = S.expert ? 1 : MAX, real = S.guesses.filter(g => !isTwin(g));
+  const n = S.expert ? EXPERT_POGINGEN : MAX, real = S.guesses.filter(g => !isTwin(g));
   let h = "";
   for (let i = 0; i < n; i++){
     const used = i < real.length, hit = used && real[i] === S.target;
-    h += `<span class="dot${hit ? " hit" : used ? " used" : ""}"></span>`;
+    h += `<span class="dot${hit ? " hit" : used ? " used" : ""}${S.expert && i === 1 ? " vangnet" : ""}"></span>`;
   }
   $("pips").innerHTML = h;
   if (S.status === "playing"){
     const left = n - real.length, twinNow = S.guesses.length && isTwin(S.guesses[S.guesses.length - 1]);
     if (twinNow) setMsg("Tweelingsoort! Telt niet mee; alle waarnemingen zijn open.", false);
-    else setMsg(S.expert ? "Je hebt één determinatie. Open eerst zoveel waarnemingen als je nodig denkt te hebben." : `Nog ${left} ${left === 1 ? "poging" : "pogingen"}.`, false);
+    else if (S.expert && real.length) setMsg("Mis! Vangnet: alle waarnemingen staan open. Je hebt nog één determinatie; goed levert 1 punt en de plaat op.", false);
+    else setMsg(S.expert ? "Je hebt één determinatie. Open eerst zoveel waarnemingen als je nodig denkt te hebben. Mis? Dan heb je nog een vangnet voor 1 punt." : `Nog ${left} ${left === 1 ? "poging" : "pogingen"}.`, false);
     const st = store.get(), eerste = S.mode === "daily" ? eersteModus(st, S.caseNo - 1) : null;
     if (eerste !== null && eerste !== !!S.expert) setMsg(`Deze casus speelde je vandaag al in ${eerste ? "expert" : "klassiek"}. Je score telt nu niet voor de ranglijst.`, false);
-    $("leftLabel").textContent = S.expert ? "1 poging" : `poging ${real.length + 1} van ${MAX}`;
+    $("leftLabel").textContent = S.expert ? (real.length ? "vangnet" : "1 poging + vangnet") : `poging ${real.length + 1} van ${MAX}`;
   } else { setMsg(S.status === "won" ? "Casus afgerond." : "Casus afgesloten.", false); $("leftLabel").textContent = "afgerond"; }
 }
 

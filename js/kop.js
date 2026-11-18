@@ -51,10 +51,10 @@ function renderTabbar(){
 
 /* ---------- dagresultaten uit de opslag ---------- */
 const finished = (st, i, expert) => { const g = (st.games || {})[dailyKey(i, expert)]; return g && g.status !== "playing" ? g : null; };
-function gamePoints(g, expert){
+function gamePoints(g, expert, i){
   if (!g || g.status !== "won") return 0;
-  if (expert) return Math.max(1, 7 - g.revealed);
   const twin = BY_ID.get(g.target).twin, tries = g.guesses.filter(n => n !== twin).length;
+  if (expert) return expertPunten(g.revealed, tries, i);
   return Math.max(1, 6 - tries);
 }
 /* Klassiek en expert hebben dezelfde casus. Voor de ranglijst telt daarom alleen de modus die je die dag als eerste
@@ -64,7 +64,7 @@ function eersteModus(st, i){
   if (e) return !!e.x;
   return finished(st, i, false) ? false : finished(st, i, true) ? true : null;
 }
-const dayPoints = (st, i) => { const m = eersteModus(st, i); return m === null ? 0 : gamePoints(finished(st, i, m), m); };
+const dayPoints = (st, i) => { const m = eersteModus(st, i); return m === null ? 0 : gamePoints(finished(st, i, m), m, i); };
 function weekStartDay(i){ const dow = (new Date(START + i * DAY).getUTCDay() + 6) % 7; return i - dow; }
 /* dagen op rij waarop je de dagcasus speelde (klassiek of expert); vandaag telt mee zodra je hem gespeeld hebt */
 /* Reeks: dagen waarop je de dagcasus afrondde. Uit de spellen op dit apparaat én uit het logboek, dat met je andere
