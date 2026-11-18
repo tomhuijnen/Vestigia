@@ -40,7 +40,7 @@ const Nieuw = (() => {
     grotebosmuis: "2026-11-15",        // update 30: de grote bosmuis
     patrijs: "2026-11-15",             // update 47: de patrijs (live 15 november)
     weetjes: "2026-11-17",             // update 37: ‘Wist je dat?’ (live 17 november 10:38)
-    expert45: "2026-11-18"             // update 45: expert levert meer op; de dag van de livegang (zie EXPERT_VANAF)
+    expert45: "2026-11-19"             // update 45: expert levert meer op; de dag van de livegang (zie EXPERT_VANAF)
   };
   const WIJZIGING = new Set(["zoekgroepen", "bronnen", "statistiek-na-casus", "verward-statistiek", "soorten14", "grotebosmuis", "patrijs", "weetjes", "expert45"]);
   /* speelde je al een dagcasus vóór die dag? (het logboek gaat via Supabase mee naar je andere apparaten) */
@@ -270,6 +270,7 @@ Wachtrij.voeg({ id: "soorten14", prio: 2.6,
 Wachtrij.voeg({ id: "vernieuwd", prio: 2.62,
   kaarten(){ return { expert45: Nieuw.vers("expert45") && Nieuw.veteraan("expert45"), weetjes: Nieuw.vers("weetjes") && Nieuw.veteraan("weetjes") }; },
   kan(){
+    if (Date.now() < Date.parse("2026-11-19T00:00:00+01:00")) return false;    // de nieuwe expertpunten gelden vanaf 19 november
     try { if (localStorage.getItem("vestigia:nieuw:vernieuwd")) return false; } catch(e){ return false; }
     const k = this.kaarten(); return k.expert45 || k.weetjes;
   },

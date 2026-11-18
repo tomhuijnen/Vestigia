@@ -17,12 +17,13 @@ const DAY = 864e5;
    houden de oude schaal (6 · 5 · 4 · 3 · 2), net als op de server (_vestigia_expert_punten, SQL 041). Oefenen en duel: altijd
    de nieuwe schaal. EXPERT_VANAF = dagnummer van de livegang; bij een andere livegangsdag hier én in SQL 041 aanpassen. */
 const EXPERT_PUNTEN = [7, 6, 5, 4, 3];
-const EXPERT_VANAF = 12;
+const EXPERT_VANAF = 13;          // do 19 november 2026
 const EXPERT_POGINGEN = 2;
 function expertPunten(clues, tries, dag){
   const c = Math.min(MAX, Math.max(1, clues || 1));
+  if (tries >= 2) return 1;
   if (dag !== undefined && dag !== null && dag < EXPERT_VANAF) return Math.max(1, 7 - c);
-  return tries >= 2 ? 1 : EXPERT_PUNTEN[c - 1];
+  return EXPERT_PUNTEN[c - 1];
 }
 
 /* ---------- hulpfuncties ---------- */
