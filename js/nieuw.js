@@ -38,9 +38,11 @@ const Nieuw = (() => {
     levels: "2026-11-16", spelersduel: "2026-11-23", advent: "2026-12-01",
     soorten14: "2026-11-13",           // update 14: libellen en kevers; de dag dat ze live gaan
     grotebosmuis: "2026-11-15",        // update 30: de grote bosmuis
-    patrijs: "2026-11-15"              // update 47: de patrijs (live 15 november)
+    patrijs: "2026-11-15",             // update 47: de patrijs (live 15 november)
+    weetjes: "2026-11-17",             // update 37: ‘Wist je dat?’ (live 17 november 10:38)
+    expert45: "2026-11-19"             // update 45: expert levert meer op; de dag van de livegang (zie EXPERT_VANAF)
   };
-  const WIJZIGING = new Set(["zoekgroepen", "bronnen", "statistiek-na-casus", "verward-statistiek", "soorten14", "grotebosmuis", "patrijs"]);
+  const WIJZIGING = new Set(["zoekgroepen", "bronnen", "statistiek-na-casus", "verward-statistiek", "soorten14", "grotebosmuis", "patrijs", "weetjes", "expert45"]);
   /* speelde je al een dagcasus vóór die dag? (het logboek gaat via Supabase mee naar je andere apparaten) */
   function veteraan(id){
     const d = VANAF[id]; if (!d) return true;
@@ -82,6 +84,8 @@ const Nieuw = (() => {
     libel: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.4" r="1.7"/><path d="M12 6.4v15"/><path d="M12 8C9 5.8 4 5.6 2.7 7.5c-.8 1.3 1.6 2.6 9.3 1.7ZM12 8c3-2.2 8-2.4 9.3-.5.8 1.3-1.6 2.6-9.3 1.7Z"/><path d="M12 10.6c-2.7-.9-7 .2-7.6 2-.4 1.4 1.9 1.7 7.6-.5ZM12 10.6c2.7-.9 7 .2 7.6 2 .4 1.4-1.9 1.7-7.6-.5Z"/></svg></span>`,
     kever: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="14.2" rx="5.2" ry="6.4"/><path d="M12 8.6v12"/><path d="M9.2 8.2a2.8 2.8 0 0 1 5.6 0"/><path d="M10.6 5.8 8.8 3.2M13.4 5.8l1.8-2.6"/><path d="M7 11.2 3.6 9.6M6.8 14.6H3.2M7.4 17.8l-3 1.9M17 11.2l3.4-1.6M17.2 14.6h3.6M16.6 17.8l3 1.9"/></svg></span>`,
     pop: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v3"/><path d="M12 5c2.6 0 4.1 3.1 4.1 7.2S14.2 21 12 21s-4.1-4.7-4.1-8.8S9.4 5 12 5Z"/><path d="M8.3 9.8h7.4M8 13.4h8M8.8 17h6.4"/></svg></span>`,
+    /* update 45: een gloeilampje voor ‘Wist je dat?’ */
+    lamp: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.4 1.1 2.2h5c0-.8.4-1.6 1.1-2.2A6 6 0 0 0 12 3Z"/></svg></span>`,
     kalender: `<span class="nw-ic kerst"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4M9 14.5l2 2 4-4"/></svg></span>`
   };
 
@@ -124,6 +128,13 @@ const Nieuw = (() => {
       stappen: [
         { ic: "poot", wat: "grotebosmuis", kop: "Nieuwe soort: de grote bosmuis", tekst: `De tweelingsoort van de bosmuis staat nu in je ${NAAM.vestiarium}, als plaat nº 128, direct na de bosmuis. Hij heeft twee casussen. ${wanneer("grote-bosmuis")} Gok je ‘bosmuis’ terwijl het een grote bosmuis is (of andersom), dan kost je dat geen poging.` },
         { ic: "veer", wat: "patrijs", kop: "Nieuwe soort: de patrijs", tekst: `De patrijs staat nu in je ${NAAM.vestiarium}, als plaat nº 559. Hij heeft twee casussen. ${wanneer("patrijs")}` }
+      ] },
+    /* update 45 (met update 37): één melding voor wie al speelde, via de wachtrij (hieronder); een kaart valt weg als je
+       pas na dat onderdeel begon */
+    { id: "vernieuwd", titel: "Expert en Wist je dat?",
+      stappen: [
+        { ic: "xp", wat: "expert45", kop: "Nieuw: expert levert meer op", tekst: "In expert krijg je nu 7 punten als je na één waarneming goed zit; elke volgende waarneming kost een punt, tot 3 bij de vijfde. Zit je mis, dan gaan alle waarnemingen open en heb je nog één gok: goed levert 1 punt én de plaat op." },
+        { ic: "lamp", wat: "weetjes", kop: "Nieuw: Wist je dat?", tekst: "Na elke casus staat een weetje over de soort, met de bron eronder. Elke casus heeft zijn eigen weetje: speel je een soort nog eens in een andere casus, dan leer je er weer iets nieuws over." }
       ] },
     { id: "levels", titel: "Levels", verborgen: () => !(typeof Levels !== "undefined" && Levels.zichtbaar()),   // pas vanaf de startdatum
       stappen: [
@@ -252,4 +263,21 @@ Wachtrij.voeg({ id: "soorten14", prio: 2.6,
   toon(){
     try { localStorage.setItem("vestigia:nieuw:soorten14", "1"); } catch(e){}
     return Nieuw.toon(Nieuw.ONDERDELEN.find(o => o.id === "soorten14"));
+  } });
+
+/* update 45: ‘Expert levert meer op’ en ‘Wist je dat?’ in één melding, direct na ‘Nieuwe soorten’. Per kaart alleen voor wie
+   al een dagcasus speelde vóór dat onderdeel (VANAF), en hooguit 4 weken (Nieuw.vers). */
+Wachtrij.voeg({ id: "vernieuwd", prio: 2.62,
+  kaarten(){ return { expert45: Nieuw.vers("expert45") && Nieuw.veteraan("expert45"), weetjes: Nieuw.vers("weetjes") && Nieuw.veteraan("weetjes") }; },
+  kan(){
+    if (Date.now() < Date.parse("2026-11-19T00:00:00+01:00")) return false;    // de nieuwe expertpunten gelden vanaf 19 november
+    try { if (localStorage.getItem("vestigia:nieuw:vernieuwd")) return false; } catch(e){ return false; }
+    const k = this.kaarten(); return k.expert45 || k.weetjes;
+  },
+  toon(){
+    const k = this.kaarten();
+    try { localStorage.setItem("vestigia:nieuw:vernieuwd", "1"); } catch(e){}
+    const o = Nieuw.ONDERDELEN.find(x => x.id === "vernieuwd"), st = o.stappen.filter(s => k[s.wat]);
+    const titel = st.length === 1 ? (st[0].wat === "expert45" ? "Expert" : "Wist je dat?") : o.titel;
+    return Nieuw.toon(Object.assign({}, o, { id: k.expert45 ? "expert45" : "weetjes", stappen: st, titel }));
   } });

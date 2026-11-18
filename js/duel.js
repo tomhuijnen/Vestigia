@@ -230,7 +230,7 @@ const Duel = (() => {
     el.innerHTML = `<div class="dbtekst"><span class="caps">Spelersduel · ${esc(modus(d))}</span>
         <b>${d.tegen ? `Tegen ${esc(d.tegen)}` : "Duel met een link"}</b></div>
       <span class="dustip" aria-label="casus ${r + 1} van 3">${stip}</span>
-      <p class="fine">${d.expert ? "Je hebt één determinatie; elke extra waarneming kost een punt." : "Vijf pogingen, net als bij de dagcasus."} Elk punt telt: meeste punten na drie casussen wint.</p>`;
+      <p class="fine">${d.expert ? "Eén determinatie: 7 punten na één waarneming, elke volgende kost een punt; mis je, dan nog één gok voor 1 punt." : "Vijf pogingen, net als bij de dagcasus."} Elk punt telt: meeste punten na drie casussen wint.</p>`;
   }
 
   /* ---------- het scherm Spelersduel ---------- */
@@ -360,7 +360,7 @@ const Duel = (() => {
       <span class="flab">Modus</span>
       <div class="seg duseg${expert ? " expert" : ""} klaar" role="group" aria-label="Modus van het duel">
         <button type="button" id="duKl" aria-pressed="${!expert}">Klassiek</button><button type="button" id="duEx" aria-pressed="${expert}">Expert</button></div>
-      <p class="fine" id="duModusUitleg">${expert ? "Expert: één determinatie per casus; hoe minder waarnemingen je opent, hoe meer punten." : "Klassiek: vijf pogingen per casus; hoe eerder goed, hoe meer punten."}</p>
+      <p class="fine" id="duModusUitleg">${expert ? "Expert: één determinatie per casus, tot 7 punten; hoe minder waarnemingen je opent, hoe meer. Mis je, dan nog één gok voor 1 punt." : "Klassiek: vijf pogingen per casus; hoe eerder goed, hoe meer punten."}</p>
       ${revanche ? `<p class="fine">Revanche: dezelfde tegenstander, drie nieuwe casussen.</p>` : ""}
       <div class="actions"><button class="btn" id="duStart">Start het duel</button><button class="linklike" id="duAnnuleer">Annuleren</button><span class="msg" id="duStartMsg"></span></div>
       <p class="fine">Op naam kunnen jullie meteen allebei spelen; met een link zodra iemand hem aanneemt. Jullie hebben 48 uur. Stop je halverwege, dan ga je later verder waar je was; wat je niet speelt, telt als niet gevonden.</p>`;
@@ -374,7 +374,7 @@ const Duel = (() => {
       const seg = el.querySelector(".duseg");
       seg.classList.toggle("expert", x);
       $("duKl").setAttribute("aria-pressed", String(!x)); $("duEx").setAttribute("aria-pressed", String(x));
-      $("duModusUitleg").textContent = x ? "Expert: één determinatie per casus; hoe minder waarnemingen je opent, hoe meer punten." : "Klassiek: vijf pogingen per casus; hoe eerder goed, hoe meer punten.";
+      $("duModusUitleg").textContent = x ? "Expert: één determinatie per casus, tot 7 punten; hoe minder waarnemingen je opent, hoe meer. Mis je, dan nog één gok voor 1 punt." : "Klassiek: vijf pogingen per casus; hoe eerder goed, hoe meer punten.";
     };
     $("duKl").onclick = () => zetModus(false); $("duEx").onclick = () => zetModus(true);
     $("duAnnuleer").onclick = () => { paneelOpen = false; revanche = null; gekozen = null; teken(cache(), false); };
@@ -421,7 +421,7 @@ const Duel = (() => {
   function regel(r, expert){
     if (!r) return `<span class="dr-niet">niet gespeeld</span>`;
     if (!r.won) return `<span class="dr-mis">✕ niet gevonden</span><b>0</b>`;
-    const w = expert ? `${r.clues} ${r.clues === 1 ? "waarneming" : "waarnemingen"}` : `${r.tries} ${r.tries === 1 ? "poging" : "pogingen"}`;
+    const w = expert ? (r.tries >= 2 ? "via het vangnet" : `${r.clues} ${r.clues === 1 ? "waarneming" : "waarnemingen"}`) : `${r.tries} ${r.tries === 1 ? "poging" : "pogingen"}`;
     return `<span class="dr-goed">✓ ${w}</span><b>${r.punten}</b>`;
   }
   async function onthul(d){
@@ -620,7 +620,7 @@ const Duel = (() => {
     const lees_ = () => { try { return JSON.parse(sessionStorage.getItem(KEY)); } catch(e){ return null; } };
     const zet_ = v => { try { sessionStorage.setItem(KEY, JSON.stringify(v)); } catch(e){} };
     const ik = () => (online.player() || { name: "Jij" }).name;
-    const punten = (ex, r) => !r.won ? 0 : ex ? Math.max(1, 7 - r.clues) : Math.max(1, 6 - r.tries);
+    const punten = (ex, r) => !r.won ? 0 : ex ? expertPunten(r.clues, r.tries) : Math.max(1, 6 - r.tries);
     const fout = (msg, status) => { throw Object.assign(new Error(msg), { status: status || 400 }); };
     const nu = () => Date.now(), UUR48 = 1728e5;
     function kies(skip){

@@ -2306,3 +2306,8 @@ html.donker .tabbar:has(.mid.open) button.on:not(.mid) .ic *{color:var(--ink-2)}
 .lvklap .fine{margin-top:8px}
 html.donker .lvklap > summary .lvvolg b{color:var(--green-d)}
 @media (prefers-reduced-motion: reduce){ .lvklap > summary::after{transition:none} }
+
+/* update 45: het tweede bolletje in expert is het vangnet */
+.dot.vangnet{width:9px; height:9px; margin-top:1.5px; box-shadow:inset 0 0 0 1.5px var(--green); opacity:.7; border:0}
+.dot.vangnet.used{opacity:1}
+.dot.vangnet.hit{opacity:1}

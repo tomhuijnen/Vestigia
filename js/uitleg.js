@@ -21,7 +21,7 @@ const Uitleg = (() => {
     { doel: () => $("gInput").closest(".det-row"), kop: "Determineer de soort",
       tekst: "Typ de Nederlandse of wetenschappelijke naam, of een groep zoals ‘uil’ of ‘vleermuis’, en kies de soort uit de lijst. Je hebt vijf pogingen. Na elke foute gok zie je ook wat jouw soort en de gezochte soort gemeen hebben, of waarin ze verschillen." },
     { doel: () => document.querySelector(".modebar"), kop: "Klassiek of expert",
-      tekst: "Klassiek: vijf pogingen, en na elke foute gok een waarneming erbij. Expert: je opent zelf waarnemingen en hebt één poging. Voor de ranglijst telt alleen de modus die je die dag als eerste speelt." },
+      tekst: "Klassiek: vijf pogingen, en na elke foute gok een waarneming erbij. Expert: je opent zelf waarnemingen en hebt één poging, voor meer punten (en mis je, dan nog één gok voor 1 punt). Voor de ranglijst telt alleen de modus die je die dag als eerste speelt." },
     { doel: () => $("tabbar"), kop: "Ranglijst, Spelen en Vestiarium",
       tekst: () => `Met de balk onderaan het scherm ga je naar de rest van de app. Bij Ranglijst zie je hoe je het doet ten opzichte van andere spelers, ook in een eigen league. Via Spelen kies je de dagcasus of oefen je per diergroep${duelAan() ? ", en daag je iemand uit voor een spelersduel" : ""}. In het ${NAAM.vestiarium} krijgt elke soort die je vindt een eigen plaat.` },
     { doel: () => [$("eikelBtn"), $("menuBtn")], kop: "Je avatar en het menu",

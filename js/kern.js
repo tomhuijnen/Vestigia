@@ -12,6 +12,19 @@ const COLS = ["h","a","v","b","w","l","r"];
 const COL_LABEL = { h:"Leefgebied", a:"Activiteit", v:"Voedsel", b:"Verblijfplaats", w:"Winter", l:"Lengte", r:"Regime" };
 const START = Date.UTC(2026,10,6);
 const DAY = 864e5;
+/* Expert (update 45): 7 · 6 · 5 · 4 · 3 punten bij 1–5 waarnemingen. Vangnet: na een foute gok gaan alle waarnemingen
+   open en heb je nog één gok, goed = 1 punt (twee echte gokken, de tweelinggok telt niet). Dagcasussen vóór EXPERT_VANAF
+   houden de oude schaal (6 · 5 · 4 · 3 · 2), net als op de server (_vestigia_expert_punten, SQL 041). Oefenen en duel: altijd
+   de nieuwe schaal. EXPERT_VANAF = dagnummer van de livegang; bij een andere livegangsdag hier én in SQL 041 aanpassen. */
+const EXPERT_PUNTEN = [7, 6, 5, 4, 3];
+const EXPERT_VANAF = 13;          // do 19 november 2026
+const EXPERT_POGINGEN = 2;
+function expertPunten(clues, tries, dag){
+  const c = Math.min(MAX, Math.max(1, clues || 1));
+  if (tries >= 2) return 1;
+  if (dag !== undefined && dag !== null && dag < EXPERT_VANAF) return Math.max(1, 7 - c);
+  return EXPERT_PUNTEN[c - 1];
+}
 
 /* ---------- hulpfuncties ---------- */
 const $ = id => document.getElementById(id);
