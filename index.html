@@ -90,7 +90,7 @@ html.opent body>:not(#opening){visibility:hidden}
 #opening{position:fixed;inset:0;z-index:60;background:#4b7a5e}
 html.donker #opening{background:#7fb894}
 </style>
-<link rel="stylesheet" href="css/vestigia.css?v=202611180849">
+<link rel="stylesheet" href="css/vestigia.css?v=202611180919">
 </head>
 <body>
 <script>/* installatievraag zo vroeg mogelijk opvangen: de browser kan hem sturen voordat app.js geladen is */
@@ -188,7 +188,7 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
             <table id="grid">
               <thead><tr>
                 <th scope="col">Soort</th><th scope="col">Leefgebied</th><th scope="col">Activiteit</th><th scope="col">Voedsel</th>
-                <th scope="col">Verblijfplaats</th><th scope="col">Winter</th><th scope="col">Lengte</th><th scope="col">Regime</th>
+                <th scope="col">Verblijfplaats</th><th scope="col">Winter</th><th scope="col">Lengte</th><th scope="col">Bescherming</th>
               </tr></thead>
               <tbody id="gridBody"></tbody>
             </table>
@@ -406,7 +406,7 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
       <li><span class="key no"></span> <b>Anders:</b> geen overlap.</li>
       <li><b>Winter</b> ‘Als ei, larve of pop’ staat bij insecten die de winter niet als volwassen dier doorkomen, zoals libellenlarven in het water en rupsen.</li>
       <li><b>Lengte</b> is groen binnen ±15%. Daarbuiten zie je alleen een pijl: ↑ betekent dat de gezochte soort groter is, maar niet hoeveel.</li>
-      <li>Twee varianten van de Vogelrichtlijn tellen als overlap. Een kolom ‘diergroep’ is er bewust niet.</li>
+      <li>Bij vogels telt ‘nest jaarrond beschermd’ naast ‘nest alleen in gebruik’ als overlap. Een kolom ‘diergroep’ is er bewust niet.</li>
       <li><b>Tweelingsoorten</b>, zoals de gewone en grijze grootoorvleermuis: gok je de tweelingsoort van het antwoord, dan telt die poging niet mee en gaan alle waarnemingen open.</li>
     </ul>
     <h3>Wie kan het antwoord zijn?</h3>
@@ -518,43 +518,43 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
 </div>
 
 <script src="config.js"></script>
-<script src="js/fouten.js?v=202611180849"></script>
-<script src="data/teksten.js?v=202611180849"></script>
-<script src="data/soorten.js?v=202611180849"></script>
-<script src="data/sporen.js?v=202611180849"></script>
-<script src="data/dagschema.js?v=202611180849"></script>
-<script src="data/veldweken.js?v=202611180849"></script>
-<script src="data/toelichting.js?v=202611180849"></script>
-<script src="data/weetjes.js?v=202611180849"></script>
-<script src="data/zoekgroepen.js?v=202611180849"></script>
-<script src="data/bronnen.js?v=202611180849"></script>
-<script src="js/kern.js?v=202611180849"></script>
-<script src="js/spel.js?v=202611180849"></script>
-<script src="js/veldboek.js?v=202611180849"></script>
-<script src="js/melden.js?v=202611180849"></script>
-<script src="js/kop.js?v=202611180849"></script>
-<script src="js/spelen.js?v=202611180849"></script>
-<script src="js/opening.js?v=202611180849"></script>
-<script src="js/uitleg.js?v=202611180849"></script>
-<script src="js/online.js?v=202611180849"></script>
-<script src="js/league.js?v=202611180849"></script>
-<script src="data/avatars.js?v=202611180849"></script>
-<script src="js/profiel.js?v=202611180849"></script>
-<script src="data/advent.js?v=202611180849"></script>
-<script src="js/wachtrij.js?v=202611180849"></script>
-<script src="js/kerst.js?v=202611180849"></script>
-<script src="data/dwaalgasten.js?v=202611180849"></script>
-<script src="js/dwaalgast.js?v=202611180849"></script>
-<script src="js/nieuw.js?v=202611180849"></script>
-<script src="js/levels.js?v=202611180849"></script>
-<script src="js/boost.js?v=202611180849"></script>
-<script src="js/statistiek.js?v=202611180849"></script>
-<script src="js/duel.js?v=202611180849"></script>
-<script src="js/spelerskaart.js?v=202611180849"></script>
-<script src="js/qrcode.js?v=202611180849"></script>
-<script src="js/apparaat.js?v=202611180849"></script>
-<script src="js/push.js?v=202611180849"></script>
-<script src="js/week.js?v=202611180849"></script>
-<script src="js/app.js?v=202611180849"></script>
+<script src="js/fouten.js?v=202611180919"></script>
+<script src="data/teksten.js?v=202611180919"></script>
+<script src="data/soorten.js?v=202611180919"></script>
+<script src="data/sporen.js?v=202611180919"></script>
+<script src="data/dagschema.js?v=202611180919"></script>
+<script src="data/veldweken.js?v=202611180919"></script>
+<script src="data/toelichting.js?v=202611180919"></script>
+<script src="data/weetjes.js?v=202611180919"></script>
+<script src="data/zoekgroepen.js?v=202611180919"></script>
+<script src="data/bronnen.js?v=202611180919"></script>
+<script src="js/kern.js?v=202611180919"></script>
+<script src="js/spel.js?v=202611180919"></script>
+<script src="js/veldboek.js?v=202611180919"></script>
+<script src="js/melden.js?v=202611180919"></script>
+<script src="js/kop.js?v=202611180919"></script>
+<script src="js/spelen.js?v=202611180919"></script>
+<script src="js/opening.js?v=202611180919"></script>
+<script src="js/uitleg.js?v=202611180919"></script>
+<script src="js/online.js?v=202611180919"></script>
+<script src="js/league.js?v=202611180919"></script>
+<script src="data/avatars.js?v=202611180919"></script>
+<script src="js/profiel.js?v=202611180919"></script>
+<script src="data/advent.js?v=202611180919"></script>
+<script src="js/wachtrij.js?v=202611180919"></script>
+<script src="js/kerst.js?v=202611180919"></script>
+<script src="data/dwaalgasten.js?v=202611180919"></script>
+<script src="js/dwaalgast.js?v=202611180919"></script>
+<script src="js/nieuw.js?v=202611180919"></script>
+<script src="js/levels.js?v=202611180919"></script>
+<script src="js/boost.js?v=202611180919"></script>
+<script src="js/statistiek.js?v=202611180919"></script>
+<script src="js/duel.js?v=202611180919"></script>
+<script src="js/spelerskaart.js?v=202611180919"></script>
+<script src="js/qrcode.js?v=202611180919"></script>
+<script src="js/apparaat.js?v=202611180919"></script>
+<script src="js/push.js?v=202611180919"></script>
+<script src="js/week.js?v=202611180919"></script>
+<script src="js/app.js?v=202611180919"></script>
 </body>
 </html>

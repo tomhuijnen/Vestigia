@@ -2311,3 +2311,14 @@ html.donker .lvklap > summary .lvvolg b{color:var(--green-d)}
 .dot.vangnet{width:9px; height:9px; margin-top:1.5px; box-shadow:inset 0 0 0 1.5px var(--green); opacity:.7; border:0}
 .dot.vangnet.used{opacity:1}
 .dot.vangnet.hit{opacity:1}
+
+/* update 80: het schermlabel in de smalle kop is een titel, geen knop: geen rand, één regel en tikken doet niets
+   (js/kop.js). Op de telefoon staat het klein onder ‘Vestigia’ (past ook in december naast advent en dwaalgast);
+   op een breed scherm ernaast, met een dun streepje ertussen. */
+.kopklein .mh-bar .mh-title, .slimbar .mh-title{align-items:center}
+.series.scherm{align-self:center; border:0; border-left:1.5px solid currentColor; border-radius:0; padding:1px 0 1px 10px; white-space:nowrap; cursor:default; opacity:.9}
+@media (max-width:600px){
+  .kopklein .mh-bar .mh-title{flex-direction:column; align-items:flex-start; justify-content:center; gap:2px}
+  .kopklein .mh-bar .series.scherm{align-self:flex-start; border-left:0; padding:0; line-height:1.1}
+  .kopklein .mh-bar .mh-name{line-height:1}
+}

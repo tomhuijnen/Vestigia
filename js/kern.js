@@ -9,7 +9,7 @@ const BY_ID = new Map(SPECIES.map(s => [s.id, s]));
 const BY_NAME = new Map(SPECIES.map(s => [s.n, s]));
 const MAX = 5;
 const COLS = ["h","a","v","b","w","l","r"];
-const COL_LABEL = { h:"Leefgebied", a:"Activiteit", v:"Voedsel", b:"Verblijfplaats", w:"Winter", l:"Lengte", r:"Regime" };
+const COL_LABEL = { h:"Leefgebied", a:"Activiteit", v:"Voedsel", b:"Verblijfplaats", w:"Winter", l:"Lengte", r:"Bescherming" };
 const START = Date.UTC(2026,10,6);
 const DAY = 864e5;
 /* Expert (update 45): 7 · 6 · 5 · 4 · 3 punten bij 1–5 waarnemingen. Vangnet: na een foute gok gaan alle waarnemingen
@@ -386,7 +386,7 @@ function tipGelijk(k, g, t){
 }
 /* overlap: de hoofdwaarde van de ene soort komt ook voor bij de andere */
 function tipOverlap(k, g, t){
-  if (k === "r") return { f: "r~VR", k, txt: "Beide vallen onder de Vogelrichtlijn, maar niet in dezelfde categorie." };
+  if (k === "r") return { f: "r~VR", k, txt: "Beide zijn vogels, maar hun nest is anders beschermd." };
   const gv = g[k][0], tv = t[k][0];
   if (t[k].includes(gv)){
     const x = { h: `De gezochte soort komt ook ${TIP.h[gv]} voor.`, a: `De gezochte soort is soms ook ${TIP.a[gv]} actief.`,

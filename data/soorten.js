@@ -27,15 +27,16 @@ const LABELS = {
   b: { HOL:"Hol of burcht", BOOM:"Boom(holte)", GEB:"Gebouw of bouwwerk", VEG:"In de vegetatie",
        GROND:"Bodem of strooisel", WATER:"In het water", STEEN:"Muur of rots" },
   w: { ACT:"Actief", SLAAP:"Winterslaap/-rust", TREK:"Trekt weg", LARVE:"Als ei, larve of pop" },
-  r: { HR:"Habitatrichtlijn IV", BAL:"Bal bijlage IX", VRJ:"Vogelrichtlijn · nest jaarrond", VR:"Vogelrichtlijn", NB:"Niet beschermd" }
+  r: { HR:"Streng beschermd (EU)", BAL:"Nationaal beschermd", VRJ:"Vogel · nest jaarrond beschermd", VR:"Vogel · nest alleen in gebruik", NB:"Niet beschermd" }
 };
 
 const REGIME_INFO = {
-  HR: "Strikt beschermd via bijlage IV van de Habitatrichtlijn of de verdragen van Bern/Bonn (art. 11.46 Bal). Verboden zijn onder meer opzettelijk doden, vangen en verstoren, en het beschadigen of vernielen van voortplantings- en rustplaatsen.",
-  BAL: "Nationaal beschermde ‘andere soort’ uit bijlage IX van het Bal (art. 11.54). Voor algemene soorten geldt vaak een provinciale vrijstelling bij ruimtelijke ingrepen; voor zeldzame soorten niet.",
-  VRJ: "Vogelrichtlijnsoort (art. 11.37 Bal). Het nest staat in de landelijke basistabel van jaarrond beschermde nesten (categorie 1–4), dus ook buiten het broedseizoen beschermd. Een deel van de provincies hanteert een eigen tabel.",
-  VR: "Vogelrichtlijnsoort (art. 11.37 Bal): alle in het wild levende vogels zijn beschermd. Het nest is alleen beschermd zolang het in gebruik is (of categorie 5: alleen bij zwaarwegende feiten).",
-  NB: "Niet beschermd onder de soortenbescherming van de Omgevingswet. De algemene zorgplicht voor dieren geldt wel."
+  /* update 80: in gewone taal; het wetsartikel blijft klein aan het eind staan */
+  HR: "Streng beschermd door Europese regels. Je mag het dier niet opzettelijk doden, vangen of verstoren, en zijn voortplantings- en rustplaatsen niet beschadigen of vernielen. Een ontheffing kan alleen onder strenge voorwaarden. (Habitatrichtlijn bijlage IV of de verdragen van Bern en Bonn; art. 11.46 Bal)",
+  BAL: "Beschermd door Nederlandse regels, niet door Europese. Je mag het dier niet opzettelijk doden of vangen, en zijn vaste voortplantings- en rustplaatsen niet opzettelijk beschadigen of vernielen. Voor algemene soorten geven de meeste provincies een vrijstelling bij ruimtelijke ingrepen; voor zeldzame soorten niet. (art. 11.54 en bijlage IX Bal)",
+  VRJ: "Alle wilde vogels zijn beschermd. Deze soort gebruikt zijn nest jaar na jaar, dus het nest is ook buiten het broedseizoen beschermd. Sommige provincies hebben een eigen lijst. (Vogelrichtlijn, art. 11.37 Bal; landelijke basistabel jaarrond beschermde nesten, categorie 1–4)",
+  VR: "Alle wilde vogels zijn beschermd. Het nest is alleen beschermd zolang de vogel het gebruikt; bij een paar soorten ook daarbuiten, als daar zwaarwegende redenen voor zijn. (Vogelrichtlijn, art. 11.37 Bal; nestcategorie 5)",
+  NB: "Niet beschermd door de soortenregels van de Omgevingswet. Wel geldt voor alle dieren de zorgplicht: je mag ze niet zomaar schade doen."
 };
 
 const CLUE_TYPES = ["Locatie & seizoen","Habitat","Microhabitat","Spoor of geluid","Kenmerk"];

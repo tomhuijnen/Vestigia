@@ -314,8 +314,10 @@ const MENU_GO = {
 $("menu").addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b && MENU_GO[b.dataset.go]) MENU_GO[b.dataset.go](); });
 
 /* ---------- naam in de kop: terug naar de dagcasus ---------- */
-$("toDaily").addEventListener("click", () => MENU_GO.daily());
-$("slimTitle").addEventListener("click", () => MENU_GO.daily());
+/* update 80: het schermlabel (‘Mijn profiel’, ‘Shop’ …) is alleen een label; alleen ‘Vestigia’ brengt je naar de dagcasus */
+const naarDagcasus = e => { if (e.target.closest(".series.scherm")) return; MENU_GO.daily(); };
+$("toDaily").addEventListener("click", naarDagcasus);
+$("slimTitle").addEventListener("click", naarDagcasus);
 
 /* ---------- smalle balk zodra de grote kop uit beeld is ---------- */
 if ("IntersectionObserver" in window){
