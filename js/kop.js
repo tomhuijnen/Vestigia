@@ -64,6 +64,15 @@ function eersteModus(st, i){
   if (e) return !!e.x;
   return finished(st, i, false) ? false : finished(st, i, true) ? true : null;
 }
+/* update 82 (a): de modus waarin je de dagcasus vandaag al begon. Een gok gedaan of (expert) een waarneming extra
+   geopend telt als begonnen: dan zit de andere modus op slot, ook als de casus nog niet af is. Anders zag je in de ene
+   modus de waarnemingen en speelde je hem daarna met die kennis in de andere. */
+function begonnenModus(st, i){
+  const eerst = eersteModus(st, i);
+  if (eerst !== null) return eerst;
+  const bezig = x => { const g = (st.games || {})[dailyKey(i, x)]; return !!(g && ((g.guesses || []).length || (g.revealed || 1) > 1)); };
+  return bezig(false) ? false : bezig(true) ? true : null;
+}
 const dayPoints = (st, i) => { const m = eersteModus(st, i); return m === null ? 0 : gamePoints(finished(st, i, m), m, i); };
 function weekStartDay(i){ const dow = (new Date(START + i * DAY).getUTCDay() + 6) % 7; return i - dow; }
 /* dagen op rij waarop je de dagcasus speelde (klassiek of expert); vandaag telt mee zodra je hem gespeeld hebt */
@@ -151,14 +160,14 @@ function renderKop(){
   $("doneExpert").hidden = !(daily && finished(st, i, true));
   /* Slotje: heb je de dagcasus vandaag al in de ene modus gespeeld, dan zit de andere op slot (zelfde casus, je kent
      het antwoord al). Bij oefenen zit er nooit een slot op. */
-  const eerst = daily ? eersteModus(st, i) : null;
+  const eerst = daily ? begonnenModus(st, i) : null;
   for (const [id, expert] of [["modeClassic", false], ["modeExpert", true]]){
     const dicht = eerst !== null && eerst !== expert, b = $(id);
     b.classList.toggle("slot", dicht);
     let k = b.querySelector(".slotje");
     if (dicht && !k){ b.insertAdjacentHTML("beforeend", `<span class="slotje" aria-hidden="true">${SLOTJE}</span>`); }
     if (!dicht && k) k.remove();
-    dicht ? b.setAttribute("aria-label", `${expert ? "Expert" : "Klassiek"}: vandaag op slot`) : b.removeAttribute("aria-label");
+    dicht ? b.setAttribute("aria-label", `${expert ? "Expert" : "Klassiek"}: op slot`) : b.removeAttribute("aria-label");
   }
   renderVeldweek(st, daily ? S.caseNo - 1 : i, daily);
   if (typeof Duel !== "undefined") Duel.balk();

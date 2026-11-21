@@ -277,6 +277,7 @@ function renderClues(){
   /* update 45: wat een goede determinatie nu oplevert, en wat de volgende waarneming kost */
   const dag = S.mode === "daily" ? S.caseNo - 1 : null, nu = expertPunten(S.revealed, 0, dag);
   $("expertHint").textContent = S.revealed >= MAX ? `Goed nu: ${nu} punten.` : `Goed nu: ${nu} punten. De volgende waarneming kost een punt.`;
+  $("expertHint").hidden = S.mode === "free";   // update 82 (c): bij oefenen verdien je geen punten
   freshClue = -1;
 }
 
@@ -714,9 +715,9 @@ const pref = {
   set expert(v){ try { localStorage.setItem("vestigia:expert", v ? "1" : "0"); } catch(e){} }
 };
 function showGame(){ setView("game"); render(); }
-/* De dagcasus opent in de modus die je vandaag al speelde (de andere zit op slot), anders in je voorkeur. */
+/* De dagcasus opent in de modus die je vandaag al speelde of begon (de andere zit op slot), anders in je voorkeur. */
 function startDaily(){
-  const wissel = S && S.mode !== "daily", eerst = eersteModus(store.get(), todayIndex());
+  const wissel = S && S.mode !== "daily", eerst = begonnenModus(store.get(), todayIndex());   // update 82 (a)
   S = loadDaily(eerst === null ? pref.expert : eerst); showGame(); if (wissel) inBeeld($("gameView"));
 }
 /* keuze = { g, nieuw }; zonder keuze: bij oefenen dezelfde keuze als nu, anders alle soorten */
@@ -739,9 +740,9 @@ function goFree(){ if (S.mode !== "free" || S.status !== "playing") startFree();
 function setMode(expert){
   if (S.mode === "duel") return;                    // update 16: de uitdager koos de modus
   if (S.mode === "daily"){
-    const eerst = eersteModus(store.get(), todayIndex());
+    const st = store.get(), af = eersteModus(st, todayIndex()) !== null, eerst = begonnenModus(st, todayIndex());
     if (eerst !== null && eerst !== expert){
-      toast(`Vandaag speelde je de dagcasus al in ${eerst ? "expert" : "klassiek"}. ${expert ? "Expert" : "Klassiek"} is dezelfde casus, dus die zit tot morgen op slot.`,
+      toast(`${af ? "Vandaag speelde je de dagcasus al" : "Je bent de dagcasus van vandaag al begonnen"} in ${eerst ? "expert" : "klassiek"}. ${expert ? "Expert" : "Klassiek"} is dezelfde casus, dus die zit tot morgen op slot.`,
         { label: "Oefenen", duur: 7000, run: () => { $("toast").hidden = true; pref.expert = expert; startFree(); } });
       return;
     }
@@ -749,7 +750,8 @@ function setMode(expert){
   pref.expert = expert;
   if (expert === S.expert) return;
   if (S.mode === "daily") startDaily();
-  else if (S.guesses.length === 0 && S.status === "playing"){ S.expert = expert; S.revealed = 1; render(); }
+  /* update 82 (a): een oefencasus wisselt alleen ter plekke als je nog niets deed; anders een nieuwe casus */
+  else if (S.guesses.length === 0 && S.revealed <= 1 && S.status === "playing"){ S.expert = expert; S.revealed = 1; render(); }
   else startFree({ g: S.groep, nieuw: S.nieuw, ids: S.ids || null });
 }
 $("modeClassic").addEventListener("click", () => setMode(false));

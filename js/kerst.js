@@ -345,12 +345,27 @@ const Kerst = (() => {
   /* ---------- eikels vliegen naar je saldo ----------
      Een spook-saldo boven het donkere scherm, precies op de plek van de eikelknop. Elke eikel die aankomt, laat het
      saldo opveren en een stukje optellen; pas na de laatste staat het nieuwe saldo er. */
+  /* update 82 (g): scrollen tijdens de vlucht liet het saldo verspringen. De grote kop schoof uit beeld terwijl de smalle
+     balk nog verstopt zat (of net inschoof), en dan landde het saldo bij het menu buiten beeld of halverwege de balk.
+     Nu: staat de eikelknop in de grote kop helemaal in beeld, dan daar; anders altijd op de vaste plek van de eikelknop
+     in de smalle balk, gemeten zonder het inschuiven, ook als die balk (nog) niet zichtbaar is. Het spook is zelf een
+     saldo, dus het staat daar ook zonder balk goed. */
+  function slimRust(k){
+    const r = k.getBoundingClientRect();
+    let dy = 0;
+    try { const t = getComputedStyle($("slimbar")).transform; if (t && t !== "none") dy = new DOMMatrixReadOnly(t).m42; } catch(e){}
+    return { left: r.left, top: r.top - dy, width: r.width, height: r.height, bottom: r.bottom - dy };
+  }
   function saldoPlek(){
-    const slim = $("slimbar") && $("slimbar").classList.contains("show");     // update 19b: smalle balk in beeld? dan daar
-    const k = (slim ? [$("slimEikel"), $("eikelBtn")] : [$("eikelBtn"), $("slimEikel")]).find(x => x && !x.hidden && x.getBoundingClientRect().width > 0 && x.getBoundingClientRect().bottom > 0);
-    if (k) return { el: k, r: k.getBoundingClientRect() };
+    const groot = $("eikelBtn"), slim = $("slimEikel");
+    if (groot && !groot.hidden){
+      const r = groot.getBoundingClientRect();
+      if (r.width > 0 && r.top >= 0 && r.bottom <= innerHeight) return { el: groot, r };
+    }
+    if (slim && !slim.hidden && slim.getBoundingClientRect().width > 0) return { el: slim, r: slimRust(slim) };
+    if (groot && !groot.hidden && groot.getBoundingClientRect().width > 0) return { el: groot, r: groot.getBoundingClientRect() };
     const m = $("menuBtn").getBoundingClientRect();
-    return { el: null, r: { left: m.left - 92, top: m.top + 2, width: 84, height: 36 } };
+    return { el: null, r: { left: m.left - 92, top: Math.max(8, m.top + 2), width: 84, height: 36 } };
   }
   /* snel: niet wachten tot het spook-saldo is weggefaded (de volgende vlucht kan meteen; update 13) */
   async function vliegNaarSaldo(van, n, snel){
