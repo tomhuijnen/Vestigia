@@ -133,7 +133,7 @@ const Nieuw = (() => {
        pas na dat onderdeel begon */
     { id: "vernieuwd", titel: "Expert en Wist je dat?",
       stappen: [
-        { ic: "xp", wat: "expert45", kop: "Nieuw: expert levert meer op", tekst: "In expert krijg je nu 7 punten als je na één waarneming goed zit; elke volgende waarneming kost een punt, tot 3 bij de vijfde. Zit je mis, dan gaan alle waarnemingen open en heb je nog één gok: goed levert 1 punt én de plaat op." },
+        { ic: "xp", wat: "expert45", kop: "Nieuw: expert levert meer op", tekst: "In expert krijg je nu 7 punten als je na één waarneming goed zit; daarna 6 · 4 · 3 en 1 bij de vijfde. Zit je mis, dan gaan alle waarnemingen open en heb je nog één gok: goed levert 1 punt én de plaat op." },
         { ic: "lamp", wat: "weetjes", kop: "Nieuw: Wist je dat?", tekst: "Na elke casus staat een weetje over de soort, met de bron eronder. Elke casus heeft zijn eigen weetje: speel je een soort nog eens in een andere casus, dan leer je er weer iets nieuws over." }
       ] },
     { id: "levels", titel: "Levels", verborgen: () => !(typeof Levels !== "undefined" && Levels.zichtbaar()),   // pas vanaf de startdatum

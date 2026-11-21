@@ -230,7 +230,7 @@ const Duel = (() => {
     el.innerHTML = `<div class="dbtekst"><span class="caps">Spelersduel · ${esc(modus(d))}</span>
         <b>${d.tegen ? `Tegen ${esc(d.tegen)}` : "Duel met een link"}</b></div>
       <span class="dustip" aria-label="casus ${r + 1} van 3">${stip}</span>
-      <p class="fine">${d.expert ? "Eén determinatie: 7 punten na één waarneming, elke volgende kost een punt; mis je, dan nog één gok voor 1 punt." : "Vijf pogingen, net als bij de dagcasus."} Elk punt telt: meeste punten na drie casussen wint.</p>`;
+      <p class="fine">${d.expert ? "Eén determinatie: 7 punten na één waarneming, daarna 6 · 4 · 3 · 1; mis je, dan nog één gok voor 1 punt." : "Vijf pogingen, net als bij de dagcasus."} Elk punt telt: meeste punten na drie casussen wint.</p>`;
   }
 
   /* ---------- het scherm Spelersduel ---------- */
