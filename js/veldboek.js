@@ -170,6 +170,9 @@ function progressData(st, withLog){
     for (const [k, v] of Object.entries(st.games || {})) if (v && v.status !== "playing" && +(k.match(/^d(\d+)/) || [, -9])[1] >= i - 1) g[k] = v;
     out.games = g;
     out.gezien = gezienData();
+    /* update 82 (b): de open oefencasus, zodat een ander apparaat dezelfde teruggeeft */
+    if (st.oefen) out.oefen = st.oefen;
+    if (st.oefenKlaar) out.oefenKlaar = st.oefenKlaar;
   }
   return out;
 }
@@ -197,6 +200,13 @@ function mergeProgressData(data){
     st.games = st.games || {};
     for (const [k, g] of Object.entries(data.games)) if (g && g.status && g.status !== "playing" && (!st.games[k] || st.games[k].status === "playing" && !(st.games[k].guesses || []).length)) st.games[k] = g;
   }
+  /* update 82 (b): open oefencasus. De nieuwste telt; een casus die op een van je apparaten al af is, komt niet terug. */
+  st.oefenKlaar = Math.max(st.oefenKlaar || 0, +data.oefenKlaar || 0) || undefined;
+  const o = data.oefen, voortgang = x => ((x && x.guesses) || []).length * 10 + ((x && x.revealed) || 1);
+  if (o && typeof o === "object" && BY_ID.has(o.target) && +o.t > (st.oefenKlaar || 0)
+      && (!st.oefen || +o.t > st.oefen.t || (+o.t === st.oefen.t && voortgang(o) > voortgang(st.oefen)))) st.oefen = o;
+  if (st.oefen && st.oefen.t <= (st.oefenKlaar || 0)) delete st.oefen;
+  if (!st.oefenKlaar) delete st.oefenKlaar;
   checkAwards(st, true);
   store.set(st);
   gezienSamenvoegen(data.gezien);

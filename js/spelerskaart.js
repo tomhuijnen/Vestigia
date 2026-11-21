@@ -64,7 +64,7 @@ const Spelerskaart = (() => {
           ${duels ? `<div class="spbalk" aria-hidden="true"><i class="w" style="width:${pct(du.gewonnen)}%"></i><i class="g" style="width:${pct(du.gelijk)}%"></i><i class="v" style="width:${pct(du.verloren)}%"></i></div>` : ""}
         </section>
         ${online.player() && !eigen ? `<div class="spknop"><button class="btn duel" id="spelerDaag">${ZWAARD}Daag ${naam} uit</button></div>` : ""}`
-        : `<p class="spnog">Vanaf maandag 23 november kun je ${naam} hier uitdagen voor een spelersduel.</p>`}
+        : eigen ? "" : `<p class="spnog">Vanaf maandag 23 november kun je ${naam} hier uitdagen voor een spelersduel.</p>`}
       </div>`;
   }
 

@@ -1408,9 +1408,9 @@ const SPECIES = [
       "Tien baarddraden."
     ] },
     { bron:"RAVON, soortpagina grote modderkruiper", sl:{ i:3, t:"Hij hapt lucht en ademt ook via zijn darm, waardoor hij zuurstofloze modder overleeft. Opgepakt piept hij." }, wn:[
-      "Noordwest-Overijssel, september. Het waterschap maait en baggert de sloten, zoals elk najaar.",
+      "Noordwest-Overijssel, september. Een zachte nazomerdag.",
       "Een veenweidepolder met smalle, verlandende sloten.",
-      "Een hoop bagger die net met de maaikorf op de kant is gelegd.",
+      "Een hoop bagger die het waterschap bij het jaarlijkse schonen net met de maaikorf op de kant heeft gelegd.",
       "In de bagger spartelt iets langgerekts dat een zacht piepend geluid maakt; het hapt lucht als het weer in het water ligt.",
       "Tot 30 cm, geelbruin met donkere lengtestrepen."
     ] }
@@ -2178,7 +2178,7 @@ const SPECIES = [
     ] }
   ] },
 { id:"kauw", no:533, g:"B", n:"Kauw", s:"Corvus monedula", r:"VR", l:34, zz:"A", twin:null,
-  h:["BEB","HALF"], a:["DAG"], v:["ONG","PLANT"], b:["GEB","BOOM"], w:["ACT"],
+  h:["BEB","HALF"], a:["DAG"], v:["ONG","PLANT","GEW"], b:["GEB","BOOM"], w:["ACT"],
   x:"roek",
   t:"De roek is groter, glanzend zwart met een kale, grijswitte snavelbasis en broedt in boomkolonies. Deze soort is kleiner, met een grijze nek en lichte ogen.",
   cs:[

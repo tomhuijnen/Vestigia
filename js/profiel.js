@@ -394,7 +394,8 @@ const Profiel = (() => {
       const eigen = ik && li.dataset.n.toLowerCase() === ik && Levels.zichtbaar();
       const av = avatarSVG(pr, "avatar klein", true);
       li.querySelector(".pos").insertAdjacentHTML("afterend", `<span class="rav">${metLaurier(eigen ? Levels.mijnRing(av, "klein") : Levels.ring(av, pr.level, pr.pct || 0, "klein"), pr, "klein")}</span>`);
-      const regel = li.querySelector(".who > span");
+      /* update 82 (d): niet het label 'expert' (dagranglijst), anders kwam de ondertitel in dat donkere blokje */
+      const regel = li.querySelector(".who > span:not(.xbadge)");
       if (pr.subtitle && regel){ regel.title = regel.textContent; regel.textContent = pr.subtitle; regel.classList.add("sub"); }
     }
   }

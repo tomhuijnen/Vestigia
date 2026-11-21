@@ -29,7 +29,7 @@ const online = (() => {
         headers: Object.assign({ apikey: CFG.supabaseKey, "Content-Type": "application/json" }, /^eyJ/.test(CFG.supabaseKey) ? { Authorization: "Bearer " + CFG.supabaseKey } : {}),
         body: JSON.stringify(args || {})
       });
-    } catch(e){ Veld.zet(true); throw Object.assign(new Error("Geen verbinding"), { status: 0, offline: true }); }
+    } catch(e){ Veld.mislukt(); throw Object.assign(new Error("Geen verbinding"), { status: 0, offline: true }); }
     finally { if (tijd) clearTimeout(tijd); }
     Veld.zet(false);
     const txt = await r.text(); let data = null;
@@ -382,7 +382,17 @@ const online = (() => {
   /* na samenvoegen: kop, menu en Vestiarium bijwerken; speelde je de dagcasus al op een ander apparaat,
      dan staat hij hier ook als gespeeld (zolang je hier nog niets geprobeerd hebt) */
   function naSamenvoegen(){
-    if (S && S.mode === "daily" && S.status === "playing" && !S.guesses.length && finished(store.get(), S.caseNo - 1, S.expert)) startDaily();
+    if (S && S.mode === "daily" && S.status === "playing" && !S.guesses.length){
+      const st = store.get(), m = begonnenModus(st, S.caseNo - 1);   // update 82 (a): ook als je hem elders in de andere modus begon
+      if (finished(st, S.caseNo - 1, S.expert) || (m !== null && m !== !!S.expert && S.revealed <= 1)) startDaily();
+    }
+    /* update 82 (b): op een ander apparaat een nieuwere oefencasus getrokken, of verder gespeeld? Dan die hier ook */
+    if (S && S.mode === "free" && S.status === "playing"){
+      const o = store.get().oefen;
+      if (!o || o.t !== S.t || (o.guesses || []).length > S.guesses.length || (o.revealed || 1) > S.revealed){
+        if (o) startFree(); else if (S.t <= (store.get().oefenKlaar || 0)) { S.status = "lost"; S.opgegeven = true; render(); }
+      }
+    }
     renderTiles(); renderMenu(); if (VIEW === "dex") renderDex();
   }
   /* code om een ander apparaat te koppelen: je spelerscode, of (zonder naam) de code van een verborgen account */
@@ -501,7 +511,7 @@ if (!online.enabled){ ["menuLeague", "menuInvite", "menuShop"].forEach(id => $(i
 /* Veldmodus: gaat vanzelf aan zonder internet (of als Supabase niet te bereiken is) en weer uit zodra het lukt.
    Spelen werkt gewoon; wat online moet (ranglijst, eikels, shop) wacht, en dagscores gaan in de wachtrij. */
 const Veld = (() => {
-  let aan = false, gemeld = false;
+  let aan = false, gemeld = false, missers = [], peil = null;
   function toon(){
     for (const id of ["veldPill", "veldPillSlim"]){ const b = $(id); if (b) b.hidden = !aan; }
     document.documentElement.classList.toggle("veldmodus", aan);
@@ -509,18 +519,48 @@ const Veld = (() => {
   function zet(v){
     if (v === aan) return;
     aan = v; toon();
+    if (!aan) missers = [];
     if (aan && !gemeld){ gemeld = true; toast("Geen verbinding: veldmodus staat aan. Je speelt gewoon verder; je dagscore wordt verstuurd zodra je weer verbinding hebt.", { duur: 7000 }); }
     if (!aan && gemeld){ gemeld = false; online.flush().then(() => toast("Weer online. Je scores zijn verstuurd.", { duur: 4000 })).catch(() => {}); }
+    clearInterval(peil); peil = null;
+    if (aan && online.enabled) peil = setInterval(() => { if (document.visibilityState === "visible") probeer(); }, 20000);
+  }
+  /* update 82 (e): Tom zag de veldmodus met 5G. Eén mislukte vraag zette hem aan, en hij ging pas uit bij de volgende
+     vraag die lukte, terwijl er dan vaak lang geen vraag meer kwam. Mislukte vragen komen ook voor met een goede
+     verbinding: als de app naar de achtergrond gaat of net terugkomt (iPhone breekt lopende vragen af), bij een
+     netwisseling (wifi naar 5G) of één trage vraag. Nu: zegt het toestel zelf dat er geen internet is, dan meteen aan;
+     anders pas na 2 mislukte vragen binnen een minuut terwijl de app in beeld is. Staat hij aan, dan kijkt de app elke
+     20 seconden (en bij terugkomen) met een kleine vraag of de server weer te bereiken is. */
+  function mislukt(){
+    if (navigator.onLine === false){ zet(true); return; }
+    if (document.visibilityState !== "visible") return;
+    const nu = Date.now();
+    missers = missers.filter(t => nu - t < 60000).concat(nu);
+    if (missers.length >= 2) zet(true);
+  }
+  let bezig = false;
+  async function probeer(){
+    if (!aan || bezig || navigator.onLine === false || !online.enabled) return;
+    const CFG = window.VESTIGIA_CONFIG || {};
+    bezig = true;
+    const ctl = typeof AbortController !== "undefined" ? new AbortController() : null;
+    const tijd = ctl ? setTimeout(() => ctl.abort(), 8000) : null;
+    try {
+      /* elk antwoord van de server (ook een foutcode) betekent: er is verbinding */
+      await fetch(CFG.supabaseUrl.replace(/\/$/, "") + "/auth/v1/health", { headers: { apikey: CFG.supabaseKey }, cache: "no-store", signal: ctl ? ctl.signal : undefined });
+      zet(false);
+    } catch(e){}
+    finally { bezig = false; if (tijd) clearTimeout(tijd); }
   }
   const uitleg = () => toast("Veldmodus: er is nu geen verbinding met internet of met de server van Vestigia. De dagcasus en oefenen werken gewoon. De ranglijst, eikels en de shop komen terug zodra je weer online bent; je scores worden dan vanzelf verstuurd.", { duur: 8000 });
-  for (const id of ["veldPill", "veldPillSlim"]){ const b = $(id); if (b) b.onclick = uitleg; }
-  return { zet, aan: () => aan, toon };
+  for (const id of ["veldPill", "veldPillSlim"]){ const b = $(id); if (b) b.onclick = () => { uitleg(); probeer(); }; }
+  return { zet, mislukt, probeer, aan: () => aan, toon };
 })();
 window.addEventListener("online", () => { Veld.zet(false); online.flush(); });
 window.addEventListener("offline", () => Veld.zet(true));
 if (navigator.onLine === false) setTimeout(() => Veld.zet(true), 0);   // na het laden van app.js (toast)
 online.haalVoortgang().then(() => online.flush()).then(() => online.refreshWeek()).catch(() => {});
-document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible"){ online.herstelAanmelding(); online.haalVoortgang(); } });
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible"){ Veld.probeer(); online.herstelAanmelding(); online.haalVoortgang(); } });
 /* update 62: een aanmelding waarvan het antwoord nooit aankwam, alsnog ophalen (na het laden van de andere onderdelen) */
 setTimeout(() => online.herstelAanmelding(), 1500);
 
