@@ -2178,7 +2178,7 @@ const SPECIES = [
     ] }
   ] },
 { id:"kauw", no:533, g:"B", n:"Kauw", s:"Corvus monedula", r:"VR", l:34, zz:"A", twin:null,
-  h:["BEB","HALF"], a:["DAG"], v:["ONG","PLANT"], b:["GEB","BOOM"], w:["ACT"],
+  h:["BEB","HALF"], a:["DAG"], v:["ONG","PLANT","GEW"], b:["GEB","BOOM"], w:["ACT"],
   x:"roek",
   t:"De roek is groter, glanzend zwart met een kale, grijswitte snavelbasis en broedt in boomkolonies. Deze soort is kleiner, met een grijze nek en lichte ogen.",
   cs:[

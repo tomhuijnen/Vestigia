@@ -2330,8 +2330,13 @@ html.donker .lvklap > summary .lvvolg b{color:var(--green-d)}
 .splist div{display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); column-gap:10px; align-items:baseline}
 .splist div span, .opts li[role="option"] span{hyphens:auto; overflow-wrap:break-word}
 .plate .nm{min-height:2.2em}   /* update 82 (i): twee regels gereserveerd, zodat de wetenschappelijke naam in elke plaat op dezelfde hoogte staat */
-.ranklist .who span.xbadge{display:inline-block; width:max-content; margin-left:6px; color:var(--paper); font-size:var(--fs-xs)}   /* update 82 (d): klein label, niet een balk over de hele breedte */
+.ranklist .who span.xbadge{display:inline-block; width:max-content; margin-left:10px; padding:0 5px; background:none; border:1px solid var(--rule); color:var(--ink-2); font-size:var(--fs-xs); font-weight:500; letter-spacing:.04em; vertical-align:1px}   /* update 82 (d): klein label, niet een balk over de hele breedte */
 /* update 82 (f): op iPhones met iOS 26 kleurt de balk met klok en camera-eiland mee met wat er bovenaan het scherm vast
    staat; zonder zo'n element pakt iOS de witte pagina en kwam er een witte waas over het logo en de avatar. Deze strook
    is precies zo hoog als dat gebied (op laptops en de meeste Android-telefoons 0 px) en heeft de kleur van de kop. */
 .statusband{position:fixed; top:0; left:0; right:0; height:env(safe-area-inset-top, 0px); background:var(--green-d); z-index:16; pointer-events:none}
+/* update 82 (b): opgeven bij oefenen, klein onder de determinatie */
+.geefop{margin:6px 0 0; font-size:var(--fs-s)}
+.geefop .linklike{color:var(--ink-2)}
+.geefop .linklike.zeker{color:#b4492f; font-weight:600}
+html.donker .geefop .linklike.zeker{color:#f0a48f}

@@ -26,10 +26,27 @@ function loadDaily(expert){
 }
 function saveDaily(){
   if (S.mode === "duel"){ Duel.bewaar(); return; }     // update 16: een duelcasus bewaart zijn eigen stand (js/duel.js)
+  if (S.mode === "free"){ bewaarOefen(); return; }       // update 82 (b)
   if (S.mode !== "daily") return;
   const st = store.get(); st.games = st.games || {};
   st.games[dailyKey(S.caseNo - 1, S.expert)] = { target:S.target, k:S.k, guesses:S.guesses, revealed:S.revealed, status:S.status };
   store.set(st);
+}
+/* update 82 (b): een getrokken oefencasus ligt vast tot je hem beantwoordt of opgeeft. Weggaan, een andere oefengroep
+   kiezen, van modus wisselen of een ander apparaat pakken geeft dezelfde casus terug. Anders kon je blijven trekken tot
+   je een casus kreeg die je herkende (Tom, 18 november). Bewaard in st.oefen (gaat mee in de voortgang naar je andere
+   apparaten); st.oefenKlaar = het nummer (t) van de laatst afgeronde, zodat een ander apparaat hem niet terugzet. */
+function bewaarOefen(){
+  if (!S || S.mode !== "free") return;
+  const st = store.get();
+  if (S.status === "playing") st.oefen = { t: S.t, target: S.target, k: S.k, expert: !!S.expert, guesses: S.guesses, revealed: S.revealed,
+    groep: S.groep || null, nieuw: !!S.nieuw, ids: S.ids || null };
+  else { if (st.oefen && st.oefen.t === S.t) delete st.oefen; st.oefenKlaar = Math.max(st.oefenKlaar || 0, S.t || 0); }
+  store.set(st);
+}
+function openOefen(){
+  const o = store.get().oefen;
+  return o && BY_ID.has(o.target) && oefenbaar(o.target) ? o : null;
 }
 function recordDex(){
   const st = store.get(); st.dex = st.dex || {};
@@ -278,6 +295,7 @@ function renderClues(){
   const dag = S.mode === "daily" ? S.caseNo - 1 : null, nu = expertPunten(S.revealed, 0, dag);
   $("expertHint").textContent = S.revealed >= MAX ? `Goed nu: ${nu} punten.` : `Goed nu: ${nu} punten. De volgende waarneming kost een punt.`;
   $("expertHint").hidden = S.mode === "free";   // update 82 (c): bij oefenen verdien je geen punten
+  $("geefOpRij").hidden = !(S.mode === "free" && S.status === "playing");   // update 82 (b)
   freshClue = -1;
 }
 
@@ -707,6 +725,18 @@ $("gOpts").addEventListener("mousedown", e => { const li = e.target.closest("li[
 $("gInput").addEventListener("blur", () => setTimeout(closeOpts, 120));
 $("gBtn").addEventListener("click", commit);
 $("moreClue").addEventListener("click", moreClue);
+/* update 82 (b): opgeven met twee tikken, zodat het niet per ongeluk gebeurt (geen pop-up) */
+let geefOpT = null;
+$("geefOp").addEventListener("click", () => {
+  const b = $("geefOp");
+  if (!b.classList.contains("zeker")){
+    b.classList.add("zeker"); b.textContent = "Zeker? Tik nog een keer om op te geven";
+    clearTimeout(geefOpT); geefOpT = setTimeout(() => { b.classList.remove("zeker"); b.textContent = "Geef deze oefencasus op"; }, 4000);
+    return;
+  }
+  clearTimeout(geefOpT); b.classList.remove("zeker"); b.textContent = "Geef deze oefencasus op";
+  geefOp();
+});
 
 /* ---------- modi ----------
    De gekozen modus (klassiek of expert) wordt onthouden. Schermwissels en het menu staan in js/kop.js. */
@@ -720,12 +750,29 @@ function startDaily(){
   const wissel = S && S.mode !== "daily", eerst = begonnenModus(store.get(), todayIndex());   // update 82 (a)
   S = loadDaily(eerst === null ? pref.expert : eerst); showGame(); if (wissel) inBeeld($("gameView"));
 }
-/* keuze = { g, nieuw }; zonder keuze: bij oefenen dezelfde keuze als nu, anders alle soorten */
+/* keuze = { g, nieuw }; zonder keuze: bij oefenen dezelfde keuze als nu (of die je koos terwijl er nog een casus open
+   stond), anders alle soorten. update 82 (b): staat er nog een oefencasus open, dan komt die terug. */
 function startFree(keuze){
-  keuze = keuze || (S && S.mode === "free" ? { g: S.groep || null, nieuw: !!S.nieuw, ids: S.ids || null } : { g: null, nieuw: false });
+  const o = openOefen();
+  if (o){
+    const vorige = S && S.mode === "free" && S.t === o.t, volgende = keuze || (S && S.mode === "free" && S.volgende) || null;
+    S = Object.assign(newGame("free", o.expert, o.target, o.k, 0), { t: o.t, guesses: (o.guesses || []).slice(), revealed: o.revealed || 1,
+      groep: o.groep, nieuw: o.nieuw, ids: o.ids });
+    if (volgende) S.volgende = volgende;
+    showGame(); inBeeld($("gameView"));
+    if (!vorige) window.scrollTo({ top:0, behavior:"auto" });
+    const ander = keuze && (oefengroep(keuze.g) !== (o.groep || null) || !!keuze.nieuw !== !!o.nieuw || JSON.stringify(keuze.ids || null) !== JSON.stringify(o.ids || null));
+    if (!keuze && vorige) return;
+    toast(ander ? "Je hebt nog een oefencasus open. Determineer hem eerst of geef hem op; daarna oefen je met je nieuwe keuze."
+      : "Je oefencasus staat nog open. Determineer hem of geef hem op voor een nieuwe.", { duur: 6000 });
+    return;
+  }
+  keuze = keuze || (S && S.mode === "free" ? (S.volgende || { g: S.groep || null, nieuw: !!S.nieuw, ids: S.ids || null }) : { g: null, nieuw: false });
   const f = randomFree(S && S.target, keuze);
   S = newGame("free", pref.expert, f.id, f.k, 0);
   S.groep = oefengroep(keuze.g); S.nieuw = !!keuze.nieuw; S.ids = keuze.ids || null;
+  S.t = Math.max(Date.now(), (store.get().oefenKlaar || 0) + 1);
+  bewaarOefen();
   showGame(); inBeeld($("gameView")); window.scrollTo({ top:0, behavior:"auto" });
   if (f.alles) {
     const og = oefengroep(keuze.g), wat = og ? OEFENGROEPEN[og].naam.toLowerCase() : "soorten";
@@ -733,6 +780,14 @@ function startFree(keuze){
     toast(wacht.length ? `De rest van de ${wat} heb je al. ${wacht.map(t => t.n.charAt(0).toUpperCase() + t.n.slice(1)).join(" en ")} kun je pas oefenen na ${wacht.length > 1 ? "hun" : "zijn"} eerste dagcasus.`
       : `Je hebt alle ${wat} al in je ${NAAM.vestiarium}. Deze ken je dus al.`);
   }
+}
+/* update 82 (b): opgeven telt als niet gevonden */
+function geefOp(){
+  if (!S || S.mode !== "free" || S.status !== "playing") return;
+  S.status = "lost"; S.opgegeven = true;
+  recordStats(); recordDex(); recordLog(); freshResult = true;
+  online.afterGame();
+  saveDaily(); render();
 }
 function goDaily(){ if (S.mode === "daily") showGame(); else startDaily(); }
 function goFree(){ if (S.mode !== "free" || S.status !== "playing") startFree(); else showGame(); }
@@ -750,8 +805,9 @@ function setMode(expert){
   pref.expert = expert;
   if (expert === S.expert) return;
   if (S.mode === "daily") startDaily();
-  /* update 82 (a): een oefencasus wisselt alleen ter plekke als je nog niets deed; anders een nieuwe casus */
-  else if (S.guesses.length === 0 && S.revealed <= 1 && S.status === "playing"){ S.expert = expert; S.revealed = 1; render(); }
+  /* update 82 (a, b): een oefencasus wisselt alleen ter plekke als je nog niets deed; daarna ligt hij vast tot hij af is */
+  else if (S.guesses.length === 0 && S.revealed <= 1 && S.status === "playing"){ S.expert = expert; S.revealed = 1; saveDaily(); render(); }
+  else if (S.status === "playing"){ toast(`Je bent deze oefencasus al begonnen in ${S.expert ? "expert" : "klassiek"}. Determineer hem eerst of geef hem op; de volgende speel je in ${expert ? "expert" : "klassiek"}.`, { duur: 6000 }); }
   else startFree({ g: S.groep, nieuw: S.nieuw, ids: S.ids || null });
 }
 $("modeClassic").addEventListener("click", () => setMode(false));

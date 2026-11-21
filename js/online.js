@@ -386,6 +386,13 @@ const online = (() => {
       const st = store.get(), m = begonnenModus(st, S.caseNo - 1);   // update 82 (a): ook als je hem elders in de andere modus begon
       if (finished(st, S.caseNo - 1, S.expert) || (m !== null && m !== !!S.expert && S.revealed <= 1)) startDaily();
     }
+    /* update 82 (b): op een ander apparaat een nieuwere oefencasus getrokken, of verder gespeeld? Dan die hier ook */
+    if (S && S.mode === "free" && S.status === "playing"){
+      const o = store.get().oefen;
+      if (!o || o.t !== S.t || (o.guesses || []).length > S.guesses.length || (o.revealed || 1) > S.revealed){
+        if (o) startFree(); else if (S.t <= (store.get().oefenKlaar || 0)) { S.status = "lost"; S.opgegeven = true; render(); }
+      }
+    }
     renderTiles(); renderMenu(); if (VIEW === "dex") renderDex();
   }
   /* code om een ander apparaat te koppelen: je spelerscode, of (zonder naam) de code van een verborgen account */
