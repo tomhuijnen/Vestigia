@@ -293,7 +293,8 @@ function renderClues(){
   $("moreClue").disabled = S.revealed >= MAX;
   /* update 45: wat een goede determinatie nu oplevert, en wat de volgende waarneming kost */
   const dag = S.mode === "daily" ? S.caseNo - 1 : null, nu = expertPunten(S.revealed, 0, dag);
-  $("expertHint").textContent = S.revealed >= MAX ? `Goed nu: ${nu} punten.` : `Goed nu: ${nu} punten. De volgende waarneming kost een punt.`;
+  const straks = S.revealed < MAX ? expertPunten(S.revealed + 1, 0, dag) : null;   // update 83: een stap kost soms 2 punten
+  $("expertHint").textContent = `Goed nu: ${nu} ${nu === 1 ? "punt" : "punten"}.` + (straks === null ? "" : ` Met de volgende waarneming: ${straks}.`);
   $("expertHint").hidden = S.mode === "free";   // update 82 (c): bij oefenen verdien je geen punten
   $("geefOpRij").hidden = !(S.mode === "free" && S.status === "playing");   // update 82 (b)
   freshClue = -1;

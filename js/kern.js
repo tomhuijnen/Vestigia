@@ -12,18 +12,23 @@ const COLS = ["h","a","v","b","w","l","r"];
 const COL_LABEL = { h:"Leefgebied", a:"Activiteit", v:"Voedsel", b:"Verblijfplaats", w:"Winter", l:"Lengte", r:"Bescherming" };
 const START = Date.UTC(2026,10,6);
 const DAY = 864e5;
-/* Expert (update 45): 7 · 6 · 5 · 4 · 3 punten bij 1–5 waarnemingen. Vangnet: na een foute gok gaan alle waarnemingen
-   open en heb je nog één gok, goed = 1 punt (twee echte gokken, de tweelinggok telt niet). Dagcasussen vóór EXPERT_VANAF
-   houden de oude schaal (6 · 5 · 4 · 3 · 2), net als op de server (_vestigia_expert_punten, SQL 041). Oefenen en duel: altijd
-   de nieuwe schaal. EXPERT_VANAF = dagnummer van de livegang; bij een andere livegangsdag hier én in SQL 041 aanpassen. */
-const EXPERT_PUNTEN = [7, 6, 5, 4, 3];
-const EXPERT_VANAF = 13;          // do 19 november 2026
+/* Expert (update 45, staart herzien in update 83): 7 · 6 · 4 · 3 · 1 punten bij 1–5 waarnemingen. Vangnet: na een foute
+   gok gaan alle waarnemingen open en heb je nog één gok, goed = 1 punt (twee echte gokken, de tweelinggok telt niet).
+   Oude dagcasussen houden hun schaal, net als op de server (_vestigia_expert_punten, SQL 042): vóór dag 13 6 · 5 · 4 · 3 · 2,
+   dag 13 t/m 16 (19–22 november) 7 · 6 · 5 · 4 · 3. Oefenen en duel: altijd de nieuwste schaal. Verander je de schaal, zet
+   dan de vorige in EXPERT_SCHALEN, een nieuwe EXPERT_VANAF hier én in de SQL, en pas de teksten aan. */
+const EXPERT_PUNTEN = [7, 6, 4, 3, 1];
+const EXPERT_VANAF = 17;          // ma 23 november 2026 (update 83)
+const EXPERT_SCHALEN = [[13, [6, 5, 4, 3, 2]], [EXPERT_VANAF, [7, 6, 5, 4, 3]]];   // [tot dag, schaal]
 const EXPERT_POGINGEN = 2;
+function expertSchaal(dag){
+  if (dag !== undefined && dag !== null) for (const [tot, schaal] of EXPERT_SCHALEN) if (dag < tot) return schaal;
+  return EXPERT_PUNTEN;
+}
 function expertPunten(clues, tries, dag){
   const c = Math.min(MAX, Math.max(1, clues || 1));
   if (tries >= 2) return 1;
-  if (dag !== undefined && dag !== null && dag < EXPERT_VANAF) return Math.max(1, 7 - c);
-  return EXPERT_PUNTEN[c - 1];
+  return expertSchaal(dag)[c - 1];
 }
 
 /* ---------- hulpfuncties ---------- */

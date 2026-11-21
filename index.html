@@ -90,7 +90,7 @@ html.opent body>:not(#opening){visibility:hidden}
 #opening{position:fixed;inset:0;z-index:60;background:#4b7a5e}
 html.donker #opening{background:#7fb894}
 </style>
-<link rel="stylesheet" href="css/vestigia.css?v=202611212218">
+<link rel="stylesheet" href="css/vestigia.css?v=202611212358">
 </head>
 <body>
 <div class="statusband" aria-hidden="true"></div>
@@ -148,7 +148,7 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
       <div class="sechead"><h2 id="notesH">Waarnemingen</h2><span class="caps" id="clueCount">1 van 5</span></div>
       <ol class="clues" id="clues"></ol>
       <div class="expertbar" id="notesFoot" hidden>
-        <span id="expertHint">Goed nu: 7 punten. De volgende waarneming kost een punt.</span>
+        <span id="expertHint">Goed nu: 7 punten. Met de volgende waarneming: 6.</span>
         <button class="btn line" id="moreClue">Volgende waarneming</button>
       </div>
     </section>
@@ -383,7 +383,7 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
     </div>
     <div class="modecard" id="cardExpert">
       <div class="mc-top"><b>Expert</b><span class="caps">tot 7 punten</span></div>
-      <p>Je opent zelf waarnemingen en hebt één determinatie: 7 punten na één waarneming, elke volgende kost een punt (3 bij de vijfde). Mis? Dan gaan alle waarnemingen open en heb je nog één gok voor 1 punt.</p>
+      <p>Je opent zelf waarnemingen en hebt één determinatie: 7 punten na één waarneming, daarna 6 · 4 · 3 en 1 bij de vijfde. Mis? Dan gaan alle waarnemingen open en heb je nog één gok voor 1 punt.</p>
       <div class="bars" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><span>1 poging + vangnet</span></div>
     </div>
     <p class="fine">Klassiek en expert hebben dezelfde casus. Ben je de dagcasus in de ene modus begonnen, dan gaat de andere tot morgen op slot. Oefenen kan in beide modi; een oefencasus die je al begon, maak je af in de modus waarin je hem begon.</p>
@@ -422,7 +422,7 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
     <h3>Dwaalgasten</h3>
     <p>Met een spelersnaam duikt er één keer per maand een dwaalgast bij je op: een zeldzaam dier dat normaal niet in Nederland leeft. De dag en het dier verschillen per speler. Beantwoord drie vragen over het dier goed, dan komt hij bij de dwaalgasten in je <span data-naam="vestiarium">Vestiarium</span>, met 50 eikels en zijn avatar. Is een antwoord fout, dan dwaalt hij weg en blijft er een vraagteken achter.</p>
     <h3>Ranglijst</h3>
-    <p>Met een spelersnaam doe je mee aan de ranglijst. Alleen je eerste poging aan de dagcasus telt: 5 punten in één poging, 1 punt bij de vijfde. In de expertmodus krijg je 7 punten als je na één waarneming goed zit, 3 bij de vijfde, en 1 punt als je hem pas via het vangnet hebt. Klassiek en expert hebben dezelfde casus; daarom telt alleen de modus die je die dag als eerste speelt. Staan spelers gelijk (evenveel punten en evenveel gedetermineerde dagen), dan delen ze de plaats en krijgen ze dezelfde beloning.</p>
+    <p>Met een spelersnaam doe je mee aan de ranglijst. Alleen je eerste poging aan de dagcasus telt: 5 punten in één poging, 1 punt bij de vijfde. In de expertmodus krijg je 7 punten als je na één waarneming goed zit, 1 bij de vijfde, en 1 punt als je hem pas via het vangnet hebt. Klassiek en expert hebben dezelfde casus; daarom telt alleen de modus die je die dag als eerste speelt. Staan spelers gelijk (evenveel punten en evenveel gedetermineerde dagen), dan delen ze de plaats en krijgen ze dezelfde beloning.</p>
     <h3>Prestaties en mijlpalen</h3>
     <p>Prestaties hebben drie niveaus (brons, zilver en goud) en staan per categorie, zoals Determineren, Specialist en Volhouden. Goud levert een ondertitel op. Mijlpalen haal je maar één keer: bijvoorbeeld een week in de top 3 of als nummer 1 van de weekranglijst. Een week telt zodra hij voorbij is. Elke mijlpaal levert eenmalig eikels op, de grootste ook een ondertitel. Wat je eenmaal behaald hebt, raak je nooit meer kwijt.</p>
     <h3>Installeren</h3>
@@ -436,7 +436,7 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
     <ul>
       <li><b>Dagcasus:</b> elke dag één nieuwe casus, voor iedereen dezelfde, en passend bij het seizoen.</li>
       <li><b>Oefenen:</b> onbeperkt willekeurige casussen, eventueel uit één diergroep of alleen soorten die je nog niet hebt. Oefenen telt niet mee voor de punten in de ranglijst, wel voor je platen. Een oefencasus blijft staan tot je hem determineert of opgeeft (opgeven telt als niet gevonden), ook als je weggaat of een andere keuze maakt.</li>
-      <li><b>Expert:</b> je opent zelf waarnemingen en hebt één determinatie: 7 · 6 · 5 · 4 · 3 punten bij 1 tot 5 waarnemingen. Zit je mis, dan gaan alle waarnemingen open en heb je nog één gok (het vangnet): goed levert 1 punt en de plaat op.</li>
+      <li><b>Expert:</b> je opent zelf waarnemingen en hebt één determinatie: 7 · 6 · 4 · 3 · 1 punten bij 1 tot 5 waarnemingen. Zit je mis, dan gaan alle waarnemingen open en heb je nog één gok (het vangnet): goed levert 1 punt en de plaat op.</li>
     </ul>
   </div>
 </div>
@@ -520,43 +520,43 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
 </div>
 
 <script src="config.js"></script>
-<script src="js/fouten.js?v=202611212218"></script>
-<script src="data/teksten.js?v=202611212218"></script>
-<script src="data/soorten.js?v=202611212218"></script>
-<script src="data/sporen.js?v=202611212218"></script>
-<script src="data/dagschema.js?v=202611212218"></script>
-<script src="data/veldweken.js?v=202611212218"></script>
-<script src="data/toelichting.js?v=202611212218"></script>
-<script src="data/weetjes.js?v=202611212218"></script>
-<script src="data/zoekgroepen.js?v=202611212218"></script>
-<script src="data/bronnen.js?v=202611212218"></script>
-<script src="js/kern.js?v=202611212218"></script>
-<script src="js/spel.js?v=202611212218"></script>
-<script src="js/veldboek.js?v=202611212218"></script>
-<script src="js/melden.js?v=202611212218"></script>
-<script src="js/kop.js?v=202611212218"></script>
-<script src="js/spelen.js?v=202611212218"></script>
-<script src="js/opening.js?v=202611212218"></script>
-<script src="js/uitleg.js?v=202611212218"></script>
-<script src="js/online.js?v=202611212218"></script>
-<script src="js/league.js?v=202611212218"></script>
-<script src="data/avatars.js?v=202611212218"></script>
-<script src="js/profiel.js?v=202611212218"></script>
-<script src="data/advent.js?v=202611212218"></script>
-<script src="js/wachtrij.js?v=202611212218"></script>
-<script src="js/kerst.js?v=202611212218"></script>
-<script src="data/dwaalgasten.js?v=202611212218"></script>
-<script src="js/dwaalgast.js?v=202611212218"></script>
-<script src="js/nieuw.js?v=202611212218"></script>
-<script src="js/levels.js?v=202611212218"></script>
-<script src="js/boost.js?v=202611212218"></script>
-<script src="js/statistiek.js?v=202611212218"></script>
-<script src="js/duel.js?v=202611212218"></script>
-<script src="js/spelerskaart.js?v=202611212218"></script>
-<script src="js/qrcode.js?v=202611212218"></script>
-<script src="js/apparaat.js?v=202611212218"></script>
-<script src="js/push.js?v=202611212218"></script>
-<script src="js/week.js?v=202611212218"></script>
-<script src="js/app.js?v=202611212218"></script>
+<script src="js/fouten.js?v=202611212358"></script>
+<script src="data/teksten.js?v=202611212358"></script>
+<script src="data/soorten.js?v=202611212358"></script>
+<script src="data/sporen.js?v=202611212358"></script>
+<script src="data/dagschema.js?v=202611212358"></script>
+<script src="data/veldweken.js?v=202611212358"></script>
+<script src="data/toelichting.js?v=202611212358"></script>
+<script src="data/weetjes.js?v=202611212358"></script>
+<script src="data/zoekgroepen.js?v=202611212358"></script>
+<script src="data/bronnen.js?v=202611212358"></script>
+<script src="js/kern.js?v=202611212358"></script>
+<script src="js/spel.js?v=202611212358"></script>
+<script src="js/veldboek.js?v=202611212358"></script>
+<script src="js/melden.js?v=202611212358"></script>
+<script src="js/kop.js?v=202611212358"></script>
+<script src="js/spelen.js?v=202611212358"></script>
+<script src="js/opening.js?v=202611212358"></script>
+<script src="js/uitleg.js?v=202611212358"></script>
+<script src="js/online.js?v=202611212358"></script>
+<script src="js/league.js?v=202611212358"></script>
+<script src="data/avatars.js?v=202611212358"></script>
+<script src="js/profiel.js?v=202611212358"></script>
+<script src="data/advent.js?v=202611212358"></script>
+<script src="js/wachtrij.js?v=202611212358"></script>
+<script src="js/kerst.js?v=202611212358"></script>
+<script src="data/dwaalgasten.js?v=202611212358"></script>
+<script src="js/dwaalgast.js?v=202611212358"></script>
+<script src="js/nieuw.js?v=202611212358"></script>
+<script src="js/levels.js?v=202611212358"></script>
+<script src="js/boost.js?v=202611212358"></script>
+<script src="js/statistiek.js?v=202611212358"></script>
+<script src="js/duel.js?v=202611212358"></script>
+<script src="js/spelerskaart.js?v=202611212358"></script>
+<script src="js/qrcode.js?v=202611212358"></script>
+<script src="js/apparaat.js?v=202611212358"></script>
+<script src="js/push.js?v=202611212358"></script>
+<script src="js/week.js?v=202611212358"></script>
+<script src="js/app.js?v=202611212358"></script>
 </body>
 </html>
