@@ -128,6 +128,11 @@ const Kerst = (() => {
     const w = weetje(d), t = w && BY_ID.get(w.soort);
     return w ? `<div class="avk-weetje"><span class="caps">Winterweetje · ${esc(t ? t.n : w.soort)}${d === 5 ? " · Sinterklaas" : d === 24 ? " · Kerstavond" : d === 21 ? " · kortste dag" : ""}</span><p>${esc(w.tekst)}</p><p class="fine">Bron: ${esc(w.bron)}</p></div>` : "";
   }
+
+  /* De kerst-mus (22 november 2026): een mannetje huismus met kerstmuts en rood-wit sjaaltje, alleen versiering.
+     Hij zit rechtsboven op het rooster (vakje 6), alleen zolang de kalender loopt (1 t/m 24 december). Geen animatie.
+     Tekencode ook in het Project: techniek/kerstmus.mjs (mag met Pasen terugkomen). */
+  const KERSTMUS = `<svg class="kerstmus" viewBox="6 4 92 84" aria-hidden="true" focusable="false"><path fill="#5b3a22" d="M66 58L92 64C96 66 96 72 92 73L64 69Z"/> <path fill="#7a4d2c" d="M67 61L91 66C93 67 93 70 91 70L66 67Z"/> <path fill="#a8703f" d="M28 50C32 37 54 33 70 42C80 48 81 61 73 69C63 78 43 79 34 71C28 65 26 57 28 50Z"/> <path fill="#d4cdbf" d="M28 52C27 66 38 79 55 78C46 72 39 63 37 52Z"/> <path fill="#c2b9a9" d="M30 64C34 72 42 77 52 78C42 75 35 70 31 62Z"/> <path fill="#8a5430" d="M44 50C54 43 70 45 79 55C76 66 63 71 50 67C45 63 43 56 44 50Z"/> <path d="M50 52L58 58M56 49L65 56M63 49L71 56M52 60L60 65M61 59L70 64" fill="none" stroke="#2e1f15" stroke-width="1.8" stroke-linecap="round"/> <path d="M47 56C52 55 56 57 59 60" fill="none" stroke="#f6f1e6" stroke-width="2" stroke-linecap="round"/> <path fill="#4a3021" d="M66 66L80 62L78 66L68 69Z"/> <path fill="#c9c6c0" d="M20 36C20 26 28 20 37 21C46 22 50 30 48 38C46 45 39 49 31 48C24 47 20 42 20 36Z"/> <path fill="#8a4a24" d="M31 29C37 27 45 29 48 35C49 40 47 45 43 47C44 41 41 34 31 31Z"/> <path fill="#e8e5de" d="M23 39C25 44 31 47 37 46C34 43 33 40 33 37C29 38 26 39 23 39Z"/> <path fill="#231e1b" d="M19 38C20 42 23 45 27 47L33 50L28 52C23 50 20 46 19 42Z"/> <path fill="#231e1b" d="M20 33C23 31 27 31 30 33L29 36C26 35 23 35 21 36Z"/> <circle cx="27.5" cy="34" r="2.5" fill="#15110e"/><circle cx="28.3" cy="33.2" r=".8" fill="#fff"/> <path fill="#f4f1ea" d="M31.5 33.6C33 33 34.6 33.4 35.4 34.6C34 35.4 32.4 35.2 31.5 33.6Z"/> <path fill="#6b5a48" d="M21 33L11 37L21 39.5Z"/><path fill="#9a8670" d="M21 37L11 37L21 39.5Z"/> <path fill="#d3263a" d="M24 27C25 17 33 10 43 10C51 11 56 16 59 24C61 29 63 33 66 34C61 35 57 33 54 29L50 28C42 25 32 25 24 27Z"/> <path fill="#a5172a" d="M43 10C51 11 56 16 59 24C61 29 63 33 66 34C62 34 59 32 57 29C55 22 50 15 43 10Z"/> <rect x="21" y="23.5" width="32" height="8" rx="4" transform="rotate(-6 37 27.5)" fill="#fbf7f0"/> <circle cx="67" cy="34.5" r="4.6" fill="#fbf7f0"/> <path fill="#d3263a" d="M25 46C33 51 43 51 50 45L52 51C44 58 32 57 24 52Z"/> <path d="M29 49.5L28 54.5M35 51L34.5 56M41 51L41 56M47 48.5L47.5 54" fill="none" stroke="#fbf7f0" stroke-width="2.4"/> <path fill="#d3263a" d="M30 53L27 66L32 65L35 54Z"/> <path d="M28.8 57.5L33.6 57.8M28 61.5L32.6 61.6" fill="none" stroke="#fbf7f0" stroke-width="2"/> <path d="M27 66L26.5 69M29.5 65.6L29.5 68.8M32 65.2L32.6 68.2" fill="none" stroke="#fbf7f0" stroke-width="1.3" stroke-linecap="round"/> <path d="M45 76L43 83M52 77L52 84M43 83L39 85M43 83L45 85.5M52 84L48 86M52 84L54.5 86.5" fill="none" stroke="#a87e66" stroke-width="1.8" stroke-linecap="round"/></svg>`;
   /* het rooster */
   let gekozen = null;
   function teken(){
@@ -142,6 +147,9 @@ const Kerst = (() => {
       const label = `Vakje ${d}: ${{ open: "geopend", vandaag: "vandaag, nog dicht", gemist: "gemist", dicht: "nog niet" }[staat]}`;
       return `<button class="avk ${staat}${gekozen === d ? " gekozen" : ""}" data-d="${d}" aria-label="${label}"${staat === "dicht" || staat === "gemist" ? " disabled" : ""}><span class="avk-nr">${d}</span>${v ? klein(v) : ""}${staat === "gemist" ? `<span class="avk-weg">gemist</span>` : ""}</button>`;
     }).join("");
+    const mus = !!s.vandaag;
+    $("adventPop").querySelector(".adventsheet").classList.toggle("met-mus", mus);
+    if (mus) grid.insertAdjacentHTML("beforeend", KERSTMUS);
     grid.querySelectorAll(".avk.open, .avk.vandaag").forEach(b => b.onclick = () => klik(+b.dataset.d, b));
     /* knop onder de kalender: zolang het vakje van vandaag dicht is */
     const go = $("adventGo");

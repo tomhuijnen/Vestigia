@@ -1066,6 +1066,14 @@ html.donker .sneeuw i{background:#e9f1f5}
 .avk-extra small{display:block; font-weight:400; color:var(--ink-2); font-size:.8rem}
 html.donker .avk.open, html.donker .adventvak{background:#18241d}
 @media (max-width:420px){ .adventgrid{gap:5px} .avk-nr{font-size:.9rem} }
+/* de kerst-mus (22 november 2026): zit rechtsboven op vakje 6, alleen versiering */
+.adventgrid{position:relative}
+.adventgrid .kerstmus{position:absolute; right:-2px; bottom:calc(100% - 5px); width:60px; height:auto; pointer-events:none; z-index:2}
+.adventsheet.met-mus #adventSub{padding-right:64px}
+@media (min-width:600px){ .adventgrid .kerstmus{width:66px} .adventsheet.met-mus #adventSub{padding-right:72px} }
+.nw-blokje + .adventgrid .kerstmus{display:none}   /* zit er een uitlegblokje boven het rooster, dan even weg */
+/* donker: de knop ‘Open cadeau’ blijft rood (de algemene regel voor knoppen in donker maakte hem groen) */
+html.donker .adventknop{background:linear-gradient(180deg,#c22a3c,#8f1424); color:#fff8ec}
 @media (prefers-reduced-motion:reduce){ .avk.vandaag, .kerstbtn.nieuw .stip, .avk.opent, .adventvak.nieuw{animation:none} }
 
 /* pop-up uit de wachtrij: kies je avatar */
