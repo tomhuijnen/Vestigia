@@ -156,7 +156,9 @@ function pickDaily(d, history){
      niet bij het seizoen, dan wordt het liever een andere soort dan dezelfde casus. */
   const vers = d >= ANDERE_CASUS_VANAF ? new Set(history.slice(Math.max(0, d - 365), d).map(x => x.id + "#" + x.k)) : new Set();
   const nieuw = p => { const q = p.filter(c => !vers.has(c.id + "#" + c.k)); return q.length ? q : p; };
-  const cand = TARGETS.filter(t => !vw || vw.f(t)).flatMap(t => t.cs.map((c, k) => ({ id: t.id, k, m: caseMonth(c) })));
+  /* Update 53: een nieuwe soort (instroom) nooit vóór zijn venster, ook niet als het schema later opnieuw wordt ingedeeld */
+  const teVroeg = id => INSTROOM.some(x => x.ids.includes(id) && d < x.van);
+  const cand = TARGETS.filter(t => (!vw || vw.f(t)) && !teVroeg(t.id)).flatMap(t => t.cs.map((c, k) => ({ id: t.id, k, m: caseMonth(c) })));
   const near = cand.filter(c => c.m >= 0 && Math.min((c.m - m + 12) % 12, (m - c.m + 12) % 12) <= 1);
   if (vw){
     /* binnen een veldweek: nooit twee keer dezelfde soort, liefst passend bij het seizoen en niet net geweest */
