@@ -5,6 +5,7 @@
    4. Het groen vloeit weg en de app is er; die laadde al onder de animatie door, maar bleef onzichtbaar (html.opent,
       zie de kop van index.html), zodat er niets van de app door het groen heen schemert.
    Prenten die achter de grote letters van ‘Vestigia’ zouden vallen, worden overgeslagen; het spoor loopt erna gewoon door.
+   Hetzelfde als een prent over een prent van een ander dier zou vallen: sporen kruisen wel, prenten nooit (22 november).
    Een tik of toets slaat de animatie over. Bij ‘minder beweging’ alleen een korte overvloeiing.
    Een spoor is nooit van de soort van de dagcasus van vandaag of de komende acht dagen, anders is het een hint. */
 "use strict";
@@ -84,6 +85,23 @@ const Opening = (() => {
       const ids = kiesSoorten(innerWidth < 360 ? 2 : 3), veld = $("opVeld");
       const kort = Math.min(innerWidth, innerHeight), u = kort * (innerWidth < 700 ? 0.095 : 0.06);
       const loopduur = 1250;
+      /* Sporen van verschillende dieren mogen elkaar kruisen, maar twee prenten staan nooit over elkaar (Tom, 22 november).
+         Elke prent is een gedraaid vak van u × 1,1u; overlapt dat vak met een prent van een ander dier die al staat,
+         dan wordt hij overgeslagen, net als achter de letters. Het spoor loopt erna gewoon door. */
+      const geplaatst = [];
+      const vak = (cx, cy, hoek) => {
+        const a = hoek * Math.PI / 180;
+        return { cx, cy, ux: Math.cos(a), uy: Math.sin(a), hw: u * 0.5, hh: u * 0.55 };
+      };
+      const overlapt = (A, B) => {      // scheidende-assenstelling voor twee gedraaide rechthoeken
+        const dx = B.cx - A.cx, dy = B.cy - A.cy;
+        for (const [ax, ay] of [[A.ux, A.uy], [-A.uy, A.ux], [B.ux, B.uy], [-B.uy, B.ux]]){
+          const ra = A.hw * Math.abs(A.ux * ax + A.uy * ay) + A.hh * Math.abs(-A.uy * ax + A.ux * ay);
+          const rb = B.hw * Math.abs(B.ux * ax + B.uy * ay) + B.hh * Math.abs(-B.uy * ax + B.ux * ay);
+          if (Math.abs(dx * ax + dy * ay) > ra + rb) return false;
+        }
+        return true;
+      };
       veld.innerHTML = ids.map((id, j) => {
         const b = BANEN[j], pts = spoor(id, u), ys = pts.map(p => p.y), mid = (Math.max(...ys) + Math.min(...ys)) / 2;
         const rad = b.hoek * Math.PI / 180;
@@ -92,14 +110,23 @@ const Opening = (() => {
         const start = j * 170, stap = Math.round((loopduur - start) / pts.length);
         /* waar komt deze prent op het scherm? (het veld zoomt nog 8 % in, vandaar de ruime marge) */
         const cos = Math.cos(rad), sin = Math.sin(rad), marge = u * 0.7;
+        const opScherm = p => {
+          const lx = p.x * u, ly = (p.y - mid) * u;
+          return [dx + lx * cos - ly * sin, dy + lx * sin + ly * cos];     // vanaf het midden, vóór de zoom
+        };
         const achterLetters = p => {
           if (!letters) return false;
-          const lx = p.x * u, ly = (p.y - mid) * u;
-          const sx = innerWidth / 2 + (dx + lx * cos - ly * sin) * 1.08, sy = innerHeight / 2 + (dy + lx * sin + ly * cos) * 1.08;
+          const [x, y] = opScherm(p), sx = innerWidth / 2 + x * 1.08, sy = innerHeight / 2 + y * 1.08;
           return sx > letters.l - marge && sx < letters.r + marge && sy > letters.t - marge && sy < letters.b + marge;
         };
+        const botst = p => {
+          const [x, y] = opScherm(p), v = vak(x, y, b.hoek + p.r);
+          if (geplaatst.some(g => g.j !== j && overlapt(g.v, v))) return true;
+          geplaatst.push({ j, v });
+          return false;
+        };
         return `<div class="op-spoor" data-soort="${id}" style="transform:translate(${dx}px,${dy}px) rotate(${b.hoek}deg)">` + pts.map((p, i) => {
-          if (achterLetters(p)) return "";
+          if (achterLetters(p) || botst(p)) return "";
           const t = `rotate(${p.r}deg)${p.spiegel ? " scaleX(-1)" : ""}`;
           return prentSVG(id, p.voet, `width="${u}" height="${u * 1.1}" style="left:${p.x * u - u / 2}px;top:${(p.y - mid) * u - u * 0.55}px;--t:${t};animation-delay:${start + i * stap}ms"`);
         }).join("") + `</div>`;
