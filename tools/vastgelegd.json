@@ -1,516 +1,516 @@
 {
  "uitleg": "Wat live staat. Het controlescript bewaakt dat id's, platennummers, casussen en het dagschema nooit verschuiven. Bijwerken met: node tools/controle.mjs --vastleggen",
- "vastgelegd": "2026-11-15",
+ "vastgelegd": "2026-11-22",
  "soorten": {
   "das": {
    "n": "Das",
    "no": 136,
-   "casussen": 2
+   "casussen": 4
   },
   "otter": {
    "n": "Otter",
    "no": 137,
-   "casussen": 2
+   "casussen": 4
   },
   "bever": {
    "n": "Bever",
    "no": 118,
-   "casussen": 2
+   "casussen": 4
   },
   "hamster": {
    "n": "Hamster",
    "no": 121,
-   "casussen": 2
+   "casussen": 4
   },
   "hazelmuis": {
    "n": "Hazelmuis",
    "no": 119,
-   "casussen": 2
+   "casussen": 4
   },
   "eikelmuis": {
    "n": "Eikelmuis",
    "no": 120,
-   "casussen": 2
+   "casussen": 4
   },
   "boommarter": {
    "n": "Boommarter",
    "no": 138,
-   "casussen": 2
+   "casussen": 4
   },
   "steenmarter": {
    "n": "Steenmarter",
    "no": 139,
-   "casussen": 2
+   "casussen": 4
   },
   "eekhoorn": {
    "n": "Eekhoorn",
    "no": 117,
-   "casussen": 2
+   "casussen": 4
   },
   "watervleermuis": {
    "n": "Watervleermuis",
    "no": 105,
-   "casussen": 2
+   "casussen": 4
   },
   "laatvlieger": {
    "n": "Laatvlieger",
    "no": 112,
-   "casussen": 2
+   "casussen": 4
   },
   "waterspitsmuis": {
    "n": "Waterspitsmuis",
    "no": 104,
-   "casussen": 2
+   "casussen": 4
   },
   "hermelijn": {
    "n": "Hermelijn",
    "no": 140,
-   "casussen": 2
+   "casussen": 4
   },
   "bruinvis": {
    "n": "Bruinvis",
    "no": 149,
-   "casussen": 2
+   "casussen": 4
   },
   "vos": {
    "n": "Vos",
    "no": 134,
-   "casussen": 2
+   "casussen": 4
   },
   "ree": {
    "n": "Ree",
    "no": 144,
-   "casussen": 2
+   "casussen": 4
   },
   "edelhert": {
    "n": "Edelhert",
    "no": 145,
-   "casussen": 2
+   "casussen": 4
   },
   "damhert": {
    "n": "Damhert",
    "no": 146,
-   "casussen": 2
+   "casussen": 4
   },
   "wild-zwijn": {
    "n": "Wild zwijn",
    "no": 143,
-   "casussen": 2
+   "casussen": 4
   },
   "haas": {
    "n": "Haas",
    "no": 130,
-   "casussen": 2
+   "casussen": 4
   },
   "konijn": {
    "n": "Konijn",
    "no": 131,
-   "casussen": 2
+   "casussen": 4
   },
   "egel": {
    "n": "Egel",
    "no": 101,
-   "casussen": 2
+   "casussen": 4
   },
   "wezel": {
    "n": "Wezel",
    "no": 141,
-   "casussen": 2
+   "casussen": 4
   },
   "bunzing": {
    "n": "Bunzing",
    "no": 142,
-   "casussen": 2
+   "casussen": 4
   },
   "gewone-zeehond": {
    "n": "Gewone zeehond",
    "no": 147,
-   "casussen": 2
+   "casussen": 4
   },
   "wilde-kat": {
    "n": "Wilde kat",
    "no": 135,
-   "casussen": 2
+   "casussen": 4
   },
   "bosmuis": {
    "n": "Bosmuis",
    "no": 127,
-   "casussen": 2
+   "casussen": 4
   },
   "grote-bosmuis": {
    "n": "Grote bosmuis",
    "no": 128,
-   "casussen": 2
+   "casussen": 4
   },
   "dwergmuis": {
    "n": "Dwergmuis",
    "no": 129,
-   "casussen": 2
+   "casussen": 4
   },
   "woelrat": {
    "n": "Woelrat",
    "no": 122,
-   "casussen": 2
+   "casussen": 4
   },
   "aardmuis": {
    "n": "Aardmuis",
    "no": 124,
-   "casussen": 2
+   "casussen": 4
   },
   "rosse-woelmuis": {
    "n": "Rosse woelmuis",
    "no": 123,
-   "casussen": 2
+   "casussen": 4
   },
   "gewone-bosspitsmuis": {
    "n": "Gewone bosspitsmuis",
    "no": 102,
-   "casussen": 2
+   "casussen": 4
   },
   "huisspitsmuis": {
    "n": "Huisspitsmuis",
    "no": 103,
-   "casussen": 2
+   "casussen": 4
   },
   "gewone-dwergvleermuis": {
    "n": "Gewone dwergvleermuis",
    "no": 110,
-   "casussen": 2
+   "casussen": 4
   },
   "ruige-dwergvleermuis": {
    "n": "Ruige dwergvleermuis",
    "no": 111,
-   "casussen": 2
+   "casussen": 4
   },
   "rosse-vleermuis": {
    "n": "Rosse vleermuis",
    "no": 114,
-   "casussen": 2
+   "casussen": 4
   },
   "meervleermuis": {
    "n": "Meervleermuis",
    "no": 106,
-   "casussen": 2
+   "casussen": 4
   },
   "franjestaart": {
    "n": "Franjestaart",
    "no": 107,
-   "casussen": 2
+   "casussen": 4
   },
   "ingekorven-vleermuis": {
    "n": "Ingekorven vleermuis",
    "no": 108,
-   "casussen": 2
+   "casussen": 4
   },
   "tweekleurige-vleermuis": {
    "n": "Tweekleurige vleermuis",
    "no": 113,
-   "casussen": 2
+   "casussen": 4
   },
   "grijze-grootoorvleermuis": {
    "n": "Grijze grootoorvleermuis",
    "no": 115,
-   "casussen": 2
+   "casussen": 4
   },
   "gewone-grootoorvleermuis": {
    "n": "Gewone grootoorvleermuis",
    "no": 116,
-   "casussen": 2
+   "casussen": 4
   },
   "noordse-woelmuis": {
    "n": "Noordse woelmuis",
    "no": 125,
-   "casussen": 2
+   "casussen": 4
   },
   "grijze-zeehond": {
    "n": "Grijze zeehond",
    "no": 148,
-   "casussen": 2
+   "casussen": 4
   },
   "zandhagedis": {
    "n": "Zandhagedis",
    "no": 201,
-   "casussen": 2
+   "casussen": 4
   },
   "gladde-slang": {
    "n": "Gladde slang",
    "no": 205,
-   "casussen": 2
+   "casussen": 4
   },
   "adder": {
    "n": "Adder",
    "no": 207,
-   "casussen": 2
+   "casussen": 4
   },
   "ringslang": {
    "n": "Ringslang",
    "no": 206,
-   "casussen": 2
+   "casussen": 4
   },
   "hazelworm": {
    "n": "Hazelworm",
    "no": 204,
-   "casussen": 2
+   "casussen": 4
   },
   "levendbarende-hagedis": {
    "n": "Levendbarende hagedis",
    "no": 202,
-   "casussen": 2
+   "casussen": 4
   },
   "muurhagedis": {
    "n": "Muurhagedis",
    "no": 203,
-   "casussen": 2
+   "casussen": 4
   },
   "kamsalamander": {
    "n": "Kamsalamander",
    "no": 301,
-   "casussen": 2
+   "casussen": 4
   },
   "boomkikker": {
    "n": "Boomkikker",
    "no": 311,
-   "casussen": 2
+   "casussen": 4
   },
   "rugstreeppad": {
    "n": "Rugstreeppad",
    "no": 310,
-   "casussen": 2
+   "casussen": 4
   },
   "knoflookpad": {
    "n": "Knoflookpad",
    "no": 308,
-   "casussen": 2
+   "casussen": 4
   },
   "geelbuikvuurpad": {
    "n": "Geelbuikvuurpad",
    "no": 306,
-   "casussen": 2
+   "casussen": 4
   },
   "vroedmeesterpad": {
    "n": "Vroedmeesterpad",
    "no": 307,
-   "casussen": 2
+   "casussen": 4
   },
   "heikikker": {
    "n": "Heikikker",
    "no": 313,
-   "casussen": 2
+   "casussen": 4
   },
   "vuursalamander": {
    "n": "Vuursalamander",
    "no": 302,
-   "casussen": 2
+   "casussen": 4
   },
   "gewone-pad": {
    "n": "Gewone pad",
    "no": 309,
-   "casussen": 2
+   "casussen": 4
   },
   "bruine-kikker": {
    "n": "Bruine kikker",
    "no": 312,
-   "casussen": 2
+   "casussen": 4
   },
   "kleine-watersalamander": {
    "n": "Kleine watersalamander",
    "no": 304,
-   "casussen": 2
+   "casussen": 4
   },
   "alpenwatersalamander": {
    "n": "Alpenwatersalamander",
    "no": 303,
-   "casussen": 2
+   "casussen": 4
   },
   "vinpootsalamander": {
    "n": "Vinpootsalamander",
    "no": 305,
-   "casussen": 2
+   "casussen": 4
   },
   "poelkikker": {
    "n": "Poelkikker",
    "no": 314,
-   "casussen": 2
+   "casussen": 4
   },
   "meerkikker": {
    "n": "Meerkikker",
    "no": 316,
-   "casussen": 2
+   "casussen": 4
   },
   "grote-modderkruiper": {
    "n": "Grote modderkruiper",
    "no": 403,
-   "casussen": 2
+   "casussen": 4
   },
   "beekprik": {
    "n": "Beekprik",
    "no": 401,
-   "casussen": 2
+   "casussen": 4
   },
   "kwabaal": {
    "n": "Kwabaal",
    "no": 407,
-   "casussen": 2
+   "casussen": 4
   },
   "elrits": {
    "n": "Elrits",
    "no": 404,
-   "casussen": 2
+   "casussen": 4
   },
   "beekdonderpad": {
    "n": "Beekdonderpad",
    "no": 408,
-   "casussen": 2
+   "casussen": 4
   },
   "gestippelde-alver": {
    "n": "Gestippelde alver",
    "no": 405,
-   "casussen": 2
+   "casussen": 4
   },
   "noordzeehouting": {
    "n": "Noordzeehouting",
    "no": 406,
-   "casussen": 2
+   "casussen": 4
   },
   "steenuil": {
    "n": "Steenuil",
    "no": 519,
-   "casussen": 2
+   "casussen": 4
   },
   "gierzwaluw": {
    "n": "Gierzwaluw",
    "no": 524,
-   "casussen": 2
+   "casussen": 4
   },
   "kerkuil": {
    "n": "Kerkuil",
    "no": 518,
-   "casussen": 2
+   "casussen": 4
   },
   "ooievaar": {
    "n": "Ooievaar",
    "no": 504,
-   "casussen": 2
+   "casussen": 4
   },
   "ijsvogel": {
    "n": "IJsvogel",
    "no": 525,
-   "casussen": 2
+   "casussen": 4
   },
   "roek": {
    "n": "Roek",
    "no": 534,
-   "casussen": 2
+   "casussen": 4
   },
   "oeverzwaluw": {
    "n": "Oeverzwaluw",
    "no": 541,
-   "casussen": 2
+   "casussen": 4
   },
   "slechtvalk": {
    "n": "Slechtvalk",
    "no": 514,
-   "casussen": 2
+   "casussen": 4
   },
   "ransuil": {
    "n": "Ransuil",
    "no": 522,
-   "casussen": 2
+   "casussen": 4
   },
   "huismus": {
    "n": "Huismus",
    "no": 556,
-   "casussen": 2
+   "casussen": 4
   },
   "oehoe": {
    "n": "Oehoe",
    "no": 520,
-   "casussen": 2
+   "casussen": 4
   },
   "buizerd": {
    "n": "Buizerd",
    "no": 511,
-   "casussen": 2
+   "casussen": 4
   },
   "havik": {
    "n": "Havik",
    "no": 509,
-   "casussen": 2
+   "casussen": 4
   },
   "sperwer": {
    "n": "Sperwer",
    "no": 510,
-   "casussen": 2
+   "casussen": 4
   },
   "wespendief": {
    "n": "Wespendief",
    "no": 506,
-   "casussen": 2
+   "casussen": 4
   },
   "boomvalk": {
    "n": "Boomvalk",
    "no": 513,
-   "casussen": 2
+   "casussen": 4
   },
   "grote-gele-kwikstaart": {
    "n": "Grote gele kwikstaart",
    "no": 557,
-   "casussen": 2
+   "casussen": 4
   },
   "bosuil": {
    "n": "Bosuil",
    "no": 521,
-   "casussen": 2
+   "casussen": 4
   },
   "torenvalk": {
    "n": "Torenvalk",
    "no": 512,
-   "casussen": 2
+   "casussen": 4
   },
   "boerenzwaluw": {
    "n": "Boerenzwaluw",
    "no": 542,
-   "casussen": 2
+   "casussen": 4
   },
   "huiszwaluw": {
    "n": "Huiszwaluw",
    "no": 543,
-   "casussen": 2
+   "casussen": 4
   },
   "blauwe-reiger": {
    "n": "Blauwe reiger",
    "no": 505,
-   "casussen": 2
+   "casussen": 4
   },
   "zwarte-specht": {
    "n": "Zwarte specht",
    "no": 529,
-   "casussen": 2
+   "casussen": 4
   },
   "groene-specht": {
    "n": "Groene specht",
    "no": 528,
-   "casussen": 2
+   "casussen": 4
   },
   "tapuit": {
    "n": "Tapuit",
    "no": 555,
-   "casussen": 2
+   "casussen": 4
   },
   "kievit": {
    "n": "Kievit",
    "no": 515,
-   "casussen": 2
+   "casussen": 4
   },
   "spreeuw": {
    "n": "Spreeuw",
    "no": 547,
-   "casussen": 2
+   "casussen": 4
   },
   "veldmuis": {
    "n": "Veldmuis",
    "no": 126,
-   "casussen": 2
+   "casussen": 4
   },
   "mol": {
    "n": "Mol",
@@ -540,7 +540,7 @@
   "gewone-baardvleermuis": {
    "n": "Gewone baardvleermuis",
    "no": 109,
-   "casussen": 2
+   "casussen": 4
   },
   "amerikaanse-brulkikker": {
    "n": "Amerikaanse brulkikker",
@@ -555,7 +555,7 @@
   "europese-steur": {
    "n": "Europese steur",
    "no": 402,
-   "casussen": 2
+   "casussen": 4
   },
   "kleine-modderkruiper": {
    "n": "Kleine modderkruiper",
@@ -580,27 +580,27 @@
   "boomklever": {
    "n": "Boomklever",
    "no": 544,
-   "casussen": 2
+   "casussen": 4
   },
   "kauw": {
    "n": "Kauw",
    "no": 533,
-   "casussen": 2
+   "casussen": 4
   },
   "zwarte-kraai": {
    "n": "Zwarte kraai",
    "no": 535,
-   "casussen": 2
+   "casussen": 4
   },
   "grauwe-gans": {
    "n": "Grauwe gans",
    "no": 501,
-   "casussen": 2
+   "casussen": 4
   },
   "tuimelaar": {
    "n": "Tuimelaar",
    "no": 150,
-   "casussen": 2
+   "casussen": 4
   },
   "huiskat": {
    "n": "Huiskat",
@@ -615,7 +615,7 @@
   "middelste-groene-kikker": {
    "n": "Bastaardkikker",
    "no": 315,
-   "casussen": 2
+   "casussen": 4
   },
   "rivierprik": {
    "n": "Rivierprik",
@@ -635,32 +635,32 @@
   "witte-kwikstaart": {
    "n": "Witte kwikstaart",
    "no": 558,
-   "casussen": 2
+   "casussen": 4
   },
   "roodborsttapuit": {
    "n": "Roodborsttapuit",
    "no": 554,
-   "casussen": 2
+   "casussen": 4
   },
   "grutto": {
    "n": "Grutto",
    "no": 516,
-   "casussen": 2
+   "casussen": 4
   },
   "merel": {
    "n": "Merel",
    "no": 548,
-   "casussen": 2
+   "casussen": 4
   },
   "houtduif": {
    "n": "Houtduif",
    "no": 517,
-   "casussen": 2
+   "casussen": 4
   },
   "patrijs": {
    "n": "Patrijs",
    "no": 559,
-   "casussen": 2
+   "casussen": 4
   },
   "goudplevier": {
    "n": "Goudplevier",
@@ -680,147 +680,147 @@
   "witsnuitdolfijn": {
    "n": "Witsnuitdolfijn",
    "no": 151,
-   "casussen": 2
+   "casussen": 4
   },
   "wolf": {
    "n": "Wolf",
    "no": 132,
-   "casussen": 2
+   "casussen": 4
   },
   "zwarte-wouw": {
    "n": "Zwarte wouw",
    "no": 507,
-   "casussen": 2
+   "casussen": 4
   },
   "bonte-vliegenvanger": {
    "n": "Bonte vliegenvanger",
    "no": 551,
-   "casussen": 2
+   "casussen": 4
   },
   "boomkruiper": {
    "n": "Boomkruiper",
    "no": 545,
-   "casussen": 2
+   "casussen": 4
   },
   "kortsnavelboomkruiper": {
    "n": "Taigaboomkruiper",
    "no": 546,
-   "casussen": 2
+   "casussen": 4
   },
   "brilduiker": {
    "n": "Brilduiker",
    "no": 503,
-   "casussen": 2
+   "casussen": 4
   },
   "draaihals": {
    "n": "Draaihals",
    "no": 527,
-   "casussen": 2
+   "casussen": 4
   },
   "eidereend": {
    "n": "Eidereend",
    "no": 502,
-   "casussen": 2
+   "casussen": 4
   },
   "ekster": {
    "n": "Ekster",
    "no": 532,
-   "casussen": 2
+   "casussen": 4
   },
   "gekraagde-roodstaart": {
    "n": "Gekraagde roodstaart",
    "no": 553,
-   "casussen": 2
+   "casussen": 4
   },
   "glanskop": {
    "n": "Glanskop",
    "no": 537,
-   "casussen": 2
+   "casussen": 4
   },
   "grauwe-vliegenvanger": {
    "n": "Grauwe vliegenvanger",
    "no": 549,
-   "casussen": 2
+   "casussen": 4
   },
   "grote-bonte-specht": {
    "n": "Grote bonte specht",
    "no": 530,
-   "casussen": 2
+   "casussen": 4
   },
   "hop": {
    "n": "Hop",
    "no": 526,
-   "casussen": 2
+   "casussen": 4
   },
   "kleine-bonte-specht": {
    "n": "Kleine bonte specht",
    "no": 531,
-   "casussen": 2
+   "casussen": 4
   },
   "kleine-vliegenvanger": {
    "n": "Kleine vliegenvanger",
    "no": 550,
-   "casussen": 2
+   "casussen": 4
   },
   "koolmees": {
    "n": "Koolmees",
    "no": 540,
-   "casussen": 2
+   "casussen": 4
   },
   "pimpelmees": {
    "n": "Pimpelmees",
    "no": 539,
-   "casussen": 2
+   "casussen": 4
   },
   "raaf": {
    "n": "Raaf",
    "no": 536,
-   "casussen": 2
+   "casussen": 4
   },
   "ruigpootuil": {
    "n": "Ruigpootuil",
    "no": 523,
-   "casussen": 2
+   "casussen": 4
   },
   "zeearend": {
    "n": "Zeearend",
    "no": 508,
-   "casussen": 2
+   "casussen": 4
   },
   "zwarte-mees": {
    "n": "Zwarte mees",
    "no": 538,
-   "casussen": 2
+   "casussen": 4
   },
   "zwarte-roodstaart": {
    "n": "Zwarte roodstaart",
    "no": 552,
-   "casussen": 2
+   "casussen": 4
   },
   "goudjakhals": {
    "n": "Goudjakhals",
    "no": 133,
-   "casussen": 2
+   "casussen": 4
   },
   "pimpernelblauwtje": {
    "n": "Pimpernelblauwtje",
    "no": 601,
-   "casussen": 2
+   "casussen": 4
   },
   "teunisbloempijlstaart": {
    "n": "Teunisbloempijlstaart",
    "no": 606,
-   "casussen": 2
+   "casussen": 4
   },
   "grote-vos": {
    "n": "Grote vos",
    "no": 603,
-   "casussen": 2
+   "casussen": 4
   },
   "donker-pimpernelblauwtje": {
    "n": "Donker pimpernelblauwtje",
    "no": 602,
-   "casussen": 2
+   "casussen": 4
   },
   "kleine-vos": {
    "n": "Kleine vos",
@@ -835,37 +835,37 @@
   "grote-weerschijnvlinder": {
    "n": "Grote weerschijnvlinder",
    "no": 604,
-   "casussen": 2
+   "casussen": 4
   },
   "kleine-ijsvogelvlinder": {
    "n": "Kleine ijsvogelvlinder",
    "no": 605,
-   "casussen": 2
+   "casussen": 4
   },
   "gevlekte-witsnuitlibel": {
    "n": "Gevlekte witsnuitlibel",
    "no": 704,
-   "casussen": 2
+   "casussen": 4
   },
   "sierlijke-witsnuitlibel": {
    "n": "Sierlijke witsnuitlibel",
    "no": 705,
-   "casussen": 2
+   "casussen": 4
   },
   "rivierrombout": {
    "n": "Rivierrombout",
    "no": 703,
-   "casussen": 2
+   "casussen": 4
   },
   "beekrombout": {
    "n": "Beekrombout",
    "no": 702,
-   "casussen": 2
+   "casussen": 4
   },
   "bosbeekjuffer": {
    "n": "Bosbeekjuffer",
    "no": 701,
-   "casussen": 2
+   "casussen": 4
   },
   "noordse-witsnuitlibel": {
    "n": "Noordse witsnuitlibel",
@@ -885,12 +885,12 @@
   "vermiljoenkever": {
    "n": "Vermiljoenkever",
    "no": 802,
-   "casussen": 2
+   "casussen": 4
   },
   "vliegend-hert": {
    "n": "Vliegend hert",
    "no": 801,
-   "casussen": 2
+   "casussen": 4
   },
   "roodkopvuurkever": {
    "n": "Roodkopvuurkever",
