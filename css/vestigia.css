@@ -2340,3 +2340,25 @@ html.donker .lvklap > summary .lvvolg b{color:var(--green-d)}
 .geefop .linklike{color:var(--ink-2)}
 .geefop .linklike.zeker{color:#b4492f; font-weight:600}
 html.donker .geefop .linklike.zeker{color:#f0a48f}
+
+/* update 96: label 'expert' lijnt uit met het begin van de naam en de ondertitel, ook als het naar de volgende regel loopt */
+.ranklist .who:has(> .xbadge){display:flex; flex-wrap:wrap; align-items:center; column-gap:10px; row-gap:2px}
+.ranklist .who:has(> .xbadge) > span:not(.xbadge){flex-basis:100%}
+.ranklist .who:has(> .xbadge) > span.xbadge{margin-left:0}
+
+/* update 97: tweelingmoment bij elke tweelinggok (kaartje onder het invoerveld, verdwijnt vanzelf) */
+.tweelingflits{display:flex; align-items:center; gap:10px; margin:10px 0 0; padding:9px 14px; border-radius:14px; background:#fdf6e3; border:1px solid var(--ochre-soft); color:#4a3a10; font-weight:600; width:fit-content; max-width:100%; box-sizing:border-box}
+.tweelingflits[hidden]{display:none}
+.tweelingflits .tk{width:26px; height:26px; border-radius:50%; display:grid; place-items:center; background:var(--ochre-soft); color:#4a3a10; font-weight:700; flex:none}
+.tweelingflits > span:last-child{min-width:0}
+.tweelingflits small{display:block; font-weight:400; font-size:var(--fs-s)}
+html.donker .tweelingflits{background:#2a2414; color:#f1dc9e}
+.tweelingflits.in{animation:kaartIn .4s cubic-bezier(.2,.7,.3,1) both}
+.tweelingflits.uit{opacity:0; transition:opacity .3s ease}
+.tip.tweeling.flits{animation:kaartIn .4s cubic-bezier(.2,.7,.3,1) both, tweelingGloed 1.6s ease .3s 1}
+@keyframes tweelingGloed{0%,100%{box-shadow:0 0 0 0 rgba(226,184,78,0)} 40%{box-shadow:0 0 0 4px rgba(226,184,78,.5)}}
+@media (prefers-reduced-motion: reduce){
+  .tweelingflits.in{animation:vervaagIn .3s ease both}
+  .tip.tweeling.flits{animation:none}
+}
+@keyframes vervaagIn{from{opacity:0} to{opacity:1}}
