@@ -336,7 +336,7 @@ const Apparaat = (() => {
     const app = isApp() || (s && s.app), twee = s && s.n >= 2;
     return o.stappen.filter(st => !(st.wat === "app" && app) && !(st.wat === "koppel" && twee));
   }
-  Wachtrij.voeg({ id: "apparaten", prio: 2.5,
+  Wachtrij.voeg({ id: "apparaten", prio: 2.5, combi: true, naam: "Vestigia op je apparaten",
     async kan(){
       uitlegStappen = null;
       if (!online.enabled || !online.player()) return false;
