@@ -432,11 +432,38 @@ const Kerst = (() => {
     await haal();
     if (!$("adventPop").hidden && !bezig) teken();
     stip();
-    /* de eerste keer: uitlegblokjes in de kalender zelf (update 9) */
+    /* de eerste keer: uitlegblokjes in de kalender zelf (update 9). Het eerste blokje staat precies waar de kerst-mus zit;
+       dan wacht de mus tot dat blokje weg is en vliegt hij daarna aan (Tom, 22 november) */
+    const uitleg = typeof Nieuw !== "undefined" && stand().vandaag && (demo() || !Nieuw.gezien("advent"));
+    if (uitleg) musWacht();
+    const alBezig = typeof Nieuw !== "undefined" && Nieuw.bezigMet("advent");   // de uitleg loopt al (kalender twee keer geopend)
     if (typeof Nieuw !== "undefined" && stand().vandaag) Nieuw.blokjes("advent", [
       { na: $("adventSub"), tekst: "Van 1 tot en met 24 december mag er elke dag één vakje open, alleen dat van vandaag. Een gemist vakje is weg. Open je ze alle 24, dan word je Adventkampioen." },
       { na: $("adventGo"), tekst: "Tik op ‘Open cadeau’. Er zitten eikels in, sporen in de sneeuw om te raden, winterweetjes en een paar dingen die je nergens anders krijgt." }
-    ], { altijd: demo(), wacht: 900 });
+    ], { altijd: demo(), wacht: 900 }).finally(() => { if (!alBezig) musLand(); });
+  }
+  /* kerst-mus: verstopt zolang het eerste uitlegblokje boven het rooster staat, daarna aanvliegen */
+  let musKijk = null;
+  function musWacht(){
+    const grid = $("adventGrid"), sheet = grid.parentElement;
+    if (grid.classList.contains("mus-wacht")) return;      // kalender twee keer geopend (wachtrij en knop): al aan het wachten
+    grid.classList.add("mus-wacht");
+    let blokGezien = false;
+    if (musKijk) musKijk.disconnect();
+    musKijk = new MutationObserver(() => {
+      const boven = grid.previousElementSibling && grid.previousElementSibling.classList.contains("nw-blokje");
+      if (boven) blokGezien = true; else if (blokGezien) musLand();
+    });
+    musKijk.observe(sheet, { childList: true });
+  }
+  function musLand(){
+    const grid = $("adventGrid");
+    if (musKijk){ musKijk.disconnect(); musKijk = null; }
+    if (!grid.classList.contains("mus-wacht")) return;
+    grid.classList.remove("mus-wacht");
+    if (rustig() || $("adventPop").hidden) return;
+    grid.classList.add("mus-vliegt");
+    setTimeout(() => grid.classList.remove("mus-vliegt"), 1600);
   }
   function sluit(){ if (!bezig) $("adventPop").hidden = true; }
 

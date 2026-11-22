@@ -227,7 +227,7 @@ const Nieuw = (() => {
     });
   }
   knoppen();
-  return { toon, blokjes, knoppen, veteraan, vers, ONDERDELEN };
+  return { toon, blokjes, knoppen, veteraan, vers, gezien, bezigMet: id => bezig.has(id), ONDERDELEN };
 })();
 
 /* update 30 en 47: één melding ‘Nieuwe soorten’, direct na die van update 14. De kaart van de grote bosmuis krijgt wie al een
