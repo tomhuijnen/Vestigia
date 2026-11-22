@@ -2362,3 +2362,20 @@ html.donker .tweelingflits{background:#2a2414; color:#f1dc9e}
   .tip.tweeling.flits{animation:none}
 }
 @keyframes vervaagIn{from{opacity:0} to{opacity:1}}
+
+/* update 86: combi-pop-up ‘Nieuw in Vestigia’ – balkje boven de pop-up en een stapeltje kaarten erachter */
+#wachtPop.combi{align-content:center; gap:10px}
+.overlay.bottom#wachtPop.combi{align-content:end}
+.combipil{justify-self:center; display:flex; align-items:center; gap:10px; white-space:nowrap; min-width:0;
+  background:var(--paper); color:var(--ink-2); border-radius:999px; padding:6px 6px 6px 14px; box-shadow:0 6px 20px rgba(0,0,0,.18);
+  font-size:.8125rem; max-width:calc(100% - 24px); animation:cpIn .3s ease}
+.combipil:not(:has(.cp-later)){padding-right:14px}
+.cp-balk{display:flex; gap:3px; flex:none} .cp-balk i{width:14px; height:4px; border-radius:2px; background:var(--rule)}
+.cp-balk i.klaar{background:var(--moss)} .cp-balk i.nu{background:var(--green)}
+.cp-tekst{overflow:hidden; text-overflow:ellipsis; min-width:0} .cp-tekst b{color:var(--ink); font-weight:600}
+.cp-later{flex:none; border:0; font:inherit; font-weight:600; color:var(--green-d); background:var(--leaf); border-radius:999px; padding:6px 12px; cursor:pointer}
+#wachtPop.cp-stapel .sheet{box-shadow:0 -6px 0 -2px color-mix(in srgb, var(--paper) 78%, transparent), 0 -12px 0 -5px color-mix(in srgb, var(--paper) 50%, transparent)}
+#wachtPop.cp-volgende:not([hidden]) .sheet{animation:cpVolg .32s cubic-bezier(.2,.7,.3,1)}
+@keyframes cpIn{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
+@keyframes cpVolg{from{transform:translateX(28px); opacity:.2} to{transform:none; opacity:1}}
+@media (prefers-reduced-motion:reduce){ .combipil, #wachtPop.cp-volgende:not([hidden]) .sheet{animation:none} }

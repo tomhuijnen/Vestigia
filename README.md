@@ -28,7 +28,7 @@ Determinatiespel over beschermde fauna van Nederland: herken de soort aan habita
 | `js/league.js` | uitnodigen en leagues, en de links `?van=` en `?league=` |
 | `data/avatars.js` | de 29 avatartekeningen, waarvan 10 medaille-avatars in kleur (prijzen staan in Supabase) |
 | `js/profiel.js` | eikels, avatars, Mijn profiel (kiezen uit wat je hebt), shop (kopen, goedkoop naar duur) en prestaties met eikels; per achtergrondkleur een eigen tint voor de details van een avatar (update 19, `KLEUREN` en `avatarTekening`); gouden lauriertakken om een medaille-avatar in Mijn profiel, de ranglijst en op de profielkaart (update 57, `metLaurier`; elders blijft het embleem) |
-| `js/wachtrij.js` | wachtrij voor pop-ups: nooit twee tegelijk; herinnering om een avatar te kiezen (update 8); terugkomen in een app die al openstaat telt als openen na 15 minuten weg of op een nieuwe dag, niet midden in een casus (update 60) |
+| `js/wachtrij.js` | wachtrij voor pop-ups: nooit twee tegelijk; herinnering om een avatar te kiezen (update 8); terugkomen in een app die al openstaat telt als openen na 15 minuten weg of op een nieuwe dag, niet midden in een casus (update 60) ; combi-pop-up ‘Nieuw in Vestigia’: meldingen zonder keuze (je week, levels, uitleg over iets nieuws) na elkaar in één pop-up met ‘2 van 3 · Hierna: …’ en ‘Later’ (update 86) |
 | `data/advent.js` | winterweetjes voor de adventkalender (update 8) |
 | `js/kerst.js` | kerstmuts, sneeuw en adventkalender van 1 december t/m 6 januari; testen met `?kerst=demo&dag=12` (update 8) |
 | `data/dwaalgasten.js` | de tien dwaalgasten: naam, waar ze normaal leven en ‘Gezien in Nederland’ (update 9); vragen en antwoorden staan in Supabase |

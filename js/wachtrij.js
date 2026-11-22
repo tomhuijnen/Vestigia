@@ -45,11 +45,31 @@ const Wachtrij = (() => {
     /* eerst ophalen wat je op je andere apparaten al zag (hooguit 4 s wachten) */
     if (typeof online !== "undefined" && online.voortgangKlaar) await online.voortgangKlaar(4000);
     if (ietsOpen() || update()) return;
-    for (const k of kandidaten.slice().sort((a, b) => a.prio - b.prio)){
+    /* update 86 (Tom, 22 november): de uitleg voor nieuwe spelers komt altijd eerst. js/app.js start de wachtrij pas na
+       Uitleg.automatisch(); staat de uitleg toch nog niet als gezien bewaard, dan nu geen pop-ups. */
+    try { if (!localStorage.getItem("vestigia:tutorial")) return; } catch(e){}
+    /* Komt er een losse melding (dwaalgast, advent, duel), dan wacht de combi-pop-up tot de volgende keer openen:
+       nooit twee pop-ups direct na elkaar bij het opstarten, en wie via een duel een casus begint, wordt niet gestoord. */
+    /* update 86: wat verloopt en los blijft (dwaalgast, advent, duel) eerst, dan de rest op prio */
+    const los = k => !k.combi && k.prio < 2;
+    const lijst = kandidaten.slice().sort((a, b) => (los(b) - los(a)) || (a.prio - b.prio));
+    for (let n = 0; n < lijst.length; n++){
+      const k = lijst[n];
       let ok = false;
       try { ok = await k.kan(); } catch(e){ ok = false; }
       if (!ok) continue;
       if (ietsOpen() || update()) return;      // er kwam intussen iets anders in beeld: volgende keer
+      if (k.combi){                             // update 86: alle meldingen zonder keuze samen, na elkaar
+        const rij = [k];
+        for (const j of lijst.slice(n + 1)){
+          if (!j.combi) continue;
+          let ja = false; try { ja = await j.kan(); } catch(e){}
+          if (ja) rij.push(j);
+        }
+        if (ietsOpen() || update()) return;
+        await reeks(rij);
+        return;
+      }
       if (k.doorgaan){                          // uitleg bij iets nieuws: eerst wegklikken, dan gaat de wachtrij door
         try { await k.toon(); } catch(e){}
         await wacht(350);
@@ -59,6 +79,48 @@ const Wachtrij = (() => {
       try { k.toon(); } catch(e){}
       return;                                   // nooit twee tegelijk
     }
+  }
+
+  /* ---------- update 86: combi-pop-up ‘Nieuw in Vestigia’ ----------
+     Staan er bij het openen meerdere meldingen zonder keuze klaar (XP-boost, je week, levels, uitleg over iets nieuws),
+     dan komen ze in één pop-up na elkaar. Boven de pop-up een balkje met ‘2 van 3’, wat hierna komt en ‘Rest later’.
+     Elke melding houdt haar eigen knop; die opent de volgende. Wat je niet zag (Rest later, of je ging ergens heen),
+     komt de volgende keer gewoon terug, want pas bij tonen wordt iets als gezien bewaard. */
+  let stop = false;
+  function pil(rij, i){
+    const pop = $("wachtPop");
+    let el = $("combiPil");
+    if (!el){ el = document.createElement("div"); el.id = "combiPil"; el.className = "combipil"; pop.insertBefore(el, pop.firstChild); }
+    const volg = rij[i + 1];
+    el.innerHTML = `<span class="cp-balk" aria-hidden="true">${rij.map((_, k) => `<i class="${k === i ? "nu" : k < i ? "klaar" : ""}"></i>`).join("")}</span>
+      <span class="cp-tekst"><b>${i + 1} van ${rij.length}</b>${volg ? ` · Hierna: ${esc(volg.naam || "")}` : " · Laatste"}</span>
+      ${volg ? `<button class="cp-later" id="combiLater">Later</button>` : ""}`;
+    const later = $("combiLater");
+    if (later) later.onclick = () => { stop = true; const b = $("nwSkip") || $("lvVerder") || $("nwVolg"); if (b) b.click(); else $("wachtPop").hidden = true; };
+    pop.classList.add("combi");
+    pop.classList.toggle("cp-stapel", !!volg);
+    /* de afsluitknop van deze melding (‘Begrepen’, ‘Verder’) heet ‘Volgende’ zolang er nog iets komt */
+    if (kijker) kijker.disconnect();
+    const noem = () => { if (!volg) return; const b = $("lvVerder") || (!$("nwSkip") && $("nwVolg")); if (b && b.textContent !== "Volgende") b.textContent = "Volgende"; };
+    kijker = new MutationObserver(noem); kijker.observe($("wachtBody"), { childList: true, subtree: true }); noem();
+  }
+  let kijker = null;
+  function pilWeg(){ if (kijker){ kijker.disconnect(); kijker = null; } const el = $("combiPil"); if (el) el.remove(); $("wachtPop").classList.remove("combi", "cp-stapel", "cp-volgende"); }
+  async function reeks(rij){
+    stop = false;
+    if (rij.length === 1){ try { await rij[0].toon(); } catch(e){} return; }
+    try {
+      for (let i = 0; i < rij.length; i++){
+        if (i > 0 && (ietsOpen() || update())) break;   // je ging ergens anders heen: de rest de volgende keer
+        let p;
+        try { p = rij[i].toon(); } catch(e){ continue; }
+        pil(rij, i);
+        $("wachtPop").classList.toggle("cp-volgende", i > 0);
+        try { await p; } catch(e){}
+        if (stop) break;
+        await wacht(30);
+      }
+    } finally { pilWeg(); }
   }
 
   /* ---------- update 60: terugkomen in een app die al openstaat ---------- */
@@ -144,5 +206,5 @@ const Wachtrij = (() => {
       $("piKies").focus();
     } });
 
-  return { voeg, start, ietsOpen };
+  return { voeg, start, ietsOpen, reeks };
 })();

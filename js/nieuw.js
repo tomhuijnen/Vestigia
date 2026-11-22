@@ -233,7 +233,7 @@ const Nieuw = (() => {
 /* update 30 en 47: één melding ‘Nieuwe soorten’, direct na die van update 14. De kaart van de grote bosmuis krijgt wie al een
    dagcasus speelde vóór 15 november en de losse bosmuis-melding (15 november 16:13–16:40) nog niet zag; de kaart van de
    patrijs krijgt wie al speelde vóór VANAF.patrijs. Wie alleen de patrijs krijgt, ziet ook alleen die kaart. */
-Wachtrij.voeg({ id: "nieuwesoorten", prio: 2.61,
+Wachtrij.voeg({ id: "nieuwesoorten", prio: 2.61, combi: true, naam: "Nieuwe soorten",
   kaarten(){
     let al = true; try { al = !!localStorage.getItem("vestigia:nieuw:grotebosmuis"); } catch(e){}
     return { grotebosmuis: !al && Nieuw.vers("grotebosmuis") && Nieuw.veteraan("grotebosmuis"), patrijs: Nieuw.vers("patrijs") && Nieuw.veteraan("patrijs") };
@@ -255,7 +255,7 @@ Wachtrij.voeg({ id: "nieuwesoorten", prio: 2.61,
 
 /* update 14: één keer ‘Nieuw: libellen en kevers’, na de dwaalgast, het duel, de levels, de adventkalender en de uitleg
    over de app; vóór de herinnering om een avatar te kiezen. Alleen voor wie al een dagcasus speelde vóór VANAF. */
-Wachtrij.voeg({ id: "soorten14", prio: 2.6,
+Wachtrij.voeg({ id: "soorten14", prio: 2.6, combi: true, naam: "Libellen en kevers",
   kan(){
     try { if (localStorage.getItem("vestigia:nieuw:soorten14")) return false; } catch(e){ return false; }
     return Nieuw.vers("soorten14") && Nieuw.veteraan("soorten14");
@@ -267,7 +267,7 @@ Wachtrij.voeg({ id: "soorten14", prio: 2.6,
 
 /* update 45: ‘Expert levert meer op’ en ‘Wist je dat?’ in één melding, direct na ‘Nieuwe soorten’. Per kaart alleen voor wie
    al een dagcasus speelde vóór dat onderdeel (VANAF), en hooguit 4 weken (Nieuw.vers). */
-Wachtrij.voeg({ id: "vernieuwd", prio: 2.62,
+Wachtrij.voeg({ id: "vernieuwd", prio: 2.62, combi: true, naam: "Expert en Wist je dat?",
   kaarten(){ return { expert45: Nieuw.vers("expert45") && Nieuw.veteraan("expert45"), weetjes: Nieuw.vers("weetjes") && Nieuw.veteraan("weetjes") }; },
   kan(){
     if (Date.now() < Date.parse("2026-11-19T00:00:00+01:00")) return false;    // de nieuwe expertpunten gelden vanaf 19 november
