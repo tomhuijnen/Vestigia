@@ -130,6 +130,17 @@ function randomFree(exclude, f){
   return { id: t.id, k: ks[Math.floor(Math.random() * ks.length)], alles: !!f.nieuw && !open0.length };
 }
 
+/* update 97: bij elke tweelinggok een kaartje onder het invoerveld dat na ±4 s vanzelf verdwijnt (de uitleg-pop-up blijft één keer) */
+let tweelingT = null;
+function tweelingFlits(aan = true){
+  const el = $("tweelingFlits"); if (!el) return;
+  clearTimeout(tweelingT);
+  if (!aan){ el.hidden = true; el.classList.remove("in", "uit"); return; }
+  el.classList.remove("uit"); el.hidden = false;
+  void el.offsetWidth; el.classList.add("in");
+  tweelingT = setTimeout(() => { el.classList.add("uit"); tweelingT = setTimeout(() => { el.hidden = true; el.classList.remove("in", "uit"); }, 350); }, 4200);
+}
+
 function points(){
   if (S.status !== "won") return 0;
   return S.expert ? expertPunten(S.revealed, usedTries(), S.mode === "daily" ? S.caseNo - 1 : null) : Math.max(1, 6 - usedTries());
@@ -143,8 +154,9 @@ function submitGuess(id){
   if (S.guesses.includes(id)){ setMsg("Die soort heb je al geprobeerd.", true); return; }
   S.guesses.push(id);
   freshRow = true;
+  if (!isTwin(id)) tweelingFlits(false);
   if (id === S.target){ S.status = "won"; }
-  else if (isTwin(id)){ S.revealed = MAX; freshClue = MAX - 1; setTimeout(() => Spelen.tweelingEersteKeer(BY_ID.get(id)), 650); }
+  else if (isTwin(id)){ S.revealed = MAX; freshClue = MAX - 1; tweelingFlits(); setTimeout(() => Spelen.tweelingEersteKeer(BY_ID.get(id)), 650); }
   else if (S.expert && usedTries() >= EXPERT_POGINGEN){ S.status = "lost"; }
   else if (S.expert){ S.revealed = MAX; freshClue = MAX - 1; }      /* update 45: vangnet, alles open en nog één gok */
   else if (usedTries() >= MAX){ S.status = "lost"; }
@@ -311,7 +323,7 @@ function renderTips(){
   $("tipList").innerHTML = rijen.map((r, i) => {
     const g = BY_ID.get(r.id), nieuw = i === laatste && freshRow ? " enter" : "";
     if (r.soort === "goed") return `<li class="tip goed${nieuw}"><span class="tk" aria-label="goed">✓</span><div><b>${esc(g.n)}</b> <i>${esc(g.s)}</i><p>Goed gedetermineerd.</p></div></li>`;
-    if (r.soort === "tweeling") return `<li class="tip tweeling${nieuw}"><span class="tk" aria-label="tweelingsoort">≈</span><div><b>${esc(g.n)}</b> <i>${esc(g.s)}</i><p>Tweelingsoort van het antwoord: je zit er heel dicht bij. Deze gok telt niet mee. <button class="linklike tweelingWat">Wat is een tweelingsoort?</button></p></div></li>`;
+    if (r.soort === "tweeling") return `<li class="tip tweeling${nieuw}${nieuw ? " flits" : ""}"><span class="tk" aria-label="tweelingsoort">≈</span><div><b>${esc(g.n)}</b> <i>${esc(g.s)}</i><p>Tweelingsoort van het antwoord: je zit er heel dicht bij. Deze gok telt niet mee. <button class="linklike tweelingWat">Wat is een tweelingsoort?</button></p></div></li>`;
     return `<li class="tip${nieuw}"><span class="tk" aria-label="fout">✕</span><div><b>${esc(g.n)}</b> <i>${esc(g.s)}</i><p>${esc(r.tip.txt)}</p></div></li>`;
   }).join("");
   $("tipList").querySelectorAll(".tweelingWat").forEach(b => b.onclick = () => Spelen.tweeling());
@@ -552,7 +564,7 @@ function renderPips(){
   $("pips").innerHTML = h;
   if (S.status === "playing"){
     const left = n - real.length, twinNow = S.guesses.length && isTwin(S.guesses[S.guesses.length - 1]);
-    if (twinNow) setMsg("Tweelingsoort! Telt niet mee; alle waarnemingen zijn open.", false);
+    if (twinNow) setMsg(S.expert ? (real.length ? "Alle waarnemingen staan open. Nog één determinatie; goed levert 1 punt en de plaat op." : "Alle waarnemingen staan open. Je hebt nog je determinatie, en daarna het vangnet.") : `Alle waarnemingen staan open. Nog ${left} ${left === 1 ? "poging" : "pogingen"}.`, false);
     else if (S.expert && real.length) setMsg("Mis! Vangnet: alle waarnemingen staan open. Je hebt nog één determinatie; goed levert 1 punt en de plaat op.", false);
     else setMsg(S.expert ? "Je hebt één determinatie. Open eerst zoveel waarnemingen als je nodig denkt te hebben. Mis? Dan heb je nog een vangnet voor 1 punt." : `Nog ${left} ${left === 1 ? "poging" : "pogingen"}.`, false);
     const st = store.get(), eerste = S.mode === "daily" ? eersteModus(st, S.caseNo - 1) : null;
@@ -568,7 +580,7 @@ function renderHead(){
   $("gBtn").disabled = !matchExact(inp.value) || S.status !== "playing";
 }
 
-function render(){ renderHead(); renderBalk(); renderClues(); renderGrid(); renderPips(); renderResult(); tipZoekgroepen(); }
+function render(){ if (!(S.status === "playing" && S.guesses.length && isTwin(S.guesses[S.guesses.length - 1]))) tweelingFlits(false); renderHead(); renderBalk(); renderClues(); renderGrid(); renderPips(); renderResult(); tipZoekgroepen(); }
 /* Eenmalige uitleg bij zoeken op een groep (update 12): bij de eerstvolgende casus die je speelt (dag of oefen), zodra er
    geen pop-up, uitleg of openingsanimatie meer in beeld is. Daarna nooit meer (Nieuw.blokjes onthoudt het). */
 let zoekTipBezig = false;
