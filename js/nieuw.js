@@ -281,3 +281,28 @@ Wachtrij.voeg({ id: "vernieuwd", prio: 2.62, combi: true, naam: "Expert en Wist 
     const titel = st.length === 1 ? (st[0].wat === "expert45" ? "Expert" : "Wist je dat?") : o.titel;
     return Nieuw.toon(Object.assign({}, o, { id: k.expert45 ? "expert45" : "weetjes", stappen: st, titel }));
   } });
+
+/* update 85 (Tom, 18 november 14:05 en 22 november 16:09): twee weken dubbel uitnodigen, met een vooruitblik op de
+   adventkalender. In de combi-pop-up ‘Nieuw in Vestigia’, één keer per speler (ook over je apparaten), alleen van
+   ma 30 november t/m zo 13 december, en alleen voor wie een spelersnaam heeft. Vóór 1 december de vooruitblik, daarna ‘de adventkalender is open’.
+   Voorbeeld: ?dubbel=demo (30 november) of ?dubbel=demo&nu=2026-12-03. */
+Wachtrij.voeg({ id: "dubbeluitnodigen", prio: 1.65, combi: true, naam: "Dubbel uitnodigen",
+  kan(){
+    if (typeof online === "undefined" || !online.enabled || !online.player() || !League.dubbel()) return false;   // alleen met een spelersnaam: zonder naam tellen uitnodigingen niet
+    try { return !localStorage.getItem("vestigia:nieuw:dubbeluitnodigen"); } catch(e){ return false; }
+  },
+  toon(){
+    try { localStorage.setItem("vestigia:nieuw:dubbeluitnodigen", "1"); } catch(e){}
+    const adventOpen = League.nu() >= Date.parse("2026-12-01T00:00:00+01:00");
+    return Nieuw.toon({ id: "dubbeluitnodigen", titel: "Dubbel uitnodigen",
+      actie: { label: "Uitnodigen", run: () => League.openUitnodigen() },
+      stappen: [
+        { ic: "duel", kop: "Twee weken dubbel uitnodigen",
+          tekst: "Tot en met zondag 13 december levert elke speler die je uitnodigt dubbel op: 20 eikels zodra die speler zich aanmeldt in de app en een eerste casus determineert, en nog eens 20 als hij of zij drie dagcasussen heeft gespeeld. Dat geldt voor maximaal vijf spelers." },
+        adventOpen
+          ? { ic: "cadeau", kop: "De adventkalender is open",
+              tekst: "Tot en met 24 december gaat er elke dag één vakje open. Een gemist vakje is weg, dus kom elke dag even langs. Wie je nu uitnodigt, kan meteen meedoen." }
+          : { ic: "cadeau", kop: "Mis de adventkalender niet",
+              tekst: "Vanaf dinsdag 1 december gaat er elke dag één vakje open, tot en met 24 december. Er zitten eikels, sporen om te raden en dingen in die je nergens anders krijgt. Een gemist vakje is weg, dus kom elke dag even langs. Nodig nu iemand uit, dan speelt die vanaf het eerste vakje mee." }
+      ] });
+  } });

@@ -121,6 +121,16 @@ const League = (() => {
   $("leaguePop").addEventListener("click", e => { if (e.target === $("leaguePop")) $("leaguePop").hidden = true; });
   document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("leaguePop").hidden) $("leaguePop").hidden = true; });
 
+  /* ---------- update 85: uitnodigen tijdelijk dubbel ----------
+     Van ma 30 november t/m zo 13 december levert een uitgenodigde speler 20 + 20 eikels op in plaats van 10 + 10.
+     De server telt het moment van aanmelden (invites.created_at, _vestigia_uitnodiging_dubbel in SQL 044): wie in die
+     weken binnenkomt, levert ook later nog dubbel op. Voorbeeld: ?dubbel=demo (en &nu=2026-12-03 voor een dag na 1 december). */
+  const DUBBEL = { van: Date.parse("2026-11-30T00:00:00+01:00"), tot: Date.parse("2026-12-14T00:00:00+01:00") };
+  let dubbelDemo = null;
+  try { const q = new URLSearchParams(location.search); if (q.get("dubbel") === "demo") dubbelDemo = q.get("nu") ? Date.parse(q.get("nu") + "T12:00:00+01:00") : DUBBEL.van + 10 * 36e5; } catch(e){}
+  const nu = () => dubbelDemo || Date.now();
+  const dubbel = () => { const t = nu(); return t >= DUBBEL.van && t < DUBBEL.tot; };
+
   /* ---------- uitnodigen ---------- */
   function uitnodiging(l){
     const me = p(), params = { van: me && me.name, league: l && l.code };
@@ -136,7 +146,9 @@ const League = (() => {
     $("leaguePopBody").innerHTML = `
       <div class="top"><h2 id="leaguePopH">Speler uitnodigen</h2><button class="iconbtn" id="lpX" aria-label="Sluiten"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l10 10M13 3L3 13"/></svg></button></div>
       ${me
-        ? `<p>De speler die je uitnodigt, krijgt een link met jouw naam erin. Kiest die speler een spelersnaam en determineert hij of zij een eerste casus, dan krijg jij 10 eikels. Speelt die speler daarna op drie verschillende dagen de dagcasus, dan komen er nog 10 bij (voor maximaal vijf spelers).</p>`
+        ? (dubbel()
+          ? `<p class="dubbelnoot"><b>Tot en met zondag 13 december levert uitnodigen dubbel op.</b></p><p>De speler die je uitnodigt, krijgt een link met jouw naam erin. Kiest die speler een spelersnaam en determineert hij of zij een eerste casus, dan krijg jij 20 eikels. Speelt die speler daarna drie dagcasussen, dan komen er nog 20 bij (voor maximaal vijf spelers).</p>`
+          : `<p>De speler die je uitnodigt, krijgt een link met jouw naam erin. Kiest die speler een spelersnaam en determineert hij of zij een eerste casus, dan krijg jij 10 eikels. Speelt die speler daarna op drie verschillende dagen de dagcasus, dan komen er nog 10 bij (voor maximaal vijf spelers).</p>`)
         : `<p>De speler die je uitnodigt, krijgt een link naar Vestigia. Kies eerst zelf een spelersnaam, dan staat jouw naam in de link en tellen de uitnodigingen voor jou.</p>`}
       ${cached().length ? `<p class="fine">Wil je iemand in een league? Deel dan de uitnodiging bij die league, onder Leagues in het menu.</p>` : ""}
       <div class="actions"><a class="btn wa" id="lpWa" href="${esc(waUitnodiging(uitnodiging(null)))}" target="_blank" rel="noopener">${WA_IC}WhatsApp</a><button class="btn line" id="lpDeel">${deelAnders()}</button>${me ? "" : `<button class="btn line" id="lpNaam">Kies een spelersnaam</button>`}<span class="msg" id="lpMsg"></span></div>`;
@@ -265,7 +277,7 @@ const League = (() => {
   }
 
   return { cached, vernieuw, huidige, setLast, tegel, vernieuwTegel, bijwerken, naNaam, verwerk, render,
-           openUitnodigen, welkomTekst, heeftLink: () => !!(pendingVan() || pendingCode()) };
+           openUitnodigen, welkomTekst, dubbel, nu, heeftLink: () => !!(pendingVan() || pendingCode()) };
 })();
 
 function showLeague(){
