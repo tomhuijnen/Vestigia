@@ -45,6 +45,11 @@ const Wachtrij = (() => {
     /* eerst ophalen wat je op je andere apparaten al zag (hooguit 4 s wachten) */
     if (typeof online !== "undefined" && online.voortgangKlaar) await online.voortgangKlaar(4000);
     if (ietsOpen() || update()) return;
+    /* update 86 (Tom, 22 november): de uitleg voor nieuwe spelers komt altijd eerst. js/app.js start de wachtrij pas na
+       Uitleg.automatisch(); staat de uitleg toch nog niet als gezien bewaard, dan nu geen pop-ups. */
+    try { if (!localStorage.getItem("vestigia:tutorial")) return; } catch(e){}
+    /* Komt er een losse melding (dwaalgast, advent, duel), dan wacht de combi-pop-up tot de volgende keer openen:
+       nooit twee pop-ups direct na elkaar bij het opstarten, en wie via een duel een casus begint, wordt niet gestoord. */
     /* update 86: wat verloopt en los blijft (dwaalgast, advent, duel) eerst, dan de rest op prio */
     const los = k => !k.combi && k.prio < 2;
     const lijst = kandidaten.slice().sort((a, b) => (los(b) - los(a)) || (a.prio - b.prio));
