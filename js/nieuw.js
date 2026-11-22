@@ -297,12 +297,12 @@ Wachtrij.voeg({ id: "dubbeluitnodigen", prio: 1.65, combi: true, naam: "Dubbel u
     return Nieuw.toon({ id: "dubbeluitnodigen", titel: "Dubbel uitnodigen",
       actie: { label: "Uitnodigen", run: () => League.openUitnodigen() },
       stappen: [
-        { ic: "duel", kop: "Twee weken dubbel uitnodigen",
+        { ic: "duel", kop: "Twee weken dubbele beloning!",
           tekst: "Tot en met zondag 13 december levert elke speler die je uitnodigt dubbel op: 20 eikels zodra die speler zich aanmeldt in de app en een eerste casus determineert, en nog eens 20 als hij of zij drie dagcasussen heeft gespeeld. Dat geldt voor maximaal vijf spelers." },
         adventOpen
           ? { ic: "cadeau", kop: "De adventkalender is open",
               tekst: "Tot en met 24 december gaat er elke dag één vakje open. Een gemist vakje is weg, dus kom elke dag even langs. Wie je nu uitnodigt, kan meteen meedoen." }
           : { ic: "cadeau", kop: "Mis de adventkalender niet",
-              tekst: "Vanaf dinsdag 1 december gaat er elke dag één vakje open, tot en met 24 december. Er zitten eikels, sporen om te raden en dingen in die je nergens anders krijgt. Een gemist vakje is weg, dus kom elke dag even langs. Nodig nu iemand uit, dan speelt die vanaf het eerste vakje mee." }
+              tekst: "Vanaf dinsdag 1 december gaat er elke dag één vakje open, tot en met 24 december. Er zitten eikels, sporen om te raden en beloningen in die je nergens anders krijgt. Een gemist vakje is weg, dus kom elke dag even langs. Nodig nu iemand uit, dan speelt die vanaf het eerste vakje mee." }
       ] });
   } });
