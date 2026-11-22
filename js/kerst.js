@@ -462,10 +462,31 @@ const Kerst = (() => {
     if (musKijk){ musKijk.disconnect(); musKijk = null; }
     if (!grid.classList.contains("mus-wacht")) return;
     grid.classList.remove("mus-wacht");
-    if (rustig() || $("adventPop").hidden) return;
-    grid.classList.add("mus-vliegt");
-    setTimeout(() => grid.classList.remove("mus-vliegt"), 2000);
+    if (rustig() || $("adventPop").hidden || !grid.querySelector(".kerstmus")) return;
+    /* een kopie vliegt boven de pop-up vanaf de linkerrand van het scherm naar de plek van de echte mus;
+       die plek wordt elk beeld opnieuw gemeten, want de kalender kan intussen scrollen */
+    const vlieger = document.createElement("div");
+    vlieger.className = "musvlucht"; vlieger.innerHTML = KERSTMUS;
+    const svg = vlieger.firstElementChild;
+    grid.classList.add("mus-weg");
+    $("adventPop").appendChild(vlieger);
+    const plaats = () => {
+      const echt = grid.querySelector(".kerstmus"); if (!echt) return null;
+      const r = echt.getBoundingClientRect();
+      vlieger.style.left = r.left + "px"; vlieger.style.top = r.top + "px"; vlieger.style.width = r.width + "px";
+      return r;
+    };
+    const r = plaats();
+    svg.style.setProperty("--sx", -(r.right + 24) + "px");
+    svg.classList.add("vliegt");
+    let loopt = true;
+    const volg = () => { if (!loopt) return; plaats(); requestAnimationFrame(volg); };
+    requestAnimationFrame(volg);
+    const klaar = () => { if (!loopt) return; loopt = false; vlieger.remove(); grid.classList.remove("mus-weg"); };
+    svg.addEventListener("animationend", e => { if (e.target === svg) klaar(); });
+    setTimeout(klaar, 2600);
   }
+
   function sluit(){ if (!bezig) $("adventPop").hidden = true; }
 
   if ($("adventBtn")) $("adventBtn").addEventListener("click", open);
