@@ -63,12 +63,27 @@ const Duel = (() => {
     if (!p()) return null;
     const r = await rpc("duel_status", args()), s = Array.isArray(r) ? r[0] : r;
     zet(K.st, s || {}); badge();
+    /* update 109: het telletje op het app-icoon telt alleen uitnodigingen die je nog niet oppakte; daarvoor is de lijst nodig */
+    if (s && s.voor_jou > 0 && VIEW !== "duel") haalLijst().catch(() => {});
+    else if (s && !(s.voor_jou > 0)) appIcoon(0);   // niets voor jou: dan ook geen uitnodiging, wat de oude lijst ook zegt
     return s;
   }
   async function haalLijst(){
     const r = await rpc("duel_lijst", args());
     zet(K.lijst, r || []);
+    appIcoon();
     return r || [];
+  }
+  /* ---------- update 109 (Tom, 23 november): een 1'tje op het app-icoon bij een uitnodiging die je nog niet oppakte ----------
+     Telt duels waarin jij bent uitgedaagd en nog geen casus opende (niet gespeeld, niet afgewezen). Werkt alleen waar de
+     browser het app-icoon mag tekenen (Badging API): de geïnstalleerde app op iPhone/iPad (met meldingen aan), en op de
+     laptop in Chrome en Edge. Android kent het niet: daar zet het systeem zelf een stipje bij een pushmelding.
+     Is de app dicht, dan zet de service worker het getal bij de pushmelding van een uitdaging (update 70). */
+  const isUitnodiging = d => d.status === "bezig" && d.ik === "tegenstander" && !d.link && !(d.mijn || []).length && !(spel(d.id) || {}).t0;
+  function appIcoon(vast){
+    if (demo || !("setAppBadge" in navigator)) return;
+    const n = vast !== undefined ? vast : p() ? cache().filter(isUitnodiging).length : 0;
+    try { (n ? navigator.setAppBadge(n) : navigator.clearAppBadge()).catch(() => {}); } catch(e){}
   }
   /* bolletje op de tab Spelen als er een uitdaging of uitslag op je wacht */
   function badge(){
@@ -135,6 +150,7 @@ const Duel = (() => {
     else { lok = Object.assign({}, lok, { r, t0: Date.now(), g: null, ms: null, klaar: r }); spelZet(d.id, lok); }
     huidig = d;
     if (r === 0 && !lok.begon) begin(d.id);
+    appIcoon();
     sluitPop();
     showGame(); inBeeld($("gameView")); window.scrollTo({ top: 0, behavior: "auto" });
     if (S.status !== "playing" && !(lok.stuur || []).some(x => x.r === r)) naCasus();     // klaar maar nog niet verstuurd
@@ -190,7 +206,7 @@ const Duel = (() => {
     return d;
   }
   async function stuurAlles(){ for (const id of Object.keys(spelAlle())) await stuur(id); }
-  function werkBij(d){ const ls = cache(), i = ls.findIndex(x => x.id === d.id); if (i >= 0) ls[i] = d; else ls.unshift(d); zet(K.lijst, ls); }
+  function werkBij(d){ const ls = cache(), i = ls.findIndex(x => x.id === d.id); if (i >= 0) ls[i] = d; else ls.unshift(d); zet(K.lijst, ls); appIcoon(); }
 
   /* ---------- in de uitslag van een duelcasus: wat nu ---------- */
   function vervolg(){ return `<div class="duelvervolg" id="duelVervolg">${vervolgBinnen()}</div>`; }
@@ -349,7 +365,7 @@ const Duel = (() => {
     return `<article class="lgcard duelkaart beurt">
       <div class="dk-top">${av(ikDaag ? (d.tegen || null) : d.tegen)}<div><h4>${wie}</h4><p class="fine">${esc(modus(d))} · ${mijn ? `casus ${mijn + 1} van 3` : "drie casussen"} · ${esc(nogTijd(d.verloopt))}</p></div></div>
       <div class="actions"><button class="btn" data-du="speel" data-id="${esc(d.id)}">${mijn ? "Ga verder" : "Speel"}</button>
-        ${!ikDaag && !mijn ? `<button class="linklike" data-du="weiger" data-id="${esc(d.id)}">Nee, bedankt</button>` : ""}<span class="msg"></span></div>${mijnCasussen(d)}</article>`;
+        ${!ikDaag && !mijn ? `<button class="btn line" data-du="weiger" data-id="${esc(d.id)}">Afwijzen</button>` : ""}<span class="msg"></span></div>${mijnCasussen(d)}</article>`;
   }
   function kaartUitslag(d){
     return `<article class="lgcard duelkaart uitslag">
@@ -391,7 +407,7 @@ const Duel = (() => {
     if (soort === "deel") return deel(d, msg, knop.closest("article"));
     if (soort === "revanche") return open({ uitdaag: true, tegen: d.tegen, revanche: d.status === "klaar" ? d.id : null, expert: d.expert });
     if (soort === "weiger"){
-      if (!knop.dataset.zeker){ knop.dataset.zeker = "1"; knop.textContent = "Zeker weten?"; setTimeout(() => { delete knop.dataset.zeker; knop.textContent = "Nee, bedankt"; }, 4000); return; }
+      if (!knop.dataset.zeker){ knop.dataset.zeker = "1"; knop.textContent = "Zeker weten?"; setTimeout(() => { delete knop.dataset.zeker; knop.textContent = "Afwijzen"; }, 4000); return; }
       try { await rpc("duel_weiger", args({ p_duel: d.id })); toast(`Je hebt het duel van ${d.tegen} afgeslagen.`); render(); }
       catch(e){ if (msg) msg.textContent = fout(e); }
     }
@@ -579,8 +595,7 @@ const Duel = (() => {
           <p>${aangenomen ? `Nu kunnen jullie allebei spelen: drie casussen in <b>${esc(modus(d))}</b>. Jullie hebben ${esc(nogTijd(d.verloopt))}.`
                : vrij ? `Drie casussen in <b>${esc(modus(d))}</b>. Neem je de uitdaging aan, dan spelen jullie allebei dezelfde casussen, binnen 48 uur.`
                : `Drie casussen in <b>${esc(modus(d))}</b>. ${esc(d.tegen)} speelt dezelfde casussen; jullie hebben ${esc(nogTijd(d.verloopt))}.`} Wie de meeste punten haalt, wint.</p></div>
-        <div class="actions"><button class="btn" id="duJa">${vrij ? "Neem de uitdaging aan" : "Speel nu"}</button><button class="btn line" id="duLater">Later</button>
-          ${!vrij && !aangenomen ? `<button class="linklike" id="duNee">Nee, bedankt</button>` : ""}<span class="msg" id="duPopMsg"></span></div>
+        <div class="actions"><button class="btn" id="duJa">${vrij ? "Neem de uitdaging aan" : "Speel nu"}</button>${!vrij && !aangenomen ? `<button class="btn line" id="duNee">Afwijzen</button>` : ""}<button class="linklike" id="duLater">Later</button><span class="msg" id="duPopMsg"></span></div>
         <p class="fine">Wat de ander deed, zie je pas als jullie allebei klaar zijn. Een duel telt niet voor de ranglijst.</p>`;
       pop.hidden = false; $("duJa").focus({ preventScroll: true });
       /* ook sluiten via de achtergrond of Escape telt als een keuze (‘later’) */
@@ -709,7 +724,7 @@ const Duel = (() => {
 
   /* ---------- opstarten ---------- */
   function start(){
-    badge();
+    badge(); appIcoon();
     if (demo) NEP.begin();
     if (!p()) return;
     stuurAlles().then(() => haalStatus()).catch(() => {});

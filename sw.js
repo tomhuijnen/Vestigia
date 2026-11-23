@@ -1,7 +1,7 @@
 /* Vestigia service worker: de app werkt offline; de ranglijst gaat altijd via het netwerk. */
 /* VERSION niet met de hand aanpassen: node tools/versie.mjs zet hem, en zet hetzelfde nummer achter de bestanden in index.html (?v=…).
    Zo haalt een geïnstalleerde app na een update nooit een nieuwe pagina met oude scripts uit de cache. */
-const VERSION = "vestigia-202611231526";
+const VERSION = "vestigia-202611231539";
 const STAMP = VERSION.slice("vestigia-".length);
 const ASSETS = ["css/vestigia.css", "js/fouten.js", "data/teksten.js", "data/soorten.js", "data/sporen.js", "data/dagschema.js", "data/veldweken.js", "data/toelichting.js", "data/weetjes.js", "data/zoekgroepen.js", "data/bronnen.js",
   "js/kern.js", "js/spel.js", "js/veldboek.js", "js/melden.js", "js/kop.js", "js/spelen.js", "js/opening.js", "data/vesti.js", "js/uitleg.js", "js/online.js", "js/league.js", "data/avatars.js", "js/profiel.js", "data/advent.js", "js/wachtrij.js", "js/kerst.js", "data/dwaalgasten.js", "js/dwaalgast.js", "js/nieuw.js", "js/vesti.js", "js/levels.js", "js/boost.js", "js/statistiek.js", "js/duel.js", "js/spelerskaart.js", "js/qrcode.js", "js/apparaat.js", "js/push.js", "js/week.js", "js/app.js"];
@@ -48,6 +48,8 @@ self.addEventListener("fetch", e => {
 /* pushmeldingen (update 18): het seintje van 19:00. Een tik opent de app (of haalt hem naar voren) op de dagcasus. */
 self.addEventListener("push", e => {
   let d = {}; try { d = e.data ? e.data.json() : {}; } catch(x){ d = { tekst: e.data ? e.data.text() : "" }; }
+  /* update 109: bij een uitdaging het aantal open uitnodigingen op het app-icoon (waar de browser dat kan) */
+  if (d.badge > 0 && self.navigator && "setAppBadge" in self.navigator) self.navigator.setAppBadge(d.badge).catch(() => {});
   e.waitUntil(self.registration.showNotification(d.titel || "Vestigia", {
     body: d.tekst || "De dagcasus van vandaag wacht nog op je.",
     icon: "icons/app-192.png", badge: "icons/app-192.png",
