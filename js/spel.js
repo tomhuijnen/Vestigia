@@ -489,6 +489,7 @@ function renderResult(){
     ${S.mode === "duel" ? `<p class="dexnote">Een duelcasus komt niet in je ${NAAM.vestiarium}. ${(store.get().dex || {})[t.id] && store.get().dex[t.id].w > 0 ? `Plaat nº ${dexNo(t.id)} heb je al.` : "Oefen deze soort om hem erin te krijgen."} <button class="linklike" id="toDex">Open het ${NAAM.vestiarium}</button></p>`
       : ontdek ? ontdekPlaat(t) : `<p class="dexnote">${won ? `Plaat <b>nº ${dexNo(t.id)}</b> staat nu in je ${NAAM.vestiarium}.` : `Genoteerd als waargenomen in je ${NAAM.vestiarium} (nº ${dexNo(t.id)}).`} <button class="linklike" id="toDex">Open het ${NAAM.vestiarium}</button></p>`}
     <button class="reportbtn" id="repFromResult">Klopt er iets niet in deze casus? Meld een fout</button>`;
+  if (typeof Vesti !== "undefined") Vesti.uitslag(card, won);   // update 81: juicht bij goed, teleurgesteld bij niet gedetermineerd
   const vw = S.mode === "daily" ? veldweek(S.caseNo - 1) : null;
   const vwKaart = vw ? stempelkaart(store.get(), vw) : null;
   card2.innerHTML = `

@@ -2419,3 +2419,90 @@ html.donker .tweelingflits{background:#2a2414; color:#f1dc9e}
 @keyframes cpIn{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
 @keyframes cpVolg{from{transform:translateX(28px); opacity:.2} to{transform:none; opacity:1}}
 @media (prefers-reduced-motion:reduce){ .combipil, #wachtPop.cp-volgende:not([hidden]) .sheet{animation:none} }
+
+/* ---------- Vesti, de mascotte (update 81; js/vesti.js, tekeningen in data/vesti.js) ----------
+   Alles binnen .vesti en met v-… in de animatienamen, zodat niets botst met de rest van de app. */
+.vesti-plek{display:block; pointer-events:none}
+.vesti-plek svg{display:block; width:100%; height:auto}
+html.donker .vesti{filter:drop-shadow(0 0 .8px #f3e0bd) drop-shadow(0 0 .8px #f3e0bd)}
+.vesti *{transform-box:view-box}
+.vesti .adem{transform-origin:120px 228px; animation:v-adem 3.2s ease-in-out infinite}
+.vesti .staartstand{transform-origin:152px 205px}
+.vesti .staart{transform-origin:152px 205px; animation:v-zwiep 2.8s ease-in-out infinite}
+.vesti .ogen{transform-origin:120px 95px; animation:v-knipper 5s infinite}
+.vesti .oor-l{transform-origin:96px 66px; animation:v-oorL 7s infinite}
+.vesti .oor-r{transform-origin:144px 66px; animation:v-oorR 7s 1.3s infinite}
+.vesti .schaduw{transform-origin:120px 230px}
+.vesti.u-uitleg .arm-r{transform-origin:146px 148px; animation:v-wijs 1.6s ease-in-out infinite}
+.vesti.u-juicht .spring{transform-origin:120px 230px; animation:v-hop .9s ease-in-out infinite}
+.vesti.u-juicht .schaduw{animation:v-schaduw .9s ease-in-out infinite}
+.vesti.u-juicht .arm-l{transform-origin:94px 148px; animation:v-zwaaiL .45s ease-in-out infinite alternate}
+.vesti.u-juicht .arm-r{transform-origin:146px 148px; animation:v-zwaaiR .45s ease-in-out infinite alternate}
+.vesti.u-juicht .vonk{animation:v-vonk .9s ease-in-out infinite}
+.vesti.u-juicht .vonk2{animation-delay:.45s}
+.vesti.u-teleurgesteld .oor-l{animation:none; transform:rotate(-24deg)}
+.vesti.u-teleurgesteld .oor-r{animation:none; transform:rotate(24deg)}
+.vesti.u-teleurgesteld .staartstand{transform:rotate(8deg)}
+.vesti.u-teleurgesteld .staart{animation:v-zwiepmoe 4.5s ease-in-out infinite}
+.vesti.u-teleurgesteld .adem{animation:v-zucht 4.2s ease-in-out infinite}
+.vesti.u-teleurgesteld .kop{transform-origin:120px 136px; animation:v-hang 4.2s ease-in-out infinite}
+.vesti.u-slaapt .adem{animation:v-slaap 4.8s ease-in-out infinite}
+.vesti.u-slaapt .kop{transform-origin:120px 136px; transform:rotate(-8deg)}
+.vesti.u-slaapt .staart{animation:v-zwiepmoe 6s ease-in-out infinite}
+.vesti.u-slaapt .oor-l, .vesti.u-slaapt .oor-r{animation:none}
+.vesti.u-slaapt .zzz{animation:v-zweef 3.6s ease-out infinite; opacity:0}
+.vesti.u-slaapt .zzz2{animation-delay:1.2s}
+.vesti.u-slaapt .zzz3{animation-delay:2.4s}
+.vesti .pupil{animation:v-lees 5s ease-in-out infinite}
+.vesti.vkijkt .duik{animation:v-opduik .6s cubic-bezier(.3,1.4,.5,1) both}
+.vesti.vkijkt .pootjes{animation:v-poten .35s .45s ease-out both}
+@keyframes v-adem{50%{transform:scale(1.015,1.03)}}
+@keyframes v-zwiep{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(5deg)}}
+@keyframes v-knipper{0%,92%,97%,100%{transform:scaleY(1)}94.5%{transform:scaleY(.08)}}
+@keyframes v-oorL{0%,82%,90%,100%{transform:none}85%{transform:rotate(-9deg)}}
+@keyframes v-oorR{0%,82%,90%,100%{transform:none}85%{transform:rotate(9deg)}}
+@keyframes v-wijs{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(6deg)}}
+@keyframes v-hop{0%,100%{transform:none}15%{transform:scale(1.04,.95)}45%{transform:translateY(-16px) scale(.97,1.04)}75%{transform:scale(1.03,.97)}}
+@keyframes v-schaduw{45%{transform:scale(.72)}}
+@keyframes v-zwaaiL{from{transform:rotate(-7deg)}to{transform:rotate(6deg)}}
+@keyframes v-zwaaiR{from{transform:rotate(7deg)}to{transform:rotate(-6deg)}}
+@keyframes v-vonk{0%,100%{opacity:0}40%,60%{opacity:1}}
+@keyframes v-zwiepmoe{0%,100%{transform:rotate(-1deg)}50%{transform:rotate(2deg)}}
+@keyframes v-zucht{0%,100%{transform:none}35%{transform:scale(1.02,1.045)}60%{transform:scale(1,.985)}}
+@keyframes v-hang{0%,100%{transform:translateY(1px)}60%{transform:translateY(4px) rotate(-3deg)}}
+@keyframes v-slaap{50%{transform:scale(1.025,1.05)}}
+@keyframes v-zweef{0%{opacity:0;transform:translate(-10px,14px)}25%{opacity:1}100%{opacity:0;transform:translate(8px,-10px)}}
+@keyframes v-lees{0%,100%{transform:translate(-2px,0)}45%,55%{transform:translate(2.4px,.6px)}}
+@keyframes v-opduik{from{transform:translateY(46px)}}
+@keyframes v-poten{from{opacity:0;transform:translateY(-6px)}}
+/* wolkje: spraak (met puntje) of gedachte (met bolletjes), altijd links van Vesti */
+.vesti-wolk{position:fixed; z-index:61; max-width:200px; box-sizing:border-box; padding:9px 13px; border-radius:16px; background:#fffdf7; color:#22302a; border:1.5px solid #2a1a10; font-size:14px; font-weight:600; line-height:1.35; box-shadow:0 3px 10px rgba(0,0,0,.18); pointer-events:none; animation:v-wolk .35s .6s cubic-bezier(.3,1.4,.5,1) both}
+html.donker .vesti-wolk{background:#f3eee2; color:#1d2620}
+.vesti-wolk.spraak::after{content:""; position:absolute; width:12px; height:12px; background:inherit; border:1.5px solid #2a1a10; border-left:0; border-top:0; transform:rotate(-45deg); right:-7.5px; bottom:14px}
+.vesti-wolk.gedachte{border-radius:22px}
+.vesti-wolk.gedachte::before, .vesti-wolk.gedachte::after{content:""; position:absolute; background:inherit; border:1.5px solid #2a1a10; border-radius:50%}
+.vesti-wolk.gedachte::before{width:11px; height:11px; right:-14px; bottom:4px}
+.vesti-wolk.gedachte::after{width:6px; height:6px; right:-23px; bottom:-2px}
+@keyframes v-wolk{from{opacity:0; transform:scale(.6) translateY(6px)}}
+/* koppie over de rand (boven alles, ook boven de tutorial) en ‘opzij’ (laptop: achter de melding, boven de achtergrond) */
+.vesti-kijkt{position:fixed; z-index:60}
+.vesti-opzij{position:fixed; z-index:0}
+.overlay > .vesti-voor{position:relative; z-index:1}
+/* welkom: groot boven de titel */
+.wk-vesti{display:block; width:176px; margin:-6px auto 0}
+/* uitslag: rechts naast ‘Toelichting’ en ‘Nieuwe casus’, voeten op de lijn van de onderste knop */
+.vesti-uitslag{display:flex; align-items:flex-end; gap:8px}
+.vesti-uitslag .vu-links{flex:1; min-width:0; display:grid; gap:10px; justify-items:start}
+.vesti-uitslag .vu-links > *{margin:0}
+.vesti-uitslag .vu-links > .toelbox{justify-self:stretch}
+.vesti-uitslag .vu-vesti{width:96px; flex:none; margin:-14px -6px -4px 0}
+@media (min-width:900px){ .vesti-uitslag .vu-vesti{width:150px; margin:-118px 10px -6px 0} }
+/* prestatie of mijlpaal: links van de medaille, voeten op de hoogte van de onderkant van de medaille */
+.belbadge.met-vesti{position:relative}
+.belbadge .vb-vesti{position:absolute; width:92px; right:calc(100% + 12px); bottom:2px}
+/* ranglijst zonder verbinding: slapend boven de tekst */
+.vesti-slaapt{display:block; width:130px; margin:8px auto 0}
+/* telefoon: het pilletje ‘1 van 3’ boven de combi-pop-up maakt plaats voor Vesti (Tom, 23 november 2026) */
+@media (max-width:899px){ html.vesti-aan #combiPil{display:none} }
+/* minder beweging: Vesti staat stil, z’s en wolkje blijven gewoon staan */
+@media (prefers-reduced-motion:reduce){ .vesti *, .vesti-wolk{animation:none!important} .vesti.u-slaapt .zzz{opacity:1} }

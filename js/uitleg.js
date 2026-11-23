@@ -75,6 +75,7 @@ const Uitleg = (() => {
     if (!kant){ kant = "onder"; top = Math.max(rand, innerHeight - kh - rand); left = midX; }   // laatste uitweg
     Object.assign(kaart.style, { top: top + "px", left: left + "px" });
     kaart.classList.toggle("boven", kant === "boven");
+    if (typeof Vesti !== "undefined") Vesti.tutorial(stap, spot, kaart, kant === "boven");   // update 81: koppie over de rand, met wolkje
   }
   function toon(i){
     stap = i;
@@ -97,6 +98,7 @@ const Uitleg = (() => {
     markeer();
     removeEventListener("resize", plaats); removeEventListener("scroll", plaats, true);
     document.removeEventListener("keydown", toets, true);
+    if (typeof Vesti !== "undefined") Vesti.weg();
     root.remove(); root = null; doelEl = null;
     setInert(false);
     window.scrollTo({ top: 0, behavior: "auto" });
@@ -157,6 +159,7 @@ const Uitleg = (() => {
           <p class="wk-fijn">Hierna volgt een korte uitleg van de app in vijf stappen.</p>
           <button class="btn wk-door" type="button">Doorgaan</button>
         </div>`;
+      if (typeof Vesti !== "undefined") Vesti.welkom(el.querySelector(".wk-kaart"));   // update 81: Vesti stelt zich voor
       document.body.appendChild(el);
       setInert(true);
       const knop = el.querySelector(".wk-door");

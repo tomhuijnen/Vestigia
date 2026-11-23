@@ -205,7 +205,7 @@ const online = (() => {
         $("rankMe").innerHTML = `${wk ? wk.pts : 0}<small>jouw punten deze week</small>`;
       }
     } catch(e){
-      list.innerHTML = Veld.aan() ? `<p class="rankempty"><b>Veldmodus.</b> Zonder internet kan de ranglijst niet laden. Je speelt gewoon verder; je dagscore wordt verstuurd zodra je weer verbinding hebt.</p>` : `<p class="rankempty">De ranglijst is nu niet bereikbaar. Controleer je internetverbinding en probeer het later opnieuw.</p>`;
+      list.innerHTML = Veld.aan() ? `<p class="rankempty"><b>Veldmodus.</b> Zonder internet kan de ranglijst niet laden. Je speelt gewoon verder; je dagscore wordt verstuurd zodra je weer verbinding hebt.</p>` : `${typeof Vesti !== "undefined" ? Vesti.slaapt() : ""}<p class="rankempty">De ranglijst is nu niet bereikbaar. Controleer je internetverbinding en probeer het later opnieuw.</p>`;
     }
   }
   function renderPlayerBox(){
