@@ -128,8 +128,9 @@ const Spelen = (() => {
     nu.hidden = !gegokt;
     if (gegokt) nu.innerHTML = `Je gokte de <b>${esc(gegokt.n.toLowerCase())}</b>: de tweelingsoort van het antwoord.`;
     $("tweelingPop").hidden = false; $("tweelingOk").focus({ preventScroll: true });
+    if (typeof Vesti !== "undefined") requestAnimationFrame(() => Vesti.melding("tweeling", $("tweelingPop")));   // update 81
   }
-  function tweelingSluit(){ $("tweelingPop").hidden = true; if (terug && terug.focus) terug.focus({ preventScroll: true }); }
+  function tweelingSluit(){ if (typeof Vesti !== "undefined") Vesti.weg(); $("tweelingPop").hidden = true; if (terug && terug.focus) terug.focus({ preventScroll: true }); }
   function tweelingEersteKeer(gegokt){
     try { if (localStorage.getItem(TWEELING)) return; localStorage.setItem(TWEELING, "1"); } catch(e){ return; }
     tweeling(gegokt);

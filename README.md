@@ -43,6 +43,8 @@ Determinatiespel over beschermde fauna van Nederland: herken de soort aan habita
 | `js/week.js` | ‘Je week in Vestigia’ en het league-kroontje (update 25): op maandag of dinsdag één pop-up met je eindplaats van vorige week in de weekranglijst en je leagues (hooguit 2, plaats alleen in de top 10, ▲/▼ alleen als je de week ervoor ook geplaatst was), met de mijlpalen podium en weekwinnaar; kroontje achter de naam voor de top 3 van vorige week in een league. Rekent met `leaderboard_range` en `league_board`, dus geen SQL. Voorbeeld met `?week=demo` (`&plek=1`, `&plek=12`) |
 | `js/boost.js` | XP-boost (update 48, aan met de levels): de 1e, 5e, 10e … keer in één poging goed (klassiek) = +100 XP; banner met draaiend diamantje van boven, vóór de XP-vlucht en de pop-ups na het spel; gemiste boosts in één banner bij het openen (wachtrij 1,4); voorbeeld met `?boost=demo` of `?boost=demo&n=12` |
 | `js/qrcode.js` | QR-codes maken: qrcode-generator 1.4.4 van Kazuhiko Arase (MIT-licentie, ongewijzigd) |
+| `data/vesti.js` | tekeningen en wolkjes van Vesti, de mascotte; gemaakt door `node tools/vesti.mjs` uit `tools/vesti/` (niet met de hand aanpassen) |
+| `js/vesti.js` | Vesti (update 81): welkom (stelt zich voor), tutorial en meldingen met een wolkje (koppie over de rand; op de laptop ernaast), uitslag (juicht of teleurgesteld), prestatie/mijlpaal en de ranglijst zonder verbinding (slaapt). Aan zodra je de Wrapped zag (`vestigia:wrapped-gezien`) of vanaf vr 8 januari 2027; testen met `?vesti=demo` |
 | `js/app.js` | spelregels, kop, installeren en opstarten |
 | `sw.js` | service worker (offline, updates en het tonen van pushmeldingen) |
 

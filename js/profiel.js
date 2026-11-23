@@ -318,6 +318,7 @@ const Profiel = (() => {
           <p>${een ? esc(een.sub.replace(/^(Prestatie|Mijlpaal) · ?/, "")) || "Een mijlpaal blijft altijd van jou." : "Na dit spel heb je meerdere doelen gehaald."}</p></div>
         <div class="lvbuitlijst">${rijen}</div>
         <button class="btn" id="lvVerder">Verder</button>`, "belpop");
+      if (typeof Vesti !== "undefined") Vesti.prestatie($("wachtBody"));   // update 81: Vesti juicht naast de medaille
     }
     bindTitelZet($("wachtBody"));
     /* de eikels vliegen pas als de pop-up staat; rij voor rij */

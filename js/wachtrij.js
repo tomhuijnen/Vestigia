@@ -108,7 +108,10 @@ const Wachtrij = (() => {
   function pilWeg(){ if (kijker){ kijker.disconnect(); kijker = null; } const el = $("combiPil"); if (el) el.remove(); $("wachtPop").classList.remove("combi", "cp-stapel", "cp-volgende"); }
   async function reeks(rij){
     stop = false;
-    if (rij.length === 1){ try { await rij[0].toon(); } catch(e){} return; }
+    /* update 81: Vesti kijkt mee bij meldingen met een wolkje (VESTI_WOLKJES) */
+    const vesti = k => { if (typeof Vesti !== "undefined") requestAnimationFrame(() => Vesti.melding(k.id, $("wachtPop"))); };
+    const vestiWeg = () => { if (typeof Vesti !== "undefined") Vesti.weg(); };
+    if (rij.length === 1){ try { const p = rij[0].toon(); vesti(rij[0]); await p; } catch(e){} vestiWeg(); return; }
     try {
       for (let i = 0; i < rij.length; i++){
         if (i > 0 && (ietsOpen() || update())) break;   // je ging ergens anders heen: de rest de volgende keer
@@ -116,7 +119,9 @@ const Wachtrij = (() => {
         try { p = rij[i].toon(); } catch(e){ continue; }
         pil(rij, i);
         $("wachtPop").classList.toggle("cp-volgende", i > 0);
+        vesti(rij[i]);
         try { await p; } catch(e){}
+        vestiWeg();
         if (stop) break;
         await wacht(30);
       }
