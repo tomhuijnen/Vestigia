@@ -2506,3 +2506,8 @@ html.donker .vesti-wolk{background:#f3eee2; color:#1d2620}
 @media (max-width:899px){ html.vesti-aan #combiPil{display:none} }
 /* minder beweging: Vesti staat stil, z’s en wolkje blijven gewoon staan */
 @media (prefers-reduced-motion:reduce){ .vesti *, .vesti-wolk{animation:none!important} .vesti.u-slaapt .zzz{opacity:1} }
+/* Vesti stelt zich voor (pop-up voor wie al speelde maar de Wrapped niet zag) */
+#wachtPop.vesti-intro .vi-vesti{width:170px; margin:-4px auto -6px}
+#wachtPop.vesti-intro .nw-stap{text-align:center}
+#wachtPop.vesti-intro .vi-fijn{font-size:var(--fs-s); color:var(--ink-2)}
+#wachtPop.vesti-intro .nw-knoppen{justify-content:flex-end}

@@ -20,6 +20,7 @@ const Vesti = (() => {
     return Date.now() >= VANAF;
   }
   const laptop = () => matchMedia("(min-width:900px)").matches;
+  const INTRO = "vestigia:nieuw:vesti";   // Vesti heeft zich voorgesteld (gaat mee naar je andere apparaten)
   if (aan()) document.documentElement.classList.add("vesti-aan");
   const RAND = 136 / 144, KIJK_H = 144 / 140, HEEL_H = 258 / 232, VOET = 0.961;
 
@@ -88,6 +89,7 @@ const Vesti = (() => {
     if (poot){ poot.className = "wk-vesti"; poot.innerHTML = ""; poot.appendChild(heel("uitleg", "")); }
     const h = kaart.querySelector("#welkomH"); if (h) h.innerHTML = "Hoi! Ik ben Vesti.<br>Welkom bij Vestigia!";
     const f = kaart.querySelector(".wk-fijn"); if (f) f.textContent = "Hierna leg ik je de app uit in vijf stappen.";
+    try { localStorage.setItem(INTRO, "1"); } catch(e){}   // een nieuwe speler leert Vesti hier kennen
   }
   /* Tutorial: over het oplichtende kader; staat het kaartje erboven, dan over het kaartje */
   function tutorial(i, spot, kaart, boven){
@@ -131,5 +133,38 @@ const Vesti = (() => {
   /* Ranglijst zonder verbinding */
   const slaapt = () => aan() ? `<span class="vesti-slaapt" aria-hidden="true">${VESTI_TEKENING.heel.slaapt}</span>` : "";
 
-  return { aan, welkom, tutorial, melding, uitslag, prestatie, slaapt, weg };
+  /* Voorstellen (Tom, 23 november 2026): wie al speelde maar de Wrapped niet zag, krijgt één pop-up waarin Vesti zich
+     voorstelt, zodat hij voor niemand uit het niets in de app staat. In de Wrapped stelt hij zich zelf voor; een nieuwe
+     speler leert hem kennen in het welkom. Als losse melding vóór alles (prio 0,9): de combi-pop-up met Vesti komt dan pas
+     de volgende keer. Voorbeeld: ?vesti=demo&voorstellen=1 */
+  function voorstellenNodig(){
+    if (!aan()) return false;
+    if (demo && /[?&]voorstellen=1\b/.test(location.search)) return true;
+    try { if (localStorage.getItem(INTRO) || localStorage.getItem("vestigia:wrapped-gezien")) return false; } catch(e){ return false; }
+    const st = store.get();
+    return (st.log || []).length > 0 || Object.keys(st.dex || {}).length > 0;   // speelde al eerder
+  }
+  function voorstellen(){
+    try { localStorage.setItem(INTRO, "1"); } catch(e){}
+    return new Promise(klaar => {
+      const pop = $("wachtPop"), body = $("wachtBody");
+      const dicht = () => { pop.hidden = true; pop.classList.remove("nieuw", "vesti-intro"); document.removeEventListener("keydown", esc_, true); klaar(); };
+      const esc_ = e => { if (e.key === "Escape"){ e.preventDefault(); e.stopPropagation(); dicht(); } };
+      body.innerHTML = `
+        <div class="nw-kop"><span class="caps">Nieuw in Vestigia</span></div>
+        <div class="vi-vesti" aria-hidden="true">${VESTI_TEKENING.heel.uitleg}</div>
+        <div class="nw-stap"><h2 id="wachtH">Hoi! Ik ben Vesti.</h2>
+          <p>Vanaf nu ben ik je veldgids in Vestigia. Ik leg nieuwe dingen uit, kijk af en toe met je mee en juich als je een soort goed hebt.</p>
+          <p class="vi-fijn">Speel je een casus niet goed? Dan baal ik gewoon even met je mee.</p></div>
+        <div class="nw-knoppen"><button class="btn" id="viOk">Hoi Vesti!</button></div>`;
+      $("viOk").onclick = dicht;
+      pop.classList.add("nieuw", "vesti-intro");
+      pop.hidden = false;
+      document.addEventListener("keydown", esc_, true);
+      $("viOk").focus({ preventScroll: true });
+    });
+  }
+  if (typeof Wachtrij !== "undefined") Wachtrij.voeg({ id: "vestivoorstellen", prio: 0.9, kan: voorstellenNodig, toon: voorstellen });
+
+  return { aan, welkom, tutorial, melding, uitslag, prestatie, slaapt, weg, voorstellen };
 })();

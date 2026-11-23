@@ -114,7 +114,7 @@ document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("medPop
    neemt de hoogste waarde, een vlag blijft staan zodra één apparaat hem heeft. Alleen wat over de speler gaat; wat
    per apparaat hoort (pushmeldingen, installeren, thema, openingsanimatie) blijft op het apparaat. */
 const GEZIEN_MAX = ["vestigia:xpLevelGezien", "vestigia:boostGezien", "vestigia:weekPop", "vestigia:adventGetoond", "vestigia:dwaalLater"];
-const GEZIEN_VLAG = ["vestigia:pionierGezien", "vestigia:tutorial", "vestigia:codeBewaard", "vestigia:tweeling-uitleg"];
+const GEZIEN_VLAG = ["vestigia:pionierGezien", "vestigia:tutorial", "vestigia:codeBewaard", "vestigia:tweeling-uitleg", "vestigia:wrapped-gezien"];   // update 81: Wrapped gezien → Vesti aan, op al je apparaten
 const GEZIEN_OBJ = ["vestigia:avatarHerinnering"];       // { n, dag }: per veld de hoogste
 const isGezien = k => GEZIEN_MAX.includes(k) || GEZIEN_VLAG.includes(k) || GEZIEN_OBJ.includes(k) || /^vestigia:nieuw:[\w-]+$/.test(k);
 function gezienData(){
