@@ -164,8 +164,10 @@ function submitGuess(id){
   /* update 19: waar stond het invoerveld op het scherm? De balk met de uitslag komt precies daar */
   const invoerOpScherm = S.status !== "playing" ? $("gInput").getBoundingClientRect().top : null;
   if (S.status !== "playing"){
-    /* update 16: een duelcasus levert geen plaat op in het Vestiarium; het duel zelf regelt eikels en XP */
-    recordStats(); if (S.mode !== "duel") recordDex(); if (!(S.mode === "duel" && Duel.demo)) recordLog(); freshResult = true;
+    /* update 16 liet een duelcasus buiten het Vestiarium. Update 102 (Tom, 23 november, optie A): een soort die je in een duel
+       vindt, krijgt nu ook een plaat, net als bij oefenen (prestaties, groep compleet, en je fouten tellen al mee via het logboek).
+       Het voorbeeld (?duel=demo) verandert niets. Geen terugwerkende kracht voor duels van vóór deze update. */
+    recordStats(); if (!(S.mode === "duel" && Duel.demo)){ recordDex(); recordLog(); } freshResult = true;
     if (S.status === "won") try { navigator.vibrate && navigator.vibrate([30, 50, 70]); } catch(e){}
     if (S.mode === "duel") Duel.naCasus(); else online.afterGame();
   }
@@ -486,7 +488,7 @@ function renderResult(){
     <div class="confuse"><span class="caps">Verwar niet met</span><p><b>${esc(xs.n)}.</b> ${S.guesses.includes(t.x) ? "Die soort heb je in deze casus ook geprobeerd. " : ""}${esc(t.t)}</p></div>
     ${bronRij(t)}
     ${(S.newAwards || []).map(k => { const [kind, name] = awardLabel(k); return `<div class="awardnote"><span class="caps">Nieuwe ${kind.toLowerCase()}</span><b>${esc(name)}</b></div>`; }).join("")}
-    ${S.mode === "duel" ? `<p class="dexnote">Een duelcasus komt niet in je ${NAAM.vestiarium}. ${(store.get().dex || {})[t.id] && store.get().dex[t.id].w > 0 ? `Plaat nº ${dexNo(t.id)} heb je al.` : "Oefen deze soort om hem erin te krijgen."} <button class="linklike" id="toDex">Open het ${NAAM.vestiarium}</button></p>`
+    ${S.mode === "duel" && Duel.demo ? `<p class="dexnote">In het voorbeeld komt een duelcasus niet in je ${NAAM.vestiarium}. <button class="linklike" id="toDex">Open het ${NAAM.vestiarium}</button></p>`
       : ontdek ? ontdekPlaat(t) : `<p class="dexnote">${won ? `Plaat <b>nº ${dexNo(t.id)}</b> staat nu in je ${NAAM.vestiarium}.` : `Genoteerd als waargenomen in je ${NAAM.vestiarium} (nº ${dexNo(t.id)}).`} <button class="linklike" id="toDex">Open het ${NAAM.vestiarium}</button></p>`}
     <button class="reportbtn" id="repFromResult">Klopt er iets niet in deze casus? Meld een fout</button>`;
   if (typeof Vesti !== "undefined") Vesti.uitslag(card, won);   // update 81: juicht bij goed, teleurgesteld bij niet gedetermineerd
@@ -510,7 +512,7 @@ function renderResult(){
   wrap.hidden = false;
   if (S.mode === "duel"){
     Duel.bindVervolg();
-    $("toDex").onclick = () => showDex();
+    $("toDex").onclick = () => showDex(ontdek ? t.id : undefined);
     $("repFromResult").onclick = e => openReport(t.id, e.currentTarget, S.k);
     if ($("toelBtn")) $("toelBtn").onclick = () => {
       const box = $("toelBox"), open = box.hidden;
