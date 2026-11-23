@@ -638,7 +638,7 @@ const Duel = (() => {
     toon(){
       markeerUitleg();
       const o = Nieuw.ONDERDELEN.find(x => x.id === "spelersduel");
-      return Nieuw.toon(Object.assign({}, o, { actie: { label: "Naar het spelersduel", run: () => open() } }));
+      return Nieuw.toon(Object.assign({}, o, { actie: { label: "Naar het duel", run: () => open() } }));
     } });
 
   /* ---------- opstarten ---------- */
