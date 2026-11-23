@@ -1747,6 +1747,9 @@ html.donker .induel .toelbtn[aria-expanded="true"]{background:var(--dn); color:v
 #wachtPop.duelnieuw .btn{background:var(--du)}
 #wachtPop.duelnieuw .btn:hover{background:var(--du-d)}
 #wachtPop.duelnieuw .linklike{color:var(--du)}
+/* 23 november: tweede knop (‘Naar het duel’) in de melding bij openen: omlijnd in heidepaars */
+#wachtPop.duelnieuw .btn.line{background:transparent; color:var(--du); border-color:var(--du); box-shadow:none}
+#wachtPop.duelnieuw .btn.line:hover{background:var(--du-gloed)}
 @keyframes duNieuwIn{from{opacity:0; transform:scale(.85) translateY(14px)} to{opacity:1; transform:none}}
 @keyframes duIcoon{from{transform:scale(.4) rotate(-20deg)} to{transform:none}}
 @keyframes duBand{to{background-position:-200% 0}}
@@ -1754,6 +1757,7 @@ html.donker #wachtPop.duelnieuw .sheet{background:radial-gradient(120% 70% at 50
 html.donker #wachtPop.duelnieuw .nw-stap h2{color:var(--dn-l)}
 html.donker #wachtPop.duelnieuw .nw-kop .caps{color:var(--dn-l)}
 html.donker #wachtPop.duelnieuw .btn{background:var(--dn); color:var(--dn-bg)}
+html.donker #wachtPop.duelnieuw .btn.line{background:transparent; color:var(--dn-l); border-color:var(--dn-l)}
 @media (prefers-reduced-motion:reduce){ #wachtPop.duelnieuw .sheet, #wachtPop.duelnieuw .sheet::before, #wachtPop.duelnieuw .nw-ic{animation:none} }
 
 /* de pop-ups van het duel (uitdaging en uitslag) in dezelfde kleur */
