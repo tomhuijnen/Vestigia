@@ -17,10 +17,15 @@ function wanneer(id){
   return oefenbaar(id) ? "Hij was al dagcasus, dus je kunt hem nu ook oefenen."
     : "Je kunt hem pas oefenen nadat hij voor het eerst dagcasus is geweest.";
 }
+/* Update 110 (Tom, 23 november): ‘Oefen de scholekster’ gaf je meteen de scholekster, die je dan zo kon invullen en
+   verzamelen. Nu oefen je met de hele oefengroep van de nieuwe soort, en is de eerste casus nooit die nieuwe soort zelf
+   (niet: …); daarna kan hij gewoon tussen de rest voorbijkomen. */
 function nieuwOefenen(ids){
   if (!ids.every(id => oefenbaar(id))) return null;
-  const label = ids.length > 1 ? "Oefen de nieuwe soorten" : `Oefen de ${(BY_ID.get(ids[0]) || { n: "nieuwe soort" }).n.toLowerCase()}`;
-  return { label, run: () => startFree({ g: null, nieuw: false, ids }) };
+  const ogs = [...new Set(ids.map(id => OEFENGROEP_VAN[(BY_ID.get(id) || {}).g]).filter(Boolean))];
+  const g = ogs.length === 1 ? ogs[0] : null;
+  const label = g ? `Oefen met ${OEFENGROEPEN[g].naam.toLowerCase()}` : "Oefen met alle soorten";
+  return { label, run: () => startFree({ g, nieuw: false, niet: ids }) };
 }
 const Nieuw = (() => {
   const KEY = id => "vestigia:nieuw:" + id;

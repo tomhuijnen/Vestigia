@@ -107,7 +107,8 @@ function randomFree(exclude, f){
   const st = store.get(), recent = st.recent || [], dex = st.dex || {};
   const upcoming = new Set(Array.from({length:8}, (_, k) => daily(todayIndex() + k).id));
   const ids = f.ids ? aanvullen(f.ids) : null;      // ids: alleen deze soorten (je verwarringen), aangevuld tot MIN_KEUZE
-  const groep = TARGETS.filter(t => oefenbaar(t.id) && inOefengroep(t, og) && (!ids || ids.includes(t.id)));
+  const niet = new Set(f.niet || []);              // update 110: deze soorten niet als eerste casus (net aangekondigde nieuwe soort)
+  const groep = TARGETS.filter(t => oefenbaar(t.id) && inOefengroep(t, og) && (!ids || ids.includes(t.id)) && !niet.has(t.id));
   const open0 = groep.filter(t => !(dex[t.id] && dex[t.id].w > 0));
   const open = f.nieuw && open0.length < MIN_KEUZE ? groep : open0;
   const vers = t => t.id !== exclude && !recent.includes(t.id) && !upcoming.has(t.id);
@@ -116,7 +117,7 @@ function randomFree(exclude, f){
      soort die binnenkort dagcasus is. Eerder viel de enige open kever weg als hij net de casus was (of binnenkort dagcasus),
      en zei de app ten onrechte ‘Je hebt alle kevers al’. Dat verraadde bovendien dat die soort binnenkort dagcasus is. */
   const stappen = (f.nieuw ? [[open, vers], [open, nietBinnenkort], [open, t => t.id !== exclude], [open, () => true]] : [])
-    .concat([[groep, vers], [groep, nietBinnenkort], [groep, t => t.id !== exclude], [groep, () => true], [TARGETS.filter(t => oefenbaar(t.id)), () => true]]);
+    .concat([[groep, vers], [groep, nietBinnenkort], [groep, t => t.id !== exclude], [groep, () => true], [TARGETS.filter(t => oefenbaar(t.id) && !niet.has(t.id)), () => true]]);
   let pool = [], stap = 0;
   for (; stap < stappen.length; stap++){ pool = stappen[stap][0].filter(stappen[stap][1]); if (pool.length) break; }
   const t = pool[Math.floor(Math.random() * pool.length)];
