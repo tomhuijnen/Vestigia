@@ -33,7 +33,7 @@ const DAGSCHEMA = [
   "vuursalamander#4"                , //  28 · vr 4 dec 2026
   "wolf#4"                          , //  29 · za 5 dec 2026
   "grote-bosmuis#2"                 , //  30 · zo 6 dec 2026
-  "kerkuil#4"                       , //  31 · ma 7 dec 2026
+  "scholekster#2"                       , //  31 · ma 7 dec 2026
   "tweekleurige-vleermuis#2"        , //  32 · di 8 dec 2026
   "haas#4"                          , //  33 · wo 9 dec 2026
   "ingekorven-vleermuis#2"          , //  34 · do 10 dec 2026
@@ -142,7 +142,7 @@ const DAGSCHEMA = [
   "merel#2"                         , // 137 · di 23 mrt 2027
   "grijze-zeehond#4"                , // 138 · wo 24 mrt 2027
   "koolmees#3"                      , // 139 · do 25 mrt 2027
-  "vermiljoenkever#2"               , // 140 · vr 26 mrt 2027
+  "scholekster#3"                   , // 140 · vr 26 mrt 2027
   "rivierrombout#4"                 , // 141 · za 27 mrt 2027
   "boomvalk#1"                      , // 142 · zo 28 mrt 2027
   "ruige-dwergvleermuis#2"          , // 143 · ma 29 mrt 2027
@@ -189,7 +189,7 @@ const DAGSCHEMA = [
   "boerenzwaluw#4"                  , // 184 · zo 9 mei 2027
   "brilduiker#3"                    , // 185 · ma 10 mei 2027
   "vinpootsalamander#1"             , // 186 · di 11 mei 2027
-  "kievit#1"                        , // 187 · wo 12 mei 2027
+  "scholekster#1"                        , // 187 · wo 12 mei 2027
   "ree#3"                           , // 188 · do 13 mei 2027
   "grauwe-vliegenvanger#1"          , // 189 · vr 14 mei 2027
   "gierzwaluw#1"                    , // 190 · za 15 mei 2027
@@ -220,7 +220,7 @@ const DAGSCHEMA = [
   "grote-vos#2"                     , // 215 · wo 9 jun 2027
   "gewone-baardvleermuis#3"         , // 216 · do 10 jun 2027
   "ruigpootuil#2"                   , // 217 · vr 11 jun 2027
-  "glanskop#4"                      , // 218 · za 12 jun 2027
+  "scholekster#4"                      , // 218 · za 12 jun 2027
   "gewone-pad#3"                    , // 219 · zo 13 jun 2027
   "teunisbloempijlstaart#2"         , // 220 · ma 14 jun 2027
   "rivierrombout#2"                 , // 221 · di 15 jun 2027

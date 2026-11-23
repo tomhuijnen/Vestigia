@@ -223,7 +223,10 @@ if ("serviceWorker" in navigator && (location.protocol === "https:" || location.
   const hadController = !!navigator.serviceWorker.controller;
   let reloaded = false;
   /* update 18: tik op het seintje terwijl de app al open is → naar de dagcasus */
-  navigator.serviceWorker.addEventListener("message", e => { if (e.data === "dagcasus" && typeof MENU_GO !== "undefined" && MENU_GO.daily) MENU_GO.daily(); });
+  navigator.serviceWorker.addEventListener("message", e => {
+    if (e.data === "dagcasus" && typeof MENU_GO !== "undefined" && MENU_GO.daily) MENU_GO.daily();
+    if (e.data === "duel" && typeof Duel !== "undefined") Duel.open();          // update 70: seintje bij een uitdaging
+  });
   navigator.serviceWorker.addEventListener("controllerchange", () => { if (hadController && !reloaded && !stilBijgewerkt){ reloaded = true; location.reload(); } });
 }
 

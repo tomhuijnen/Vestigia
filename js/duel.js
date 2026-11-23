@@ -134,9 +134,15 @@ const Duel = (() => {
     if (lok.r === r && lok.g && lok.g.s === ronde.s){ S.guesses = lok.g.guesses || []; S.revealed = lok.g.revealed || 1; S.status = lok.g.status || "playing"; }
     else { lok = Object.assign({}, lok, { r, t0: Date.now(), g: null, ms: null, klaar: r }); spelZet(d.id, lok); }
     huidig = d;
+    if (r === 0 && !lok.begon) begin(d.id);
     sluitPop();
     showGame(); inBeeld($("gameView")); window.scrollTo({ top: 0, behavior: "auto" });
     if (S.status !== "playing" && !(lok.stuur || []).some(x => x.r === r)) naCasus();     // klaar maar nog niet verstuurd
+  }
+  /* update 103: de ander ziet ‘is begonnen’ zodra je je eerste casus opent (één keer per duel; mislukt het, dan niet erg) */
+  function begin(id){
+    if (!p()) return;
+    rpc("duel_begin", args({ p_duel: id })).then(() => { const lok = spel(id); if (lok){ lok.begon = true; spelZet(id, lok); } }).catch(() => {});
   }
   /* aangeroepen door spel.js na elke gok en extra waarneming */
   function bewaar(){
@@ -343,7 +349,7 @@ const Duel = (() => {
     return `<article class="lgcard duelkaart beurt">
       <div class="dk-top">${av(ikDaag ? (d.tegen || null) : d.tegen)}<div><h4>${wie}</h4><p class="fine">${esc(modus(d))} · ${mijn ? `casus ${mijn + 1} van 3` : "drie casussen"} · ${esc(nogTijd(d.verloopt))}</p></div></div>
       <div class="actions"><button class="btn" data-du="speel" data-id="${esc(d.id)}">${mijn ? "Ga verder" : "Speel"}</button>
-        ${!ikDaag && !mijn ? `<button class="linklike" data-du="weiger" data-id="${esc(d.id)}">Nee, bedankt</button>` : ""}<span class="msg"></span></div></article>`;
+        ${!ikDaag && !mijn ? `<button class="linklike" data-du="weiger" data-id="${esc(d.id)}">Nee, bedankt</button>` : ""}<span class="msg"></span></div>${mijnCasussen(d)}</article>`;
   }
   function kaartUitslag(d){
     return `<article class="lgcard duelkaart uitslag">
@@ -355,8 +361,16 @@ const Duel = (() => {
     const deelKnoppen = vrij || !n ? `<div class="actions"><a class="btn line wa" href="${esc(waLink(deelTekst(d)))}" target="_blank" rel="noopener">${WA_IC}WhatsApp</a><button class="btn line" data-du="deel" data-id="${esc(d.id)}">${deelAnders()}</button><span class="msg"></span></div>` : "";
     return `<article class="lgcard duelkaart">
       <div class="dk-top">${av(d.tegen || null)}<div><h4>${vrij ? "Duel met een link" : `Wacht op ${esc(d.tegen)}`}</h4>
-        <p class="fine">${esc(modus(d))} · ${vrij ? "nog door niemand aangenomen" : n ? `${esc(d.tegen)} speelde ${n} van 3` : "nog niet begonnen"} · ${esc(nogTijd(d.verloopt))}</p></div></div>
-      ${deelKnoppen}</article>`;
+        <p class="fine">${esc(modus(d))} · ${vrij ? "nog door niemand aangenomen" : n ? `${esc(d.tegen)} speelde ${n} van 3` : d.hun_begonnen ? `${esc(d.tegen)} is begonnen` : "nog niet begonnen"} · ${esc(nogTijd(d.verloopt))}</p></div></div>
+      ${deelKnoppen}${mijnCasussen(d)}</article>`;
+  }
+  /* update 107: in een lopend duel je eigen casussen terugzien (soort, goed of niet, punten); van de ander niets */
+  function mijnCasussen(d){
+    const mijn = (d.mijn || []).slice().sort((a, b) => a.r - b.r);
+    if (!mijn.length || !d.rondes) return "";
+    const li = mijn.map(x => { const t = BY_ID.get((d.rondes[x.r] || {}).s);
+      return `<li><div class="drsoort"><span class="caps">Casus ${x.r + 1}</span><b>${esc(t ? t.n : "?")}</b>${t ? `<i>${esc(t.s)}</i>` : ""}</div><div class="drspeler">${regel(x, d.expert)}</div></li>`; }).join("");
+    return `<details class="dumijn"><summary>Mijn casussen <small>${mijn.length} van 3 · ${som(mijn)} ${som(mijn) === 1 ? "punt" : "punten"}</small></summary><ol>${li}</ol></details>`;
   }
   function kaartKlaar(d){
     const pu = som(d.mijn), ph = som(d.hun);
@@ -746,7 +760,7 @@ const Duel = (() => {
       const pu = mijn.reduce((a, r) => a + r.punten, 0);
       return { id: d.id, code: d.code, ik: ikU ? "uitdager" : "tegenstander", tegen: ander, expert: d.expert, rondes: d.rondes, status: d.status, link: !!d.link,
         gemaakt: d.gemaakt, verloopt: d.status === "wacht" ? d.gemaakt + UUR48 : d.status === "bezig" ? d.start + UUR48 : null, klaar: d.klaar || null,
-        mijn, hun_aantal: hun.length, hun: d.status === "klaar" ? hun : [], uitslag, gezien: ikU ? !!d.gezien_u : !!d.gezien_t, revanche_van: d.revanche_van,
+        mijn, hun_aantal: hun.length, hun: d.status === "klaar" ? hun : [], hun_begonnen: hun.length > 0 || !!(d.begon || {})[ander], uitslag, gezien: ikU ? !!d.gezien_u : !!d.gezien_t, revanche_van: d.revanche_van,
         stand: { w: tegen.filter(x => x.winnaar === me).length, v: tegen.filter(x => x.winnaar === ander).length, g: tegen.filter(x => !x.winnaar).length },
         eikels: d.status === "klaar" ? 3 + pu + (uitslag === "gewonnen" ? 10 : uitslag === "gelijk" ? 5 : 0) : null };
     }
@@ -794,6 +808,7 @@ const Duel = (() => {
           rondes: kies(a.p_skip || []), status: tegen ? "bezig" : "wacht", link: !tegen, gemaakt: nu(), start: tegen ? nu() : null, spel: {}, revanche_van: a.p_revanche || null };
         v.duels.push(d); zet_(v);
         if (!tegen) laatAannemen(d.id);
+        else setTimeout(() => { const w = db(), x = w.duels.find(y => y.id === d.id); if (x && x.status === "bezig"){ x.begon = Object.assign({}, x.begon, { [tegen]: true }); zet_(w); ververs(); } }, 5000);
         return json(d);
       },
       duel_neem(a){ return r.duel_haal(a); },
@@ -808,6 +823,7 @@ const Duel = (() => {
         if (mijn.length === 3){ if ((d.spel[ander] || []).length === 3) afronden(d); else laatSpelen(d.id); }
         zet_(v); return json(d);
       },
+      duel_begin(a){ const v = db(), d = v.duels.find(x => x.id === a.p_duel); if (d){ d.begon = Object.assign({}, d.begon, { [ik()]: true }); zet_(v); } return true; },
       duel_weiger(a){ const v = db(), d = v.duels.find(x => x.id === a.p_duel); if (d){ d.status = "geweigerd"; d.klaar = nu(); zet_(v); } return null; },
       duel_gezien(a){ const v = db(), d = v.duels.find(x => x.id === a.p_duel); if (d){ if (d.uitdager === ik()) d.gezien_u = true; else d.gezien_t = true; zet_(v); } return null; },
       player_profiles(a){ return (a.p_names || []).filter(n => PROF[n]).map(n => ({ name: n, avatar: PROF[n][0], color: PROF[n][1], level: PROF[n][2], pct: PROF[n][3] })); }

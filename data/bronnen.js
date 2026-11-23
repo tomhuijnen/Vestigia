@@ -37,7 +37,7 @@ const WAARNEMING = {
   "gestippelde-alver":2101, "noordzeehouting":80129, "steenuil":34, "gierzwaluw":97, "kerkuil":33, "ooievaar":7, "ijsvogel":37, "roek":167,
   "oeverzwaluw":155, "slechtvalk":325, "ransuil":310, "huismus":122, "oehoe":300, "buizerd":82, "havik":117, "sperwer":178,
   "wespendief":349, "boomvalk":74, "grote-gele-kwikstaart":756, "bosuil":77, "torenvalk":188, "boerenzwaluw":65, "huiszwaluw":123,
-  "blauwe-reiger":64, "zwarte-specht":759, "groene-specht":40, "tapuit":46, "kievit":129, "spreeuw":180, "veldmuis":426,
+  "blauwe-reiger":64, "zwarte-specht":759, "groene-specht":40, "tapuit":46, "kievit":129, "scholekster":173, "spreeuw":180, "veldmuis":426,
   "gewone-baardvleermuis":373, "europese-steur":2120, "boomklever":70, "kauw":126, "zwarte-kraai":208, "grauwe-gans":104, "tuimelaar":422,
   "middelste-groene-kikker":2270, "witte-kwikstaart":202, "roodborsttapuit":45, "grutto":26, "merel":150, "houtduif":120, "patrijs":16,
   "witsnuitdolfijn":435, "wolf":70056, "zwarte-wouw":364, "bonte-vliegenvanger":69, "boomkruiper":71, "kortsnavelboomkruiper":337,

@@ -634,4 +634,8 @@ const WEETJES = {
   "zwarte-roodstaart:1": { t:"Vaak zingt hij al zo'n twee uur voor zonsopkomst.", bron:"Vogelbescherming, vogelgids zwarte roodstaart" },
   "zwarte-roodstaart:3": { t:"Een paartje heeft meestal twee legsels per jaar, soms drie.", bron:"Vogelbescherming, vogelgids zwarte roodstaart" },
   "zwarte-roodstaart:2": { t:"In de herfst eet de zwarte roodstaart ook zaden, bessen en vruchten.", bron:"Vogelbescherming, vogelgids zwarte roodstaart" },
+  "scholekster:0": { t:"Het mannetje maakt meerdere kuiltjes op het dak, soms versierd met steentjes of schelpjes; het vrouwtje kiest er één uit als nest.", bron:"Vogelbescherming, factsheet Scholekster op het dak" },
+  "scholekster:1": { t:"Zijn snavel slijt hard maar groeit snel bij: in de zomer wordt hij puntiger voor wormen, in de winter stomper voor schelpdieren.", bron:"Vogelbescherming, vogelgids scholekster" },
+  "scholekster:2": { t:"Een paartje keert vaak jaren achtereen terug naar dezelfde broedplaats, meestal in de buurt van waar ze zelf zijn opgegroeid.", bron:"Vogelbescherming, factsheet Scholekster op het dak" },
+  "scholekster:3": { t:"De kuikens zijn nestvlieders: ze hebben meteen dons en lopen binnen een dag al rond, maar worden nog weken door de ouders gevoerd.", bron:"Vogelbescherming, factsheet Scholekster op het dak" },
 };

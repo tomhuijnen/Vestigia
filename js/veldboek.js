@@ -14,13 +14,29 @@ function medalSpecies(st){
   for (const k of earned(st)) if (k.startsWith("M:") && BY_ID.has(k.slice(2))) ids.add(k.slice(2));
   return TARGETS.filter(t => ids.has(t.id));
 }
-function rosette(color, on, label){
+/* Update 106 (Tom, 23 november): in de groepsmedaille een tekening van een soort uit die groep in plaats van het aantal.
+   Uitsnede [midden x, midden y, grootte] binnen de avatartekening (100 × 100). Veldheer (alle soorten): een pootafdruk. */
+const TITEL_DIER = { Z: "das", R: "adder", A: "boomkikker", F: "kwabaal", B: "kerkuil", V: "grote-vos", L: "bosbeekjuffer", K: "vliegend-hert" };
+const TITEL_CROP = { das: [50, 50, 92], adder: [50, 52, 92], boomkikker: [50, 54, 90], kwabaal: [50, 50, 96], kerkuil: [50, 54, 104],
+                     "grote-vos": [50, 50, 96], bosbeekjuffer: [50, 50, 96], "vliegend-hert": [50, 50, 96] };
+let rosNr = 0;
+function rosetteDier(on, dier){
+  const c = "rs" + (++rosNr);
+  if (dier === "ALL") return `<g transform="translate(40 41)" fill="${on ? "currentColor" : "#9aa394"}" opacity="${on ? 1 : .6}"><ellipse cx="0" cy="6" rx="8" ry="6.5"/>
+    <ellipse cx="-9.5" cy="-4" rx="3.3" ry="4.2"/><ellipse cx="-3.4" cy="-10" rx="3.3" ry="4.4"/><ellipse cx="3.4" cy="-10" rx="3.3" ry="4.4"/><ellipse cx="9.5" cy="-4" rx="3.3" ry="4.2"/></g>`;
+  const [cx, cy, size] = TITEL_CROP[dier] || [50, 50, 92], k = 42 / size;
+  const tx = 19 - (cx - size / 2) * k, ty = 19 - (cy - size / 2) * k;
+  return `<defs><clipPath id="${c}"><circle cx="40" cy="40" r="21"/></clipPath></defs>
+    <g clip-path="url(#${c})"${on ? "" : ' opacity=".45" style="filter:grayscale(1)"'}><g style="--av-bg:${on ? "#f7f6f0" : "transparent"}" transform="translate(${tx.toFixed(2)} ${ty.toFixed(2)}) scale(${k.toFixed(4)})">${AVATARS[dier].replaceAll("{id}", c)}</g></g>`;
+}
+function rosette(color, on, label, dier){
   const pts = [];
   for (let i = 0; i < 32; i++){ const r = i % 2 ? 34 : 38, a = Math.PI * i / 16; pts.push((40 + r*Math.cos(a)).toFixed(1) + "," + (40 + r*Math.sin(a)).toFixed(1)); }
   return `<svg viewBox="0 0 80 80" aria-hidden="true"><polygon points="${pts.join(" ")}" fill="${on ? color : "none"}" stroke="${on ? color : "#b9c0b1"}" stroke-width="1.5" ${on ? "" : 'stroke-dasharray="3 3"'}/>
     <circle cx="40" cy="40" r="25" fill="${on ? "#f7f6f0" : "none"}" stroke="${on ? "#f7f6f0" : "#b9c0b1"}" stroke-width="1"/>
-    <circle cx="40" cy="40" r="21" fill="none" stroke="${on ? color : "#d3d8cd"}" stroke-width="1"/>
-    <text x="40" y="45.5" text-anchor="middle" font-family="Rubik, Arial, sans-serif" font-weight="600" font-size="16" fill="${on ? color : "#b9c0b1"}">${label}</text></svg>`;
+    ${dier && (dier === "ALL" || (typeof AVATARS !== "undefined" && AVATARS[dier])) ? `<g style="color:${on ? color : "#9aa394"}">${rosetteDier(on, dier)}</g>`
+      : `<text x="40" y="45.5" text-anchor="middle" font-family="Rubik, Arial, sans-serif" font-weight="600" font-size="16" fill="${on ? color : "#b9c0b1"}">${label}</text>`}
+    <circle cx="40" cy="40" r="21" fill="none" stroke="${on ? color : "#d3d8cd"}" stroke-width="1"/></svg>`;
 }
 /* Uitsnede per medaillesoort: [midden x, midden y, grootte] binnen de avatartekening (100 × 100),
    zodat het dier in het midden van de medaille staat en hem vult. */
@@ -54,12 +70,12 @@ function renderTrophies(st){
   const dex = st.dex || {}, got = id => dex[id] && dex[id].w > 0, have = earned(st);
   const cells = Object.entries(TITLES).map(([g, name]) => {
     const all = TARGETS.filter(t => t.g === g), f = all.filter(t => got(t.id)).length, on = have.includes("T:" + g);
-    return `<div class="award${on ? " got" : " locked"}" data-award="T:${g}">${rosette(`var(--g-${g})`, on, all.length)}<span class="an">${name}</span>
+    return `<div class="award${on ? " got" : " locked"}" data-award="T:${g}">${rosette(`var(--g-${g})`, on, all.length, TITEL_DIER[g])}<span class="an">${name}</span>
       <span class="ac">${on ? "Alle " + GROUPS[g].toLowerCase() + " gedetermineerd" : `${f} van ${all.length} ${GROUPS[g].toLowerCase()}`}</span>
       <span class="ap"><i style="width:${100*f/all.length}%; background:var(--g-${g})"></i></span></div>`;
   });
   const fAll = TARGETS.filter(t => got(t.id)).length, onAll = have.includes("T:ALL");
-  cells.push(`<div class="award${onAll ? " got" : " locked"}" data-award="T:ALL">${rosette("var(--ink)", onAll, TARGETS.length)}<span class="an">${TITLE_ALL}</span>
+  cells.push(`<div class="award${onAll ? " got" : " locked"}" data-award="T:ALL">${rosette("var(--ink)", onAll, TARGETS.length, "ALL")}<span class="an">${TITLE_ALL}</span>
     <span class="ac">${onAll ? `Je ${NAAM.vestiarium} is compleet` : `${fAll} van ${TARGETS.length} soorten`}</span>
     <span class="ap"><i style="width:${100*fAll/TARGETS.length}%; background:var(--ink)"></i></span></div>`);
   $("titleRow").innerHTML = cells.join("");
@@ -275,12 +291,12 @@ function nextAward(){
         : `Kies een spelersnaam om hem te gebruiken in de ranglijst.`}</p></div>`;
     }
   } else if (k === "T:ALL"){
-    badge = rosette("#2f3b40", true, TARGETS.length); kind = "Eindtitel"; name = TITLE_ALL;
+    badge = rosette("#2f3b40", true, TARGETS.length, "ALL"); kind = "Eindtitel"; name = TITLE_ALL;
     text = `Alle ${TARGETS.length} soorten staan in je ${NAAM.vestiarium}. Een groter compliment heeft Vestigia niet.`;
     extra = typeof Profiel !== "undefined" ? Profiel.titelZet(TITLE_ALL) : "";
   } else {
     const g = k.slice(2), n = TARGETS.filter(t => t.g === g).length;
-    badge = rosette(`var(--g-${g})`, true, n); kind = "Nieuwe titel"; name = TITLES[g];
+    badge = rosette(`var(--g-${g})`, true, n, TITEL_DIER[g]); kind = "Nieuwe titel"; name = TITLES[g];
     text = `Je hebt alle ${n} ${GROUPS[g].toLowerCase()} gedetermineerd. Vanaf nu ben je officieel <b>${esc(TITLES[g])}</b>.`;
     extra = typeof Profiel !== "undefined" ? Profiel.titelZet(TITLES[g]) : "";
   }

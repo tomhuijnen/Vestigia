@@ -19,7 +19,7 @@ function wanneer(id){
 }
 function nieuwOefenen(ids){
   if (!ids.every(id => oefenbaar(id))) return null;
-  const label = ids.length > 1 ? "Oefen de nieuwe soorten" : ids[0] === "patrijs" ? "Oefen de patrijs" : "Oefen de grote bosmuis";
+  const label = ids.length > 1 ? "Oefen de nieuwe soorten" : `Oefen de ${(BY_ID.get(ids[0]) || { n: "nieuwe soort" }).n.toLowerCase()}`;
   return { label, run: () => startFree({ g: null, nieuw: false, ids }) };
 }
 const Nieuw = (() => {
@@ -41,11 +41,12 @@ const Nieuw = (() => {
     soorten14: "2026-11-13",           // update 14: libellen en kevers; de dag dat ze live gaan
     grotebosmuis: "2026-11-15",        // update 30: de grote bosmuis
     patrijs: "2026-11-15",             // update 47: de patrijs (live 15 november)
+    scholekster: "2026-11-23",         // update 105: de scholekster (live 23 november)
     weetjes: "2026-11-17",             // update 37: ‘Wist je dat?’ (live 17 november 10:38)
     expert45: "2026-11-19",            // update 45: expert levert meer op; de dag van de livegang (zie EXPERT_VANAF)
     uitslagtabs: "2026-11-24", dexweergave: "2026-11-24"   // update 64: uitslag in tabbladen, compact Vestiarium (dag van de livegang)
   };
-  const WIJZIGING = new Set(["zoekgroepen", "bronnen", "statistiek-na-casus", "verward-statistiek", "soorten14", "grotebosmuis", "patrijs", "weetjes", "expert45", "uitslagtabs", "dexweergave"]);
+  const WIJZIGING = new Set(["zoekgroepen", "bronnen", "statistiek-na-casus", "verward-statistiek", "soorten14", "grotebosmuis", "patrijs", "scholekster", "weetjes", "expert45", "uitslagtabs", "dexweergave"]);
   /* speelde je al een dagcasus vóór die dag? (het logboek gaat via Supabase mee naar je andere apparaten) */
   function veteraan(id){
     const d = VANAF[id]; if (!d) return true;
@@ -131,6 +132,11 @@ const Nieuw = (() => {
       stappen: [
         { ic: "poot", wat: "grotebosmuis", kop: "Nieuwe soort: de grote bosmuis", tekst: `De tweelingsoort van de bosmuis staat nu in je ${NAAM.vestiarium}, als plaat nº 128, direct na de bosmuis. Hij heeft twee casussen. ${wanneer("grote-bosmuis")} Gok je ‘bosmuis’ terwijl het een grote bosmuis is (of andersom), dan kost je dat geen poging.` },
         { ic: "veer", wat: "patrijs", kop: "Nieuwe soort: de patrijs", tekst: `De patrijs staat nu in je ${NAAM.vestiarium}, als plaat nº 559. Hij heeft twee casussen. ${wanneer("patrijs")}` }
+      ] },
+    /* update 105: de scholekster (via de wachtrij, hieronder) */
+    { id: "scholekster", titel: "Scholekster", actie: nieuwOefenen(["scholekster"]),
+      stappen: [
+        { ic: "veer", kop: "Nieuwe soort: de scholekster", tekst: `De scholekster staat nu in je ${NAAM.vestiarium}, als plaat nº 560. Hij heeft vier casussen, van het wad tot een plat dak in de stad. ${wanneer("scholekster")}` }
       ] },
     /* update 45 (met update 37): één melding voor wie al speelde, via de wachtrij (hieronder); een kaart valt weg als je
        pas na dat onderdeel begon */
@@ -254,6 +260,18 @@ Wachtrij.voeg({ id: "nieuwesoorten", prio: 2.61, combi: true, naam: "Nieuwe soor
     return Nieuw.toon(Object.assign({}, o, { id: k.patrijs ? "patrijs" : "grotebosmuis", stappen: st,
       titel: een ? (ids[0] === "patrijs" ? "Patrijs" : "Grote bosmuis") : o.titel,
       actie: nieuwOefenen(ids) }));
+  } });
+
+/* update 105: één keer ‘Nieuwe soort: de scholekster’, in de combi-pop-up, direct na ‘Nieuwe soorten’. Alleen voor wie al een
+   dagcasus speelde vóór VANAF.scholekster, en hooguit 4 weken (Nieuw.vers). */
+Wachtrij.voeg({ id: "scholekster", prio: 2.615, combi: true, naam: "Scholekster",
+  kan(){
+    try { if (localStorage.getItem("vestigia:nieuw:scholekster")) return false; } catch(e){ return false; }
+    return Nieuw.vers("scholekster") && Nieuw.veteraan("scholekster");
+  },
+  toon(){
+    try { localStorage.setItem("vestigia:nieuw:scholekster", "1"); } catch(e){}
+    return Nieuw.toon(Nieuw.ONDERDELEN.find(o => o.id === "scholekster"));
   } });
 
 /* update 14: één keer ‘Nieuw: libellen en kevers’, na de dwaalgast, het duel, de levels, de adventkalender en de uitleg

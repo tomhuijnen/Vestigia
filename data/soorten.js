@@ -3963,6 +3963,40 @@ const SPECIES = [
       "Het vrouwtje is donkerbruin met een lichtere, gestreepte voorkant."
     ] }
   ] },
+{ id:"scholekster", no:560, g:"B", n:"Scholekster", s:"Haematopus ostralegus", r:"VR", l:42, zz:"A", twin:null,
+  h:["ZEE","OPEN","BEB"], a:["DAG"], v:["ONG"], b:["GROND","GEB"], w:["ACT","TREK"],
+  x:"kievit",
+  t:"De kievit heeft een lange, smalle kuif, een groenglanzende rug en brede, ronde vleugels. Deze soort heeft geen kuif, maar een lange, oranjerode snavel en roze poten.",
+  cs:[
+    { sl:{ i:3, t:"Anders dan andere steltlopers voert hij zijn jongen. Daardoor kan hij op een plat dak broeden en het voedsel op grasvelden in de buurt halen." }, bron:"Vogelbescherming, factsheet Scholekster op het dak; Sovon, soortinformatie", wn:[
+      "Leeuwarden, mei. Een warme middag.",
+      "Een nieuwbouwwijk met kantoren, sportvelden en grasbermen.",
+      "Een plat grinddak van een sporthal, zo'n acht meter hoog.",
+      "In het grind een ondiep kuiltje met drie eieren; telkens vliegt er een ouder met een worm in de snavel van het grasveld naar het dak, met een luid, hoog ‘te-piet!’.",
+      "Een stevige zwart-witte vogel met een lange, oranjerode snavel en roze poten."
+    ] },
+    { bron:"Vogelbescherming, vogelgids scholekster", sl:{ i:2, t:"In de winter eet hij vooral schelpdieren, zoals mosselen, kokkels en nonnetjes, die hij met zijn snavel openwrikt." }, wn:[
+      "Waddenzee bij Holwerd, januari. Laagwater, een koude ochtend.",
+      "Uitgestrekte droogvallende platen, met achter de dijk een kwelder.",
+      "Een mosselbank die net droogvalt.",
+      "Honderden stevige zwart-witte dieren tikken en wrikken tussen de schelpen; bij opkomend water vliegen ze in grote, luid roepende groepen naar de kwelder.",
+      "Een lange, oranjerode snavel en roze poten; in de vlucht witte vleugelstrepen en een zwart-witte staart."
+    ] },
+    { bron:"Vogelbescherming, vogelgids scholekster; Sovon, soortinformatie", sl:{ i:3, t:"In het voorjaar bezet hij zijn broedplaats met een opvallende baltsvlucht met langzame vleugelslagen en een luid, hoog ‘te-piet!’." }, wn:[
+      "Zuid-Holland, eind maart.",
+      "Een open polder met grasland en akkers.",
+      "Een net geploegde akker naast een brede sloot.",
+      "Twee dieren lopen luid en snel roepend naast elkaar met de snavel omlaag; daarna vliegt er een met langzame, vlinderachtige vleugelslagen rondjes boven het land.",
+      "Zwart-wit, met een lange, oranjerode snavel en roze poten."
+    ] },
+    { bron:"Vogelbescherming, factsheet Scholekster op het dak", sl:{ i:3, t:"Na een tijd springen de jongen van het dak en lopen ze op straat of gazons. De ouders roepen dan luid tot het gevaar weg is." }, wn:[
+      "Utrecht, juni. Een zonnige ochtend.",
+      "Een woonwijk met flats, een trapveldje en gazons.",
+      "Een stoep langs de gevel van een flat met een plat dak.",
+      "Een donzig kuiken loopt over de stoep; een ouder vliegt luid alarmerend rond tot een kat het trapveldje weer verlaat.",
+      "De ouder landt bij het kuiken met een regenworm in een lange, oranjerode snavel; zwart-wit verenkleed en roze poten."
+    ] }
+  ] },
 { id:"houtduif", no:517, g:"B", n:"Houtduif", s:"Columba palumbus", r:"VR", l:41, zz:"A", twin:null,
   h:["BEB","OPEN","BOS"], a:["DAG"], v:["PLANT"], b:["BOOM"], w:["ACT"],
   x:"kauw",

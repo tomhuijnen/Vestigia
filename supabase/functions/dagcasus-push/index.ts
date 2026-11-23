@@ -6,6 +6,8 @@
 //   { soort: "avond" }                → door pg_cron om 17:00 en 18:00 UTC; verstuurt alleen als het in Amsterdam
 //                                       19:00 is, alleen met het juiste geheim, en alleen als push aan staat.
 //   { soort: "test", p_id, p_key }    → testmelding naar je eigen apparaten (met ?push=demo in de app).
+//   { soort: "duel", duel }           → door de trigger op duels (supabase-046) bij een uitdaging op naam; alleen met het
+//                                       juiste geheim. Wie wanneer een seintje krijgt, beslist _vestigia_push_duel (update 70).
 // verify_jwt staat uit: de nieuwe publishable key is geen JWT. Deze functie controleert zelf (geheim of spelerscode).
 import webpush from "npm:web-push@3.6.7";
 import { createClient } from "npm:@supabase/supabase-js@2";
@@ -49,8 +51,9 @@ function tekst(reeks: number, i: number) {
   return ZONDER_REEKS[i % ZONDER_REEKS.length];
 }
 
-type Ontvanger = { endpoint: string; p256dh: string; auth: string; reeks: number };
-async function verstuur(lijst: Ontvanger[], maak: (o: Ontvanger, i: number) => string, markeer: boolean) {
+type Ontvanger = { endpoint: string; p256dh: string; auth: string; reeks?: number; uitdager?: string; expert?: boolean; code?: string };
+type Opties = { tag?: string; url?: (o: Ontvanger) => string; klaar?: string };
+async function verstuur(lijst: Ontvanger[], maak: (o: Ontvanger, i: number) => string, markeer: boolean, opt: Opties = {}) {
   const k = await sleutels();
   webpush.setVapidDetails("https://tomhuijnen.github.io/Vestigia/", k.publiek, k.prive);
   const dag = new Date().getDate();
@@ -58,7 +61,7 @@ async function verstuur(lijst: Ontvanger[], maak: (o: Ontvanger, i: number) => s
   // in kleine groepjes tegelijk, zodat het snel gaat zonder de pushdiensten te overspoelen
   for (let s = 0; s < lijst.length; s += 20) {
     await Promise.all(lijst.slice(s, s + 20).map(async (o, j) => {
-      const payload = JSON.stringify({ titel: "Vestigia", tekst: maak(o, dag + s + j), tag: "dagcasus", url: "./" });
+      const payload = JSON.stringify({ titel: "Vestigia", tekst: maak(o, dag + s + j), tag: opt.tag || "dagcasus", url: opt.url ? opt.url(o) : "./" });
       let status: "ok" | "weg" | "fout" = "ok";
       try {
         await webpush.sendNotification({ endpoint: o.endpoint, keys: { p256dh: o.p256dh, auth: o.auth } }, payload, { TTL: 4 * 3600, urgency: "normal" });
@@ -67,7 +70,7 @@ async function verstuur(lijst: Ontvanger[], maak: (o: Ontvanger, i: number) => s
         status = c === 404 || c === 410 ? "weg" : "fout";     // 404/410: dit apparaat is afgemeld of verlopen
       }
       if (status === "ok") ok++; else if (status === "weg") weg++; else fout++;
-      if (markeer || status === "weg") await db.rpc("_vestigia_push_verstuurd", { p_endpoint: o.endpoint, p_status: status });
+      if (markeer || status === "weg") await db.rpc(opt.klaar || "_vestigia_push_verstuurd", { p_endpoint: o.endpoint, p_status: status });
     }));
   }
   return { verstuurd: ok, afgemeld: weg, mislukt: fout };
@@ -92,7 +95,17 @@ Deno.serve(async (req) => {
       if (amsterdamUur() !== 19 && !body.nu) return antwoord({ overgeslagen: "het is geen 19:00 in Amsterdam" });
       const { data, error } = await db.rpc("_vestigia_push_ontvangers");
       if (error) throw error;
-      return antwoord(await verstuur(data || [], (o, i) => tekst(o.reeks, i), true));
+      return antwoord(await verstuur(data || [], (o, i) => tekst(o.reeks || 0, i), true));
+    }
+
+    if (body.soort === "duel") {
+      const { data: goed } = await db.rpc("_vestigia_push_geheim_ok", { p_geheim: req.headers.get("x-vestigia-geheim") || "" });
+      if (goed !== true) return antwoord({ fout: "Geen toegang" }, 403);
+      const { data, error } = await db.rpc("_vestigia_push_duel", { p_duel: body.duel });
+      if (error) throw error;
+      return antwoord(await verstuur(data || [],
+        (o) => `${o.uitdager} daagt je uit voor een spelersduel (${o.expert ? "expert" : "klassiek"}). Durf jij het aan?`,
+        true, { tag: "duel", url: (o) => `./?duel=${encodeURIComponent(o.code || "")}`, klaar: "_vestigia_push_duel_verstuurd" }));
     }
     return antwoord({ fout: "Onbekende soort" }, 400);
   } catch (e) {
