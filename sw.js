@@ -48,6 +48,8 @@ self.addEventListener("fetch", e => {
 /* pushmeldingen (update 18): het seintje van 19:00. Een tik opent de app (of haalt hem naar voren) op de dagcasus. */
 self.addEventListener("push", e => {
   let d = {}; try { d = e.data ? e.data.json() : {}; } catch(x){ d = { tekst: e.data ? e.data.text() : "" }; }
+  /* update 109: bij een uitdaging het aantal open uitnodigingen op het app-icoon (waar de browser dat kan) */
+  if (d.badge > 0 && self.navigator && "setAppBadge" in self.navigator) self.navigator.setAppBadge(d.badge).catch(() => {});
   e.waitUntil(self.registration.showNotification(d.titel || "Vestigia", {
     body: d.tekst || "De dagcasus van vandaag wacht nog op je.",
     icon: "icons/app-192.png", badge: "icons/app-192.png",

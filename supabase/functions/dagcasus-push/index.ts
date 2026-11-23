@@ -51,8 +51,8 @@ function tekst(reeks: number, i: number) {
   return ZONDER_REEKS[i % ZONDER_REEKS.length];
 }
 
-type Ontvanger = { endpoint: string; p256dh: string; auth: string; reeks?: number; uitdager?: string; expert?: boolean; code?: string };
-type Opties = { tag?: string; url?: (o: Ontvanger) => string; klaar?: string };
+type Ontvanger = { endpoint: string; p256dh: string; auth: string; reeks?: number; uitdager?: string; expert?: boolean; code?: string; open_n?: number };
+type Opties = { tag?: string; url?: (o: Ontvanger) => string; klaar?: string; badge?: (o: Ontvanger) => number };
 async function verstuur(lijst: Ontvanger[], maak: (o: Ontvanger, i: number) => string, markeer: boolean, opt: Opties = {}) {
   const k = await sleutels();
   webpush.setVapidDetails("https://tomhuijnen.github.io/Vestigia/", k.publiek, k.prive);
@@ -61,7 +61,7 @@ async function verstuur(lijst: Ontvanger[], maak: (o: Ontvanger, i: number) => s
   // in kleine groepjes tegelijk, zodat het snel gaat zonder de pushdiensten te overspoelen
   for (let s = 0; s < lijst.length; s += 20) {
     await Promise.all(lijst.slice(s, s + 20).map(async (o, j) => {
-      const payload = JSON.stringify({ titel: "Vestigia", tekst: maak(o, dag + s + j), tag: opt.tag || "dagcasus", url: opt.url ? opt.url(o) : "./" });
+      const payload = JSON.stringify({ titel: "Vestigia", tekst: maak(o, dag + s + j), tag: opt.tag || "dagcasus", url: opt.url ? opt.url(o) : "./", ...(opt.badge ? { badge: opt.badge(o) } : {}) });
       let status: "ok" | "weg" | "fout" = "ok";
       try {
         await webpush.sendNotification({ endpoint: o.endpoint, keys: { p256dh: o.p256dh, auth: o.auth } }, payload, { TTL: 4 * 3600, urgency: "normal" });
@@ -105,7 +105,7 @@ Deno.serve(async (req) => {
       if (error) throw error;
       return antwoord(await verstuur(data || [],
         (o) => `${o.uitdager} daagt je uit voor een spelersduel (${o.expert ? "expert" : "klassiek"}). Durf jij het aan?`,
-        true, { tag: "duel", url: (o) => `./?duel=${encodeURIComponent(o.code || "")}`, klaar: "_vestigia_push_duel_verstuurd" }));
+        true, { tag: "duel", url: (o) => `./?duel=${encodeURIComponent(o.code || "")}`, klaar: "_vestigia_push_duel_verstuurd", badge: (o) => o.open_n || 1 }));
     }
     return antwoord({ fout: "Onbekende soort" }, 400);
   } catch (e) {
