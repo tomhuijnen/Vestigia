@@ -125,6 +125,9 @@ const Duel = (() => {
     let lok = spel(d.id) || {};
     const r = Math.max((d.mijn || []).length, lok.klaar || 0);
     if (r >= 3) return open();
+    /* 23 november: wie via een uitnodiging of link meteen gaat spelen, slaat het duelscherm over. Dan eerst de uitleg,
+       maar alleen vóór de eerste casus van een duel (nooit midden in een duel). */
+    if (r === 0 && !lok.g && !uitlegGezien()){ sluitPop(); uitleg().then(() => speel(d)); return; }
     const ronde = d.rondes[r];
     S = newGame("duel", !!d.expert, ronde.s, ronde.k, 0);
     S.duel = { id: d.id, ronde: r };
@@ -233,6 +236,29 @@ const Duel = (() => {
       <p class="fine">${d.expert ? "Eén determinatie: 7 punten na één waarneming, daarna 6 · 4 · 3 · 1; mis je, dan nog één gok voor 1 punt." : "Vijf pogingen, net als bij de dagcasus."} Elk punt telt: meeste punten na drie casussen wint.</p>`;
   }
 
+  /* ---------- uitleg bij de eerste keer (23 november) ----------
+     Eerst bewaarde het openen van het duelscherm de uitleg als gezien, ook in het voorbeeld (?duel=demo) en vóór
+     23 november. Wie het duel eerder bekeek of testte, kreeg de uitleg op de startdag dus niet. Nu:
+     - pas vanaf START_DAG bewaren, en nooit in het voorbeeld (daar één keer per keer laden);
+     - een nieuwe sleutel (duel23), zodat een oude ‘gezien’ van vóór de startdag niet meer telt (ook niet via je andere
+       apparaten: sleutels die met vestigia:nieuw: beginnen gaan mee in de voortgang);
+     - de uitleg komt op drie plekken: het duelscherm (open), vóór de eerste casus als je via een uitnodiging of link
+       meteen speelt (speel), en voor wie al speelde één keer bij het openen van de app (de wachtrij, hieronder). */
+  const K_UITLEG = "vestigia:nieuw:duel23";
+  let uitlegDemo = false;
+  function uitlegGezien(){
+    if (demo) return uitlegDemo;
+    if (vandaagLokaal() < START_DAG) return true;
+    try { return !!localStorage.getItem(K_UITLEG); } catch(e){ return true; }
+  }
+  const markeerUitleg = () => { if (demo) uitlegDemo = true; else try { localStorage.setItem(K_UITLEG, "1"); } catch(e){} };
+  async function uitleg(o){
+    if (uitlegGezien()) return;
+    markeerUitleg();
+    o = o || Nieuw.ONDERDELEN.find(x => x.id === "spelersduel");
+    if (o) try { await Nieuw.toon(o); } catch(e){}
+  }
+
   /* ---------- het scherm Spelersduel ---------- */
   let paneelOpen = false, revanche = null, gekozen = null, kiesExpert = null;
   async function open(opts){
@@ -242,7 +268,7 @@ const Duel = (() => {
     if (opts.uitdaag){ paneelOpen = true; gekozen = opts.tegen === undefined ? gekozen : opts.tegen; revanche = opts.revanche || null; if (opts.expert !== undefined) kiesExpert = opts.expert; }
     render();
     /* uitleg bij de eerste keer (ook terug te vinden in de spelregels) */
-    try { if (!localStorage.getItem("vestigia:nieuw:spelersduel")){ localStorage.setItem("vestigia:nieuw:spelersduel", "1"); const o = Nieuw.ONDERDELEN.find(x => x.id === "spelersduel"); if (o) await Nieuw.toon(o); } } catch(e){}
+    await uitleg();
   }
   let laden = 0;
   async function render(){
@@ -599,6 +625,20 @@ const Duel = (() => {
          Zo komt de uitnodiging terug als je meteen op ‘Vernieuwen’ tikt bij een nieuwe versie. */
       const d = kandidaat;
       return uitdagingPop(d, false, () => { const g = lees(K.pop) || {}; g[d.id] = todayIndex(); zet(K.pop, g); });
+    } });
+
+  /* ---------- 23 november: ‘Nieuw: het spelersduel!’ bij het openen, voor wie al een dagcasus speelde vóór de startdag ----------
+     In de combi-pop-up ‘Nieuw in Vestigia’, na de losse meldingen (een uitnodiging gaat dus voor). Hooguit 4 weken
+     (Nieuw.vers). Wie de uitleg al via het duelscherm of een uitnodiging kreeg, krijgt hem niet nog eens. */
+  Wachtrij.voeg({ id: "duelnieuw", prio: 2.55, combi: true, naam: "Spelersduel",
+    kan(){
+      if (demo || !online.enabled || vandaagLokaal() < START_DAG || uitlegGezien()) return false;
+      return Nieuw.vers("spelersduel") && Nieuw.veteraan("spelersduel");
+    },
+    toon(){
+      markeerUitleg();
+      const o = Nieuw.ONDERDELEN.find(x => x.id === "spelersduel");
+      return Nieuw.toon(Object.assign({}, o, { actie: { label: "Naar het spelersduel", run: () => open() } }));
     } });
 
   /* ---------- opstarten ---------- */
