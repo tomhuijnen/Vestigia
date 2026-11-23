@@ -12,6 +12,8 @@
    (Tom, 16 november: ‘dit mag nooit meer gebeuren’). Daarom alleen oefenbaar() (wordt pas waar de dag ná de eerste
    dagcasus), geen datum uit het dagschema. tools/controle.mjs bewaakt dit. */
 function wanneer(id){
+  /* update 102: zonder wachttijd (OEFENEN_NA_DAGCASUS leeg) geen ‘al dagcasus’, want dat zou niet kloppen */
+  if (!OEFENEN_NA_DAGCASUS.includes(id)) return "Je kunt hem meteen oefenen, en hij kan ook in een duel voorkomen.";
   return oefenbaar(id) ? "Hij was al dagcasus, dus je kunt hem nu ook oefenen."
     : "Je kunt hem pas oefenen nadat hij voor het eerst dagcasus is geweest.";
 }

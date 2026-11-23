@@ -117,7 +117,10 @@ const INSTROOM = [
    de dag na hun eerste dagcasus. Tot dan kiest oefenen ze nooit (ook niet via ‘Vaakst verward’ of een filter).
    Gokken mag wel, en wie hem al oefende, houdt zijn plaat. Komt de soort in zijn venster niet langs, dan is hij vrij
    vanaf de dag na het venster. */
-const OEFENEN_NA_DAGCASUS = ["grote-bosmuis", "patrijs"];
+/* Update 102 (Tom, 23 november 12:52): ‘regel loslaten’. De grote bosmuis en de patrijs hadden hun melding al gehad, dus
+   ze mogen meteen in oefenen en in het duel, ook vóór hun eerste dagcasus. De lijst is leeg; het mechanisme blijft staan
+   voor het geval een nieuwe soort ooit wél eerst als dagcasus moet komen. */
+const OEFENEN_NA_DAGCASUS = [];
 /* Update 79 (Tom, 17 november): oefenen kiest uit vier groepen in plaats van acht diergroepen. Met een kleine diergroep
    (kevers 2, libellen 5, vlinders 6, reptielen 7, vissen 8) wist je het antwoord bijna, en kreeg je de plaat en een
    XP-boost cadeau. Elke oefengroep heeft minstens 13 soorten. Volgorde zoals de plaatnummers. Het Vestiarium houdt

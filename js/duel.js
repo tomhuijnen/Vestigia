@@ -435,7 +435,7 @@ const Duel = (() => {
   /* de dagcasussen rond vandaag liever niet in een duel (dan zou het duel de dagcasus verklappen, of andersom) */
   function overslaan(){
     const t = todayIndex(), ids = new Set();
-    /* update 102: nieuwe soorten die je pas na hun eerste dagcasus mag oefenen, ook niet in een duel (en dus ook geen plaat) */
+    /* update 102: staat er ooit weer een soort in OEFENEN_NA_DAGCASUS, dan ook niet in een duel vóór zijn eerste dagcasus */
     OEFENEN_NA_DAGCASUS.filter(id => !oefenbaar(id)).forEach(id => ids.add(id));
     for (let i = Math.max(0, t - 14); i <= t + 21; i++){ try { ids.add(daily(i).id); } catch(e){} }
     return [...ids].slice(0, 60);
