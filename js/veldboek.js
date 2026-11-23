@@ -75,6 +75,7 @@ function renderTrophies(st){
   }).join("");
   $("medalWord").textContent = telwoord(medals.length);
   $("trophCount").textContent = `${have.length} van ${Object.keys(TITLES).length + 1 + medals.length} behaald`;
+  if ($("trofSam")) $("trofSam").textContent = `${Object.keys(TITLES).length + 1} titels · ${medals.length} medailles · ${have.length} van ${Object.keys(TITLES).length + 1 + medals.length} behaald`;
   $("medalRow").querySelectorAll("button.medaille").forEach(b => b.onclick = () => medaillePop(b.dataset.award.slice(2), b));
 }
 
@@ -295,7 +296,7 @@ function nextAward(){
   $("awardNext").focus();
   $("awardNext").onclick = nextAward;
   /* update 75: ‘Bekijk Vestiarium’ scrollt naar de titel of medaille die je net verdiende en licht hem uit */
-  $("awardDex").onclick = () => { awardQueue = []; $("awardPop").hidden = true; showDex();
+  $("awardDex").onclick = () => { awardQueue = []; $("awardPop").hidden = true; showDex(); if ($("trofRij")) $("trofRij").open = true;
     lichtUitEl(document.querySelector(`.trophies [data-award="${CSS.escape(k)}"]`)); };
   if ($("awardProf")) $("awardProf").onclick = () => { awardQueue = []; $("awardPop").hidden = true; showProfiel(); };
 }
@@ -313,6 +314,10 @@ function showDex(focusId){
   dexQ = ""; $("dexQ").value = "";   /* elke keer met een leeg zoekveld openen, zodat een uitgelichte plaat er ook staat */
   renderDex(); renderCarry(); Profiel.inVestiarium(); window.scrollTo({ top:0, behavior:"auto" });
   if (focusId) lichtUit(focusId);
+  /* update 64: wie de grote platen kende, ziet één keer waar hij ze terugzet */
+  else if (typeof Nieuw !== "undefined" && $("dexWeerg")) Nieuw.blokjes("dexweergave", [
+    { na: $("dexWeerg"), tekst: "Nieuw: je platen staan nu compact, zodat je sneller door je Vestiarium gaat. Liever de grote platen? Kies hier ‘Groot’; dat onthoudt de app." }
+  ]);
 }
 /* Na 'Open het Vestiarium' bij een nieuwe soort: rustig naar die plaat scrollen en hem even laten oppoppen.
    Update 7: trager, zodat je het met het oog volgt. Eigen scroll (± 1,4 s, zacht in en uit) in plaats van de snelle
@@ -379,6 +384,17 @@ function renderVeldweken(st){
   $("vwBody").innerHTML = `<ul class="vwlijst">${weken.reverse().map(v => { const k = stempelkaart(st, v);
     return `<li class="${k.n === 7 ? "compleet" : ""}"><div><b>${esc(v.titel)}</b><span class="fine">week van ${fmt.format(new Date(START + v.start * DAY))}${k.n === 7 ? " · compleet" : ` · ${k.n} van 7`}</span></div>${k.html}</li>`; }).join("")}</ul>`;
 }
+/* update 64: weergave van de platen. Compact (kleine plaatjes, 4 kolommen op de telefoon, 8 op de laptop) is de
+   standaard; de keuze wordt per apparaat onthouden. */
+const DEX_WEERG = "vestigia:dexweergave";
+function dexKlein(){ try { return localStorage.getItem(DEX_WEERG) !== "groot"; } catch(e){ return true; } }
+/* na het kiezen van een diergroep: de platen bovenaan, net onder de balk die blijft staan */
+function naarPlaten(){
+  const plak = $("dexPlak"), grid = $("dexGrid");
+  if (!plak || !grid) return;
+  const doel = grid.getBoundingClientRect().top + scrollY - plak.offsetHeight - (parseFloat(getComputedStyle(plak).top) || 0) - 8;
+  if (scrollY > doel) window.scrollTo({ top: Math.max(0, doel), behavior: "auto" });
+}
 function renderDex(){
   const st = store.get(), dex = st.dex || {};
   renderVeldweken(st); if (typeof Dwaalgast !== "undefined") Dwaalgast.vestiarium();
@@ -389,11 +405,25 @@ function renderDex(){
     const all = TARGETS.filter(t => t.g === g), f = all.filter(t => dex[t.id] && dex[t.id].w > 0).length;
     return `<div class="gbar"><span>${lab}<i>${f}/${all.length}</i></span><div class="track"><div class="fill" style="width:${100*f/all.length}%; background:var(--g-${g})"></div></div></div>`;
   }).join("");
+  const sl = $("dexFilters").scrollLeft;
   $("dexFilters").innerHTML = [["ALL","Alles"]].concat(Object.entries(GROUPS)).map(([g, lab]) =>
-    `<button class="chipbtn" data-g="${g}" aria-pressed="${dexFilter === g}">${lab}</button>`).join("")
-    + `<span class="gap"></span><label class="switch-inline"><input type="checkbox" id="onlyFound"${dexOnlyFound ? " checked" : ""}> alleen gedetermineerd</label>`;
-  $("dexFilters").querySelectorAll(".chipbtn").forEach(b => b.onclick = () => { dexFilter = b.dataset.g; renderDex(); });
+    `<button class="chipbtn" data-g="${g}" aria-pressed="${dexFilter === g}">${lab}</button>`).join("");
+  $("dexFilters").scrollLeft = sl;
+  $("dexFilters").querySelectorAll(".chipbtn").forEach(b => b.onclick = () => { dexFilter = b.dataset.g; renderDex(); naarPlaten(); });
+  /* update 64: ‘alleen gedetermineerd’ en de schakelaar Groot/Compact in één rij onder de diergroepen */
+  const klein = dexKlein();
+  $("dexWeerg").innerHTML = `<label class="switch-inline"><input type="checkbox" id="onlyFound"${dexOnlyFound ? " checked" : ""}> alleen gedetermineerd</label>
+    <div class="weergseg${klein ? " klein" : ""}" role="group" aria-label="Weergave van de platen"><button type="button" data-w="groot" aria-pressed="${!klein}">Groot</button><button type="button" data-w="klein" aria-pressed="${klein}">Compact</button></div>`;
   $("onlyFound").onchange = e => { dexOnlyFound = e.target.checked; renderDex(); };
+  $("dexWeerg").querySelectorAll(".weergseg button").forEach(b => b.onclick = () => {
+    const k = b.dataset.w === "klein";
+    try { localStorage.setItem(DEX_WEERG, k ? "klein" : "groot"); } catch(e){}
+    const seg = $("dexWeerg").querySelector(".weergseg");
+    seg.classList.add("klaar"); seg.classList.toggle("klein", k);
+    seg.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    $("dexGrid").classList.toggle("klein", k);
+  });
+  $("dexGrid").classList.toggle("klein", klein);
   renderDexGrid();
 }
 /* ---------- zoeken in het Vestiarium (update 36) ----------
@@ -432,7 +462,7 @@ function renderDexGrid(){
     : dexZoekNummer(dexQ) !== null ? `<p class="dexempty">Er is geen plaat nº ${esc(String(dexZoekNummer(dexQ)).padStart(3, "0"))}${esc(binnen)}.${filterAan ? ` <button class="linkbtn dexalles" id="dexAlles">Zoek in alle platen</button>` : ""}</p>`
     : `<p class="dexempty">Geen eigen plaat gevonden voor ‘${esc(dexQ.trim())}’${esc(binnen)}. Je zoekt alleen in soorten die je al gedetermineerd of waargenomen hebt.${filterAan ? ` <button class="linkbtn dexalles" id="dexAlles">Zoek in alle platen</button>` : ""}</p>`;
   $("dexGrid").innerHTML = list.length ? list.map(t => {
-    const e = dex[t.id], no = dexNo(t.id), band = `<div class="band" style="background:var(--g-${t.g})"><span>${GROUPS[t.g]}</span><b>nº ${no}</b></div>`;
+    const e = dex[t.id], no = dexNo(t.id), band = `<div class="band" style="background:var(--g-${t.g})"><span data-no="${no}">${GROUPS[t.g]}</span><b>nº ${no}</b></div>`;
     if (!e) return `<div class="plate unknown" aria-label="Plaat ${no}: nog niet waargenomen">${band}<div class="mid"><span class="q">?</span><span class="sc">nog niet waargenomen</span></div><div class="ft"><span>&nbsp;</span></div></div>`;
     const won = e.w > 0;
     const best = won ? [e.b ? `beste ${e.b}${e.b <= MAX ? "/" + MAX : ""}` : "", e.bx ? `expert ${e.bx}` : ""].filter(Boolean).join(" · ") : "&nbsp;";   /* de stempel ‘waargenomen’ zegt het al */

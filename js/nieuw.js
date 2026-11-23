@@ -42,9 +42,10 @@ const Nieuw = (() => {
     grotebosmuis: "2026-11-15",        // update 30: de grote bosmuis
     patrijs: "2026-11-15",             // update 47: de patrijs (live 15 november)
     weetjes: "2026-11-17",             // update 37: ‘Wist je dat?’ (live 17 november 10:38)
-    expert45: "2026-11-19"             // update 45: expert levert meer op; de dag van de livegang (zie EXPERT_VANAF)
+    expert45: "2026-11-19",            // update 45: expert levert meer op; de dag van de livegang (zie EXPERT_VANAF)
+    uitslagtabs: "2026-11-24", dexweergave: "2026-11-24"   // update 64: uitslag in tabbladen, compact Vestiarium (dag van de livegang)
   };
-  const WIJZIGING = new Set(["zoekgroepen", "bronnen", "statistiek-na-casus", "verward-statistiek", "soorten14", "grotebosmuis", "patrijs", "weetjes", "expert45"]);
+  const WIJZIGING = new Set(["zoekgroepen", "bronnen", "statistiek-na-casus", "verward-statistiek", "soorten14", "grotebosmuis", "patrijs", "weetjes", "expert45", "uitslagtabs", "dexweergave"]);
   /* speelde je al een dagcasus vóór die dag? (het logboek gaat via Supabase mee naar je andere apparaten) */
   function veteraan(id){
     const d = VANAF[id]; if (!d) return true;
