@@ -1650,8 +1650,15 @@ body.induel .modebar{display:none}
 .duelkaart h4{margin:0; font-family:var(--display); font-weight:700; font-size:1.12rem}
 .duelkaart .fine{margin:2px 0 0}
 .duelkaart.beurt, .duelkaart.uitslag{border-left:5px solid var(--du)}
-.duelkaart.gewonnen h4{color:var(--green-d)}
-.duelkaart.verloren h4{color:#9a4a33}
+/* update 102 (Tom, 23 november, optie B): afgelopen duels groen of roodbruin, met rand links en een lichte waas.
+   Alleen onder ‘Afgelopen’ (kaartKlaar): ‘De uitslag is binnen’ blijft paars, anders zie je de uitslag al. Gelijk, verlopen
+   en ‘zei nee’ blijven neutraal. background-image, zodat de waas ook over de paarse donkere kaart (body.induel) ligt. */
+.duelkaart{--dw-rand:#3b7a52; --dw-kop:#2f6a45; --dw-tint:rgba(59,122,82,.09); --dv-rand:#b0553a; --dv-kop:#9a4a33; --dv-tint:rgba(176,85,58,.09)}
+html.donker .duelkaart{--dw-rand:#7fb894; --dw-kop:#a9d6b8; --dw-tint:rgba(127,184,148,.13); --dv-rand:#e39a82; --dv-kop:#e9a790; --dv-tint:rgba(227,154,130,.13)}
+.lgcard.duelkaart.gewonnen{border-left:5px solid var(--dw-rand); background-image:linear-gradient(var(--dw-tint), var(--dw-tint))}
+.lgcard.duelkaart.verloren{border-left:5px solid var(--dv-rand); background-image:linear-gradient(var(--dv-tint), var(--dv-tint))}
+.duelkaart.gewonnen h4{color:var(--dw-kop)}
+.duelkaart.verloren h4{color:var(--dv-kop)}
 .dustand{white-space:nowrap}
 .duav{display:inline-grid; flex:0 0 auto}
 .duav.leeg{width:40px; height:40px; border-radius:50%; border:2px dashed var(--rule); place-items:center; color:var(--ink-2); font-weight:700}
@@ -1698,7 +1705,7 @@ html.donker .dustip i.klaar{background:var(--dn)}
 html.donker .dustip i.nu{background:var(--dn-nu)}
 html.donker .dukies, html.donker .drspeler, html.donker .duelpaneel input#duTegen{background:#1d2a22}
 html.donker .duronde{background:#18241d}
-html.donker .dr-mis, html.donker .duoordeel.verloren h2, html.donker .duelkaart.verloren h4{color:#e39a82}
+html.donker .dr-mis, html.donker .duoordeel.verloren h2{color:#e39a82}
 html.donker .belstip, html.donker .duelstip{border-color:#141f19}
 .duelvoorbeeld{margin:16px 0 0; padding:10px 14px; border-radius:8px; background:#fff6dc; border:1px dashed #d9a441; font-size:.92rem}
 html.donker .duelvoorbeeld{background:#2a2414; border-color:#8a6a2a}
@@ -1772,7 +1779,9 @@ html.donker #duelPop .drspeler{background:var(--dn-bg)}
 html.donker .duelbalk{background:var(--dn-vlak); border-color:var(--dn-rand); border-left-color:var(--dn)}
 html.donker .duelbalk b{color:#fff}
 html.donker .duelvervolg{background:var(--dn-vlak)}
-html.donker body.induel .lgcard.duelkaart{background:#2e1f2c; border-color:var(--dn-rand)}
+html.donker body.induel .lgcard.duelkaart{background-color:#2e1f2c; border-color:var(--dn-rand)}
+html.donker body.induel .lgcard.duelkaart.gewonnen, html.donker .lgcard.duelkaart.gewonnen{border-left-color:var(--dw-rand); background-image:linear-gradient(var(--dw-tint), var(--dw-tint))}
+html.donker body.induel .lgcard.duelkaart.verloren, html.donker .lgcard.duelkaart.verloren{border-left-color:var(--dv-rand); background-image:linear-gradient(var(--dv-tint), var(--dv-tint))}
 html.donker .induel .tile{border-color:var(--dn-rand)}
 /* donker: ook de achtergrond van het duel krijgt een paarse zweem, zodat het echt een eigen plek is */
 html.donker body.induel{--paper:#1a1219; background:#1a1219}

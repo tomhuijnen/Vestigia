@@ -12,8 +12,8 @@
 
    Een duelcasus wordt gespeeld in het gewone spelscherm (S.mode = "duel"). De stand van de casus die je speelt,
    staat in localStorage (vestigia:duels), zodat herladen de casus niet opnieuw laat beginnen; een gespeelde casus gaat
-   meteen naar de server, en zonder verbinding later alsnog. Een duelcasus levert geen plaat op en telt niet voor de
-   ranglijst; eikels en XP komen pas als het duel beslist is.
+   meteen naar de server, en zonder verbinding later alsnog. Een duelcasus telt niet voor de ranglijst, maar levert sinds
+   update 102 wel een plaat op (zoals oefenen); eikels en XP komen pas als het duel beslist is.
 
    Voorbeeld zonder server: ?duel=demo. Dan praat het duel met een nepserver in deze browser (NEP, onderaan): je kunt
    uitdagen, spelen en de uitslag zien; nepspelers spelen hun casussen vanzelf. Er gaat niets naar Supabase, en eikels,
@@ -289,6 +289,7 @@ const Duel = (() => {
       return;
     }
     const nr = ++laden;
+    gepeild = Date.now();             // update 102: net opgehaald, de klok voor het zelf verversen begint opnieuw
     teken(cache(), true);
     try {
       await stuurAlles();
@@ -328,7 +329,7 @@ const Duel = (() => {
       ${sectie("Wacht op de ander", g.wacht, kaartWacht)}
       ${sectie("Afgelopen", g.klaar.slice(0, 15), kaartKlaar)}
       ${!ls.length ? `<p class="rankempty">${bezig ? "Duels laden…" : "Je hebt nog geen duels gespeeld. Daag een leaguegenoot uit, of deel een link in de groepsapp."}</p>` : ""}
-      <p class="fine">Een duel telt niet voor de ranglijst en levert geen plaat op. Je krijgt 3 eikels plus 1 per punt dat je haalt, en 10 extra als je wint of 5 bij gelijkspel (hooguit 60 per dag), plus XP. Je kunt vijf duels tegelijk uit hebben staan, en één tegelijk met dezelfde speler.</p>`;
+      <p class="fine">Een duel telt niet voor de ranglijst. Een soort die je goed hebt, komt wel in je ${NAAM.vestiarium}. Je krijgt 3 eikels plus 1 per punt dat je haalt, en 10 extra als je wint of 5 bij gelijkspel (hooguit 60 per dag), plus XP. Je kunt vijf duels tegelijk uit hebben staan, en één tegelijk met dezelfde speler.</p>`;
     if ($("duUitdagen")) $("duUitdagen").onclick = () => { paneelOpen = !paneelOpen; revanche = null; teken(cache(), false); if (paneelOpen) setTimeout(() => $("duTegen") && $("duTegen").focus(), 50); };
     if (paneelOpen && kan) paneel();
     body.querySelectorAll("[data-du]").forEach(b => b.onclick = () => actie(b.dataset.du, b.dataset.id, b));
@@ -434,6 +435,8 @@ const Duel = (() => {
   /* de dagcasussen rond vandaag liever niet in een duel (dan zou het duel de dagcasus verklappen, of andersom) */
   function overslaan(){
     const t = todayIndex(), ids = new Set();
+    /* update 102: staat er ooit weer een soort in OEFENEN_NA_DAGCASUS, dan ook niet in een duel vóór zijn eerste dagcasus */
+    OEFENEN_NA_DAGCASUS.filter(id => !oefenbaar(id)).forEach(id => ids.add(id));
     for (let i = Math.max(0, t - 14); i <= t + 21; i++){ try { ids.add(daily(i).id); } catch(e){} }
     return [...ids].slice(0, 60);
   }
@@ -615,7 +618,7 @@ const Duel = (() => {
 
   /* ---------- wachtrij bij het openen: een uitslag die binnen is, of een nieuwe uitdaging ---------- */
   let kandidaat = null;
-  Wachtrij.voeg({ id: "duel", prio: 1.5,
+  const wachtDuel = { id: "duel", prio: 1.5,
     async kan(){
       kandidaat = null;
       if (!p() || lees(K.link) || (S && S.mode === "duel")) return false;     // niet midden in een duel
@@ -633,7 +636,48 @@ const Duel = (() => {
          Zo komt de uitnodiging terug als je meteen op ‘Vernieuwen’ tikt bij een nieuwe versie. */
       const d = kandidaat;
       return uitdagingPop(d, false, () => { const g = lees(K.pop) || {}; g[d.id] = todayIndex(); zet(K.pop, g); });
-    } });
+    } };
+  Wachtrij.voeg(wachtDuel);
+
+  /* ---------- update 102 (Tom, 23 november): zelf zoeken naar nieuws in je duels ----------
+     Eerst haalde de app je duels alleen op bij het opstarten, bij het openen van het duelscherm en na iets wat je zelf deed.
+     Een nieuwe uitdaging of uitslag zag je dus pas als je toevallig op Spelen tikte. Nu kijkt hij zelf, zoals bij updates
+     (js/app.js, zoekUpdates): bij terugkomen in de app (als de vorige keer minstens een minuut geleden is), elke 2 minuten
+     op het duelscherm en elke 10 minuten elders, alleen als de app in beeld is en er verbinding is. Eén klein verzoek
+     (duel_status); de lijst zelf alleen op het duelscherm.
+     - Op het duelscherm: de lijst wordt stil ververst (geen ‘Duels laden…’), alleen als er iets veranderde, en niet terwijl
+       het uitdaagpaneel openstaat of er nog een ronde verstuurd wordt.
+     - Elders: komt er een uitdaging of uitslag bij, dan dezelfde pop-up als bij het openen (wachtDuel), maar alleen als er
+       niets anders open staat, je niet midden in een casus zit, er geen nieuwe versie klaarstaat en de uitleg voor nieuwe
+       spelers al gezien is. Anders blijft het bij het bolletje op Spelen, en komt de pop-up bij de volgende keer openen. */
+  const PEIL_DUEL = 2 * 60000, PEIL_ELDERS = 10 * 60000, PEIL_TERUG = 60000;
+  let gepeild = Date.now(), peilt = false;
+  const midInCasus = () => !!S && S.status === "playing" && (S.mode === "duel" || !!(S.guesses && S.guesses.length));
+  async function peil(terug){
+    if (demo || !online.enabled || !p() || !zichtbaar() || peilt || versturen) return;
+    if (document.visibilityState !== "visible" || !navigator.onLine) return;
+    if (Date.now() - gepeild < (terug ? PEIL_TERUG : VIEW === "duel" ? PEIL_DUEL : PEIL_ELDERS)) return;
+    gepeild = Date.now(); peilt = true;
+    try {
+      const oud = status(), s = await haalStatus();
+      if (!s) return;
+      if (VIEW === "duel"){
+        if (paneelOpen) return;
+        const voor = JSON.stringify(cache()), ls = await haalLijst();
+        if (JSON.stringify(ls) === voor) return;
+        await haalProfielen(ls.map(d => d.tegen));
+        if (VIEW === "duel" && !paneelOpen && !versturen) teken(ls, false);
+        return;
+      }
+      const meer = (s.voor_jou || 0) > (oud.voor_jou || 0) || (s.uitslagen || 0) > (oud.uitslagen || 0);
+      if (!meer || Wachtrij.ietsOpen() || midInCasus() || window.__nieuweVersie) return;
+      try { if (!localStorage.getItem("vestigia:tutorial")) return; } catch(e){ return; }
+      if (await wachtDuel.kan() && !Wachtrij.ietsOpen() && !midInCasus() && VIEW !== "duel") await Wachtrij.reeks([wachtDuel]);
+    } catch(e){} finally { peilt = false; }
+  }
+  setInterval(() => peil(false), 30000);
+  document.addEventListener("visibilitychange", () => peil(true));
+  window.addEventListener("focus", () => peil(true));
 
   /* ---------- 23 november: ‘Nieuw: het spelersduel!’ bij het openen, voor wie al een dagcasus speelde vóór de startdag ----------
      In de combi-pop-up ‘Nieuw in Vestigia’, na de losse meldingen (een uitnodiging gaat dus voor). Hooguit 4 weken
