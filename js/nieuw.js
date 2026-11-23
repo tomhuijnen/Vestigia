@@ -41,7 +41,7 @@ const Nieuw = (() => {
     soorten14: "2026-11-13",           // update 14: libellen en kevers; de dag dat ze live gaan
     grotebosmuis: "2026-11-15",        // update 30: de grote bosmuis
     patrijs: "2026-11-15",             // update 47: de patrijs (live 15 november)
-    scholekster: "2026-11-24",         // update 105: de scholekster (dag van de livegang; aanpassen als die later is)
+    scholekster: "2026-11-23",         // update 105: de scholekster (live 23 november)
     weetjes: "2026-11-17",             // update 37: ‘Wist je dat?’ (live 17 november 10:38)
     expert45: "2026-11-19",            // update 45: expert levert meer op; de dag van de livegang (zie EXPERT_VANAF)
     uitslagtabs: "2026-11-24", dexweergave: "2026-11-24"   // update 64: uitslag in tabbladen, compact Vestiarium (dag van de livegang)

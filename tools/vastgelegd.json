@@ -652,6 +652,11 @@
    "no": 548,
    "casussen": 4
   },
+  "scholekster": {
+   "n": "Scholekster",
+   "no": 560,
+   "casussen": 4
+  },
   "houtduif": {
    "n": "Houtduif",
    "no": 517,
@@ -935,7 +940,7 @@
   "vuursalamander#4",
   "wolf#4",
   "grote-bosmuis#2",
-  "kerkuil#4",
+  "scholekster#2",
   "tweekleurige-vleermuis#2",
   "haas#4",
   "ingekorven-vleermuis#2",
@@ -1044,7 +1049,7 @@
   "merel#2",
   "grijze-zeehond#4",
   "koolmees#3",
-  "vermiljoenkever#2",
+  "scholekster#3",
   "rivierrombout#4",
   "boomvalk#1",
   "ruige-dwergvleermuis#2",
@@ -1091,7 +1096,7 @@
   "boerenzwaluw#4",
   "brilduiker#3",
   "vinpootsalamander#1",
-  "kievit#1",
+  "scholekster#1",
   "ree#3",
   "grauwe-vliegenvanger#1",
   "gierzwaluw#1",
@@ -1122,7 +1127,7 @@
   "grote-vos#2",
   "gewone-baardvleermuis#3",
   "ruigpootuil#2",
-  "glanskop#4",
+  "scholekster#4",
   "gewone-pad#3",
   "teunisbloempijlstaart#2",
   "rivierrombout#2",

@@ -2644,4 +2644,5 @@ html.donker .weergseg button[aria-pressed="true"]{color:#0f1712}
 .dumijn summary small{text-transform:none; letter-spacing:0; font-family:inherit; margin-left:auto}
 .dumijn ol{list-style:none; margin:6px 0 0; padding:0; display:grid; gap:6px}
 .dumijn li{display:grid; gap:4px; background:var(--leaf); border-radius:8px; padding:8px 10px}
+@media (min-width: 900px){ .dumijn ol{grid-template-columns:repeat(3, 1fr)} }
 @media (prefers-reduced-motion: reduce){ .dumijn summary::before{transition:none} }
