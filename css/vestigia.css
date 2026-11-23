@@ -2634,3 +2634,14 @@ html.donker .weergseg button[aria-pressed="true"]{color:#0f1712}
 @media (max-width:520px){ .weergseg{width:156px} }
 .dexgrid.klein .plate .mid{padding:6px 5px 5px}
 .dexgrid.klein .plate .nm{font-size:.74rem!important; letter-spacing:-.01em}
+
+/* update 107: je eigen casussen in een lopend duel */
+.dumijn{margin-top:10px; border-top:1px solid var(--rule); padding-top:8px}
+.dumijn summary{cursor:pointer; font-family:var(--caps); text-transform:uppercase; letter-spacing:.05em; font-size:var(--fs-xs); color:var(--ink-2); list-style:none; display:flex; align-items:center; gap:8px; min-height:32px}
+.dumijn summary::-webkit-details-marker{display:none}
+.dumijn summary::before{content:"▸"; transition:transform .2s}
+.dumijn[open] summary::before{transform:rotate(90deg)}
+.dumijn summary small{text-transform:none; letter-spacing:0; font-family:inherit; margin-left:auto}
+.dumijn ol{list-style:none; margin:6px 0 0; padding:0; display:grid; gap:6px}
+.dumijn li{display:grid; gap:4px; background:var(--leaf); border-radius:8px; padding:8px 10px}
+@media (prefers-reduced-motion: reduce){ .dumijn summary::before{transition:none} }

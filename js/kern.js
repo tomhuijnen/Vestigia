@@ -347,11 +347,13 @@ function cmpSet(g, t, k){
   else if (tv.includes(gv[0]) || gv.includes(tv[0])) cls = "part";
   return { cls, main: LABELS[k][gv[0]], sec: gv.slice(1).map(x => LABELS[k][x]).join(", ") };
 }
+/* Lengte klopt alleen binnen dezelfde diergroep (update 104): een ringslang van 90 cm is geen reiger van 95 cm.
+   Bij een andere diergroep nooit groen; wel een pijl, behalve als de lengte precies gelijk is. */
 function cmpLen(g, t){
   const ratio = t.l / g.l;
   let cls = "no";
-  if (ratio >= 0.85 && ratio <= 1/0.85) cls = "ok";
-  const arrow = cls === "ok" ? "" : (t.l > g.l ? "↑" : "↓");
+  if (ratio >= 0.85 && ratio <= 1/0.85 && g.g === t.g) cls = "ok";
+  const arrow = cls === "ok" || t.l === g.l ? "" : (t.l > g.l ? "↑" : "↓");
   const fmt = g.l >= 100 ? (g.l/100).toLocaleString("nl-NL",{maximumFractionDigits:1}) + " m" : g.l.toLocaleString("nl-NL") + " cm";
   return { cls, main: fmt, arrow };
 }
@@ -410,6 +412,7 @@ function tipOverlap(k, g, t){
 }
 /* verschil: wat de gezochte soort niet is */
 function tipVerschil(k, g, t){
+  if (k === "l" && t.l === g.l) return { f: `l~${g.l}`, k, txt: `De gezochte soort is net zo lang als ${deSoort(g)}, maar uit een andere diergroep.` };
   if (k === "l") return { f: `l${t.l > g.l ? ">" : "<"}${g.l}`, k, txt: `De gezochte soort is ${t.l > g.l ? "groter" : "kleiner"} dan ${deSoort(g)}.` };
   if (k === "r") return { f: `r!${g.r}`, k, txt: `De gezochte soort heeft een andere beschermingsstatus dan ${deSoort(g)}.` };
   const gv = g[k][0];
