@@ -465,8 +465,12 @@ function tipsTerug(){
 }
 function renderResult(){
   const card = $("resultCard"), card2 = $("resultCard2"), wrap = $("resultWrap");
+  /* Fix 23 november: eerst je determinaties en de vergelijking terugzetten. Werd de uitslag een tweede keer getekend
+     (terug naar het spel, wisselen van modus, samenvoegen met een ander apparaat), dan wiste card2.innerHTML ze mee,
+     liep elke volgende render vast op $("tipList") en bleef de oude uitslag (de dagcasus) staan in oefenen en het duel. */
+  tipsTerug();
   document.querySelector(".layout").classList.toggle("afgerond", S.status !== "playing");
-  if (S.status === "playing"){ tipsTerug(); wrap.hidden = true; card.innerHTML = card2.innerHTML = ""; uitslagTab = "soort"; return; }
+  if (S.status === "playing"){ wrap.hidden = true; card.innerHTML = card2.innerHTML = ""; uitslagTab = "soort"; return; }
   const t = BY_ID.get(S.target), won = S.status === "won", xs = BY_ID.get(t.x);
   const lid = /^Europese/.test(t.n) ? t.n : t.n.toLowerCase();
   const traits = [["Leefgebied","h"],["Activiteit","a"],["Voedsel","v"],["Verblijf","b"],["Winter","w"]]

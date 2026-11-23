@@ -149,14 +149,16 @@ const Duel = (() => {
     if (lok.r === r && lok.g && lok.g.s === ronde.s){ S.guesses = lok.g.guesses || []; S.revealed = lok.g.revealed || 1; S.status = lok.g.status || "playing"; }
     else { lok = Object.assign({}, lok, { r, t0: Date.now(), g: null, ms: null, klaar: r }); spelZet(d.id, lok); }
     huidig = d;
-    if (r === 0 && !lok.begon) begin(d.id);
+    if (r === 0 && !lok.begon) meldBegonnen(d.id);
     appIcoon();
     sluitPop();
     showGame(); inBeeld($("gameView")); window.scrollTo({ top: 0, behavior: "auto" });
     if (S.status !== "playing" && !(lok.stuur || []).some(x => x.r === r)) naCasus();     // klaar maar nog niet verstuurd
   }
   /* update 103: de ander ziet ‘is begonnen’ zodra je je eerste casus opent (één keer per duel; mislukt het, dan niet erg) */
-  function begin(id){
+  /* fix 23 november: heette ook begin(), net als het starten van een nieuw duel verderop; die won, dus ‘is begonnen’
+     werd nooit verstuurd en gaf een fout (knop is null) */
+  function meldBegonnen(id){
     if (!p()) return;
     rpc("duel_begin", args({ p_duel: id })).then(() => { const lok = spel(id); if (lok){ lok.begon = true; spelZet(id, lok); } }).catch(() => {});
   }
