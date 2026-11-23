@@ -90,7 +90,7 @@ html.opent body>:not(#opening){visibility:hidden}
 #opening{position:fixed;inset:0;z-index:60;background:#4b7a5e}
 html.donker #opening{background:#7fb894}
 </style>
-<link rel="stylesheet" href="css/vestigia.css?v=202611231252">
+<link rel="stylesheet" href="css/vestigia.css?v=202611231437">
 </head>
 <body>
 <div class="statusband" aria-hidden="true"></div>
@@ -160,10 +160,10 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
       </div>
 
       <section class="det" aria-labelledby="gLabel">
-        <div class="sechead"><h2 id="gLabel"><label for="gInput">Determinatie</label></h2><span class="caps" id="leftLabel"></span></div>
+        <div class="sechead"><h2 id="gLabel"><label for="gInput">Jouw determinatie</label></h2><span class="caps" id="leftLabel"></span></div>
         <div class="det-row">
           <div class="combo">
-            <input id="gInput" type="text" autocomplete="off" spellcheck="false" placeholder="Soortnaam of groep"
+            <input id="gInput" type="text" autocomplete="off" spellcheck="false" placeholder="Typ een soort of groep, bijv. ‘uil’"
               role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="gOpts">
             <ul class="opts" id="gOpts" role="listbox" hidden></ul>
           </div>
@@ -270,11 +270,14 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
       <div class="dexcount" id="dexCount">0<small>van 100 gedetermineerd</small></div>
       <div class="groupbars" id="groupBars"></div>
     </div>
-    <section class="trophies" aria-labelledby="trophH">
-      <h3 id="trophH">Trofeeën <span class="caps" id="trophCount"></span></h3>
-      <div><h4>Titels</h4><div class="awardrow" id="titleRow"></div></div>
-      <div><h4>Medailles voor de <span id="medalWord">vijf</span> meest zeldzame soorten</h4><div class="medalrow" id="medalRow"></div></div>
-    </section>
+    <details class="trofrij" id="trofRij">
+      <summary><span class="tr-t"><b>Trofeeën en medailles</b><small id="trofSam"></small></span><svg class="tr-pijl" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></summary>
+      <section class="trophies" aria-labelledby="trophH">
+        <h3 id="trophH">Trofeeën <span class="caps" id="trophCount"></span></h3>
+        <div><h4>Titels</h4><div class="awardrow" id="titleRow"></div></div>
+        <div><h4>Medailles voor de <span id="medalWord">vijf</span> meest zeldzame soorten</h4><div class="medalrow" id="medalRow"></div></div>
+      </section>
+    </details>
     <section class="prestaties" id="dexPrest" hidden aria-labelledby="dexPrestH">
       <h3 id="dexPrestH">Prestaties</h3>
       <div class="prlist" id="dexPrestList"></div>
@@ -299,20 +302,20 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
         <div class="actions"><button class="btn" id="codeLoad">Voortgang toevoegen</button></div>
       </div>
     </details>
-    <div class="dexzoek" role="search">
-      <svg aria-hidden="true" viewBox="0 0 20 20" width="20" height="20"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12.6 12.6 17 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      <input id="dexQ" type="search" autocomplete="off" spellcheck="false" enterkeyhint="search"
-        placeholder="Zoek op naam of plaatnummer" aria-label="Zoek in je platen op naam of plaatnummer" aria-describedby="dexQuit">
-      <button type="button" class="dexzoek-x" id="dexQx" aria-label="Zoekveld leegmaken" hidden>×</button>
+    <div class="dexplak" id="dexPlak">
+      <div class="dexzoek" role="search">
+        <svg aria-hidden="true" viewBox="0 0 20 20" width="20" height="20"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12.6 12.6 17 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input id="dexQ" type="search" autocomplete="off" spellcheck="false" enterkeyhint="search"
+          placeholder="Zoek op naam of plaatnummer" aria-label="Zoek in je platen op naam of plaatnummer" aria-describedby="dexQuit">
+        <button type="button" class="dexzoek-x" id="dexQx" aria-label="Zoekveld leegmaken" hidden>×</button>
+      </div>
+      <div class="dexfilters" id="dexFilters"></div>
+      <div class="dexweerg" id="dexWeerg"></div>
     </div>
-    <div class="dexfilters" id="dexFilters"></div>
     <p class="dexzoekuit" id="dexQuit" aria-live="polite" hidden></p>
     <div class="dexgrid" id="dexGrid"></div>
   </section>
 
-  <footer>
-    Beschermingsregimes volgens de Omgevingswet (art. 11.37, 11.46 en 11.54 Bal; bijlage IX Bal) en de landelijke basistabel van jaarrond beschermde nesten. Provincies kunnen eigen nestlijsten en vrijstellingen hanteren. Kenmerken zijn vereenvoudigd tot hoofd- en nevencategorieën; lengte is de gemiddelde totale lengte van een volwassen dier (bij vlinders de spanwijdte, bij libellen en kevers de lichaamslengte).
-  </footer>
 </div>
 
 <div class="toast" id="toast" hidden role="status"></div>
@@ -439,6 +442,8 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
       <li><b>Oefenen:</b> onbeperkt willekeurige casussen, eventueel uit één diergroep of alleen soorten die je nog niet hebt. Oefenen telt niet mee voor de punten in de ranglijst, wel voor je platen. Een oefencasus blijft staan tot je hem determineert of opgeeft (opgeven telt als niet gevonden), ook als je weggaat of een andere keuze maakt.</li>
       <li><b>Expert:</b> je opent zelf waarnemingen en hebt één determinatie: 7 · 6 · 4 · 3 · 1 punten bij 1 tot 5 waarnemingen. Zit je mis, dan gaan alle waarnemingen open en heb je nog één gok (het vangnet): goed levert 1 punt en de plaat op.</li>
     </ul>
+    <h3>Bescherming en kenmerken</h3>
+    <p class="fine">Beschermingsregimes volgens de Omgevingswet (art. 11.37, 11.46 en 11.54 Bal; bijlage IX Bal) en de landelijke basistabel van jaarrond beschermde nesten. Provincies kunnen eigen nestlijsten en vrijstellingen hanteren. Kenmerken zijn vereenvoudigd tot hoofd- en nevencategorieën; lengte is de gemiddelde totale lengte van een volwassen dier (bij vlinders de spanwijdte, bij libellen en kevers de lichaamslengte).</p>
   </div>
 </div>
 
@@ -521,45 +526,45 @@ window.__installEvt=null;addEventListener("beforeinstallprompt",function(e){e.pr
 </div>
 
 <script src="config.js"></script>
-<script src="js/fouten.js?v=202611231252"></script>
-<script src="data/teksten.js?v=202611231252"></script>
-<script src="data/soorten.js?v=202611231252"></script>
-<script src="data/sporen.js?v=202611231252"></script>
-<script src="data/dagschema.js?v=202611231252"></script>
-<script src="data/veldweken.js?v=202611231252"></script>
-<script src="data/toelichting.js?v=202611231252"></script>
-<script src="data/weetjes.js?v=202611231252"></script>
-<script src="data/zoekgroepen.js?v=202611231252"></script>
-<script src="data/bronnen.js?v=202611231252"></script>
-<script src="js/kern.js?v=202611231252"></script>
-<script src="js/spel.js?v=202611231252"></script>
-<script src="js/veldboek.js?v=202611231252"></script>
-<script src="js/melden.js?v=202611231252"></script>
-<script src="js/kop.js?v=202611231252"></script>
-<script src="js/spelen.js?v=202611231252"></script>
-<script src="js/opening.js?v=202611231252"></script>
-<script src="data/vesti.js?v=202611231252"></script>
-<script src="js/uitleg.js?v=202611231252"></script>
-<script src="js/online.js?v=202611231252"></script>
-<script src="js/league.js?v=202611231252"></script>
-<script src="data/avatars.js?v=202611231252"></script>
-<script src="js/profiel.js?v=202611231252"></script>
-<script src="data/advent.js?v=202611231252"></script>
-<script src="js/wachtrij.js?v=202611231252"></script>
-<script src="js/kerst.js?v=202611231252"></script>
-<script src="data/dwaalgasten.js?v=202611231252"></script>
-<script src="js/dwaalgast.js?v=202611231252"></script>
-<script src="js/nieuw.js?v=202611231252"></script>
-<script src="js/vesti.js?v=202611231252"></script>
-<script src="js/levels.js?v=202611231252"></script>
-<script src="js/boost.js?v=202611231252"></script>
-<script src="js/statistiek.js?v=202611231252"></script>
-<script src="js/duel.js?v=202611231252"></script>
-<script src="js/spelerskaart.js?v=202611231252"></script>
-<script src="js/qrcode.js?v=202611231252"></script>
-<script src="js/apparaat.js?v=202611231252"></script>
-<script src="js/push.js?v=202611231252"></script>
-<script src="js/week.js?v=202611231252"></script>
-<script src="js/app.js?v=202611231252"></script>
+<script src="js/fouten.js?v=202611231437"></script>
+<script src="data/teksten.js?v=202611231437"></script>
+<script src="data/soorten.js?v=202611231437"></script>
+<script src="data/sporen.js?v=202611231437"></script>
+<script src="data/dagschema.js?v=202611231437"></script>
+<script src="data/veldweken.js?v=202611231437"></script>
+<script src="data/toelichting.js?v=202611231437"></script>
+<script src="data/weetjes.js?v=202611231437"></script>
+<script src="data/zoekgroepen.js?v=202611231437"></script>
+<script src="data/bronnen.js?v=202611231437"></script>
+<script src="js/kern.js?v=202611231437"></script>
+<script src="js/spel.js?v=202611231437"></script>
+<script src="js/veldboek.js?v=202611231437"></script>
+<script src="js/melden.js?v=202611231437"></script>
+<script src="js/kop.js?v=202611231437"></script>
+<script src="js/spelen.js?v=202611231437"></script>
+<script src="js/opening.js?v=202611231437"></script>
+<script src="data/vesti.js?v=202611231437"></script>
+<script src="js/uitleg.js?v=202611231437"></script>
+<script src="js/online.js?v=202611231437"></script>
+<script src="js/league.js?v=202611231437"></script>
+<script src="data/avatars.js?v=202611231437"></script>
+<script src="js/profiel.js?v=202611231437"></script>
+<script src="data/advent.js?v=202611231437"></script>
+<script src="js/wachtrij.js?v=202611231437"></script>
+<script src="js/kerst.js?v=202611231437"></script>
+<script src="data/dwaalgasten.js?v=202611231437"></script>
+<script src="js/dwaalgast.js?v=202611231437"></script>
+<script src="js/nieuw.js?v=202611231437"></script>
+<script src="js/vesti.js?v=202611231437"></script>
+<script src="js/levels.js?v=202611231437"></script>
+<script src="js/boost.js?v=202611231437"></script>
+<script src="js/statistiek.js?v=202611231437"></script>
+<script src="js/duel.js?v=202611231437"></script>
+<script src="js/spelerskaart.js?v=202611231437"></script>
+<script src="js/qrcode.js?v=202611231437"></script>
+<script src="js/apparaat.js?v=202611231437"></script>
+<script src="js/push.js?v=202611231437"></script>
+<script src="js/week.js?v=202611231437"></script>
+<script src="js/app.js?v=202611231437"></script>
 </body>
 </html>

@@ -261,9 +261,11 @@ function renderBalk(){
    Zonder spelersnaam: eerst de oproep om een naam te kiezen (de dagcasus van vandaag en gisteren telt dan alsnog mee,
    zie queueRecentDaily in js/online.js). Alleen bij de dagcasus; bij oefenen staat ‘Nieuwe casus’ al in de balk. */
 const VERDER_MIN = 15;
-function renderVerder(){
-  const el = $("verderKaart"); if (!el) return;
-  if (!S || S.mode !== "daily" || S.status === "playing"){ el.hidden = true; el.innerHTML = ""; return; }
+/* Update 61 + 64: ‘Verder spelen’ na de dagcasus. Sinds update 64 staat het niet meer als losse kaart onder de balk,
+   maar in de bovenlaag van de uitslag: ‘Oefen met …’ naast ‘Deel resultaat’, met de zin over je Vestiarium eronder en
+   zonder spelersnaam de oproep om een naam te kiezen. verderInfo geeft de gegevens, renderResult zet ze neer. */
+function verderInfo(){
+  if (!S || S.mode !== "daily" || S.status === "playing") return null;
   const t = BY_ID.get(S.target), won = S.status === "won", st = store.get(), dex = st.dex || {};
   const og = OEFENGROEP_VAN[t.g], groep = TARGETS.filter(x => inOefengroep(x, og));     // update 79: de oefengroep van de soort
   const groot = groep.length >= VERDER_MIN && groep.some(x => oefenbaar(x.id));
@@ -274,16 +276,11 @@ function renderVerder(){
   const naam = won && p > 0 && online.enabled && !online.player() && eersteModus(st, dag) === !!S.expert && dag >= todayIndex() - 1;
   const zin = won ? `Je hebt nu <b>${heb} van de ${lijst.length} ${wat}</b> in je ${NAAM.vestiarium}.`
                   : `Je hebt <b>${heb} van de ${lijst.length} ${wat}</b> in je ${NAAM.vestiarium}. Met oefenen leer je ze beter uit elkaar te houden.`;
-  const animeer = el.hidden && freshResult && !rustigeBeweging();
-  el.className = "verder" + (animeer ? " in" : "");
-  el.innerHTML = (naam ? `<div class="vd-naam"><p><b>Je ${p} ${p === 1 ? "punt telt" : "punten tellen"} nog niet mee.</b> Kies een spelersnaam, dan ${p === 1 ? "staat hij" : "staan ze"} in de ranglijst van deze week. Je hebt geen account of e-mailadres nodig.</p>
-      <div class="vd-rij"><button class="btn line" type="button" id="vdNaam">Kies een spelersnaam</button></div></div>` : "")
-    + `<span class="caps">Verder spelen</span><p>${zin}</p>
-    <div class="vd-rij"><button class="btn" type="button" id="vdOefen">${groot ? `Oefen met ${esc(wat)}` : "Oefen met alle soorten"} <span aria-hidden="true">→</span></button><button class="linklike" type="button" id="vdKies">of kies zelf wat je oefent</button></div>`;
-  el.hidden = false;
-  $("vdOefen").onclick = () => startFree(keuze);
-  $("vdKies").onclick = () => { startFree(keuze); Spelen.wijzig(); };
-  if ($("vdNaam")) $("vdNaam").onclick = () => MENU_GO.player();
+  return { zin, keuze, p, naam, knop: groot ? `Oefen met ${esc(wat)}` : "Oefen met alle soorten" };
+}
+function renderVerder(){
+  const el = $("verderKaart"); if (!el) return;
+  el.hidden = true; el.innerHTML = "";      // update 64: staat nu in de uitslag zelf
 }
 function moreClue(){
   if (!S.expert || S.status !== "playing" || S.revealed >= MAX) return;
@@ -449,11 +446,28 @@ function bronRij(t){
   return `<div class="bronrij"><span class="caps">Meer over de ${esc(lid)}</span><div class="bronlinks">${ls.map(l =>
     `<a class="bronlink" href="${esc(l.url)}" target="_blank" rel="noopener">${BRON_IC[l.soort] || ""}<span>${esc(l.soort === "bron" ? "Soortpagina " + l.label : l.label)}</span>${PIJL_UIT}</a>`).join("")}</div></div>`;
 }
+/* Update 64: de uitslag in twee lagen (Tom koos variant B, 23 november 2026).
+   Bovenlaag (resultCard): goed of niet, de soort, score en punten, ‘Wist je dat?’, ‘Verwar niet met’, de bronlinks,
+   ‘Deel resultaat’ naast ‘Oefen met …’ (dagcasus) of ‘Nieuwe casus’ (oefenen), en je plaat in het Vestiarium.
+   Onderlaag (resultCard2): één kaart met tabbladen ‘Over de soort’ (toelichting, status, kenmerken), ‘Jouw casus’
+   (je determinaties met tips en de volledige vergelijking) en ‘Je cijfers’ (dagcasussen, veldweek, statistieken).
+   De lijst ‘Jouw determinaties’ en de vergelijking verhuizen tijdens de uitslag naar het tabblad en gaan terug zodra
+   er weer gespeeld wordt (de ids blijven hetzelfde, renderGrid merkt er niets van). Bij een duel zijn er alleen de
+   eerste twee tabbladen; het vervolg van het duel staat in de bovenlaag. */
+let uitslagTab = "soort";
+function tipsTerug(){
+  const sec = $("gridH") && $("gridH").closest("section");
+  if (!sec) return;
+  if ($("tipList").parentElement !== sec) sec.insertBefore($("tipList"), $("gridEmpty"));
+  if ($("gridDetails").parentElement !== sec) sec.appendChild($("gridDetails"));
+  sec.hidden = false;
+}
 function renderResult(){
   const card = $("resultCard"), card2 = $("resultCard2"), wrap = $("resultWrap");
   document.querySelector(".layout").classList.toggle("afgerond", S.status !== "playing");
-  if (S.status === "playing"){ wrap.hidden = true; card.innerHTML = card2.innerHTML = ""; return; }
+  if (S.status === "playing"){ tipsTerug(); wrap.hidden = true; card.innerHTML = card2.innerHTML = ""; uitslagTab = "soort"; return; }
   const t = BY_ID.get(S.target), won = S.status === "won", xs = BY_ID.get(t.x);
+  const lid = /^Europese/.test(t.n) ? t.n : t.n.toLowerCase();
   const traits = [["Leefgebied","h"],["Activiteit","a"],["Voedsel","v"],["Verblijf","b"],["Winter","w"]]
     .map(([lab,k]) => `<div><dt>${lab}</dt><dd>${t[k].map(x => LABELS[k][x]).join(", ")}</dd></div>`).join("")
     + `<div><dt>Lengte</dt><dd>± ${t.l.toLocaleString("nl-NL")} cm</dd></div>`;
@@ -463,13 +477,26 @@ function renderResult(){
   let stats = "";
   if (S.mode === "daily"){
     const s = dagStats(store.get());
-    if (s) stats = `<span class="caps">Jouw dagcasussen</span><div class="stats"><div><b>${s.played}</b>gespeeld</div><div><b>${s.played ? Math.round(100*s.won/s.played) : 0}%</b>gedetermineerd</div><div><b>${s.streak}</b>huidige reeks</div><div><b>${s.best}</b>langste reeks</div></div>`;
+    if (s) stats = `<div class="ut-stats"><span class="caps">Jouw dagcasussen</span><div class="stats"><div><b>${s.played}</b>gespeeld</div><div><b>${s.played ? Math.round(100*s.won/s.played) : 0}%</b>gedetermineerd</div><div><b>${s.streak}</b>huidige reeks</div><div><b>${s.best}</b>langste reeks</div></div></div>`;
   }
   card.className = "account" + (won ? "" : " lost") + (freshResult && !matchMedia("(prefers-reduced-motion: reduce)").matches ? " resultin" : "");
-  card2.className = "account vervolg" + (card.classList.contains("resultin") ? " resultin" : "");
+  card2.className = "uitslagtabs" + (card.classList.contains("resultin") ? " resultin" : "");
   const ontdek = won && S.nieuwePlaat && freshResult;     // alleen direct na het spel, niet bij later terugkijken
   const vers = freshResult;
+  if (vers) uitslagTab = "soort";
   freshResult = false;
+  const vd = verderInfo();
+  const acties = S.mode === "duel" ? "" : `
+    ${vd && vd.naam ? `<div class="ut-naam"><p><b>Je ${vd.p} ${vd.p === 1 ? "punt telt" : "punten tellen"} nog niet mee.</b> Kies een spelersnaam, dan ${vd.p === 1 ? "staat hij" : "staan ze"} in de ranglijst van deze week. Je hebt geen account of e-mailadres nodig.</p>
+      <button class="btn line" type="button" id="vdNaam">Kies een spelersnaam</button></div>` : ""}
+    <div class="ut-acties">
+      <button class="btn" type="button" id="copyBtn">Deel resultaat</button>
+      ${vd ? `<button class="btn line" type="button" id="vdOefen">${vd.knop} <span aria-hidden="true">→</span></button>` : ""}
+      ${S.mode === "free" ? `<button class="btn line" type="button" id="nieuwBoven">Nieuwe casus <span aria-hidden="true">→</span></button>` : ""}
+    </div>
+    <span class="msg" id="copyMsg"></span>
+    ${vd ? `<p class="ut-zin">${vd.zin} <button class="linklike" type="button" id="vdKies">Of kies zelf wat je oefent</button></p>` : ""}
+    ${S.mode === "free" ? `<p class="ut-zin oefenkeuze">Je oefent met ${esc(Spelen.omschrijving({ g: S.groep, nieuw: S.nieuw, ids: S.ids }))}. <button class="linklike" id="oefenWijzig">Wijzig</button></p>` : ""}`;
   card.innerHTML = `
     <span class="verdict caps">${won ? "Goed gedetermineerd" : "Niet gedetermineerd · het was"}</span>
     <h3>${esc(t.n)}<i>${esc(t.s)}</i></h3>
@@ -478,70 +505,83 @@ function renderResult(){
     <p>${score}${S.mode === "duel" ? ` <span class="ptsline">${points() ? "+" + points() + " punt" + (points() > 1 ? "en" : "") : "0 punten"} in het duel</span>` : ""}${S.mode === "daily" ? ` <span class="ptsline">${eersteModus(store.get(), S.caseNo - 1) === !!S.expert
       ? `${points() ? "+" + points() + " punt" + (points() > 1 ? "en" : "") : "0 punten"} voor de ranglijst`
       : `telt niet voor de ranglijst: je speelde deze casus vandaag al in ${S.expert ? "klassiek" : "expert"}`}</span>` : ""}</p>
-    ${toelichting() ? `<div class="toelrij"><button class="toelbtn" id="toelBtn" aria-expanded="false" aria-controls="toelBox"><svg aria-hidden="true" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="8" cy="8" r="6.4"/><path d="M8 7.3v4M8 4.9v.1"/></svg><span>Toelichting</span><i class="pijl" aria-hidden="true"></i></button></div>
-    <div class="toelbox" id="toelBox" hidden><span class="caps">Waarom ${esc(/^Europese/.test(t.n) ? t.n : t.n.toLowerCase())}?</span><p>${esc(toelichting())}</p></div>` : ""}
-    ${S.mode === "free" ? `<div class="oefenverder"><button class="btn line" type="button" id="nieuwBoven">Nieuwe casus <span aria-hidden="true">→</span></button></div>` : ""}
-    <details class="status-line"><summary><span class="caps">Status</span> <b>${esc(LABELS.r[t.r])}</b><span class="meer">uitleg</span></summary><p>${esc(REGIME_INFO[t.r])}</p></details>
-    <dl class="traits">${traits}</dl>
     ${weetje() ? `<div class="sleutelbox weetje"><span class="caps">Wist je dat?</span><p>${esc(weetje().t)}</p>${weetje().bron ? `<span class="wjbron">Bron: ${esc(weetje().bron)}</span>` : ""}</div>`
-      : curCase().sl ? `<div class="sleutelbox"><span class="caps">Typisch ${esc(/^Europese/.test(t.n) ? t.n : t.n.toLowerCase())}</span><p>${esc(curCase().sl.t)}</p></div>` : ""}
+      : curCase().sl ? `<div class="sleutelbox"><span class="caps">Typisch ${esc(lid)}</span><p>${esc(curCase().sl.t)}</p></div>` : ""}
     <div class="confuse"><span class="caps">Verwar niet met</span><p><b>${esc(xs.n)}.</b> ${S.guesses.includes(t.x) ? "Die soort heb je in deze casus ook geprobeerd. " : ""}${esc(t.t)}</p></div>
     ${bronRij(t)}
     ${(S.newAwards || []).map(k => { const [kind, name] = awardLabel(k); return `<div class="awardnote"><span class="caps">Nieuwe ${kind.toLowerCase()}</span><b>${esc(name)}</b></div>`; }).join("")}
+    ${S.mode === "duel" ? `<section class="xpblok" id="xpBlok" aria-label="Ervaringspunten" hidden></section>${Duel.vervolg()}` : acties}
     ${S.mode === "duel" && Duel.demo ? `<p class="dexnote">In het voorbeeld komt een duelcasus niet in je ${NAAM.vestiarium}. <button class="linklike" id="toDex">Open het ${NAAM.vestiarium}</button></p>`
       : ontdek ? ontdekPlaat(t) : `<p class="dexnote">${won ? `Plaat <b>nº ${dexNo(t.id)}</b> staat nu in je ${NAAM.vestiarium}.` : `Genoteerd als waargenomen in je ${NAAM.vestiarium} (nº ${dexNo(t.id)}).`} <button class="linklike" id="toDex">Open het ${NAAM.vestiarium}</button></p>`}
-    <button class="reportbtn" id="repFromResult">Klopt er iets niet in deze casus? Meld een fout</button>`;
+    ${S.mode === "duel" ? "" : `<section class="xpblok" id="xpBlok" aria-label="Ervaringspunten" hidden></section>`}`;
   if (typeof Vesti !== "undefined") Vesti.uitslag(card, won);   // update 81: juicht bij goed, teleurgesteld bij niet gedetermineerd
+
+  /* onderlaag: tabbladen */
   const vw = S.mode === "daily" ? veldweek(S.caseNo - 1) : null;
   const vwKaart = vw ? stempelkaart(store.get(), vw) : null;
+  const tabs = [["soort", "Over de soort"], ["casus", "Jouw casus"]].concat(S.mode === "duel" ? [] : [["cijfers", "Je cijfers"]]);
+  if (!tabs.some(([k]) => k === uitslagTab)) uitslagTab = "soort";
+  const panelen = {
+    soort: `${toelichting() ? `<div class="toelbox"><span class="caps">Waarom ${esc(lid)}?</span><p>${esc(toelichting())}</p></div>` : ""}
+      <details class="status-line"><summary><span class="caps">Status</span> <b>${esc(LABELS.r[t.r])}</b><span class="meer">uitleg</span></summary><p>${esc(REGIME_INFO[t.r])}</p></details>
+      <dl class="traits">${traits}</dl>`,
+    casus: `<div id="utCasus" class="ut-casus"></div>`,
+    cijfers: `${vw ? `<div class="vwresult"><span class="caps">Veldweek · ${esc(vw.titel)}${vw.demo ? " · voorbeeld" : ""}</span>${vwKaart.html}<p class="fine">${vwKaart.n === 7 ? "Alle zeven dagen gespeeld: +25 eikels." : `${vwKaart.n} van 7 dagen gespeeld${vwKaart.n >= 5 ? " (+10 eikels; met alle zeven +25)" : ""}.`}</p></div>` : ""}
+      ${stats}
+      <p class="inviteline statsline">Benieuwd hoe je het tot nu toe doet? <button class="linklike" id="toStats">Bekijk je statistieken</button></p>
+      ${S.mode === "daily" && online.enabled ? `<p class="inviteline">Samen spelen is leuker. <button class="linklike" id="inviteFromResult">Nodig een speler uit</button></p>` : ""}`
+  };
+  const i = tabs.findIndex(([k]) => k === uitslagTab);
   card2.innerHTML = `
-    <section class="xpblok" id="xpBlok" aria-label="Ervaringspunten" hidden></section>
-    ${vw ? `<div class="vwresult"><span class="caps">Veldweek · ${esc(vw.titel)}${vw.demo ? " · voorbeeld" : ""}</span>${vwKaart.html}<p class="fine">${vwKaart.n === 7 ? "Alle zeven dagen gespeeld: +25 eikels." : `${vwKaart.n} van 7 dagen gespeeld${vwKaart.n >= 5 ? " (+10 eikels; met alle zeven +25)" : ""}.`}</p></div>` : ""}
-    ${stats}
-    ${S.mode === "free" ? `<p class="oefenkeuze">Je oefent met ${esc(Spelen.omschrijving({ g: S.groep, nieuw: S.nieuw, ids: S.ids }))}. <button class="linklike" id="oefenWijzig">Wijzig</button></p>` : ""}
-    <div class="actions">
-      <button class="btn" id="copyBtn">Deel resultaat</button>
-      ${S.mode === "daily" ? `<button class="btn line" id="nextBtn">Speel een oefencasus</button>` : ""}
-      <span class="msg" id="copyMsg"></span>
+    <div class="ut-kaart">
+      <div class="ut-seg" role="tablist" aria-label="Meer over deze casus" style="--n:${tabs.length}; --i:${i}">
+        ${tabs.map(([k, lab], j) => `<button type="button" role="tab" id="utTab-${k}" data-tab="${k}" aria-selected="${j === i}" aria-controls="utPan-${k}" tabindex="${j === i ? 0 : -1}">${lab}</button>`).join("")}
+      </div>
+      ${tabs.map(([k], j) => `<div class="ut-paneel" role="tabpanel" id="utPan-${k}" aria-labelledby="utTab-${k}"${j === i ? "" : " hidden"}>${panelen[k]}</div>`).join("")}
     </div>
-    <p class="inviteline statsline">Benieuwd hoe je het tot nu toe doet? <button class="linklike" id="toStats">Bekijk je statistieken</button></p>
-    ${S.mode === "daily" && online.enabled ? `<p class="inviteline">Samen spelen is leuker. <button class="linklike" id="inviteFromResult">Nodig een speler uit</button></p>` : ""}
-`;
-  /* update 16: bij een duel staat hier wat er nu komt (volgende casus, of het duel afronden) */
-  if (S.mode === "duel") card2.innerHTML = `<section class="xpblok" id="xpBlok" aria-label="Ervaringspunten" hidden></section>${Duel.vervolg()}`;
+    <p class="ut-voet"><button class="reportbtn" id="repFromResult">Klopt er iets niet in deze casus? Meld een fout</button></p>`;
+  /* je determinaties en de vergelijking naar het tabblad ‘Jouw casus’ */
+  const sec = $("gridH").closest("section");
+  $("utCasus").append($("tipList"), $("gridDetails"));
+  sec.hidden = true;
+  const seg = card2.querySelector(".ut-seg");
+  const kies = (k, focus) => {
+    uitslagTab = k;
+    const j = tabs.findIndex(([x]) => x === k);
+    seg.style.setProperty("--i", j);
+    seg.classList.add("klaar");      // pas na de eerste keuze schuift het blokje (net als klassiek/expert)
+    seg.querySelectorAll("[role=tab]").forEach(b => { const aan = b.dataset.tab === k; b.setAttribute("aria-selected", String(aan)); b.tabIndex = aan ? 0 : -1; if (aan && focus) b.focus(); });
+    card2.querySelectorAll(".ut-paneel").forEach(p => p.hidden = p.id !== "utPan-" + k);
+  };
+  seg.querySelectorAll("[role=tab]").forEach(b => b.onclick = () => kies(b.dataset.tab));
+  seg.addEventListener("keydown", e => {
+    const j = tabs.findIndex(([x]) => x === uitslagTab), n = tabs.length;
+    const nieuw = e.key === "ArrowRight" ? (j + 1) % n : e.key === "ArrowLeft" ? (j + n - 1) % n : e.key === "Home" ? 0 : e.key === "End" ? n - 1 : -1;
+    if (nieuw < 0) return;
+    e.preventDefault(); kies(tabs[nieuw][0], true);
+  });
   wrap.hidden = false;
-  if (S.mode === "duel"){
-    Duel.bindVervolg();
-    $("toDex").onclick = () => showDex(ontdek ? t.id : undefined);
-    $("repFromResult").onclick = e => openReport(t.id, e.currentTarget, S.k);
-    if ($("toelBtn")) $("toelBtn").onclick = () => {
-      const box = $("toelBox"), open = box.hidden;
-      box.hidden = !open; $("toelBtn").setAttribute("aria-expanded", String(open));
-      if (open) box.classList.remove("toelin"), void box.offsetWidth, box.classList.add("toelin");
-    };
-    return;
-  }
-  $("copyBtn").onclick = () => shareOut(resultShare(), $("copyMsg"), card);
-  /* update 33: bij oefenen staat ‘Nieuwe casus’ bovenin de uitslag (na naam, score en toelichting) en in de balk bij Determinatie */
-  if ($("nextBtn")) $("nextBtn").onclick = () => startFree();
-  if ($("nieuwBoven")) $("nieuwBoven").onclick = () => startFree();
-  if ($("oefenWijzig")) $("oefenWijzig").onclick = () => Spelen.wijzig();
   $("toDex").onclick = () => showDex(ontdek ? t.id : undefined);
   $("repFromResult").onclick = e => openReport(t.id, e.currentTarget, S.k);
-  if ($("toelBtn")) $("toelBtn").onclick = () => {
-    const box = $("toelBox"), open = box.hidden;
-    box.hidden = !open; $("toelBtn").setAttribute("aria-expanded", String(open));
-    if (open) box.classList.remove("toelin"), void box.offsetWidth, box.classList.add("toelin");
-  };
+  if (S.mode === "duel"){ Duel.bindVervolg(); return; }
+  $("copyBtn").onclick = () => shareOut(resultShare(), $("copyMsg"), card);
+  if (vd){
+    $("vdOefen").onclick = () => startFree(vd.keuze);
+    $("vdKies").onclick = () => { startFree(vd.keuze); Spelen.wijzig(); };
+    if ($("vdNaam")) $("vdNaam").onclick = () => MENU_GO.player();
+  }
+  if ($("nieuwBoven")) $("nieuwBoven").onclick = () => startFree();
+  if ($("oefenWijzig")) $("oefenWijzig").onclick = () => Spelen.wijzig();
   if ($("inviteFromResult")) $("inviteFromResult").onclick = () => League.openUitnodigen();
   $("toStats").onclick = () => Statistiek.toon();
   Profiel.toonWinst();
   if (typeof Levels !== "undefined") Levels.toonInResultaat();
   /* Eenmalige uitleg na een gespeelde casus (update 12): eerst de bronlinks, daarna de statistieken. Na elkaar, nooit
-     tegelijk. Wie de statistieken al via het menu opende, heeft die uitleg daar al gezien en krijgt hem hier niet. */
+     tegelijk. Wie de statistieken al via het menu opende, heeft die uitleg daar al gezien en krijgt hem hier niet.
+     Update 64: de statistieken staan in het tabblad ‘Je cijfers’; de uitleg wijst naar dat tabblad. */
   if (typeof Nieuw === "undefined") return;
   const gezien = k => { try { return !!localStorage.getItem("vestigia:nieuw:" + k); } catch(e){ return true; } };
-  const br = card.querySelector(".bronrij"), sl = card2.querySelector(".statsline");
+  const br = card.querySelector(".bronrij"), sl = $("utTab-cijfers") ? card2.querySelector(".ut-seg") : null;
   /* wacht tot er geen pop-up meer open staat (nieuwe medaille, level omhoog, dwaalgast …), hooguit twee minuten */
   const vrij = async () => { for (let i = 0; i < 120; i++){ if (!(typeof Wachtrij !== "undefined" && Wachtrij.ietsOpen()) && !document.querySelector("#awardPop:not([hidden]), .overlay:not([hidden])")) return true; await new Promise(r => setTimeout(r, 1000)); } return false; };
   (async () => {
@@ -551,8 +591,13 @@ function renderResult(){
       { na: br, tekst: "Nieuw: lees meer over deze soort op de soortpagina van de bron, of bekijk foto's van het dier. De links openen in een nieuw tabblad." }
     ], { wacht: 700 });
     if (!(await vrij())) return;
+    /* update 64: wie de oude uitslag kende, ziet één keer waar de rest gebleven is */
+    if (vers && card2.querySelector(".ut-seg")) await Nieuw.blokjes("uitslagtabs", [
+      { na: card2.querySelector(".ut-seg"), tekst: "Nieuw: de uitslag is korter. De toelichting, de kenmerken, je determinaties en je cijfers staan nu in deze tabbladen." }
+    ], { wacht: 700 });
+    if (!(await vrij())) return;
     if (vers && sl && sl.isConnected && !gezien("statistiek")) await Nieuw.blokjes("statistiek-na-casus", [
-      { na: sl, tekst: "Nieuw: je statistieken. Hoeveel casussen je speelde, hoeveel je er goed had, en welke soorten je het vaakst tegenkwam of invoerde. Je vindt ze hier en altijd in het menu onder je avatar." }
+      { na: sl, tekst: "Nieuw: je statistieken. Hoeveel casussen je speelde, hoeveel je er goed had, en welke soorten je het vaakst tegenkwam of invoerde. Je vindt ze hierboven onder ‘Je cijfers’ en altijd in het menu onder je avatar." }
     ], { wacht: 1200 });
   })();
 }

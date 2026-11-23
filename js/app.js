@@ -16,9 +16,16 @@ document.addEventListener("keydown", e => {
 /* namen in beeld uit data/teksten.js */
 document.querySelectorAll("[data-naam]").forEach(el => { if (NAAM[el.dataset.naam]) el.textContent = NAAM[el.dataset.naam]; });
 
-const sorted = KIESBAAR.slice().sort((a, b) => a.n.localeCompare(b.n, "nl"));
+/* Update 93: het Soortenregister per diergroep (in de volgorde van het Vestiarium), binnen een groep alfabetisch.
+   Wetenschappelijke namen staan in een eigen kolom en lijnen uit, ook als een naam over twee regels loopt. */
 const sterretje = KIESBAAR.length !== TARGETS.length;
-$("splist").innerHTML = sorted.map(x => `<div class="${x.cs && sterretje ? "tgt" : ""}"><span>${esc(x.n)}</span> <i>${esc(x.s)}</i></div>`).join("");
+$("splist").classList.add("pergroep");
+$("splist").innerHTML = Object.entries(GROUPS).map(([g, lab]) => {
+  const soorten = KIESBAAR.filter(x => x.g === g).sort((a, b) => a.n.localeCompare(b.n, "nl"));
+  if (!soorten.length) return "";
+  return `<section><h3 style="--c:var(--g-${g})">${esc(lab)}<small>${soorten.length} ${soorten.length === 1 ? "soort" : "soorten"}</small></h3>`
+    + soorten.map(x => `<div class="${x.cs && sterretje ? "tgt" : ""}"><span>${esc(x.n)}</span><i>${esc(x.s)}</i></div>`).join("") + `</section>`;
+}).join("");
 $("listSum").textContent = KIESBAAR.length === TARGETS.length ? `${TARGETS.length} beschermde soorten` : `${KIESBAAR.length} soorten · ${TARGETS.length} met casus (*)`;
 /* aantallen in de spelregels en het veldboek komen uit de data, zodat ze kloppen als er soorten bijkomen */
 document.querySelectorAll("[data-tel=doelsoorten]").forEach(el => el.textContent = TARGETS.length);

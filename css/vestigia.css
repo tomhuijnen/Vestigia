@@ -2520,3 +2520,117 @@ html.donker .vesti-wolk{background:#f3eee2; color:#1d2620}
 #wachtPop.vesti-intro .nw-stap{text-align:center}
 #wachtPop.vesti-intro .vi-fijn{font-size:var(--fs-s); color:var(--ink-2)}
 #wachtPop.vesti-intro .nw-knoppen{justify-content:flex-end}
+
+/* ───────── update 64: uitslag in twee lagen (variant B, 23 november 2026) ───────── */
+#resultCard .sleutelbox, #resultCard .confuse{margin:0}
+.ut-acties{display:flex; flex-wrap:wrap; gap:10px; margin-top:2px}
+.ut-acties .btn{flex:1 1 200px; min-height:46px; white-space:nowrap}
+.ut-zin{margin:-4px 0 0; color:var(--ink-2); font-size:var(--fs-s); line-height:1.45}
+.ut-zin .linklike{font-size:var(--fs-s)}
+#resultCard .dexnote{margin:0; font-size:var(--fs-s)}
+#resultCard #copyMsg:empty{display:none}
+.ut-naam{display:grid; gap:8px; padding:12px 14px; border-radius:8px; background:var(--paper); box-shadow:0 0 0 1px var(--rule) inset}
+.ut-naam p{margin:0; font-size:.95rem; line-height:1.4}
+.ut-naam p b{color:var(--green-d)}
+.ut-naam .btn{justify-self:start}
+/* onderlaag: één kaart met tabbladen; het blokje schuift zoals bij klassiek/expert */
+.uitslagtabs{display:grid; gap:10px}
+.ut-kaart{background:var(--leaf); border-radius:10px; box-shadow:0 0 0 1px var(--rule) inset; padding:12px; display:grid; gap:14px}
+.ut-seg{position:relative; display:grid; grid-auto-flow:column; grid-auto-columns:1fr; gap:4px; padding:4px; background:var(--paper); border:1px solid var(--rule); border-radius:12px}
+.ut-seg::before{content:""; position:absolute; top:4px; bottom:4px; left:4px; width:calc((100% - 8px - 4px * (var(--n) - 1)) / var(--n)); border-radius:9px; background:var(--green);
+  transform:translateX(calc(var(--i) * (100% + 4px)))}
+.ut-seg.klaar::before{transition:transform .3s cubic-bezier(.3,.7,.2,1)}
+.ut-seg button{position:relative; z-index:1; height:40px; border:0; border-radius:9px; background:transparent; font-family:var(--display); font-size:.92rem; font-weight:500; cursor:pointer; padding:0 4px; white-space:nowrap; color:var(--ink); transition:color .2s ease}
+.ut-seg button[aria-selected="true"]{color:#fff}
+.ut-seg button[aria-selected="false"]:hover{background:var(--leaf)}
+@media (max-width:360px){ .ut-seg button{font-size:.84rem} }
+@media (prefers-reduced-motion:reduce){ .ut-seg.klaar::before{transition:none} }
+.ut-paneel{padding:0 4px 4px; display:grid; gap:14px}
+.ut-paneel .toelbox{margin:0; background:transparent; border:0; padding:0}
+.ut-paneel .toelbox .caps{color:var(--ink-2)}
+.ut-paneel .traits{margin:0}
+.ut-casus .tiplist{margin:0}
+.ut-casus .volledig{margin-top:12px}
+.ut-stats{display:grid; gap:6px}
+.ut-paneel .inviteline{margin:0}
+.ut-voet{text-align:center; margin:2px 0 0}
+html.donker .ut-seg{background:#111a15}
+html.donker .ut-seg button[aria-selected="true"]{color:#0f1712}
+html.donker .ut-naam{background:#111a15}
+.oefenen #gameView .ut-seg button[aria-selected="false"]:hover{background:#f3e6d0}
+html.donker .oefenen #gameView .ut-seg button[aria-selected="false"]:hover{background:#33281a}
+
+/* ───────── update 93: determinatieblok als kaart (variant A) ───────── */
+.det{background:var(--leaf); border-radius:12px; padding:14px 16px 16px; box-shadow:0 0 0 1.5px var(--green) inset; gap:12px}
+.det .sechead{border-bottom:0; padding-bottom:0; margin:0}
+.det .sechead h2{color:var(--green)}
+.det .det-row{flex-direction:column; gap:10px}
+.det .combo input{background:var(--paper); border:1.5px solid var(--rule); border-radius:10px; padding:11px 14px; font-size:1.25rem}
+.det .combo input:focus{border-color:var(--green); box-shadow:0 0 0 3px rgba(75,122,94,.15)}
+.det #gBtn{min-height:48px; border-radius:10px}
+html.donker .det .combo input{background:#111a15}
+
+/* ───────── update 93: Soortenregister per diergroep (variant A) ───────── */
+.splist.pergroep{columns:auto; display:grid; gap:20px; padding-top:14px}
+@media (min-width:760px){ .splist.pergroep{grid-template-columns:1fr 1fr; gap:22px 32px; align-items:start} }
+.splist.pergroep section{break-inside:avoid}
+.splist.pergroep h3{display:flex; align-items:baseline; justify-content:space-between; margin:0 0 2px; padding:0 0 6px; border-bottom:3px solid var(--c); font-family:var(--display); font-weight:600; font-size:1.05rem}
+.splist.pergroep h3 small{font-family:var(--caps); font-size:var(--fs-xs); color:var(--ink-2); font-weight:500; letter-spacing:.05em; text-transform:uppercase}
+.splist.pergroep div{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); gap:12px; padding:8px 2px; border-bottom:1px solid var(--rule); line-height:1.3; align-items:start}
+.splist.pergroep i{color:var(--ink-2); font-size:.9rem}
+
+/* ───────── update 64: Vestiarium compacter ───────── */
+.trofrij{margin:18px 0 6px; background:var(--leaf); border-radius:10px; box-shadow:0 0 0 1px var(--rule) inset}
+.trofrij > summary{list-style:none; display:flex; align-items:center; gap:12px; padding:14px 16px; cursor:pointer; min-height:56px}
+.trofrij > summary::-webkit-details-marker{display:none}
+.trofrij .tr-t{display:grid; flex:1; gap:1px; min-width:0}
+.trofrij .tr-t b{font-family:var(--display); font-weight:600; font-size:1.1rem}
+.trofrij .tr-t small{color:var(--ink-2); font-size:var(--fs-s)}
+.trofrij .tr-pijl{flex:0 0 auto; color:var(--green); transition:transform .2s}
+.trofrij[open] .tr-pijl{transform:rotate(180deg)}
+.trofrij .trophies{padding:0 16px 16px; border:0}
+.trofrij .trophies > h3{display:none}
+@media (prefers-reduced-motion:reduce){ .trofrij .tr-pijl{transition:none} }
+/* zoekveld, diergroepen en weergave blijven bovenin staan tijdens het scrollen (onder de smalle kop) */
+.dexplak{position:sticky; top:calc(50px + env(safe-area-inset-top)); z-index:5; background:var(--paper); padding:10px 0 8px; display:grid; gap:8px; box-shadow:0 8px 10px -10px rgba(20,36,27,.35)}
+.dexplak .dexzoek{margin:0}
+.dexplak .dexfilters{flex-wrap:nowrap; overflow-x:auto; padding:0 0 2px; scrollbar-width:none}
+.dexplak .dexfilters::-webkit-scrollbar{display:none}
+.dexplak .dexfilters .chipbtn{flex:0 0 auto}
+.dexplak .dexfilters .gap, .dexplak .dexfilters .switch-inline{display:none}
+.dexweerg{display:flex; align-items:center; justify-content:space-between; gap:10px; min-height:36px}
+.dexweerg .switch-inline{font-size:.9rem}
+.weergseg{position:relative; display:grid; grid-template-columns:1fr 1fr; gap:4px; padding:3px; background:var(--leaf); border:1px solid var(--rule); border-radius:10px; width:180px; flex:0 0 auto}
+.weergseg::before{content:""; position:absolute; top:3px; bottom:3px; left:3px; width:calc((100% - 10px) / 2); border-radius:8px; background:var(--green); transform:translateX(0)}
+.weergseg.klein::before{transform:translateX(calc(100% + 4px))}
+.weergseg.klaar::before{transition:transform .3s cubic-bezier(.3,.7,.2,1)}
+.weergseg button{position:relative; z-index:1; height:30px; border:0; border-radius:8px; background:transparent; font-family:var(--display); font-size:.86rem; font-weight:500; cursor:pointer; color:var(--ink); transition:color .2s ease}
+.weergseg button[aria-pressed="true"]{color:#fff}
+@media (prefers-reduced-motion:reduce){ .weergseg.klaar::before{transition:none} }
+html.donker .weergseg{background:#1d2a22}
+html.donker .weergseg button[aria-pressed="true"]{color:#0f1712}
+.dexzoekuit{margin:10px 0 0}
+.dexgrid{margin-top:12px}
+/* compact: kleine plaatjes, vier kolommen op de telefoon, acht op de laptop */
+.dexgrid.klein{grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px}
+@media (min-width:700px){ .dexgrid.klein{grid-template-columns:repeat(8,minmax(0,1fr)); gap:10px} }
+.dexgrid.klein .plate{min-height:92px}
+.dexgrid.klein .plate .band{padding:3px 6px}
+.dexgrid.klein .plate .band span{font-size:.75rem; letter-spacing:.04em}
+.dexgrid.klein .plate .band b{display:none}
+.dexgrid.klein .plate .mid{padding:6px 6px 5px; gap:0}
+.dexgrid.klein .plate .nm{font-size:.8rem!important; line-height:1.15; hyphens:auto; overflow-wrap:anywhere}
+.dexgrid.klein .plate .sc, .dexgrid.klein .plate .ft, .dexgrid.klein .plate .stamp{display:none}
+.dexgrid.klein .plate .q{font-size:1.6rem}
+.det .sechead .caps{display:none}
+@media (max-width:420px){ .det .combo input{font-size:1.1rem} }
+.dexgrid.klein .plate .band span{font-size:0; letter-spacing:0}
+.dexgrid.klein .plate .band span::before{content:attr(data-no); font-size:.75rem; letter-spacing:.04em}
+.dexgrid.klein .plate.rare .band span::after{font-size:.75rem; margin-left:4px}
+.dexweerg .switch-inline{white-space:nowrap; font-size:.78rem}
+@media (max-width:370px){ .dexweerg .switch-inline{font-size:.7rem} .weergseg{width:160px} }
+.dexplak{grid-template-columns:minmax(0,1fr)}
+.dexweerg .switch-inline{white-space:normal; line-height:1.2; min-width:0}
+@media (max-width:520px){ .weergseg{width:156px} }
+.dexgrid.klein .plate .mid{padding:6px 5px 5px}
+.dexgrid.klein .plate .nm{font-size:.74rem!important; letter-spacing:-.01em}
