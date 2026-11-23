@@ -216,7 +216,15 @@ const Duel = (() => {
   }
   function deelTekst(d){
     const me = p(), m = modus(d);
-    const text = d.tegen
+    /* 23 november (Tom): het duel ligt al vast en jij speelde al (of je werd zelf uitgedaagd)? Dan geen nieuwe
+       uitdaging, maar een herinnering dat de ander aan de beurt is. */
+    const herinnering = d.tegen && d.status === "bezig" && (d.ik === "tegenstander" || (d.mijn || []).length > 0);
+    const tijd = d.verloopt ? ` Je hebt ${nogTijd(d.verloopt)}.` : "";
+    const text = herinnering
+      ? (d.ik === "tegenstander"
+          ? `${d.tegen}, ik heb jouw spelersduel in Vestigia (${m}) gespeeld. Nu jij!${tijd} 🐾`
+          : `${d.tegen}, ons spelersduel in Vestigia (${m}) staat klaar en ik heb al gespeeld. Nu jij!${tijd} 🐾`)
+      : d.tegen
       ? `${d.tegen}, ik daag je uit voor een spelersduel in Vestigia (${m}): drie casussen, wie determineert ze het best? Je hebt 48 uur. 🐾`
       : `Wie durft? Ik daag je uit voor een spelersduel in Vestigia (${m}): drie casussen, wie determineert ze het best? Wie de link als eerste opent, speelt tegen mij. 🐾`;
     return { text, url: appLink({ duel: d.code, van: me && me.name }), kaal: true };
