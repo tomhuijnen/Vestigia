@@ -12,7 +12,11 @@
      deelmenu van je telefoon; kan dat niet, dan wordt hij gedownload.
    Gegevens: de RPC wrapped(id, sleutel, jaar) (SQL 060, repo Vestigia-database). Hij geeft { ik, samen }: ‘ik’ is jouw
    deel (of null zonder naam), ‘samen’ het gezamenlijke deel (SQL 024, op 31 december gemaakt).
-   Een kaart toevoegen of weghalen: zie kaarten() hieronder; elke kaart is { id, kleur, vesti, wolk, html }.
+   Vesti's entree (Tom: ‘dit is bijzonder en vet, dat mag echt een moment zijn’): eerst een kaart met zijn silhouet
+   (‘er is iemand die je wil ontmoeten’), dan de onthulling met stralen en confetti. Wie de Wrapped al eens zag, krijgt
+   meteen ‘Daar ben ik weer!’. Op elke kaart staat Vesti anders: groot in het midden, naast de tekst, gluurend over
+   de onderrand of van opzij het beeld in. Elke kaart opent met een zin die vertelt wat je deed, niet met een losse titel.
+   Een kaart toevoegen of weghalen: zie kaarten() hieronder (de uitleg van de velden staat erboven).
    Voorbeeld: ?wrapped=demo (eigen Wrapped), ?wrapped=demo&weinig=1 (onder de 5 casussen), ?wrapped=demo&gast=1 (geen naam). */
 "use strict";
 
@@ -79,99 +83,111 @@ const Wrapped = (() => {
   }
 
   /* ---------- de kaarten ----------
-     kleur: groen · donker · mint · oker · nacht (zie .wr-k-… in css/vestigia.css)
-     vesti: uitleg · juicht · teleurgesteld · slaapt (de tekeningen in data/vesti.js) */
+     Elke kaart: { id, kleur, kop, html, vesti: { t, plek }, wolk, extra }
+     - kleur  groen · bos · paars · lichtblauw · koraal · geel · roze · nacht · mint (.wr-k-… in css/vestigia.css)
+     - kop    een zin die vertelt wat je deed (Tom: geen losse titels als ‘Favoriet’, die zeggen niemand iets)
+     - vesti.t  welke tekening uit data/vesti.js: heel.juicht, kijkt.lacht, opzij.trots …
+     - vesti.plek  midden (groot, in het midden) · links · rechts (staat naast de tekst) · onder (gluurt over de onderrand)
+                   · zij (gluurt van rechts het beeld in) · silhouet (nog geheim, alleen op de teaser)
+     - extra  stralen en/of confetti achter Vesti (de entree en het slot) */
   function kaarten(d){
     const ik = d.ik, s = d.samen || {}, k = [];
     const eerder = !!lees(GEZIEN);
-    k.push({ id: "hoi", kleur: "groen", vesti: "uitleg",
-      wolk: eerder ? "Daar ben ik weer! Nog een keer terugkijken?" : "Zullen we samen terugkijken?",
-      html: `<p class="wr-boven">Vestigia Wrapped ${JAAR}</p>
-        <h2>${eerder ? "Hoi, daar ben je weer!" : "Hoi! Ik ben Vesti."}</h2>
-        <p>${eerder ? "Ik ben Vesti, je veldgids. Hier is jouw jaar nog een keer." :
-          "Ik ben je nieuwe veldgids in Vestigia. Ik heb jouw eerste seizoen bijgehouden: elke casus, elke plaat en elke soort die je door elkaar haalde."}</p>
-        <p class="wr-fijn">Tik rechts voor de volgende kaart, links om terug te gaan.</p>` });
+    if (!eerder) k.push({ id: "psst", kleur: "nacht", vesti: { t: "heel.uitleg", plek: "silhouet" }, wolk: "",
+      kop: "Psst… voordat we naar je jaar kijken.",
+      html: `<p class="wr-groot zin">Er is iemand die je heel graag wil ontmoeten.</p><p class="wr-fijn">Tik om kennis te maken.</p>` });
+    k.push({ id: "hoi", kleur: "paars", vesti: { t: "heel.juicht", plek: "midden" }, extra: ["stralen", "confetti"],
+      wolk: eerder ? "Nog een keer? Graag!" : "Ik heb je hele jaar bijgehouden. Kijken we samen?",
+      kop: `Vestigia Wrapped ${JAAR}`,
+      html: `<h2 class="wr-titel">${eerder ? "Daar ben ik weer!" : "Hoi! Ik ben Vesti!"}</h2>
+        <p class="wr-lead">${eerder ? "Je veldgids, klaar om je jaar nog een keer met je door te lopen." :
+          "Vanaf nu ben ik je veldgids in Vestigia. Ik heb alles gezien: elke casus, elke plaat en elke soort die je door elkaar haalde."}</p>` });
 
     if (ik && ik.genoeg){
       const pct = ik.casussen ? Math.round(100 * ik.gewonnen / ik.casussen) : 0;
-      k.push({ id: "cijfers", kleur: "donker", vesti: "juicht",
+      k.push({ id: "cijfers", kleur: "lichtblauw", vesti: { t: "kijkt.verbaasd", plek: "onder" },
         wolk: pct >= 80 ? "Wauw, bijna alles goed!" : pct >= 50 ? "Meer goed dan fout. Netjes!" : "Elke foute gok leert je iets.",
-        html: `<p class="wr-boven">Je jaar in cijfers</p>
-          <p class="wr-groot">${nr(ik.casussen)}</p><p class="wr-onder">casussen gespeeld</p>
-          <ul class="wr-rij"><li><b>${nr(ik.gewonnen)}</b><span>goed gedetermineerd</span></li>
-            <li><b>${pct}%</b><span>goed</span></li><li><b>${nr(ik.dagen)}</b><span>${ik.dagen === 1 ? "dagcasus" : "dagcasussen"}</span></li></ul>` });
-      if (ik.reeks > 0) k.push({ id: "reeks", kleur: "oker", vesti: "juicht",
+        kop: `In ${JAAR} speelde je`,
+        html: `<p class="wr-groot">${nr(ik.casussen)}</p><p class="wr-lead">casussen in Vestigia</p>
+          <ul class="wr-rij"><li><b>${nr(ik.gewonnen)}</b><span>keer goed gedetermineerd</span></li>
+            <li><b>${pct}%</b><span>van je casussen goed</span></li><li><b>${nr(ik.dagen)}</b><span>${ik.dagen === 1 ? "dagcasus" : "dagcasussen"} gespeeld</span></li></ul>` });
+      if (ik.reeks > 0) k.push({ id: "reeks", kleur: "koraal", vesti: { t: "opzij.trots", plek: "rechts" },
         wolk: ik.reeks >= 14 ? "Zelfs ik vergeet weleens een dag." : ik.reeks >= 7 ? "Een hele week! Knap volgehouden." : "Elke dag een beetje, zo word je veldbioloog.",
-        html: `<p class="wr-boven">Je langste reeks</p>
-          <p class="wr-groot">${nr(ik.reeks)}</p><p class="wr-onder">${ik.reeks === 1 ? "dag" : "dagen op rij"} de dagcasus gespeeld</p>` });
-      if (ik.favoriet) k.push({ id: "favoriet", kleur: "mint", vesti: "juicht",
+        kop: "Zo veel dagen op rij speelde je de dagcasus",
+        html: `<p class="wr-groot">${nr(ik.reeks)}</p><p class="wr-lead">${ik.reeks === 1 ? "dag" : "dagen achter elkaar"}, zonder er één over te slaan</p>
+          <div class="wr-kalender" aria-hidden="true">${Array.from({ length: Math.min(ik.reeks, 42) }, (_, j) => `<i style="--j:${j}"></i>`).join("")}</div>` });
+      if (ik.favoriet) k.push({ id: "favoriet", kleur: "geel", vesti: { t: "kijkt.lacht", plek: "onder" },
         wolk: "Die herken je inmiddels met je ogen dicht.",
-        html: `<p class="wr-boven">Je favoriete soort</p>
-          <p class="wr-soort">${esc(soort(ik.favoriet.soort))}</p>
-          <p class="wr-onder">${keer(ik.favoriet.n)} goed gedetermineerd</p>` });
+        kop: "Deze soort herkende je het vaakst",
+        html: `<p class="wr-soort">${esc(soort(ik.favoriet.soort))}</p>
+          <p class="wr-lead">${keer(ik.favoriet.n)} goed gedetermineerd. Een echte specialiteit van je!</p>` });
       const nm = nemesis(ik.verward);
-      k.push(nm ? { id: "nemesis", kleur: "nacht", vesti: "teleurgesteld",
+      k.push(nm ? { id: "nemesis", kleur: "nacht", vesti: { t: "kijkt.verlegen", plek: "zij" },
         wolk: "Ik haal ze zelf ook weleens door elkaar, hoor.",
-        html: `<p class="wr-boven">Je nemesis</p>
-          <p class="wr-soort">${esc(soort(nm.soort))}</p>
-          <p class="wr-onder">${keer(nm.n)} verward met <b>${esc(soort(nm.met))}</b></p>
+        kop: "Deze soort haalde je het vaakst door elkaar",
+        html: `<p class="wr-soort">${esc(soort(nm.soort))}</p>
+          <p class="wr-tegen"><span>verward met</span><b>${esc(soort(nm.met))}</b></p>
+          <p class="wr-lead">${keer(nm.n)}. Je nemesis van ${JAAR}!</p>
           <p class="wr-fijn">In Statistieken staat ‘Vaakst verward’, met een knop om juist deze soorten te oefenen.</p>` }
-        : { id: "nemesis", kleur: "nacht", vesti: "juicht", wolk: "Geen nemesis? Dan ben jij die van mij.",
-        html: `<p class="wr-boven">Je nemesis</p><p class="wr-soort">Geen!</p>
-          <p class="wr-onder">Je haalde geen soorten door elkaar die op elkaar lijken.</p>` });
+        : { id: "nemesis", kleur: "nacht", vesti: { t: "kijkt.knipoog", plek: "zij" }, wolk: "Geen nemesis? Dan ben jij die van mij.",
+        kop: "Soorten die je door elkaar haalde",
+        html: `<p class="wr-soort">Geen enkele!</p><p class="wr-lead">Je haalde nooit twee soorten door elkaar die op elkaar lijken.</p>` });
       if (ik.beste){
         const b = ik.beste, wat = b.soort || (dailyTarget(b.dag) || {}).id;
-        k.push({ id: "beste", kleur: "groen", vesti: "juicht", wolk: b.pogingen <= 1 ? "In één keer! Ik zag het aan je gezicht." : "Die ging je goed af.",
-          html: `<p class="wr-boven">Je beste dagcasus</p>
-            ${wat ? `<p class="wr-soort">${esc(soort(wat))}</p>` : ""}
-            <p class="wr-onder">${datum(b.dag)}, ${b.expert ? "expert" : "klassiek"}: ${b.pogingen <= 1 ? "in één poging" : `in ${b.pogingen} pogingen`}
-              met ${b.waarnemingen === 1 ? "1 waarneming" : `${b.waarnemingen} waarnemingen`}</p>
-            <p class="wr-groot klein">${nr(b.punten)} <small>punten</small></p>` });
+        k.push({ id: "beste", kleur: "groen", vesti: { t: "heel.juicht", plek: "links" },
+          wolk: b.pogingen <= 1 ? "In één keer! Ik zag het aan je gezicht." : "Die ging je goed af.",
+          kop: `Je beste dagcasus speelde je op ${datum(b.dag)}`,
+          html: `${wat ? `<p class="wr-soort">${esc(soort(wat))}</p>` : ""}
+            <ul class="wr-chips"><li>${b.expert ? "expert" : "klassiek"}</li><li>${b.pogingen <= 1 ? "in één poging" : `in ${b.pogingen} pogingen`}</li>
+              <li>${b.waarnemingen === 1 ? "na 1 waarneming" : `na ${b.waarnemingen} waarnemingen`}</li></ul>
+            <p class="wr-groot middel">${nr(b.punten)} <small>punten</small></p>` });
       }
       if (ik.platen > 0){
         const z = ik.zeldzaamst;
-        k.push({ id: "platen", kleur: "oker", vesti: "uitleg", wolk: "Mijn eigen Vestiarium is nog lang niet zo vol.",
-          html: `<p class="wr-boven">Je ${NAAM.vestiarium}</p>
-            <p class="wr-groot">${nr(ik.platen)}</p><p class="wr-onder">${ik.platen === 1 ? "plaat" : "platen"} verzameld</p>
-            ${z ? `<div class="wr-blok"><span class="caps">Je zeldzaamste plaat</span><b>${esc(soort(z.soort))}</b>
-              <span>${z.spelers <= 1 ? "Jij bent de enige die hem heeft!" : `Maar ${nr(z.spelers)} spelers hebben hem.`}</span></div>` : ""}` });
+        k.push({ id: "platen", kleur: "lichtblauw", vesti: { t: "opzij.verbaasd", plek: "rechts" }, wolk: "Mijn eigen Vestiarium is nog lang niet zo vol.",
+          kop: `Zo veel platen verzamelde je in je ${NAAM.vestiarium}`,
+          html: `<p class="wr-groot">${nr(ik.platen)}</p><p class="wr-lead">${ik.platen === 1 ? "plaat" : "platen"}, elk voor een soort die je goed had</p>
+            ${z ? `<div class="wr-blok"><span>De zeldzaamste die je hebt:</span><b>${esc(soort(z.soort))}</b>
+              <span>${z.spelers <= 1 ? "Jij bent de enige speler met deze plaat!" : `Maar ${nr(z.spelers)} spelers hebben deze plaat.`}</span></div>` : ""}` });
       }
-      if (ik.meer_dan_pct != null && ik.spelers >= 5) k.push({ id: "vergelijk", kleur: "donker",
-        vesti: ik.meer_dan_pct >= 50 ? "juicht" : "uitleg",
-        wolk: ik.meer_dan_pct >= 50 ? "Jij bent een echte veldwerker." : "Volgend jaar haal je ze in.",
-        html: `<p class="wr-boven">Jij en de rest</p>
-          <p class="wr-onder">Je speelde meer casussen dan</p><p class="wr-groot">${ik.meer_dan_pct}%</p>
-          <p class="wr-onder">van de ${nr(ik.spelers)} spelers van ${JAAR}</p>` });
+      if (ik.meer_dan_pct != null && ik.spelers >= 5){
+        const vol = Math.round(ik.meer_dan_pct / 10);
+        k.push({ id: "vergelijk", kleur: "roze", vesti: { t: ik.meer_dan_pct >= 50 ? "heel.juicht" : "heel.uitleg", plek: "rechts" },
+          wolk: ik.meer_dan_pct >= 50 ? "Jij bent een echte veldwerker." : "Volgend jaar haal je ze in.",
+          kop: "Je speelde meer casussen dan",
+          html: `<p class="wr-groot">${ik.meer_dan_pct}%</p><p class="wr-lead">van de ${nr(ik.spelers)} spelers van ${JAAR}</p>
+            <div class="wr-poppetjes" aria-hidden="true">${Array.from({ length: 10 }, (_, j) => `<i class="${j < vol ? "vol" : ""}" style="--j:${j}"></i>`).join("")}</div>` });
+      }
     } else {
-      k.push({ id: "nognietgenoeg", kleur: "donker", vesti: "teleurgesteld",
+      k.push({ id: "nognietgenoeg", kleur: "koraal", vesti: { t: "heel.teleurgesteld", plek: "midden" },
         wolk: "Volgend jaar maak ik er een voor jou!",
-        html: ik ? `<p class="wr-boven">Jouw jaar</p><p class="wr-groot">${nr(ik.casussen)}</p>
-            <p class="wr-onder">${ik.casussen === 1 ? "casus" : "casussen"} gespeeld in ${JAAR}</p>
-            <p>Vanaf ${ik.drempel || 5} casussen maak ik je eigen overzicht: je favoriete soort, je nemesis en je platen. Volgend jaar dus!</p>`
-          : `<p class="wr-boven">Jouw jaar</p><h2>Nog geen naam</h2>
-            <p>Je eigen Wrapped hoort bij je spelersnaam. Kies er een in de ranglijst, dan houd ik volgend jaar alles voor je bij.</p>` });
+        kop: ik ? `In ${JAAR} speelde je` : "Je eigen Wrapped",
+        html: ik ? `<p class="wr-groot">${nr(ik.casussen)}</p><p class="wr-lead">${ik.casussen === 1 ? "casus" : "casussen"}. Vanaf ${ik.drempel || 5} maak ik je eigen overzicht, met je favoriete soort, je nemesis en je platen. Volgend jaar dus!</p>`
+          : `<h2 class="wr-titel">Nog geen naam</h2><p class="wr-lead">Je eigen Wrapped hoort bij je spelersnaam. Kies er een in de ranglijst, dan houd ik volgend jaar alles voor je bij.</p>` });
     }
 
     /* het gezamenlijke deel */
     if (s && s.casussen){
       const ik_ = mijnNaam();
-      const top = (titel, rij, eenheid) => rij && rij.length ? `<div class="wr-top"><span class="caps">${titel}</span><ol>${rij.map(r =>
-        `<li class="${r.naam === ik_ ? "jij" : ""}"><i>${r.plek}</i><b>${esc(r.naam)}</b><span>${nr(r.n)} ${eenheid}</span></li>`).join("")}</ol></div>` : "";
-      k.push({ id: "samen", kleur: "groen", vesti: "uitleg", wolk: "Samen hebben we heel wat sporen gelezen.",
-        html: `<p class="wr-boven">Vestigia in ${JAAR}</p>
-          <ul class="wr-rij"><li><b>${nr(s.casussen)}</b><span>casussen</span></li><li><b>${nr(s.spelers)}</b><span>spelers</span></li></ul>
-          ${top("Meeste dagen gespeeld", s.top_dag, "dagen")}${top("Langste reeks", s.top_reeks, "dagen")}${top("Meeste platen", s.top_platen, "platen")}` });
-      if (s.lastig && s.lastig.soort) k.push({ id: "lastig", kleur: "nacht", vesti: "teleurgesteld",
+      const top = (titel, rij, eenheid) => rij && rij.length ? `<div class="wr-top"><span>${titel}</span><ol>${rij.map(r =>
+        `<li class="${r.naam === ik_ ? "jij" : ""}"><i>${r.plek}</i><b>${esc(r.naam)}</b><em>${nr(r.n)} ${eenheid}</em></li>`).join("")}</ol></div>` : "";
+      k.push({ id: "samen", kleur: "bos", vesti: { t: "kijkt.trots", plek: "zij" }, wolk: "Samen hebben we heel wat sporen gelezen.",
+        kop: `Zo speelde heel Vestigia in ${JAAR}`,
+        html: `<ul class="wr-rij twee"><li><b>${nr(s.casussen)}</b><span>casussen</span></li><li><b>${nr(s.spelers)}</b><span>spelers</span></li></ul>
+          ${top("Wie speelden de meeste dagen?", s.top_dag, "dagen")}${top("Wie hadden de langste reeks?", s.top_reeks, "dagen")}${top("Wie verzamelden de meeste platen?", s.top_platen, "platen")}` });
+      if (s.lastig && s.lastig.soort) k.push({ id: "lastig", kleur: "paars", vesti: { t: "heel.teleurgesteld", plek: "links" },
         wolk: "Deze vond ik zelf ook pittig.",
-        html: `<p class="wr-boven">De lastigste dagcasus</p><p class="wr-soort">${esc(soort(s.lastig.soort))}</p>
-          <p class="wr-onder">${datum(s.lastig.dag)}: maar ${s.lastig.pct}% van de ${nr(s.lastig.spelers)} spelers had hem goed</p>` });
+        kop: "Deze dagcasus vond bijna iedereen lastig",
+        html: `<p class="wr-soort">${esc(soort(s.lastig.soort))}</p>
+          <div class="wr-ring" style="--p:${s.lastig.pct}" aria-hidden="true"><b>${s.lastig.pct}%</b></div>
+          <p class="wr-lead">Op ${datum(s.lastig.dag)} had maar ${s.lastig.pct}% van de ${nr(s.lastig.spelers)} spelers hem goed.</p>` });
     }
 
     const eigen = ik && ik.genoeg;
-    k.push({ id: "slot", kleur: "mint", vesti: "juicht",
+    k.push({ id: "slot", kleur: "mint", vesti: { t: "heel.juicht", plek: "midden" }, extra: ["stralen", "confetti"],
       wolk: eerder ? "Tot ziens in de app!" : "Vanaf nu loop ik met je mee in de app.",
-      html: `<p class="wr-boven">Tot volgend jaar</p>
-        ${eigen ? samenvatting(d, false) : `<h2>Op naar ${JAAR + 1}!</h2>`}
+      kop: `Dat was ${JAAR}!`,
+      html: `${eigen ? samenvatting(d) : `<h2 class="wr-titel">Op naar ${JAAR + 1}!</h2>`}
         <div class="wr-knoppen">${eigen ? `<button class="btn" id="wrDeel" type="button">Deel je Wrapped</button>` : ""}
           <button class="btn ghost" id="wrKlaar" type="button">Klaar</button></div>
         <p class="wr-fijn" id="wrDeelUit" role="status"></p>` });
@@ -182,8 +198,8 @@ const Wrapped = (() => {
     return `<div class="wr-sam"><ul class="wr-rij vier">
         <li><b>${nr(ik.casussen)}</b><span>casussen</span></li><li><b>${nr(ik.reeks)}</b><span>dagen op rij</span></li>
         <li><b>${nr(ik.platen)}</b><span>platen</span></li><li><b>${ik.casussen ? Math.round(100 * ik.gewonnen / ik.casussen) : 0}%</b><span>goed</span></li></ul>
-      ${ik.favoriet ? `<p>Favoriet: <b>${esc(soort(ik.favoriet.soort))}</b></p>` : ""}
-      ${nm ? `<p>Nemesis: <b>${esc(soort(nm.soort))}</b></p>` : ""}</div>`;
+      ${ik.favoriet ? `<p>Herkende je het vaakst: <b>${esc(soort(ik.favoriet.soort))}</b></p>` : ""}
+      ${nm ? `<p>Haalde je het vaakst door elkaar: <b>${esc(soort(nm.soort))}</b></p>` : ""}</div>`;
   }
 
   /* ---------- tonen ---------- */
@@ -192,9 +208,9 @@ const Wrapped = (() => {
     el = document.createElement("div");
     el.id = "wrapped"; el.className = "wrapped";
     el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true"); el.setAttribute("aria-label", `Vestigia Wrapped ${JAAR}`);
-    el.innerHTML = `<div class="wr-balk" aria-hidden="true"></div>
+    el.innerHTML = `<div class="wr-kaart" aria-live="polite"></div>
+      <div class="wr-balk" aria-hidden="true"></div>
       <button class="iconbtn wr-dicht" id="wrDicht" type="button" aria-label="Wrapped sluiten"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l10 10M13 3L3 13"/></svg></button>
-      <div class="wr-kaart" aria-live="polite"></div>
       <button class="wr-tik terug" type="button" aria-label="Vorige kaart"></button>
       <button class="wr-tik verder" type="button" aria-label="Volgende kaart"></button>`;
     document.body.appendChild(el);
@@ -215,7 +231,27 @@ const Wrapped = (() => {
       }
     });
   }
-  const vestiSvg = pose => typeof VESTI_TEKENING !== "undefined" ? (VESTI_TEKENING.heel[pose] || VESTI_TEKENING.heel.uitleg) : "";
+  /* "heel.juicht" → de tekening; onbekend → Vesti die uitlegt */
+  function vestiSvg(t){
+    if (typeof VESTI_TEKENING === "undefined") return "";
+    const [g, n] = String(t).split(".");
+    return (VESTI_TEKENING[g] && VESTI_TEKENING[g][n]) || VESTI_TEKENING.heel.uitleg;
+  }
+  const KLEUREN_CONFETTI = ["#f2c94c", "#ff7a59", "#8fd8f5", "#b69cff", "#f49ac1", "#7fd39b"];
+  function confetti(){
+    return `<div class="wr-confetti" aria-hidden="true">${Array.from({ length: 28 }, (_, j) =>
+      `<i style="--x:${(j * 37) % 100}%;--d:${(j % 7) * .23}s;--t:${2.6 + (j % 5) * .45}s;--r:${(j * 53) % 360}deg;background:${KLEUREN_CONFETTI[j % KLEUREN_CONFETTI.length]}"></i>`).join("")}</div>`;
+  }
+  function podium(c){
+    const v = c.vesti || { t: "heel.uitleg", plek: "rechts" };
+    const ex = c.extra || [];
+    return `<div class="wr-podium plek-${v.plek}" aria-hidden="true">
+      ${ex.includes("stralen") ? `<div class="wr-stralen"></div>` : ""}
+      ${c.wolk ? `<div class="wr-wolk">${esc(c.wolk)}</div>` : ""}
+      <div class="wr-vesti"><div class="wr-teken">${vestiSvg(v.t)}</div>
+        ${v.plek === "silhouet" ? `<span class="wr-vraag">?</span>` : ""}</div>
+    </div>${ex.includes("confetti") ? confetti() : ""}`;
+  }
   function ga(n){
     if (n < 0) return;
     if (n >= lijst.length){ sluit(); return; }
@@ -225,24 +261,19 @@ const Wrapped = (() => {
     el.dataset.kaart = c.id;
     el.querySelector(".wr-balk").innerHTML = lijst.map((_, j) => `<i class="${j < i ? "klaar" : j === i ? "nu" : ""}"></i>`).join("");
     const k = el.querySelector(".wr-kaart");
-    k.innerHTML = `<div class="wr-in">${c.html}</div>
-      <div class="wr-vesti" aria-hidden="true"><div class="wr-wolk">${esc(c.wolk)}</div>${vestiSvg(c.vesti)}</div>`;
+    k.innerHTML = `<div class="wr-in">${c.kop ? `<p class="wr-kop">${esc(c.kop)}</p>` : ""}${c.html}</div>${podium(c)}`;
     k.classList.remove("wr-nieuw"); void k.offsetWidth; k.classList.add("wr-nieuw");
-    /* kleine schermen: past de tekst niet boven Vesti en zijn wolkje, dan wordt Vesti kleiner */
-    k.classList.remove("wr-krap");
-    const tekstOnder = k.querySelector(".wr-in").getBoundingClientRect().bottom, w = k.querySelector(".wr-wolk");
-    if (w && tekstOnder > w.getBoundingClientRect().top - 8) k.classList.add("wr-krap");
     /* op de laatste kaart: de knoppen zelf, en geen tikvlak eroverheen */
     el.classList.toggle("wr-laatste", i === lijst.length - 1);
     const deel = $("wrDeel"); if (deel) deel.onclick = deelBeeld;
     const klaar = $("wrKlaar"); if (klaar) klaar.onclick = sluit;
   }
   function laden(tekst, met){
-    el.className = "wrapped wr-k-groen"; el.dataset.kaart = "laden";
+    el.className = "wrapped wr-k-bos"; el.dataset.kaart = "laden";
     el.querySelector(".wr-balk").innerHTML = "";
-    el.querySelector(".wr-kaart").innerHTML = `<div class="wr-in"><p class="wr-boven">Vestigia Wrapped ${JAAR}</p><h2>${tekst}</h2>
+    el.querySelector(".wr-kaart").innerHTML = `<div class="wr-in"><p class="wr-kop">Vestigia Wrapped ${JAAR}</p><h2 class="wr-titel">${tekst}</h2>
       ${met ? `<div class="wr-knoppen"><button class="btn" id="wrOpnieuw" type="button">Probeer opnieuw</button></div>` : ""}</div>
-      <div class="wr-vesti" aria-hidden="true">${vestiSvg(met ? "slaapt" : "uitleg")}</div>`;
+      ${met ? podium({ vesti: { t: "heel.slaapt", plek: "rechts" } }) : ""}`;
     if (met) $("wrOpnieuw").onclick = () => open();
   }
   async function open(){
@@ -276,7 +307,7 @@ const Wrapped = (() => {
     const ik = data.ik, nm = nemesis(ik.verward), W = 1080, H = 1350;
     const c = document.createElement("canvas"); c.width = W; c.height = H;
     const g = c.getContext("2d");
-    const verloop = g.createLinearGradient(0, 0, W, H); verloop.addColorStop(0, "#4b7a5e"); verloop.addColorStop(1, "#24402f");
+    const verloop = g.createLinearGradient(0, 0, W, H); verloop.addColorStop(0, "#6c4ab6"); verloop.addColorStop(.55, "#3d5f8f"); verloop.addColorStop(1, "#24402f");
     g.fillStyle = verloop; g.fillRect(0, 0, W, H);
     try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch(e){}
     const tekst = (t, x, y, px, kleur, gewicht = 600, font = "Rubik", uitlijn = "left") => {
@@ -287,13 +318,13 @@ const Wrapped = (() => {
       [(ik.casussen ? Math.round(100 * ik.gewonnen / ik.casussen) : 0) + "%", "goed"]];
     cijfers.forEach(([n, l], j) => {
       const x = 80 + (j % 2) * 470, y = 290 + Math.floor(j / 2) * 230;
-      g.fillStyle = "rgba(20,36,27,.45)"; g.beginPath(); g.roundRect ? g.roundRect(x, y, 450, 200, 28) : g.rect(x, y, 450, 200); g.fill();
+      g.fillStyle = "rgba(255,255,255,.13)"; g.beginPath(); g.roundRect ? g.roundRect(x, y, 450, 200, 28) : g.rect(x, y, 450, 200); g.fill();
       tekst(n, x + 36, y + 115, 96, "#ffffff", 700);
       tekst(l, x + 38, y + 170, 36, "#edfbe2", 500, "Karla");
     });
     let y = 820;
-    if (ik.favoriet){ tekst("Favoriet", 80, y, 34, "#e2b84e", 600, "Poppins"); tekst(soort(ik.favoriet.soort), 80, y + 60, 54, "#ffffff", 600); y += 140; }
-    if (nm){ tekst("Nemesis", 80, y, 34, "#e2b84e", 600, "Poppins"); tekst(soort(nm.soort), 80, y + 60, 54, "#ffffff", 600); y += 140; }
+    if (ik.favoriet){ tekst("Herkende ik het vaakst", 80, y, 34, "#f2c94c", 600, "Poppins"); tekst(soort(ik.favoriet.soort), 80, y + 60, 54, "#ffffff", 600); y += 140; }
+    if (nm){ tekst("Haalde ik het vaakst door elkaar", 80, y, 34, "#f2c94c", 600, "Poppins"); tekst(soort(nm.soort), 80, y + 60, 54, "#ffffff", 600); y += 140; }
     tekst("tomhuijnen.github.io/Vestigia", 80, H - 70, 32, "#edfbe2", 500, "Karla");
     /* Vesti rechtsonder */
     try {
