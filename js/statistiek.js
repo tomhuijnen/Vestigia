@@ -168,7 +168,12 @@ const Statistiek = (() => {
     /* update 19: ‘Vaakst verward’ verhuisde van het Vestiarium naar hier */
     eerst.then(() => { if ($("stVerward") && VIEW === "stats") Nieuw.blokjes("verward-statistiek", [
       { na: $("stVerward").querySelector("h3"), tekst: `‘Vaakst verward’ staat nu hier in plaats van in het ${NAAM.vestiarium}. Er tellen alleen nog soorten die echt op elkaar lijken: een vleermuis gokken bij een vogel telt niet meer. Met de knop eronder oefen je juist die soorten.` }
-    ], { wacht: 400 }); });
+    ], { wacht: 400 }); })
+    /* update 112: eenmalig blokje bij het nieuwe duelblok, alleen voor wie al een duel uitspeelde */
+      .then(() => { const c = typeof Duel !== "undefined" && Duel.cijfersBewaard && Duel.cijfersBewaard();
+        if ($("stDuel") && VIEW === "stats" && c && c.gewonnen + c.gelijk + c.verloren > 0) Nieuw.blokjes("duel-statistiek", [
+          { na: $("stDuel").querySelector("h3"), tekst: "Nieuw: je spelersduels in cijfers. Hoe vaak je wint, je langste winstreeks en tegen wie je het vaakst wint of verliest. Tik op een naam voor de profielkaart." }
+        ], { wacht: 400 }); });
   }
   return { toon, render, bereken };
 })();
