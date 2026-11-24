@@ -2677,3 +2677,78 @@ html.donker .weergseg button[aria-pressed="true"]{color:#0f1712}
 #rankTabs{flex-wrap:nowrap; gap:6px}
 #rankTabs .chipbtn{flex:0 1 auto; white-space:nowrap}
 @media (max-width:420px){ #rankTabs .chipbtn{padding:4px 10px; letter-spacing:.04em} }
+
+/* ── update 29: Vestigia Wrapped 2026 (js/wrapped.js) ──
+   Kaarten over het hele scherm (op de laptop een staande kaart in het midden), elk in een eigen kleur. De kleuren zijn
+   vast, ook in donker: het is een moment, geen gewoon scherm. Vesti staat rechtsonder met een wolkje. */
+html.wr-open{overflow:hidden}
+.wrapped{position:fixed; inset:0; z-index:80; display:grid; place-items:center; background:rgba(12,22,16,.88);
+  --wr-bg:#4b7a5e; --wr-ink:#fff; --wr-zacht:#edfbe2; --wr-accent:#e2b84e; --wr-vlak:rgba(20,36,27,.35)}
+.wrapped.wr-k-groen{--wr-bg:#4b7a5e}
+.wrapped.wr-k-donker{--wr-bg:#24402f}
+.wrapped.wr-k-nacht{--wr-bg:#152219; --wr-vlak:rgba(237,251,226,.08)}
+.wrapped.wr-k-mint{--wr-bg:#edfbe2; --wr-ink:#22302a; --wr-zacht:#3b6149; --wr-accent:#3b6149; --wr-vlak:rgba(75,122,94,.12)}
+.wrapped.wr-k-oker{--wr-bg:#e2b84e; --wr-ink:#2a1a10; --wr-zacht:#4a3413; --wr-accent:#2a1a10; --wr-vlak:rgba(42,26,16,.1)}
+.wr-kaart{position:relative; width:100%; height:100%; background:var(--wr-bg); color:var(--wr-ink); overflow:hidden;
+  transition:background .35s ease; display:flex; flex-direction:column}
+@media (min-width:700px){ .wr-kaart{width:min(440px, 92vw); height:min(820px, 94vh); border-radius:24px; box-shadow:0 20px 60px rgba(0,0,0,.4)} }
+.wr-in{position:relative; z-index:2; padding:calc(64px + env(safe-area-inset-top)) 28px 0; display:flex; flex-direction:column; gap:10px; max-width:440px}
+.wr-in h2{font-family:var(--display); font-size:var(--fs-xl); line-height:1.15; margin:4px 0 2px}
+.wr-in p{margin:0}
+.wr-boven{font-family:var(--caps); text-transform:uppercase; letter-spacing:.1em; font-size:var(--fs-xs); font-weight:600; color:var(--wr-accent)}
+.wr-groot{font-family:var(--display); font-weight:700; font-size:clamp(4rem, 22vw, 6.2rem); line-height:1; letter-spacing:-.02em}
+.wr-groot.klein{font-size:3.2rem; margin-top:8px}
+.wr-groot small{font-size:var(--fs-l); font-weight:500}
+.wr-soort{font-family:var(--display); font-weight:700; font-size:clamp(1.9rem, 9vw, 2.8rem); line-height:1.05; overflow-wrap:break-word; hyphens:auto}
+.wr-onder{font-size:var(--fs-l); line-height:1.35; color:var(--wr-zacht)}
+.wr-fijn{font-size:var(--fs-s); color:var(--wr-zacht); opacity:.9}
+.wr-rij{list-style:none; margin:10px 0 0; padding:0; display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px}
+.wr-rij.vier{grid-template-columns:repeat(2, minmax(0,1fr))}
+.wr-rij li{background:var(--wr-vlak); border-radius:14px; padding:10px 12px; display:flex; flex-direction:column; min-width:0}
+.wr-rij b{font-family:var(--display); font-size:var(--fs-xl); line-height:1.1}
+.wr-rij span{font-size:var(--fs-xs); color:var(--wr-zacht)}
+.wr-blok{margin-top:14px; background:var(--wr-vlak); border-radius:16px; padding:14px 16px; display:flex; flex-direction:column; gap:2px}
+.wr-blok b{font-family:var(--display); font-size:var(--fs-xl)}
+.wr-top{margin-top:6px}
+.wr-top .caps{color:var(--wr-accent)}
+.wr-top ol{list-style:none; margin:4px 0 0; padding:0; display:grid; gap:3px}
+.wr-top li{display:grid; grid-template-columns:22px 1fr auto; gap:8px; align-items:baseline; font-size:var(--fs-s); padding:3px 8px; border-radius:8px}
+.wr-top li i{font-style:normal; font-weight:700; color:var(--wr-accent)}
+.wr-top li b{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.wr-top li span{color:var(--wr-zacht)}
+.wr-top li.jij{background:var(--wr-vlak); outline:1.5px solid var(--wr-accent)}
+.wr-sam p{font-size:var(--fs-m); margin-top:8px}
+.wr-knoppen{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; position:relative; z-index:4}
+.wrapped .btn{border-radius:12px; height:48px; background:var(--wr-ink); color:var(--wr-bg)}
+.wrapped .btn.ghost{background:transparent; color:var(--wr-ink); border:1.5px solid var(--wr-ink)}
+/* voortgang bovenin en sluiten */
+.wr-balk{position:fixed; z-index:84; top:calc(12px + env(safe-area-inset-top)); left:14px; right:62px; display:flex; gap:4px}
+.wr-balk i{flex:1; height:4px; border-radius:2px; background:rgba(255,255,255,.35)}
+.wr-balk i.klaar, .wr-balk i.nu{background:#fff}
+.wr-k-mint .wr-balk i, .wr-k-oker .wr-balk i{background:rgba(42,26,16,.2)}
+.wr-k-mint .wr-balk i.klaar, .wr-k-mint .wr-balk i.nu, .wr-k-oker .wr-balk i.klaar, .wr-k-oker .wr-balk i.nu{background:#2a1a10}
+.wr-dicht{position:fixed; z-index:85; top:calc(2px + env(safe-area-inset-top)); right:10px; width:44px; height:44px; color:var(--wr-ink); background:transparent; border:0}
+@media (min-width:700px){
+  .wr-balk{top:calc(50% - min(820px, 94vh) / 2 + 14px); left:calc(50% - min(440px, 92vw) / 2 + 16px); right:auto; width:calc(min(440px, 92vw) - 76px)}
+  .wr-dicht{top:calc(50% - min(820px, 94vh) / 2 + 4px); right:calc(50% - min(440px, 92vw) / 2 + 6px)}
+}
+/* tikvlakken: links terug, rechts verder (onder de knoppen van de laatste kaart) */
+.wr-tik{all:unset; position:fixed; z-index:3; top:60px; bottom:0; cursor:pointer; -webkit-tap-highlight-color:transparent}
+.wr-tik.terug{left:0; width:33%}
+.wr-tik.verder{right:0; width:67%}
+.wr-tik:focus-visible{outline:none}
+.wrapped.wr-laatste .wr-tik.verder{display:none}
+/* Vesti met wolkje */
+.wr-vesti{position:absolute; z-index:1; right:10px; bottom:calc(8px + env(safe-area-inset-bottom)); width:min(44vw, 190px); pointer-events:none}
+.wr-vesti svg{display:block; width:100%; height:auto}
+.wr-wolk{position:absolute; right:calc(100% - 12px); bottom:62%; width:max-content; max-width:min(52vw, 220px); padding:9px 13px; border-radius:16px;
+  background:#fffdf7; color:#22302a; border:1.5px solid #2a1a10; font-size:14px; font-weight:600; line-height:1.35; box-shadow:0 3px 10px rgba(0,0,0,.18)}
+.wr-wolk::after{content:""; position:absolute; width:12px; height:12px; background:inherit; border:1.5px solid #2a1a10; border-left:0; border-top:0; transform:rotate(-45deg); right:-7.5px; bottom:14px}
+@media (max-height:700px){ .wr-vesti{width:min(34vw, 140px)} .wr-groot{font-size:clamp(3.2rem, 16vw, 4.6rem)} }
+.wr-kaart.wr-nieuw .wr-in{animation:wr-in .4s cubic-bezier(.2,.7,.3,1) both}
+.wr-kaart.wr-nieuw .wr-vesti{animation:wr-in .45s .08s cubic-bezier(.2,.7,.3,1) both}
+.wr-kaart.wr-nieuw .wr-wolk{animation:v-wolk .35s .45s cubic-bezier(.3,1.4,.5,1) both}
+@keyframes wr-in{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
+@media (prefers-reduced-motion:reduce){ .wr-kaart, .wr-kaart.wr-nieuw .wr-in, .wr-kaart.wr-nieuw .wr-vesti, .wr-kaart.wr-nieuw .wr-wolk{animation:none; transition:none} }
+/* kleine schermen met veel tekst (js/wrapped.js zet .wr-krap): Vesti kleiner in de hoek, zonder wolkje */
+.wr-kaart.wr-krap .wr-vesti{width:88px} .wr-kaart.wr-krap .wr-wolk{display:none}

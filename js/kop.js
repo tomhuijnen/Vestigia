@@ -322,7 +322,8 @@ const MENU_GO = {
   player: () => { if (online.enabled && online.player()) return showProfiel(); showRank(); setTimeout(() => $("pName") && $("pName").focus(), 60); },
   profiel: () => showProfiel(),
   shop: () => showShop(),
-  stats: () => Statistiek.toon()
+  stats: () => Statistiek.toon(),
+  wrapped: () => { closeMenu(true); Wrapped.open(); }   // update 29
 };
 $("menu").addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b && MENU_GO[b.dataset.go]) MENU_GO[b.dataset.go](); });
 
