@@ -52,7 +52,7 @@ Groene opstartbeelden voor iPhone en iPad (in plaats van het zwarte scherm bij h
 
 Contrast van alle avatars op alle achtergrondkleuren nameten: `node tools/avatarcontrast.mjs --html overzicht.html` (heeft Playwright met Chrome nodig).
 
-De databasescripts (001 t/m 019) staan bewust niet in deze repo, maar in het Project Vestigia.
+De database staat bewust niet in deze openbare repo, maar in de privé-repo `tomhuijnen/Vestigia-database`: het volledige schema (stand 24 november 2026), nieuwe SQL-wijzigingen vanaf 059 en een testdatabase met rookproef (`node test/draai.mjs`). De oude scripts 001–058 staan nog in het Project Vestigia.
 
 Casussen voor het spelersduel: de server kiest ze uit de tabel `duel_casussen`. Komen er soorten of casussen bij, draai dan `node tools/duelcasussen.mjs` en plak de uitvoer in Supabase (SQL Editor), anders kunnen die casussen nog niet in een duel komen.
 
@@ -62,7 +62,19 @@ Casussen voor het spelersduel: de server kiest ze uit de tabel `duel_casussen`. 
 2. `node tools/controle.mjs` – controleert de soortdata, casussen, maanden, tweelingen, zeldzaamheid, verraderwoorden, het dagschema en of er niets verschoven is ten opzichte van wat live staat.
 3. Nieuwe soorten of casussen? `node tools/dagschema.mjs JJJJ-MM-DD` vult het dagschema aan. Bestaande dagen veranderen nooit.
 4. Iets nieuws in de app? Kijk de uitleg bij de eerste keer na (`js/uitleg.js`): hoort het erin, en is het voor een volledig nieuwe speler nog te volgen, logisch en duidelijk? Hooguit vijf stappen; iets nieuws krijgt een bijzin in een bestaande stap of uitleg op het moment zelf. Een melding ‘nieuw / staat nu hier’ (`Nieuw.blokjes` in `js/nieuw.js`) krijgt een datum in `VANAF`; is het een echte wijziging, dan ook in `WIJZIGING`. Zo zien alleen spelers die al een dagcasus speelden vóór die datum hem.
-5. `node tools/versie.mjs` – nieuw versienummer, anders krijgen geïnstalleerde apps de update niet.
-6. `node tools/controle.mjs --vastleggen` – legt id's, platennummers, casussen en het dagschema vast voor de volgende controle.
+5. `node tools/test.mjs` – speelt de app in een echte browser (zie hieronder). Alles groen? Dan pas live.
+6. `node tools/versie.mjs` – nieuw versienummer, anders krijgen geïnstalleerde apps de update niet.
+7. `node tools/controle.mjs --vastleggen` – legt id's, platennummers, casussen en het dagschema vast voor de volgende controle.
+
+## Tests in de browser
+
+`node tools/test.mjs` speelt de app zoals een speler: welkom en uitleg, de dagcasus (klassiek goed en fout, expert met vangnet, tweelingsoort), oefenen na de dagcasus, Vestiarium, ranglijst, menu en statistieken, het voorbeeld-duel en alle voorbeelden (`?…=demo`). Elke test draait op een telefoon (390 px) en een laptop, de belangrijkste ook in donker. Een test faalt bij een JavaScript-fout, een foutmelding in de console of een controle die niet klopt.
+
+- `node tools/test.mjs dagcasus` draait alleen de tests met ‘dagcasus’ in de naam; `--lijst` toont alle namen.
+- `node tools/test.mjs --beelden` bewaart ook schermafbeeldingen in `test-uit/` (staat niet in git), om zelf na te kijken.
+- De tests praten **nooit** met Supabase: alle verzoeken naar de database worden geblokkeerd, en de datum staat vast (`VANDAAG` bovenin het script).
+- Iets nieuws gebouwd? Zet er een test bij in `TESTS` onderaan `tools/test.mjs`; de uitleg staat bovenin het bestand. Een fout die een speler vond, krijgt een test die hem nabootst (zoals `oefenen-na-dagcasus-geen-oude-uitslag` voor update 111).
+- Nodig: Node en Playwright (`npm i -g playwright`, eenmalig `npx playwright install chromium`).
+- Op GitHub draaien de controle en de tests vanzelf bij elke pull request (`.github/workflows/test.yml`); de schermafbeeldingen staan dan bij die run onder ‘Artifacts’.
 
 Spelregels voor de data: een `id` en een platennummer (`no`) veranderen nooit; nieuwe platen en casussen komen achteraan; een oude naam gaat in `ALIASES`. Zo verliest niemand ooit voortgang.
