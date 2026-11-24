@@ -154,9 +154,18 @@ const online = (() => {
   const RANK_RULE = {
     day: "Punten uit de dagcasus van vandaag. Oefenen telt niet mee.",
     week: "Punten uit de dagcasussen van deze week (vanaf maandag). Oefenen telt niet mee.",
-    all: "Alle punten uit de dagcasussen sinds de start. Oefenen telt niet mee."
+    all: "Alle punten uit de dagcasussen sinds de start. Oefenen telt niet mee.",
+    month: "Punten uit de dagcasussen van deze maand (vanaf de 1e). Oefenen telt niet mee."
   };
+  /* update 87: tabblad 3 is 'Altijd' tot 1 januari 2027, daarna 'Deze maand' (ook in leagues) */
+  function tabDrie(){
+    const b = $("rankTabs").querySelector('.chipbtn[data-r="all"], .chipbtn[data-r="month"]'), m = maandAan();
+    if (b){ b.dataset.r = m ? "month" : "all"; b.textContent = m ? "Deze maand" : "Altijd"; }
+    if (m && rankMode === "all") rankMode = "month";
+    if (!m && rankMode === "month") rankMode = "all";
+  }
   async function renderRank(){
+    tabDrie();
     if (!RANK_RULE[rankMode]) rankMode = "week";     // oude links naar de Streeplijst komen bij Deze week uit
     renderPlayerBox(); renderScope();
     const list = $("rankList"), lg = scope && League.cached().find(l => l.id === scope);
@@ -170,7 +179,7 @@ const online = (() => {
     try {
       let rows, html;
       if (lg){
-        const from = rankMode === "day" ? today : rankMode === "week" ? weekStart(today) : 0;
+        const from = rankMode === "day" ? today : rankMode === "week" ? weekStart(today) : rankMode === "month" ? monthStartDay(today) : 0;
         rows = await rpc("league_board", { p_id: player().id, p_key: player().key, p_league: lg.id, p_from: from, p_to: today });
         const pl = plaatsen(rows, STAND_SLEUTEL);
         html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}" data-n="${esc(r.name)}" data-pos="${pl[i].pos}">${posHtml(pl[i])}
@@ -186,20 +195,20 @@ const online = (() => {
           <span class="pts">${r.points}<small>punten</small></span></li>`).join("");
         if (!rows.length) html = `<p class="rankempty">Nog niemand heeft dagcasus #${today + 1} gespeeld. Ben jij de eerste?</p>`;
       } else {
-        const from = rankMode === "week" ? weekStart(today) : 0;
+        const from = rankMode === "week" ? weekStart(today) : rankMode === "month" ? monthStartDay(today) : 0;
         rows = await rpc("leaderboard_range", { p_from: from, p_to: today });
         const pl = plaatsen(rows, STAND_SLEUTEL);
         html = rows.map((r, i) => `<li class="${r.name === me ? "me" : ""}" data-n="${esc(r.name)}" data-pos="${pl[i].pos}">${posHtml(pl[i])}
           <span class="who"><b>${esc(r.name)}</b><span>${r.won} van ${r.played} ${+r.played === 1 ? "dagcasus" : "dagcasussen"} gedetermineerd</span></span>
           <span class="pts">${r.points}<small>punten</small></span></li>`).join("");
-        if (!rows.length) html = `<p class="rankempty">${rankMode === "week" ? "Deze week" : "Tot nu toe"} zijn er nog geen dagcasussen gespeeld.</p>`;
+        if (!rows.length) html = `<p class="rankempty">${rankMode === "week" ? "Deze week" : rankMode === "month" ? "Deze maand" : "Tot nu toe"} zijn er nog geen dagcasussen gespeeld.</p>`;
       }
       list.innerHTML = html; list.classList.remove("met-av");
       podium(list);
       if (list.querySelector(".pos.gedeeld")) $("rankRule").textContent += " " + GELIJK_REGEL;
       Profiel.versier(list);
       if (lg && typeof Week !== "undefined") Week.kroontjes(list, lg);     // update 25: top 3 van vorige week
-      if (!lg && rankMode === "week" && typeof Week !== "undefined") Week.beker(list);   // update 58: weekprijs
+      if (!lg && (rankMode === "week" || rankMode === "month") && typeof Week !== "undefined") Week.beker(list, rankMode);   // update 58: weekprijs, update 87: maandprijs
       if (me){
         const wk = await refreshWeek();
         $("rankMe").innerHTML = `${wk ? wk.pts : 0}<small>jouw punten deze week</small>`;

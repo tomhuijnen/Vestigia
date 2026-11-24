@@ -74,6 +74,10 @@ function begonnenModus(st, i){
   return bezig(false) ? false : bezig(true) ? true : null;
 }
 const dayPoints = (st, i) => { const m = eersteModus(st, i); return m === null ? 0 : gamePoints(finished(st, i, m), m, i); };
+/* update 87: maandranglijst. Vanaf vr 1 jan 2027 (dag 56) wordt 'Altijd' 'Deze maand'. Voorbeeld eerder: ?maand=demo */
+const MAAND_VANAF = 56;
+function monthStartDay(i){ return i - (new Date(START + i * DAY).getUTCDate() - 1); }
+function maandAan(){ try { const u = new URLSearchParams(location.search).get("maand"); if (u === "demo") sessionStorage.setItem("vestigia:maanddemo", "1"); if (u === "uit") sessionStorage.removeItem("vestigia:maanddemo"); if (sessionStorage.getItem("vestigia:maanddemo")) return true; } catch(e){} return todayIndex() >= MAAND_VANAF; }
 function weekStartDay(i){ const dow = (new Date(START + i * DAY).getUTCDay() + 6) % 7; return i - dow; }
 /* dagen op rij waarop je de dagcasus speelde (klassiek of expert); vandaag telt mee zodra je hem gespeeld hebt */
 /* Reeks: dagen waarop je de dagcasus afrondde. Uit de spellen op dit apparaat én uit het logboek, dat met je andere
