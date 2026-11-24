@@ -25,7 +25,8 @@ const Wrapped = (() => {
   const VANAF = Date.parse("2027-01-01T00:00:00+01:00");
   const VANZELF_TOT = Date.parse("2027-01-16T00:00:00+01:00");   // t/m 15 januari komt hij vanzelf
   const GEZIEN = "vestigia:wrapped-gezien", INTRO = "vestigia:nieuw:vesti";
-  const u = new URLSearchParams(location.search);
+  /* window.WRAPPED_VOORBEELD: de losse voorbeeldpagina zet hier bijv. "?wrapped=demo&weinig=1" (geen adresbalk daar) */
+  const u = new URLSearchParams(window.WRAPPED_VOORBEELD || location.search);
   const demo = u.get("wrapped") === "demo";
   const lees = k => { try { return localStorage.getItem(k); } catch(e){ return null; } };
   const zet = (k, v) => { try { localStorage.setItem(k, v); } catch(e){} };
