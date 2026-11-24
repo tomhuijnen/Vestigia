@@ -8,6 +8,13 @@ const KIESBAAR = SPECIES.filter(s => s.r !== "NB" && !s.lk);      // lk: alleen 
 const BY_ID = new Map(SPECIES.map(s => [s.id, s]));
 const BY_NAME = new Map(SPECIES.map(s => [s.n, s]));
 const MAX = 5;
+/* fix 24 november: een gewone melding van de server (status 400–499) tonen we zelf; alleen zonder verbinding (geen status)
+   vragen we je internet te controleren. Gaat er bij Vestigia zelf iets mis (500 of hoger), dan zeggen we dat eerlijk. */
+const STORING = "Er ging iets mis bij Vestigia. Probeer het zo opnieuw.";
+function foutTekst(e, wat, ookMelding = true){
+  if (ookMelding && e && e.status && e.status < 500 && e.message) return e.message;
+  return (wat ? wat + " " : "") + (e && e.status >= 500 ? STORING : "Controleer je internetverbinding.");
+}
 const COLS = ["h","a","v","b","w","l","r"];
 const COL_LABEL = { h:"Leefgebied", a:"Activiteit", v:"Voedsel", b:"Verblijfplaats", w:"Winter", l:"Lengte", r:"Bescherming" };
 const START = Date.UTC(2026,10,6);

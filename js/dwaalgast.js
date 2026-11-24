@@ -175,7 +175,7 @@ const Dwaalgast = (() => {
     vraag(i);
   }
   function foutmelding(e, opnieuw){
-    vak().innerHTML = `<div class="dg-beeld klein">${av(nu.gast, "dg-av")}</div><p class="dg-fout">${esc(e && e.status && e.status < 500 ? e.message : "Versturen lukte niet. Controleer je internetverbinding en probeer het opnieuw.")}</p><button class="btn" id="dgOpnieuw">Opnieuw proberen</button>`;
+    vak().innerHTML = `<div class="dg-beeld klein">${av(nu.gast, "dg-av")}</div><p class="dg-fout">${esc(foutTekst(e, "Versturen lukte niet."))}</p><button class="btn" id="dgOpnieuw">Opnieuw proberen</button>`;
     $("dgOpnieuw").onclick = async () => { if (!nu.demo){ nu = null; await haal(); if (!nu) return sluit(); return melding(); } opnieuw(); };
   }
   function uitslag(u){

@@ -159,7 +159,7 @@ const League = (() => {
   }
 
   /* ---------- scherm Leagues ---------- */
-  const fout = e => e && e.status && e.status < 500 ? e.message : "Dat lukte niet. Controleer je internetverbinding.";
+  const fout = e => foutTekst(e, "Dat lukte niet.");
   /* tweestaps-knop in plaats van een browservenster: eerste tik vraagt bevestiging, tweede voert uit */
   function zeker(btn, tekst, actie){
     btn.onclick = async () => {
@@ -181,7 +181,7 @@ const League = (() => {
     const nr = ++laden;
     tekenLijst(cached(), true);
     try { const rows = await vernieuw(); if (nr === laden) tekenLijst(rows, false); renderMenu(); }
-    catch(e){ if (nr === laden) tekenLijst(cached(), false, "De leagues zijn nu niet bereikbaar. Controleer je internetverbinding."); }
+    catch(e){ if (nr === laden) tekenLijst(cached(), false, foutTekst(e, "De leagues zijn nu niet bereikbaar.", false)); }
   }
   function tekenLijst(ls, bezig, melding){
     const body = $("leagueBody"), vol = ls.length >= 5;
