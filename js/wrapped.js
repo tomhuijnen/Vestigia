@@ -297,39 +297,48 @@ const Wrapped = (() => {
     const pod = k.querySelector(".wr-podium"), w = k.querySelector(".wr-wolk"), v = k.querySelector(".wr-vesti");
     if (!pod || !w || !v) return;
     const plek = [...pod.classList].find(c => c.startsWith("plek-")).slice(5);
-    const marge = 12, P = { w: pod.offsetWidth, h: pod.offsetHeight };
+    const marge = 10, P = { w: pod.offsetWidth, h: pod.offsetHeight };
     const vak = () => {   // Vesti's vak in het podium; midden en onder staan met translateX gecentreerd, offsetLeft telt dat niet mee
       const r = { x: v.offsetLeft, y: v.offsetTop, w: v.offsetWidth, h: v.offsetHeight };
       if (plek === "midden" || plek === "silhouet") r.x -= r.w * .5; else if (plek === "onder") r.x -= r.w * .46;
       if (plek === "zij") r.x += r.w * .12;   // gekanteld: de tekening vult het vak links niet helemaal
       return r;
     };
-    w.style.maxWidth = ""; v.style.height = "";
-    let V = vak(), ww = w.offsetWidth, wh = w.offsetHeight;
-    const nodig = wh + 16;   // ruimte boven Vesti voor wolkje + puntje
-    if (V.y < nodig && plek !== "onder"){
-      const nieuw = V.h - (nodig - V.y);
-      if (nieuw >= V.h * .7){ v.style.height = nieuw + "px"; V = vak(); }
-    }
-    let x, y, staart;
-    const rechtsVanMidden = V.x + V.w / 2 > P.w / 2;
-    if (V.y >= nodig || plek === "onder"){
-      /* boven zijn hoofd; het puntje wijst naar zijn hoofd (ongeveer 45% van links, gespiegeld 55%) */
+    /* Vesti mag kleiner (s = deel van zijn gewone hoogte), nooit hoger dan het podium */
+    const zet = h => { v.style.left = ""; v.style.height = h == null ? "" : h + "px"; v.style.width = h == null ? "" : "auto"; return vak(); };
+    w.style.maxWidth = ""; v.style.height = v.style.width = v.style.left = "";
+    const basis = Math.min(vak().h, P.h - 4), maxW = Math.min(210, P.w - 2 * marge);
+    const meet = mw => { w.style.maxWidth = mw + "px"; return { ww: w.offsetWidth, wh: w.offsetHeight }; };
+    /* 1. boven zijn hoofd; het puntje wijst naar zijn hoofd (ongeveer 45% van links, gespiegeld 55%) */
+    const boven = (s, moet) => {
+      const V = zet(basis * s), { ww, wh } = meet(maxW);
+      let y = V.y - wh - 14 + (plek === "onder" ? V.h * .08 : 0);
+      if (y < marge){ if (!moet) return null; y = marge; }
       const hx = V.x + V.w * (plek === "links" ? .55 : .45);
-      y = V.y - wh - 12 + (plek === "onder" ? V.h * .08 : 0);
-      if (rechtsVanMidden || plek === "midden" || plek === "silhouet"){ staart = "onder-r"; x = hx - ww + 28; }
-      else { staart = "onder"; x = hx - 28; }
-    } else {
-      /* naast hem, waar de meeste ruimte is; zo nodig smaller */
-      const links = V.x - marge - 14, rechts = P.w - (V.x + V.w) - marge - 14;
-      const kant = links >= rechts ? "links" : "rechts", ruimte = Math.max(links, rechts);
-      if (ww > ruimte){ w.style.maxWidth = Math.max(110, ruimte) + "px"; ww = w.offsetWidth; wh = w.offsetHeight; }
-      y = V.y + V.h * .12;
-      if (kant === "links"){ staart = "rechts"; x = V.x - ww - 14; } else { staart = "links"; x = V.x + V.w + 14; }
-    }
-    x = Math.max(marge, Math.min(x, P.w - ww - marge));
-    Object.assign(w.style, { left: x + "px", top: y + "px", right: "auto", bottom: "auto" });
-    w.dataset.staart = staart;
+      const rechtsVanMidden = V.x + V.w / 2 > P.w / 2;
+      return rechtsVanMidden || plek === "midden" || plek === "silhouet"
+        ? { x: hx - ww + 28, y, ww, staart: "onder-r" } : { x: hx - 28, y, ww, staart: "onder" };
+    };
+    /* 2. naast hem, aan de kant met de meeste ruimte; zo nodig smaller, en nooit onder de kaart uit */
+    const naast = s => {
+      let V = zet(basis * s);
+      /* staat hij in het midden, dan schuift hij voor het wolkje naar rechts */
+      if (plek === "midden" || plek === "silhouet"){ v.style.left = (P.w - marge - V.w / 2) + "px"; V = vak(); }
+      const links = V.x - marge - 16, rechts = P.w - (V.x + V.w) - marge - 16;
+      const ruimte = Math.min(maxW, Math.max(links, rechts));
+      if (ruimte < 120) return null;
+      const { ww, wh } = meet(ruimte), y = Math.min(V.y + V.h * .12, P.h - wh - marge);
+      if (y < marge) return null;
+      return links >= rechts ? { x: V.x - ww - 14, y, ww, staart: "rechts" } : { x: V.x + V.w + 14, y, ww, staart: "links" };
+    };
+    const probeer = (f, stappen) => { for (const s of stappen){ const r = f(s); if (r) return r; } return null; };
+    const r = probeer(boven, [1, .9, .8, .7]) || probeer(naast, [1, .9, .8, .7, .6]) || probeer(boven, [.6, .5, .45])
+           || boven(.45, true);
+    const x = Math.max(marge, Math.min(r.x, P.w - r.ww - marge));
+    Object.assign(w.style, { left: x + "px", top: r.y + "px", right: "auto", bottom: "auto" });
+    w.dataset.staart = r.staart;
+    /* heel lage schermen: past het wolkje echt nergens binnen de kaart, dan liever geen wolkje dan een half */
+    w.hidden = r.y + w.offsetHeight > Math.min(P.h, k.clientHeight - pod.offsetTop) - 4;
   }
   function ga(n){
     if (n < 0) return;
