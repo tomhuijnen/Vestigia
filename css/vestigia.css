@@ -1578,6 +1578,33 @@ button.st-rij:hover, button.st-rij:focus-visible{background:var(--mint)}
 .st-bar{height:6px; border-radius:99px; background:var(--none, #e5ebe6); overflow:hidden}
 .st-bar i{display:block; height:100%; background:var(--ochre); border-radius:99px}
 .st-n{font-family:var(--display); font-weight:700; text-align:right; font-variant-numeric:tabular-nums}
+/* update 112: spelersduels in Statistieken, in de kleur van het spelersduel */
+.st-duel{border-top:3px solid var(--du)}
+.st-duel h3{color:var(--du-d)}
+.st-dukop{display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin:6px 0 12px}
+.st-dukop b{display:block; font:700 2rem/1.05 var(--display); color:var(--du-d); font-variant-numeric:tabular-nums}
+.st-dukop span{font:600 .7rem var(--caps); text-transform:uppercase; letter-spacing:.06em; color:var(--ink-2)}
+.st-dubal{padding:10px 0 8px; border-top:1px dashed var(--rule)}
+.st-dubalk{margin:4px 0 0; height:9px}
+.st-dubalk i{height:9px}
+.st-duhl{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0 4px}
+.st-duhl > div{display:grid; gap:2px; padding:10px 12px; border-radius:8px; background:var(--du-leaf); border:1px solid var(--du-rule); min-width:0}
+.st-duhl span{font:600 .7rem var(--caps); text-transform:uppercase; letter-spacing:.08em; color:var(--du-d)}
+.st-duhl .linklike, .st-duhl b{font-family:var(--display); font-size:1.15rem; font-weight:700; text-decoration-color:var(--du); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.st-duhl b{color:var(--ink-2); font-weight:600}
+.st-duhl small{color:var(--ink-2); font-size:.8rem}
+.st-duh4{margin:14px 0 2px; font:600 .72rem var(--caps); text-transform:uppercase; letter-spacing:.08em; color:var(--du-d)}
+.st-dutop .st-rij{grid-template-columns:1.4em minmax(0,1fr) 90px 2.6em}
+.st-dutop button.st-rij:hover, .st-dutop button.st-rij:focus-visible{background:var(--du-leaf)}
+.st-dumini{height:7px; justify-self:start}
+.st-dumini i{height:7px}
+.st-duknop{margin-top:4px}
+@media (max-width:700px){ .st-dutop .st-rij{grid-template-columns:1.4em minmax(0,1fr) 48px 2.2em} .st-dukop b{font-size:1.7rem} }
+html.donker .st-duel{border-top-color:var(--dn)}
+html.donker .st-duel h3, html.donker .st-dukop b, html.donker .st-duhl span, html.donker .st-duh4{color:var(--dn-l)}
+html.donker .st-duhl > div{background:var(--dn-bg); border-color:var(--dn-rule)}
+html.donker .st-duel .spbalk .v{background:#6b4f66}
+html.donker .st-dutop button.st-rij:hover, html.donker .st-dutop button.st-rij:focus-visible{background:var(--dn-bg)}
 
 /* medaille-glans (update 12): streep schuift in 1 s over de avatar, daarna 4 s rust; fonkeling op hetzelfde ritme */
 .av-glans-streep{transform-box:view-box; transform-origin:50px 50px; animation:avGlans 5s ease-in-out infinite; animation-delay:var(--d, 0s)}
