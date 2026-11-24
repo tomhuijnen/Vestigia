@@ -2790,14 +2790,48 @@ html.wr-open{overflow:hidden}
 .wr-wolk{position:absolute; z-index:3; pointer-events:none; width:max-content; max-width:min(50vw, 210px); padding:9px 13px; border-radius:16px;
   background:#fffdf7; color:#22302a; border:1.5px solid #2a1a10; font-size:14px; font-weight:700; line-height:1.35; box-shadow:0 4px 12px rgba(0,0,0,.2)}
 .wr-wolk::after{content:""; position:absolute; width:12px; height:12px; background:inherit; border:1.5px solid #2a1a10; border-left:0; border-top:0}
-/* het wolkje staat in het podium (nooit buiten beeld), aan de kant waar Vesti niet staat; het puntje wijst naar hem */
-.plek-midden .wr-wolk, .plek-rechts .wr-wolk, .plek-zij .wr-wolk{left:18px; top:6%}
-.plek-onder .wr-wolk{right:16px; top:2%}
-.plek-links .wr-wolk{right:16px; top:8%}
-.plek-midden .wr-wolk::after, .plek-rechts .wr-wolk::after, .plek-zij .wr-wolk::after{transform:rotate(-45deg); right:-7.5px; bottom:14px}
-.plek-links .wr-wolk::after{transform:rotate(135deg); left:-7.5px; bottom:14px}
-.plek-onder .wr-wolk::after{transform:rotate(45deg); left:22px; bottom:-7.5px}
-.plek-midden .wr-wolk{max-width:min(38vw, 170px)}
+/* het wolkje: js/wrapped.js (plaatsWolk) zet het naast Vesti's hoofd; data-staart zegt waar het puntje zit */
+.wr-wolk[data-staart="rechts"]::after{transform:rotate(-45deg); right:-7.5px; bottom:16px}
+.wr-wolk[data-staart="links"]::after{transform:rotate(135deg); left:-7.5px; bottom:16px}
+.wr-wolk[data-staart="onder"]::after{transform:rotate(45deg); left:20px; bottom:-7.5px}
+.wr-wolk[data-staart="onder-r"]::after{transform:rotate(45deg); right:20px; bottom:-7.5px}
+.wr-wolk:not([data-staart])::after{display:none}
+/* denkwolkje: ronder, en twee bolletjes richting Vesti in plaats van een puntje */
+.wr-wolk.gedachte{border-radius:26px; font-style:italic}
+.wr-wolk.gedachte::after, .wr-wolk.gedachte::before{content:""; position:absolute; background:inherit; border:1.5px solid #2a1a10; border-radius:50%; transform:none}
+.wr-wolk.gedachte::after{width:13px; height:13px}
+.wr-wolk.gedachte::before{width:8px; height:8px}
+.wr-wolk.gedachte[data-staart="rechts"]::after{right:-16px; bottom:6px} .wr-wolk.gedachte[data-staart="rechts"]::before{right:-27px; bottom:-2px}
+.wr-wolk.gedachte[data-staart="links"]::after{left:-16px; bottom:6px} .wr-wolk.gedachte[data-staart="links"]::before{left:-27px; bottom:-2px}
+.wr-wolk.gedachte[data-staart="onder"]::after{left:18px; bottom:-15px} .wr-wolk.gedachte[data-staart="onder"]::before{left:10px; bottom:-26px}
+.wr-wolk.gedachte[data-staart="onder-r"]::after{right:18px; bottom:-15px} .wr-wolk.gedachte[data-staart="onder-r"]::before{right:10px; bottom:-26px}
+[data-kaart="slot"] .wr-wolk{max-width:min(46vw, 200px)}
+/* wat voor speler ben jij */
+.wrapped.wr-k-turkoois{--wr-bg:#3fd0c0; --wr-bg2:#16928f; --wr-blob:#c8fff4; --wr-ink:#06302d; --wr-zacht:#0e4a45; --wr-accent:#5a3aa8; --wr-vlak:rgba(255,255,255,.35); --wr-lijn:rgba(6,48,45,.1)}
+.wr-k-turkoois .wr-kaart::before{filter:invert(1) opacity(.09)}
+.wr-type{font-family:var(--display); font-weight:800; font-size:clamp(2.4rem, 12vw, 3.3rem); line-height:1; letter-spacing:-.01em}
+.wr-type.klein{font-size:1.6rem; color:var(--wr-accent); margin-bottom:2px}
+.wr-kaart.wr-nieuw .wr-type:not(.klein){animation:wr-pop .7s .35s cubic-bezier(.3,1.6,.5,1) both}
+/* het cadeautje vóór de eerste kaart */
+.wr-midden{align-items:center; text-align:center}
+.wr-midden .wr-kop, .wr-midden .wr-lead{margin-inline:auto}
+.plek-cadeau{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; padding-bottom:calc(24px + env(safe-area-inset-bottom))}
+.wr-pakje{all:unset; cursor:pointer; position:relative; z-index:6; width:min(66vw, 260px); -webkit-tap-highlight-color:transparent}
+.wr-pakje:focus-visible{outline:2px solid #8fd8f5; outline-offset:6px; border-radius:16px}
+.wr-cadeau{display:block; width:100%; height:auto; overflow:visible}
+.wr-cadeau .wr-deksel, .wr-cadeau .wr-doos{transform-box:fill-box; transform-origin:50% 100%}
+.wr-knoppen.midden{justify-content:center}
+.wr-kaart.wr-nieuw .wr-cadeau{animation:wr-schud 2.2s 1s ease-in-out infinite}
+.wr-kaart.wr-nieuw .wr-pakje{animation:wr-pop .8s .2s cubic-bezier(.3,1.5,.5,1) both}
+.wr-kaart.wr-open-cadeau .wr-cadeau{animation:none}
+.wr-kaart.wr-open-cadeau .wr-deksel{animation:wr-deksel .75s cubic-bezier(.3,.7,.4,1) forwards}
+.wr-kaart.wr-open-cadeau .wr-doos{animation:wr-doos .85s .15s ease-in forwards}
+.wr-kaart.wr-open-cadeau .wr-in, .wr-kaart.wr-open-cadeau .wr-knoppen{transition:opacity .4s; opacity:0}
+.wr-kaart.wr-open-cadeau::after{content:""; position:absolute; inset:0; background:radial-gradient(circle at 50% 62%, #fff 0, rgba(255,255,255,.85) 18%, transparent 60%); animation:wr-flits .9s .3s ease-out both; pointer-events:none}
+@keyframes wr-schud{0%,70%,100%{transform:none} 74%{transform:rotate(-5deg)} 78%{transform:rotate(5deg)} 82%{transform:rotate(-4deg)} 86%{transform:rotate(3deg)} 90%{transform:none}}
+@keyframes wr-deksel{to{transform:translate(18%, -160%) rotate(28deg); opacity:0}}
+@keyframes wr-doos{30%{transform:scale(1.06, .92)} to{transform:scale(.6); opacity:0}}
+@keyframes wr-flits{from{opacity:0} 40%{opacity:1} to{opacity:0}}
 /* stralen en confetti (entree en slot) */
 .wr-stralen{position:absolute; left:50%; bottom:38%; width:1100px; height:1100px; margin:-550px 0 0 -550px; transform-origin:50% 50%; translate:0 50%;
   background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.2) 0 9deg, transparent 9deg 22deg);

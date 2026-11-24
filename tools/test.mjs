@@ -299,7 +299,10 @@ const TESTS = [
 
   /* update 29: Vestigia Wrapped 2026. Het voorbeeld gebruikt vaste gegevens (demoData in js/wrapped.js), dus geen database. */
   { naam: "wrapped-voorbeeld", url: "?wrapped=demo", thema: ["licht", "donker"], stappen: async t => {
-      await t.zie("#wrapped .wr-in", "de Wrapped");
+      /* eerst het cadeautje: pas na ‘Uitpakken’ begint de Wrapped */
+      await t.zie("#wrUitpakken", "het cadeautje met ‘Uitpakken’");
+      await t.beeld("cadeau");
+      await t.klik("#wrUitpakken"); await t.wacht(1100);
       /* Vesti's entree: eerst zijn silhouet (‘er is iemand die je wil ontmoeten’), dan de onthulling */
       t.klopt(await t.app(() => document.getElementById("wrapped").dataset.kaart) === "psst", "de Wrapped begint niet met het silhouet van Vesti");
       await t.zie("#wrapped .plek-silhouet svg", "het silhouet van Vesti");
@@ -311,7 +314,7 @@ const TESTS = [
         await t.klik("#wrapped .wr-tik.verder");
         await t.wacht(250);
       }
-      for (const k of ["hoi", "cijfers", "reeks", "favoriet", "nemesis", "beste", "platen", "vergelijk", "samen", "lastig", "slot"])
+      for (const k of ["hoi", "cijfers", "type", "reeks", "favoriet", "nemesis", "beste", "platen", "vergelijk", "samen", "lastig", "slot"])
         t.klopt(gezien.includes(k), `kaart ‘${k}’ kwam niet langs (wel: ${gezien.join(", ")})`);
       /* terug met de linkerkant, en weer verder */
       await t.klik("#wrapped .wr-tik.terug");
@@ -330,6 +333,7 @@ const TESTS = [
         "na de Wrapped staat Vesti niet aan");
   } },
   { naam: "wrapped-te-weinig-casussen", url: "?wrapped=demo&weinig=1", stappen: async t => {
+      await t.klik("#wrUitpakken"); await t.wacht(1100);
       await t.zie("#wrapped .wr-in", "de Wrapped");
       await t.klik("#wrapped .wr-tik.verder"); await t.klik("#wrapped .wr-tik.verder");
       t.klopt(await t.app(() => document.getElementById("wrapped").dataset.kaart) === "nognietgenoeg", "onder de 5 casussen hoort de kaart ‘volgend jaar’ te komen");
@@ -341,12 +345,13 @@ const TESTS = [
       await t.nietZie("#wrapped", "de Wrapped na Escape");
   } },
   { naam: "wrapped-zonder-naam", url: "?wrapped=demo&gast=1", op: ["telefoon"], stappen: async t => {
+      await t.klik("#wrUitpakken"); await t.wacht(1100);
       await t.zie("#wrapped .wr-in", "de Wrapped");
       await t.klik("#wrapped .wr-tik.verder"); await t.klik("#wrapped .wr-tik.verder");
       await t.zie("#wrapped h2:has-text('Nog geen naam')", "de oproep om een naam te kiezen");
   } },
   { naam: "wrapped-vanzelf-via-wachtrij", url: "?wrapped=demo&vanzelf=1", op: ["telefoon"], stappen: async t => {
-      await t.zie("#wrapped .wr-in", "de Wrapped die vanzelf opent");
+      await t.zie("#wrUitpakken", "het cadeautje van de Wrapped die vanzelf opent");
       await t.klik("#wrDicht");
       await t.wacht(400);
       await t.nietZie("#wachtPop .vi-vesti", "Vesti die zich nóg een keer voorstelt");
@@ -361,6 +366,7 @@ const TESTS = [
       await t.klik("#menuBtn");
       await t.zie("#menuWrapped", "‘Wrapped 2026’ in het menu");
       await t.klik("#menuWrapped");
+      await t.klik("#wrUitpakken"); await t.wacht(1100);
       await t.zie("#wrOpnieuw", "‘Probeer opnieuw’ zonder internet");
       await t.beeld("zonder-internet");
   } },
