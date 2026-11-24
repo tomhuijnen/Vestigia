@@ -228,18 +228,30 @@ const Week = (() => {
       .then(r => (prijsTabel = r && r["1"] != null ? r : null))
       .catch(e => { prijsVraag = null; if (e && e.status >= 400 && e.status < 500) prijsTabel = null; return e && e.status ? null : PRIJS_STD; }));
   }
+  /* update 87: maandprijs = weekprijs ×3 (Tom 24 nov 2026); de server is leidend (maandprijzen(), SQL 058) */
+  const PRIJS_MAAND_STD = { 1: 150, 2: 100, 3: 75, top10: 30 };
+  let maandTabel, maandVraag = null;
+  const maandDemo = () => { try { return !!sessionStorage.getItem("vestigia:maanddemo"); } catch(e){ return false; } };
+  function maandPrijzen(){
+    if (maandTabel !== undefined) return Promise.resolve(maandTabel);
+    if (demo || maandDemo()) return Promise.resolve(maandTabel = PRIJS_MAAND_STD);
+    return maandVraag || (maandVraag = online.rpc("maandprijzen", {})
+      .then(r => (maandTabel = r && r["1"] != null ? r : null))
+      .catch(e => { maandVraag = null; if (e && e.status >= 400 && e.status < 500) maandTabel = null; return e && e.status ? null : PRIJS_MAAND_STD; }));
+  }
+  const tabelVoor = soort => soort === "month" ? maandPrijzen() : prijzen();
   const prijsVoor = (t, pos) => !t || !pos ? 0 : pos <= 3 ? +t[pos] || 0 : pos <= 10 ? +t.top10 || 0 : 0;
   const BEKER = `<svg class="wpbeker" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.2 5.2H4.6a2.6 2.6 0 0 0 2.9 4.3M16.8 5.2h2.6a2.6 2.6 0 0 1-2.9 4.3" fill="none" stroke="#a8731b" stroke-width="1.5" stroke-linecap="round"/><path d="M6.8 3h10.4v5.2a5.2 5.2 0 0 1-10.4 0Z" fill="#e2b84e" stroke="#a8731b" stroke-width="1.3" stroke-linejoin="round"/><path d="M10.6 13.2h2.8l.5 3.4h-3.8Z" fill="#d9a441" stroke="#a8731b" stroke-width="1.2" stroke-linejoin="round"/><rect x="7.6" y="16.6" width="8.8" height="3.6" rx="1" fill="#7d5330"/><path d="M9.4 5.2v2.6" stroke="#fff3c9" stroke-width="1.3" stroke-linecap="round" opacity=".8"/></svg>`;
 
   /* in een getekende weekranglijst (Iedereen, Deze week): bekertje in je eigen rij, naast je punten */
-  async function beker(list){
+  async function beker(list, soort){
     if (!p()) return;
-    const t = await prijzen().catch(() => null);
+    const t = await tabelVoor(soort).catch(() => null);
     if (!t || !list.isConnected) return;
     const li = list.querySelector(":scope > li.me"), pts = li && li.querySelector(".pts");
     if (!pts || pts.querySelector(".wpknop")) return;
     pts.classList.add("metbeker");
-    pts.insertAdjacentHTML("afterbegin", `<button type="button" class="wpknop" aria-haspopup="dialog" aria-label="Weekprijs: wat krijg je voor je plaats?">${BEKER}</button>`);
+    pts.insertAdjacentHTML("afterbegin", `<button type="button" class="wpknop" data-soort="${soort === "month" ? "month" : "week"}" aria-haspopup="dialog" aria-label="${soort === "month" ? "Maandprijs" : "Weekprijs"}: wat krijg je voor je plaats?">${BEKER}</button>`);
   }
   const pop = () => $("prijsPop");
   let terugNaar = null;
@@ -250,15 +262,17 @@ const Week = (() => {
     terugNaar = null;
   }
   async function openPrijs(knop){
-    const t = await prijzen().catch(() => null); if (!t) return;
+    const maand = knop.dataset.soort === "month";
+    const t = await tabelVoor(maand ? "month" : "week").catch(() => null); if (!t) return;
+    const W = maand ? { naam: "Maandprijs", deze: "deze maand", wanneer: "op de 1e van de volgende maand" } : { naam: "Weekprijs", deze: "deze week", wanneer: "maandag" };
     const list = knop.closest(".ranklist"), me = knop.closest("li");
     const getal = li => parseInt((li.querySelector(".pts") || {}).textContent, 10) || 0;
     const geplaatst = [...list.querySelectorAll(":scope > li[data-pos]")].filter(li => getal(li) > 0);
     const mijn = getal(me), pos = mijn > 0 ? +me.dataset.pos : 0;
     const gedeeld = pos && geplaatst.filter(li => +li.dataset.pos === pos).length > 1;
     let h, zin;
-    if (!pos){ h = "Nog geen punten deze week"; zin = `Speel de dagcasus en maak kans op een weekprijs: de top 10 wint eikels.`; }
-    else if (pos <= 10){ h = `Je staat nu ${pos}e${gedeeld ? " (gedeeld)" : ""}`; zin = `Blijft dat zo, dan krijg je maandag <b>${prijsVoor(t, pos)} eikels</b>.`; }
+    if (!pos){ h = `Nog geen punten ${W.deze}`; zin = `Speel de dagcasus en maak kans op een ${W.naam.toLowerCase()}: de top 10 wint eikels.`; }
+    else if (pos <= 10){ h = `Je staat nu ${pos}e${gedeeld ? " (gedeeld)" : ""}`; zin = `Blijft dat zo, dan krijg je ${W.wanneer} <b>${prijsVoor(t, pos)} eikels</b>.`; }
     else {
       const tiende = geplaatst.filter(li => +li.dataset.pos <= 10).pop(), nodig = Math.max(1, getal(tiende) - mijn + 1);
       h = `Je staat nu ${pos}e`; zin = `Met ${nodig} ${nodig === 1 ? "punt" : "punten"} meer sta je in de top 10 en win je <b>${prijsVoor(t, 10)} eikels</b>.`;
@@ -267,11 +281,11 @@ const Week = (() => {
       const jij = pos && pos >= van && pos <= tot;
       return `<li class="${jij ? "jij" : ""}${van <= 3 ? " p" + van : ""}"><span class="wpplek">${label}</span>${jij ? `<span class="wpjij">jij</span>` : ""}<span class="wpeik">${EIKEL} ${prijsVoor(t, van)}</span></li>`;
     };
-    $("prijsPopBody").innerHTML = `<div class="spkop wpkop"><span class="caps">Weekprijs</span><button class="spsluit" id="prijsSluit" aria-label="Sluiten"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    $("prijsPopBody").innerHTML = `<div class="spkop wpkop"><span class="caps">${W.naam}</span><button class="spsluit" id="prijsSluit" aria-label="Sluiten"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
         <div class="wpgroot">${BEKER}</div><h2 id="prijsPopH">${h}</h2><p>${zin}</p></div>
       <div class="wpbody">
         <ul class="wplijst">${rij(1, 1, "1e plaats")}${rij(2, 2, "2e plaats")}${rij(3, 3, "3e plaats")}${rij(4, 10, "4e t/m 10e plaats")}</ul>
-        <p class="fine">De prijs komt maandag bij je eikels, als de week voorbij is. Alleen de dagcasus telt, oefenen niet. Gelijke stand? Dan deel je de plaats en krijg je dezelfde prijs.</p>
+        <p class="fine">De prijs komt ${W.wanneer} bij je eikels, als ${maand ? "de maand" : "de week"} voorbij is. Alleen de dagcasus telt, oefenen niet. Gelijke stand? Dan deel je de plaats en krijg je dezelfde prijs.</p>
         <button class="btn" id="prijsOke">Oké</button>
       </div>`;
     terugNaar = knop;

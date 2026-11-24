@@ -2673,3 +2673,7 @@ html.donker .weergseg button[aria-pressed="true"]{color:#0f1712}
 .dumijn li{display:grid; gap:4px; background:var(--leaf); border-radius:8px; padding:8px 10px}
 @media (min-width: 900px){ .dumijn ol{grid-template-columns:repeat(3, 1fr)} }
 @media (prefers-reduced-motion: reduce){ .dumijn summary::before{transition:none} }
+/* update 87: Vandaag · Deze week · Deze maand blijven op één regel, ook op een telefoon van 360 px */
+#rankTabs{flex-wrap:nowrap; gap:6px}
+#rankTabs .chipbtn{flex:0 1 auto; white-space:nowrap}
+@media (max-width:420px){ #rankTabs .chipbtn{padding:4px 10px; letter-spacing:.04em} }
