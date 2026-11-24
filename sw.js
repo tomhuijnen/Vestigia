@@ -36,7 +36,9 @@ self.addEventListener("fetch", e => {
   if (e.request.mode === "navigate"){
     // eerst netwerk (nieuwste versie), offline uit de cache. In het veld is het netwerk vaak traag: na 3 seconden
     // zonder antwoord nemen we de versie uit de cache, en het netwerk werkt de cache op de achtergrond nog bij.
-    const net = fetch(e.request).then(r => { const copy = r.clone(); caches.open(VERSION).then(c => c.put("index.html", copy)); return r; });
+    // bugjacht 24 november: alleen een goede pagina bewaren. Een foutpagina (bijv. 404 of 503 van GitHub Pages tijdens het
+    // live zetten) kwam anders in de cache, en offline kreeg je dan die foutpagina in plaats van Vestigia.
+    const net = fetch(e.request).then(r => { if (r.ok){ const copy = r.clone(); caches.open(VERSION).then(c => c.put("index.html", copy)); } return r; });
     const traag = new Promise(res => setTimeout(res, 3000)).then(() => caches.match("index.html"));
     e.respondWith(Promise.race([net, traag.then(hit => hit || net)]).catch(() => caches.match("index.html")));
     e.waitUntil(net.catch(() => {}));

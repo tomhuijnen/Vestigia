@@ -8,6 +8,9 @@
 //   { soort: "test", p_id, p_key }    → testmelding naar je eigen apparaten (met ?push=demo in de app).
 //   { soort: "duel", duel }           → door de trigger op duels (supabase-046) bij een uitdaging op naam; alleen met het
 //                                       juiste geheim. Wie wanneer een seintje krijgt, beslist _vestigia_push_duel (update 70).
+//   { soort: "duel-bijna", test? }    → door pg_cron elk kwartier (supabase-050, update 113): nog 12 uur voor je duel en je
+//                                       speelde je casussen nog niet (allemaal). Eén keer per duel per speler; ’s nachts
+//                                       niet (dan vanaf 08:00, met de echte resterende tijd). Met test: true alleen kijken.
 // verify_jwt staat uit: de nieuwe publishable key is geen JWT. Deze functie controleert zelf (geheim of spelerscode).
 import webpush from "npm:web-push@3.6.7";
 import { createClient } from "npm:@supabase/supabase-js@2";
@@ -51,7 +54,18 @@ function tekst(reeks: number, i: number) {
   return ZONDER_REEKS[i % ZONDER_REEKS.length];
 }
 
-type Ontvanger = { endpoint: string; p256dh: string; auth: string; reeks?: number; uitdager?: string; expert?: boolean; code?: string; open_n?: number };
+// update 113: ‘nog 12 uur’ met de echte resterende tijd (’s nachts uitgesteld tot 08:00, dan bijv. ‘nog 5 uur’)
+function bijnaTekst(o: Ontvanger) {
+  const uur = Math.round((o.minuten || 0) / 60);     // elk kwartier gekeken: 11:50 is ‘nog 12 uur’
+  const tijd = uur >= 1 ? `nog ${uur} uur` : "nog minder dan een uur";
+  const tegen = o.tegen ? `je spelersduel tegen ${o.tegen}` : "je spelersduel";
+  const te = 3 - (o.gespeeld || 0);
+  if (!o.gespeeld) return `Je hebt ${tijd} voor ${tegen}. Speel je drie casussen voordat het duel verloopt!`;
+  return `Je hebt ${tijd} voor ${tegen}. Nog ${te === 1 ? "één casus" : `${te} casussen`} en je bent klaar!`;
+}
+
+type Ontvanger = { endpoint: string; p256dh: string; auth: string; reeks?: number; uitdager?: string; expert?: boolean; code?: string; open_n?: number;
+                   tegen?: string; gespeeld?: number; minuten?: number };
 type Opties = { tag?: string; url?: (o: Ontvanger) => string; klaar?: string; badge?: (o: Ontvanger) => number };
 async function verstuur(lijst: Ontvanger[], maak: (o: Ontvanger, i: number) => string, markeer: boolean, opt: Opties = {}) {
   const k = await sleutels();
@@ -106,6 +120,18 @@ Deno.serve(async (req) => {
       return antwoord(await verstuur(data || [],
         (o) => `${o.uitdager} daagt je uit voor een spelersduel (${o.expert ? "expert" : "klassiek"}). Durf jij het aan?`,
         true, { tag: "duel", url: (o) => `./?duel=${encodeURIComponent(o.code || "")}`, klaar: "_vestigia_push_duel_verstuurd", badge: (o) => o.open_n || 1 }));
+    }
+
+    if (body.soort === "duel-bijna") {
+      const { data: goed } = await db.rpc("_vestigia_push_geheim_ok", { p_geheim: req.headers.get("x-vestigia-geheim") || "" });
+      if (goed !== true) return antwoord({ fout: "Geen toegang" }, 403);
+      const test = body.test === true;
+      const { data, error } = await db.rpc("_vestigia_push_duel_bijna", { p_echt: !test });
+      if (error) throw error;
+      const lijst = (data || []) as Ontvanger[];
+      if (test) return antwoord({ test: true, apparaten: lijst.length, teksten: lijst.map(bijnaTekst) });
+      return antwoord(await verstuur(lijst, (o) => bijnaTekst(o), false,
+        { tag: "duel-bijna", url: (o) => `./?duel=${encodeURIComponent(o.code || "")}`, klaar: "_vestigia_push_duel_verstuurd" }));
     }
     return antwoord({ fout: "Onbekende soort" }, 400);
   } catch (e) {

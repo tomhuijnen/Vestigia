@@ -456,6 +456,13 @@ function bronRij(t){
    er weer gespeeld wordt (de ids blijven hetzelfde, renderGrid merkt er niets van). Bij een duel zijn er alleen de
    eerste twee tabbladen; het vervolg van het duel staat in de bovenlaag. */
 let uitslagTab = "soort";
+/* Bugjacht 24 november: bij expert verloren stond hier de interne id (‘Je determinatie (hamster) klopte niet’), en alleen
+   de eerste van je twee gokken. Nu de namen van je echte gokken (een tweelinggok telt niet mee). */
+function fouteExpert(){
+  const namen = S.guesses.filter(id => !isTwin(id) && id !== S.target).map(id => (BY_ID.get(id) || { n: id }).n);
+  if (!namen.length) return "Niet gedetermineerd.";
+  return namen.length === 1 ? `Je determinatie (${esc(namen[0])}) klopte niet.` : `Je determinaties (${namen.map(esc).join(" en ")}) klopten niet.`;
+}
 function tipsTerug(){
   const sec = $("gridH") && $("gridH").closest("section");
   if (!sec) return;
@@ -477,7 +484,7 @@ function renderResult(){
     .map(([lab,k]) => `<div><dt>${lab}</dt><dd>${t[k].map(x => LABELS[k][x]).join(", ")}</dd></div>`).join("")
     + `<div><dt>Lengte</dt><dd>± ${t.l.toLocaleString("nl-NL")} cm</dd></div>`;
   const score = S.expert
-    ? (won ? `Gedetermineerd na ${S.revealed} van de ${MAX} aanwijzingen.` : `Je determinatie (${esc(S.guesses[0] || "")}) klopte niet.`)
+    ? (won ? `Gedetermineerd na ${S.revealed} van de ${MAX} aanwijzingen.` : fouteExpert())
     : (won ? `Gedetermineerd in ${usedTries()} van de ${MAX} pogingen.` : `Na ${MAX} pogingen niet gevonden.`);
   let stats = "";
   if (S.mode === "daily"){
@@ -855,7 +862,23 @@ function geefOp(){
   online.afterGame();
   saveDaily(); render();
 }
-function goDaily(){ if (S.mode === "daily") showGame(); else startDaily(); }
+/* Bugjacht 24 november: bleef de app over middernacht open (laptop, of een telefoon die de app in het geheugen houdt), dan
+   bleef de dagcasus van gisteren staan, ook na ‘Dagcasus’ of het seintje van 19:00. Was hij al gespeeld, dan leek het
+   alsof je vandaag al klaar was. Nu komt de casus van vandaag, behalve als je midden in die van gisteren zit: die mag je
+   afmaken (de server neemt gisteren nog aan). */
+const dagVerlopen = () => !!S && S.mode === "daily" && S.caseNo - 1 !== todayIndex();
+const middenInCasus = () => !!S && S.status === "playing" && S.guesses.length > 0;
+function goDaily(){ if (S.mode === "daily" && !(dagVerlopen() && !middenInCasus())) showGame(); else startDaily(); }
+/* terug in de app, of het scherm stond de hele nacht open: de dagcasus van gisteren wordt die van vandaag
+   (alleen in het spelscherm, en niet als je net een uitslag leest terwijl het middernacht wordt) */
+function dagBijwerken(terug){
+  if (typeof VIEW === "undefined" || VIEW !== "game" || !dagVerlopen() || middenInCasus()) return;
+  if (!terug && S.status !== "playing") return;
+  startDaily();
+}
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") dagBijwerken(true); });
+window.addEventListener("focus", () => dagBijwerken(true));
+setInterval(() => dagBijwerken(false), 60 * 1000);
 function goFree(){ if (S.mode !== "free" || S.status !== "playing") startFree(); else showGame(); }
 /* Wisselen tussen klassiek en expert. Een oefencasus waarin nog niets geprobeerd is, wisselt ter plekke. */
 function setMode(expert){
