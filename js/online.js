@@ -205,7 +205,7 @@ const online = (() => {
         $("rankMe").innerHTML = `${wk ? wk.pts : 0}<small>jouw punten deze week</small>`;
       }
     } catch(e){
-      list.innerHTML = Veld.aan() ? `<p class="rankempty"><b>Veldmodus.</b> Zonder internet kan de ranglijst niet laden. Je speelt gewoon verder; je dagscore wordt verstuurd zodra je weer verbinding hebt.</p>` : `${typeof Vesti !== "undefined" ? Vesti.slaapt() : ""}<p class="rankempty">De ranglijst is nu niet bereikbaar. Controleer je internetverbinding en probeer het later opnieuw.</p>`;
+      list.innerHTML = Veld.aan() ? `<p class="rankempty"><b>Veldmodus.</b> Zonder internet kan de ranglijst niet laden. Je speelt gewoon verder; je dagscore wordt verstuurd zodra je weer verbinding hebt.</p>` : `${typeof Vesti !== "undefined" ? Vesti.slaapt() : ""}<p class="rankempty">${esc(e && e.status >= 500 ? "De ranglijst is nu niet bereikbaar. Er ging iets mis bij Vestigia; probeer het later opnieuw." : "De ranglijst is nu niet bereikbaar. Controleer je internetverbinding en probeer het later opnieuw.")}</p>`;
     }
   }
   function renderPlayerBox(){
@@ -327,6 +327,7 @@ const online = (() => {
       const bezet = e.status && e.status < 500 && /bezet/i.test(e.message || "");
       if (bezet){ alSpeler(name, name, true); return; }
       $("pMsg").textContent = e.status && e.status < 500 ? e.message
+        : e.status >= 500 ? "Aanmelden lukte niet. " + STORING
         : "Aanmelden lukte niet. Controleer je internetverbinding en probeer het met dezelfde naam opnieuw.";
       return;
     }
@@ -340,7 +341,7 @@ const online = (() => {
         const r = await rpc("koppel_gebruik", { p_code: waarde });
         if (!r || !r.ok){ $("pMsg").textContent = r && r.reden === "druk" ? "Er werd net te vaak een foute code geprobeerd. Wacht een paar minuten." : "Deze koppelcode klopt niet of is verlopen. Maak op je andere apparaat een nieuwe."; return; }
         naKoppel(await koppel("VSP-" + r.id + "." + r.key));
-      } catch(e){ $("pMsg").textContent = e.status === 404 ? "Koppelen met een korte code werkt binnenkort. Gebruik tot dan je spelerscode." : "Koppelen lukte niet. Controleer je internetverbinding."; }
+      } catch(e){ $("pMsg").textContent = e.status === 404 ? "Koppelen met een korte code werkt binnenkort. Gebruik tot dan je spelerscode." : foutTekst(e, "Koppelen lukte niet.", false); }
       return;
     }
     try { naKoppel(await koppel(waarde)); }

@@ -33,7 +33,7 @@ const Duel = (() => {
   const rpc = (fn, a) => demo ? NEP.rpc(fn, a) : online.rpc(fn, a);
   const reduce = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
   const wacht = ms => new Promise(r => setTimeout(r, ms));
-  const fout = e => e && e.status && e.status < 500 ? e.message : "Dat lukte niet. Controleer je internetverbinding.";
+  const fout = e => foutTekst(e, "Dat lukte niet.");
   const modus = d => d.expert ? "expert" : "klassiek";
   const vandaagLokaal = () => { const d = new Date(), p2 = n => String(n).padStart(2, "0"); return `${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())}`; };
 
@@ -320,7 +320,7 @@ const Duel = (() => {
       const [ls] = await Promise.all([haalLijst(), haalStatus()]);
       await haalProfielen(ls.map(d => d.tegen));
       if (nr === laden) teken(ls, false);
-    } catch(e){ if (nr === laden) teken(cache(), false, Veld.aan() ? "Veldmodus: zonder internet kun je geen duel spelen. Zodra je weer online bent, kan het weer." : "Je duels zijn nu niet bereikbaar. Controleer je internetverbinding."); }
+    } catch(e){ if (nr === laden) teken(cache(), false, Veld.aan() ? "Veldmodus: zonder internet kun je geen duel spelen. Zodra je weer online bent, kan het weer." : foutTekst(e, "Je duels zijn nu niet bereikbaar.", false)); }
   }
   /* indeling: jouw beurt · uitslag binnen · wacht op de ander · afgelopen */
   function groepen(ls){

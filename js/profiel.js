@@ -511,7 +511,7 @@ const Profiel = (() => {
       teken(); toast(`Je speelt nu als ${naam}.`);
     } catch(e){
       $("pfNaamBtn").disabled = false;
-      msg.textContent = e.status && e.status < 500 ? e.message : "Wijzigen lukte niet. Controleer je internetverbinding.";
+      msg.textContent = foutTekst(e, "Wijzigen lukte niet.");
     }
   }
   /* tweede klik bevestigt: een wijziging is er één van de drie */
@@ -543,7 +543,7 @@ const Profiel = (() => {
       if (VIEW === "profiel") teken(); else tekenShop();
       renderMenu();
       return true;
-    } catch(e){ if (msg) msg.textContent = e.status && e.status < 500 ? e.message : "Opslaan lukte niet. Controleer je internetverbinding."; return false; }
+    } catch(e){ if (msg) msg.textContent = foutTekst(e, "Opslaan lukte niet."); return false; }
   }
 
   /* ---------- update 71: een net verdiende ondertitel meteen onder je naam zetten ----------
@@ -708,7 +708,7 @@ const Profiel = (() => {
     const { i, v, soort } = popItem, knop = $("shopPopKoop"), msg = $("shopPopMsg");
     knop.disabled = true; msg.classList.remove("tekort"); msg.textContent = "Even geduld…";
     try { await online.rpc("buy_item", args({ p_item: i.item })); await haalAlles(); }
-    catch(e){ knop.disabled = false; msg.textContent = e.status && e.status < 500 ? e.message : "Kopen lukte niet. Controleer je internetverbinding."; return; }
+    catch(e){ knop.disabled = false; msg.textContent = foutTekst(e, "Kopen lukte niet."); return; }
     popSluit();
     if (await kies(soort, v || null, $("shopMsg"))) { const m = $("shopMsg"); if (m) m.textContent = "Gekocht en in gebruik. Wisselen doe je in Mijn profiel."; }
   }

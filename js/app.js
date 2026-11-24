@@ -138,7 +138,7 @@ async function naarAndereBrowser(viaEdge){
   msg.textContent = "Je voortgang wordt eerst opgeslagen…";
   let code;
   try { code = await online.koppelcode(); }
-  catch(e){ msg.textContent = "Dat lukt nu niet. Controleer je internetverbinding."; return; }
+  catch(e){ msg.textContent = foutTekst(e, "Dat lukt nu niet.", false); return; }
   const link = location.origin + location.pathname + "#koppel=" + encodeURIComponent(code);
   if (viaEdge){ location.href = "microsoft-edge:" + link; msg.textContent = "Edge wordt geopend. Gebeurt er niets? Kopieer dan de link en plak hem in Edge."; return; }
   try { await navigator.clipboard.writeText(link); msg.textContent = "Link gekopieerd. Plak hem in de adresbalk van Chrome of Edge. Deel hem met niemand: met deze link speel je als jou."; }

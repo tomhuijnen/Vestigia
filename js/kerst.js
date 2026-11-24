@@ -245,7 +245,7 @@ const Kerst = (() => {
     }
     if (!v || v.fout){
       const e = v && v.fout;
-      onder.innerHTML = `<p class="avk-fout">${esc(e && e.status && e.status < 500 ? e.message : "Openen lukte niet. Controleer je internetverbinding.")}</p><button class="btn" id="avkVerder">Terug</button>`;
+      onder.innerHTML = `<p class="avk-fout">${esc(foutTekst(e, "Openen lukte niet."))}</p><button class="btn" id="avkVerder">Terug</button>`;
       laag.querySelector("#avkVerder").onclick = () => { laag.remove(); knop.style.visibility = ""; };
       return;
     }

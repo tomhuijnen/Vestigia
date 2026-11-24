@@ -252,7 +252,7 @@ $("codeCopy").addEventListener("click", async () => {
       const code = await online.koppelcode(); renderCarry();
       try { await navigator.clipboard.writeText(code); $("codeMsg").textContent = "Gekopieerd. Plak hem op je andere apparaat."; }
       catch(e){ $("codeIn").value = code; $("codeIn").select(); $("codeMsg").textContent = "Selecteer en kopieer de code hieronder."; }
-    } catch(e){ $("codeMsg").textContent = "Koppelen lukt nu niet. Controleer je internetverbinding."; }
+    } catch(e){ $("codeMsg").textContent = foutTekst(e, "Koppelen lukt nu niet.", false); }
     return;
   }
   const code = progressCode();
