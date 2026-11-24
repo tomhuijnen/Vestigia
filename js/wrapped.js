@@ -287,29 +287,46 @@ const Wrapped = (() => {
         ${v.plek === "silhouet" ? `<span class="wr-vraag">?</span>` : ""}</div>
     </div>${ex.includes("confetti") ? confetti() : ""}`;
   }
-  /* Het wolkje naast Vesti's hoofd, met het puntje naar hem toe. Rekent met offset* (zonder de bewegingen), zodat het
-     klopt terwijl Vesti nog binnenkomt. HOOFD = waar zijn hoofd zit in de tekening, als deel van breedte en hoogte. */
-  const HOOFD = { midden: [.46, .30], silhouet: [.46, .30], rechts: [.46, .30], links: [.54, .30], onder: [.45, .36], zij: [.38, .55] };
+  /* Het wolkje bij Vesti, maar nooit over hem heen (Tom, 24 november).
+     1. Liefst boven zijn hoofd, met het puntje omlaag naar hem toe, schuin naar de kant waar plek is.
+     2. Is daar te weinig ruimte, dan wordt Vesti iets kleiner (hooguit tot 70%), zodat het wolkje er toch boven past.
+     3. Lukt dat ook niet (heel klein scherm), dan naast hem, aan de kant met de meeste ruimte, met het puntje opzij.
+     Rekent met offset* (zonder de bewegingen), zodat het klopt terwijl Vesti nog binnenkomt. */
   function plaatsWolk(k){
     const pod = k.querySelector(".wr-podium"), w = k.querySelector(".wr-wolk"), v = k.querySelector(".wr-vesti");
     if (!pod || !w || !v) return;
-    const plek = [...pod.classList].find(c => c.startsWith("plek-")).slice(5), [fx, fy] = HOOFD[plek] || [.5, .3];
-    const P = { w: pod.offsetWidth, h: pod.offsetHeight }, V = { x: v.offsetLeft, y: v.offsetTop, w: v.offsetWidth, h: v.offsetHeight };
-    /* midden en onder staan met translateX(-50%) / (-46%) gecentreerd; offsetLeft telt dat niet mee */
-    if (plek === "midden" || plek === "silhouet") V.x -= V.w * .5; else if (plek === "onder") V.x -= V.w * .46;
-    const hx = V.x + V.w * fx, hy = V.y + V.h * fy, straal = V.w * .2, marge = 12;
-    const ww = w.offsetWidth, wh = w.offsetHeight;
+    const plek = [...pod.classList].find(c => c.startsWith("plek-")).slice(5);
+    const marge = 12, P = { w: pod.offsetWidth, h: pod.offsetHeight };
+    const vak = () => {   // Vesti's vak in het podium; midden en onder staan met translateX gecentreerd, offsetLeft telt dat niet mee
+      const r = { x: v.offsetLeft, y: v.offsetTop, w: v.offsetWidth, h: v.offsetHeight };
+      if (plek === "midden" || plek === "silhouet") r.x -= r.w * .5; else if (plek === "onder") r.x -= r.w * .46;
+      if (plek === "zij") r.x += r.w * .12;   // gekanteld: de tekening vult het vak links niet helemaal
+      return r;
+    };
+    w.style.maxWidth = ""; v.style.height = "";
+    let V = vak(), ww = w.offsetWidth, wh = w.offsetHeight;
+    const nodig = wh + 16;   // ruimte boven Vesti voor wolkje + puntje
+    if (V.y < nodig && plek !== "onder"){
+      const nieuw = V.h - (nodig - V.y);
+      if (nieuw >= V.h * .7){ v.style.height = nieuw + "px"; V = vak(); }
+    }
     let x, y, staart;
-    if (plek === "onder" && V.y - wh - 10 > -40){        // gluurt over de rand: wolkje schuin boven zijn hoofd
-      staart = "onder"; x = hx + straal * .3; y = V.y - wh + V.h * .12;
-      if (x + ww > P.w - marge){ x = hx - ww - straal * .3; staart = "onder-r"; }
-    } else if (hx > P.w / 2 || plek === "midden" || plek === "silhouet"){   // Vesti rechts of in het midden: wolkje links van zijn hoofd
-      staart = "rechts"; x = hx - straal - ww - 10; y = hy - wh * .8;
-    } else {                                              // Vesti links: wolkje rechts van zijn hoofd
-      staart = "links"; x = hx + straal + 10; y = hy - wh * .8;
+    const rechtsVanMidden = V.x + V.w / 2 > P.w / 2;
+    if (V.y >= nodig || plek === "onder"){
+      /* boven zijn hoofd; het puntje wijst naar zijn hoofd (ongeveer 45% van links, gespiegeld 55%) */
+      const hx = V.x + V.w * (plek === "links" ? .55 : .45);
+      y = V.y - wh - 12 + (plek === "onder" ? V.h * .08 : 0);
+      if (rechtsVanMidden || plek === "midden" || plek === "silhouet"){ staart = "onder-r"; x = hx - ww + 28; }
+      else { staart = "onder"; x = hx - 28; }
+    } else {
+      /* naast hem, waar de meeste ruimte is; zo nodig smaller */
+      const links = V.x - marge - 14, rechts = P.w - (V.x + V.w) - marge - 14;
+      const kant = links >= rechts ? "links" : "rechts", ruimte = Math.max(links, rechts);
+      if (ww > ruimte){ w.style.maxWidth = Math.max(110, ruimte) + "px"; ww = w.offsetWidth; wh = w.offsetHeight; }
+      y = V.y + V.h * .12;
+      if (kant === "links"){ staart = "rechts"; x = V.x - ww - 14; } else { staart = "links"; x = V.x + V.w + 14; }
     }
     x = Math.max(marge, Math.min(x, P.w - ww - marge));
-    y = Math.max(-30, y);
     Object.assign(w.style, { left: x + "px", top: y + "px", right: "auto", bottom: "auto" });
     w.dataset.staart = staart;
   }
