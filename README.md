@@ -52,7 +52,7 @@ Groene opstartbeelden voor iPhone en iPad (in plaats van het zwarte scherm bij h
 
 Contrast van alle avatars op alle achtergrondkleuren nameten: `node tools/avatarcontrast.mjs --html overzicht.html` (heeft Playwright met Chrome nodig).
 
-De databasescripts (001 t/m 019) staan bewust niet in deze repo, maar in het Project Vestigia.
+De database staat bewust niet in deze openbare repo, maar in de privé-repo `tomhuijnen/Vestigia-database`: het volledige schema (stand 24 november 2026), nieuwe SQL-wijzigingen vanaf 059 en een testdatabase met rookproef (`node test/draai.mjs`). De oude scripts 001–058 staan nog in het Project Vestigia.
 
 Casussen voor het spelersduel: de server kiest ze uit de tabel `duel_casussen`. Komen er soorten of casussen bij, draai dan `node tools/duelcasussen.mjs` en plak de uitvoer in Supabase (SQL Editor), anders kunnen die casussen nog niet in een duel komen.
 
