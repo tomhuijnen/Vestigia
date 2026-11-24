@@ -812,6 +812,17 @@ const Duel = (() => {
           uitslagen: v.duels.filter(d => d.status === "klaar" && ((d.uitdager === me && !d.gezien_u) || (d.tegenstander === me && !d.gezien_t))).length,
           lopend: v.duels.filter(d => ["wacht", "bezig"].includes(d.status) && mee(d)).length }]; },
       duel_lijst(){ return db().duels.filter(mee).sort((a, b) => b.gemaakt - a.gemaakt).map(json); },
+      /* update 112: zoals de server, alleen uitgespeelde duels */
+      duel_cijfers(){ const me = ik(), ds = db().duels.filter(d => d.status === "klaar" && mee(d)).sort((a, b) => a.klaar - b.klaar);
+        const u = d => !d.winnaar ? "g" : d.winnaar === me ? "w" : "v", tegen = new Map();
+        let reeks = 0, max = 0;
+        for (const d of ds){
+          reeks = u(d) === "w" ? reeks + 1 : 0; max = Math.max(max, reeks);
+          const naam = d.uitdager === me ? d.tegenstander : d.uitdager, t = tegen.get(naam) || { naam, n: 0, w: 0, g: 0, v: 0 };
+          t.n++; t[u(d)]++; tegen.set(naam, t);
+        }
+        return { gewonnen: ds.filter(d => u(d) === "w").length, gelijk: ds.filter(d => u(d) === "g").length, verloren: ds.filter(d => u(d) === "v").length,
+          reeks_max: max, reeks_nu: reeks, tegen: [...tegen.values()].sort((a, b) => b.n - a.n || b.w - a.w) }; },
       duel_haal(a){ const d = db().duels.find(x => x.code === a.p_code || x.id === a.p_code); if (!d) fout("Dit duel bestaat niet (meer)"); return json(d); },
       duel_zoek(a){ const q = String(a.p_q || "").toLowerCase();
         return NAMEN.filter(n => !q ? n === "Sanne" || n === "Joris" || n === "Ilse" : n.toLowerCase().startsWith(q) || (q.length >= 3 && n.toLowerCase().includes(q)))
@@ -856,5 +867,14 @@ const Duel = (() => {
     };
   })();
 
-  return { demo, zichtbaar, actief, aantal, open, render, speel, bewaar, naCasus, vervolg, bindVervolg, balk, onthul, verwerkLink, naNaam, welkomTekst, start, badge };
+  /* update 112: duelcijfers voor Statistieken (alle uitgespeelde duels, tegen iedereen). De laatste uitkomst blijft
+     bewaard, zodat het blok zonder verbinding of tijdens het laden niet leeg is. */
+  async function cijfers(){
+    if (!p()) return null;
+    try { const c = await rpc("duel_cijfers", args()); if (c) zet(D + "duelcijfers", c); return c; }
+    catch(e){ return lees(D + "duelcijfers"); }
+  }
+  const cijfersBewaard = () => p() ? lees(D + "duelcijfers") : null;
+
+  return { demo, zichtbaar, actief, aantal, open, render, speel, bewaar, naCasus, vervolg, bindVervolg, balk, onthul, verwerkLink, naNaam, welkomTekst, start, badge, cijfers, cijfersBewaard };
 })();

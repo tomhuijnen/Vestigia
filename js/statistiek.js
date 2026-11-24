@@ -58,6 +58,57 @@ const Statistiek = (() => {
       <span class="st-vn">${a.n ? `${a.w} van ${a.n} · ${pct(a.w, a.n)}%` : "nog niet gespeeld"}</span></div>`;
   }
 
+  /* Spelersduels (update 112): alle uitgespeelde duels, tegen iedereen, zoals de duelbalans op de profielkaart.
+     De cijfers komen van de server (Duel.cijfers); tot ze binnen zijn staat de laatst bewaarde stand er. */
+  const duelAan = () => typeof Duel !== "undefined" && Duel.actief && Duel.actief() && !!online.player();
+  const keer = n => `${n}×`;
+  function duelBinnen(c){
+    if (!c) return `<p class="fine">Duelcijfers laden…</p>`;
+    const n = c.gewonnen + c.gelijk + c.verloren, pp = x => n ? (100 * x / n).toFixed(1) : 0;
+    if (!n) return `<p class="fine">Nog geen duel uitgespeeld. Speel je eerste spelersduel, dan zie je hier hoe vaak je wint en tegen wie.</p>
+      <button class="btn line st-duknop" id="stNaarDuel">Naar het spelersduel</button>`;
+    const tg = c.tegen || [];
+    const top = k => tg.filter(t => t[k] > 0).sort((a, b) => b[k] - a[k] || b.n - a.n)[0];
+    const won = top("w"), verl = top("v");
+    const uitl = t => [t.w && `${t.w} gewonnen`, t.g && `${t.g} gelijk`, t.v && `${t.v} verloren`].filter(Boolean).join(" · ");
+    const max = tg.length ? tg[0].n : 1;
+    return `<div class="st-dukop">
+        <div><b>${n}</b><span>gespeeld</span></div>
+        <div><b>${pct(c.gewonnen, n)}%</b><span>gewonnen</span></div>
+        <div><b>${c.reeks_max}</b><span>langste winstreeks</span></div>
+      </div>
+      <div class="spbalans st-dubal"><div><b>${c.gewonnen}</b><span>gewonnen</span></div><div><b>${c.gelijk}</b><span>gelijk</span></div><div><b>${c.verloren}</b><span>verloren</span></div></div>
+      <div class="spbalk st-dubalk" aria-hidden="true"><i class="w" style="width:${pp(c.gewonnen)}%"></i><i class="g" style="width:${pp(c.gelijk)}%"></i><i class="v" style="width:${pp(c.verloren)}%"></i></div>
+      <p class="fine st-sinds">${c.reeks_nu >= 2 ? `Je wint nu ${c.reeks_nu} duels op rij.` : c.reeks_nu === 1 ? "Je laatste duel won je." : "Je laatste duel won je niet: tijd voor een revanche?"}</p>
+      <div class="st-duhl">
+        <div><span>Vaakst gewonnen van</span>${won ? `<button class="linklike" data-speler="${esc(won.naam)}">${esc(won.naam)}</button><small>${keer(won.w)} van ${won.n}</small>` : `<b>nog niemand</b>`}</div>
+        <div><span>Vaakst verloren van</span>${verl ? `<button class="linklike" data-speler="${esc(verl.naam)}">${esc(verl.naam)}</button><small>${keer(verl.v)} van ${verl.n}</small>` : `<b>nog niemand</b>`}</div>
+      </div>
+      <h4 class="st-duh4">Tegen wie</h4>
+      <ol class="st-top st-dutop">${tg.slice(0, 6).map(t => `<li><button class="st-rij" type="button" data-speler="${esc(t.naam)}">
+        <span class="st-naam"><b>${esc(t.naam)}</b><small>${esc(uitl(t))}</small></span>
+        <span class="spbalk st-dumini" aria-hidden="true" style="width:${Math.max(18, Math.round(100 * t.n / max))}%"><i class="w" style="width:${100 * t.w / t.n}%"></i><i class="g" style="width:${100 * t.g / t.n}%"></i><i class="v" style="width:${100 * t.v / t.n}%"></i></span>
+        <span class="st-n">${keer(t.n)}</span></button></li>`).join("")}</ol>
+      ${tg.length > 6 ? `<p class="fine">En nog ${tg.length - 6} ${tg.length - 6 === 1 ? "speler" : "spelers"}.</p>` : ""}`;
+  }
+  function duelBlok(){
+    if (!duelAan()) return "";
+    return `<section class="st-blok st-duel" id="stDuel" aria-labelledby="stDuelH"><h3 id="stDuelH">Spelersduels</h3>
+      <p class="fine">Alle uitgespeelde duels, tegen iedereen. Verlopen en afgewezen duels tellen niet mee.</p>
+      <div id="stDuelIn">${duelBinnen(Duel.cijfersBewaard())}</div></section>`;
+  }
+  function bindDuel(){
+    const el = $("stDuelIn"); if (!el) return;
+    el.querySelectorAll("[data-speler]").forEach(b => b.onclick = () => Spelerskaart.open(b.dataset.speler, b));
+    if ($("stNaarDuel")) $("stNaarDuel").onclick = () => Duel.open();
+  }
+  async function vulDuel(){
+    if (!$("stDuelIn")) return;
+    const c = await Duel.cijfers();
+    if (!c || !$("stDuelIn") || VIEW !== "stats") return;
+    $("stDuelIn").innerHTML = duelBinnen(c); bindDuel();
+  }
+
   /* Vaakst verward (update 19, eerder in het Vestiarium): alleen soorten die echt op elkaar lijken, zie lijktOp in
      js/veldboek.js. Met een knop om juist die soorten te oefenen. */
   function verward(){
@@ -94,12 +145,14 @@ const Statistiek = (() => {
         ${verdeling("Dagcasus", s.dag)}${verdeling("Oefencasus", s.oef)}${verdeling("Klassiek", s.kl)}${verdeling("Expert", s.ex)}
         <p class="fine">${kGem ? `Goed in klassiek: gemiddeld na ${kGem} ${kGem === "1" ? "poging" : "pogingen"}.` : ""}${xGem ? ` Goed in expert: gemiddeld na ${xGem} ${xGem === "1" ? "waarneming" : "waarnemingen"}.` : ""}</p>
       </section>
+      ${duelBlok()}
       <div class="st-twee" id="stLijsten">
         <section class="st-blok" aria-labelledby="stDoelH"><h3 id="stDoelH">Vaakst tegengekomen</h3><p class="fine">De soort die het antwoord was.</p>${lijst(s.topDoel, "doel")}</section>
         <section class="st-blok" aria-labelledby="stInvH"><h3 id="stInvH">Vaakst ingevoerd</h3><p class="fine">Elke soort die je als determinatie invoerde, goed of fout.</p>${lijst(s.topInvoer, "invoer")}</section>
       </div>
       ${verward()}`;
     body.querySelectorAll(".st-rij[data-id]").forEach(b => b.onclick = () => openPlate(b.dataset.id, b));
+    bindDuel(); vulDuel();
     if ($("oefenFouten")) $("oefenFouten").onclick = () => startFree({ g: null, nieuw: false, ids: JSON.parse($("oefenFouten").dataset.ids) });
   }
 
