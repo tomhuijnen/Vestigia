@@ -298,9 +298,9 @@ const Wrapped = (() => {
     if (!pod || !w || !v) return;
     const plek = [...pod.classList].find(c => c.startsWith("plek-")).slice(5);
     const marge = 10, P = { w: pod.offsetWidth, h: pod.offsetHeight };
-    const vak = () => {   // Vesti's vak in het podium; midden en onder staan met translateX gecentreerd, offsetLeft telt dat niet mee
+    const vak = () => {   // Vesti's vak in het podium; midden staat met translateX gecentreerd, offsetLeft telt dat niet mee
       const r = { x: v.offsetLeft, y: v.offsetTop, w: v.offsetWidth, h: v.offsetHeight };
-      if (plek === "midden" || plek === "silhouet") r.x -= r.w * .5; else if (plek === "onder") r.x -= r.w * .46;
+      if (plek === "midden" || plek === "silhouet") r.x -= r.w * .5;
       if (plek === "zij") r.x += r.w * .12;   // gekanteld: de tekening vult het vak links niet helemaal
       return r;
     };
