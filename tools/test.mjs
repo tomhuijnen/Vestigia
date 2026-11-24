@@ -122,6 +122,8 @@ async function draai(browser, base, test, apparaat, thema){
   const page = await ctx.newPage();
   page.setDefaultTimeout(5000);                                // niets in deze app hoort langer dan 5 s te duren
   page.on("pageerror", e => fouten.push("JavaScript-fout: " + e.message));
+  /* een bestand van de app zelf dat ontbreekt (404), bijv. een vergeten script of plaatje */
+  page.on("response", r => { if (r.status() >= 400 && r.url().startsWith(base)) fouten.push(`Ontbreekt (${r.status()}): ${r.url().slice(base.length)}`); });
   page.on("console", m => {
     if (m.type() !== "error") return;
     const tekst = m.text();
@@ -144,7 +146,8 @@ async function draai(browser, base, test, apparaat, thema){
     if (test.stappen) await test.stappen(t);
     await page.waitForTimeout(300);
   } catch(e){
-    fout = e instanceof Fout ? e.message : (e.message || String(e)).split("\n").filter(r => /intercepts|waiting for|Timeout/.test(r)).slice(0, 3).join(" · ");
+    const regels = String(e && e.message || e).split("\n");
+    fout = e instanceof Fout ? e.message : (regels.filter(r => /intercepts|waiting for|Timeout/.test(r)).slice(0, 3).join(" · ") || regels[0] || "onbekende fout");
     if (BEELDEN) await page.screenshot({ path: path.join(UIT, `${test.naam}--FOUT--${apparaat}-${thema}.png`) }).catch(() => {});
   }
   await ctx.close();
@@ -214,11 +217,20 @@ const TESTS = [
       const punten = await t.app(() => points()); t.klopt(punten === 1, `vangnet hoort 1 punt te geven, niet ${punten}`);
   } },
 
-  { naam: "dagcasus-tweeling", stappen: async t => {
-      const tw = await t.app(() => { const s = KIESBAAR.find(x => x.id !== S.target && isTwin(x.id)); return s && s.n; });
-      if (!tw) return;                                            // de dagcasus van vandaag heeft geen tweeling
+  /* tweelingsoort (bijv. bosmuis / grote bosmuis): alle waarnemingen gaan open en de gok telt niet als poging.
+     De dagcasus van VANDAAG heeft geen tweeling, dus deze test speelt een oefencasus met een soort die er wel een heeft. */
+  { naam: "tweelingsoort", stappen: async t => {
+      await t.speelkring("oefen"); await t.sluitPopups();
+      const tw = await t.app(() => {
+        const doel = TARGETS.find(s => s.twin && BY_ID.get(s.twin) && KIESBAAR.includes(BY_ID.get(s.twin)));
+        S = newGame("free", false, doel.id, 0, 0); render();
+        return BY_ID.get(doel.twin).n;
+      });
       await t.gok(tw);
-      const s = await t.stand(); t.klopt(s.revealed === 5, "na de tweelingsoort horen alle waarnemingen open te staan");
+      const s = await t.stand();
+      t.klopt(s.revealed === 5 && s.status === "playing", `na de tweelingsoort horen alle waarnemingen open te staan en hoort de casus door te gaan (nu ${s.revealed}, ${s.status})`);
+      t.klopt(await t.app(() => usedTries()) === 0, "de tweelinggok telde als poging");
+      await t.beeld("tweeling");
   } },
 
   /* update 111: de uitslag van de dagcasus mag niet blijven staan als je daarna gaat oefenen */
@@ -262,7 +274,8 @@ const TESTS = [
   { naam: "spelregels", stappen: async t => {
       await t.klik("#menuBtn");
       const r = t.page.locator("#menu button, #menu a", { hasText: /Spelregels/ }).first();
-      if (await r.count()){ await r.click(); await t.wacht(300); await t.zie("#help", "de spelregels"); await t.beeld("spelregels"); }
+      t.klopt(await r.count(), "geen knop ‘Spelregels’ in het menu");
+      await r.click(); await t.wacht(300); await t.zie("#help", "de spelregels"); await t.beeld("spelregels");
   } },
 
   /* elk voorbeeld uit de README moet zonder fouten openen */
