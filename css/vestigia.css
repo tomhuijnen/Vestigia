@@ -2677,3 +2677,213 @@ html.donker .weergseg button[aria-pressed="true"]{color:#0f1712}
 #rankTabs{flex-wrap:nowrap; gap:6px}
 #rankTabs .chipbtn{flex:0 1 auto; white-space:nowrap}
 @media (max-width:420px){ #rankTabs .chipbtn{padding:4px 10px; letter-spacing:.04em} }
+
+/* ── update 29: Vestigia Wrapped 2026 (js/wrapped.js) ──
+   Kaarten over het hele scherm (op de laptop een staande kaart in het midden). Elke kaart een eigen, levendige kleur
+   (Tom: groen is de basis, maar ook paars, lichtblauw en zo) met hoogtelijnen en een zachte vlek erin, zodat geen kaart
+   ‘leeg’ oogt. De kleuren zijn vast, ook in donker: het is een moment, geen gewoon scherm.
+   Bovenin de tekst (.wr-in), daaronder het podium (.wr-podium) waar Vesti staat; het podium vult de rest van de kaart,
+   dus Vesti wordt vanzelf zo groot als er plek is. Waar Vesti staat: .plek-midden · -links · -rechts · -onder · -zij · -silhouet. */
+html.wr-open{overflow:hidden}
+.wrapped{position:fixed; inset:0; z-index:80; display:grid; place-items:center; background:rgba(12,16,28,.9);
+  --wr-bg:#3f8a5c; --wr-bg2:#2b6a47; --wr-blob:#7fd39b; --wr-ink:#fff; --wr-zacht:#e6fbe9; --wr-accent:#f2c94c;
+  --wr-vlak:rgba(255,255,255,.14); --wr-lijn:rgba(255,255,255,.10)}
+.wrapped.wr-k-groen{--wr-bg:#3f8a5c; --wr-bg2:#25603f; --wr-blob:#7fd39b}
+.wrapped.wr-k-bos{--wr-bg:#24402f; --wr-bg2:#122219; --wr-blob:#4b8a62; --wr-accent:#7fd39b}
+.wrapped.wr-k-paars{--wr-bg:#7651c8; --wr-bg2:#41278a; --wr-blob:#c3a8ff; --wr-zacht:#efe7ff}
+.wrapped.wr-k-lichtblauw{--wr-bg:#9be0fa; --wr-bg2:#56b4e3; --wr-blob:#ffffff; --wr-ink:#0f2c45; --wr-zacht:#1d4566; --wr-accent:#5a3aa8; --wr-vlak:rgba(255,255,255,.45); --wr-lijn:rgba(15,44,69,.10)}
+.wrapped.wr-k-koraal{--wr-bg:#ff8a63; --wr-bg2:#f0573d; --wr-blob:#ffd07a; --wr-ink:#2b0f08; --wr-zacht:#4a1a0d; --wr-accent:#41278a; --wr-vlak:rgba(255,255,255,.3); --wr-lijn:rgba(43,15,8,.10)}
+.wrapped.wr-k-geel{--wr-bg:#f7d45a; --wr-bg2:#eaa83a; --wr-blob:#fff6c2; --wr-ink:#2a1a10; --wr-zacht:#4a3015; --wr-accent:#b23f22; --wr-vlak:rgba(255,255,255,.4); --wr-lijn:rgba(42,26,16,.10)}
+.wrapped.wr-k-roze{--wr-bg:#f7a6ca; --wr-bg2:#e46aa3; --wr-blob:#ffe0ee; --wr-ink:#36091f; --wr-zacht:#4f1530; --wr-accent:#5a3aa8; --wr-vlak:rgba(255,255,255,.38); --wr-lijn:rgba(54,9,31,.10)}
+.wrapped.wr-k-nacht{--wr-bg:#22306a; --wr-bg2:#0e1433; --wr-blob:#7651c8; --wr-zacht:#d5dcff; --wr-accent:#8fd8f5}
+.wrapped.wr-k-mint{--wr-bg:#e3fbe8; --wr-bg2:#a9e7c0; --wr-blob:#9be0fa; --wr-ink:#173324; --wr-zacht:#2c5a40; --wr-accent:#6c4ab6; --wr-vlak:rgba(255,255,255,.6); --wr-lijn:rgba(23,51,36,.09)}
+.wr-kaart{position:relative; width:100%; height:100%; color:var(--wr-ink); overflow:hidden; display:flex; flex-direction:column;
+  background:radial-gradient(120% 70% at 85% 100%, color-mix(in srgb, var(--wr-blob) 55%, transparent), transparent 60%),
+             radial-gradient(90% 55% at 0% 0%, rgba(255,255,255,.16), transparent 60%),
+             linear-gradient(165deg, var(--wr-bg), var(--wr-bg2));
+  transition:background .4s ease}
+/* hoogtelijnen, zoals in de kop van de app */
+.wr-kaart::before{content:""; position:absolute; inset:0; pointer-events:none; opacity:1;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320' fill='none' stroke='white' stroke-width='1.6'%3E%3Cpath d='M40 160c0-70 60-120 130-112s110 70 96 130-80 100-140 86S40 230 40 160z'/%3E%3Cpath d='M74 162c0-48 42-84 92-78s78 50 68 92-56 70-98 60-62-30-62-74z'/%3E%3Cpath d='M108 164c0-26 24-46 52-42s44 28 38 52-32 40-56 34-34-18-34-44z'/%3E%3Cpath d='M-30 20c40 10 70 40 60 80M260 -10c-10 40 20 70 70 70M300 280c-30-20-70-10-80 30'/%3E%3C/svg%3E");
+  background-size:320px; mix-blend-mode:normal; -webkit-mask:linear-gradient(#000, rgba(0,0,0,.35)); mask:linear-gradient(#000, rgba(0,0,0,.35)); filter:opacity(.13)}
+.wr-k-lichtblauw .wr-kaart::before, .wr-k-koraal .wr-kaart::before, .wr-k-geel .wr-kaart::before, .wr-k-roze .wr-kaart::before, .wr-k-mint .wr-kaart::before{filter:invert(1) opacity(.09)}
+/* sterren in de nacht */
+.wr-k-nacht .wr-kaart::after{content:""; position:absolute; inset:0; pointer-events:none;
+  background-image:radial-gradient(1.6px 1.6px at 12% 18%, #fff 50%, transparent), radial-gradient(1.2px 1.2px at 72% 9%, #fff 50%, transparent),
+    radial-gradient(1.8px 1.8px at 88% 30%, #fff 50%, transparent), radial-gradient(1.2px 1.2px at 35% 42%, #fff 50%, transparent),
+    radial-gradient(1.4px 1.4px at 60% 24%, #fff 50%, transparent), radial-gradient(1.2px 1.2px at 22% 66%, #fff 50%, transparent),
+    radial-gradient(1.6px 1.6px at 80% 58%, #fff 50%, transparent), radial-gradient(1.2px 1.2px at 48% 80%, #fff 50%, transparent);
+  opacity:.75}
+@media (min-width:700px){ .wr-kaart{width:min(440px, 92vw); height:min(820px, 94vh); border-radius:26px; box-shadow:0 24px 70px rgba(0,0,0,.45)} }
+
+/* tekst */
+.wr-in{position:relative; z-index:2; padding:calc(58px + env(safe-area-inset-top)) 26px 0; display:flex; flex-direction:column; gap:10px; flex:none}
+.wr-in p, .wr-in h2{margin:0}
+.wr-kop{font-family:var(--display); font-weight:600; font-size:1.3rem; line-height:1.25; max-width:22ch}
+.wr-titel{font-family:var(--display); font-weight:700; font-size:clamp(2.3rem, 11vw, 3rem); line-height:1.02; letter-spacing:-.01em}
+.wr-groot{font-family:var(--display); font-weight:800; font-size:clamp(4.6rem, 27vw, 7rem); line-height:.95; letter-spacing:-.03em; color:var(--wr-ink)}
+.wr-groot.middel{font-size:3.4rem}
+.wr-groot.zin{font-size:clamp(2rem, 9.5vw, 2.6rem); line-height:1.12; letter-spacing:-.01em; font-weight:700}
+.wr-groot small{font-size:var(--fs-l); font-weight:600}
+.wr-soort{font-family:var(--display); font-weight:800; font-size:clamp(2.3rem, 11vw, 3.2rem); line-height:1; overflow-wrap:break-word; hyphens:auto}
+.wr-lead{font-size:1.12rem; line-height:1.4; color:var(--wr-zacht); max-width:30ch}
+.wr-fijn{font-size:var(--fs-s); color:var(--wr-zacht); opacity:.9}
+.wr-in b{color:inherit}
+.wr-rij{list-style:none; margin:6px 0 0; padding:0; display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px}
+.wr-rij.twee, .wr-rij.vier{grid-template-columns:repeat(2, minmax(0,1fr))}
+.wr-rij li{background:var(--wr-vlak); border-radius:16px; padding:10px 12px; display:flex; flex-direction:column; min-width:0; backdrop-filter:blur(2px)}
+.wr-rij b{font-family:var(--display); font-size:var(--fs-xl); line-height:1.1}
+.wr-rij span{font-size:var(--fs-xs); line-height:1.3; color:var(--wr-zacht); overflow-wrap:break-word; hyphens:auto}
+.wr-chips{list-style:none; margin:4px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:6px}
+.wr-chips li{background:var(--wr-vlak); border-radius:999px; padding:4px 12px; font-weight:700; font-size:var(--fs-s)}
+.wr-tegen{display:flex; flex-direction:column; gap:0; padding-left:14px; border-left:4px solid var(--wr-accent)}
+.wr-tegen span{font-family:var(--caps); text-transform:uppercase; letter-spacing:.08em; font-size:var(--fs-xs); color:var(--wr-accent)}
+.wr-tegen b{font-family:var(--display); font-size:var(--fs-xl); line-height:1.15}
+.wr-blok{margin-top:4px; background:var(--wr-vlak); border-radius:18px; padding:12px 16px; display:flex; flex-direction:column; gap:1px; max-width:300px}
+.wr-blok b{font-family:var(--display); font-size:1.7rem; line-height:1.1}
+.wr-blok span{font-size:var(--fs-s); color:var(--wr-zacht)}
+.wr-top{margin-top:2px}
+.wr-top > span{font-weight:700; font-size:var(--fs-s); color:var(--wr-accent)}
+.wr-top ol{list-style:none; margin:3px 0 0; padding:0; display:grid; gap:2px}
+.wr-top li{display:grid; grid-template-columns:20px 1fr auto; gap:8px; align-items:baseline; font-size:var(--fs-s); padding:2px 8px; border-radius:8px}
+.wr-top li i{font-style:normal; font-weight:800; color:var(--wr-accent)}
+.wr-top li b{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.wr-top li em{font-style:normal; color:var(--wr-zacht)}
+.wr-top li.jij{background:var(--wr-vlak); box-shadow:inset 0 0 0 1.5px var(--wr-accent)}
+/* lage schermen (laptop, liggende telefoon): alles iets dichter op elkaar, zodat Vesti en zijn wolkje er nog bij passen */
+@media (max-height:720px){ .wr-in{gap:6px; padding-top:calc(48px + env(safe-area-inset-top))} .wr-top li{padding:0 8px} .wr-top ol{gap:0} }
+.wr-sam p{font-size:var(--fs-m); margin-top:6px}
+.wr-knoppen{display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; position:relative; z-index:5}
+.wrapped .btn{border-radius:14px; height:50px; background:var(--wr-ink); color:var(--wr-bg2); padding:10px 22px}
+.wrapped .btn.ghost{background:transparent; color:var(--wr-ink); box-shadow:inset 0 0 0 2px var(--wr-ink)}
+/* kalender van je reeks, poppetjes voor de vergelijking, ring voor de lastigste casus */
+.wr-kalender{display:grid; grid-template-columns:repeat(7, 22px); gap:5px; margin-top:6px}
+.wr-kalender i{width:22px; height:22px; border-radius:6px; background:var(--wr-ink); opacity:.88}
+.wr-kaart.wr-nieuw .wr-kalender i{animation:wr-stip .35s calc(.25s + var(--j) * 25ms) cubic-bezier(.3,1.5,.5,1) both}
+.wr-poppetjes{display:flex; gap:6px; margin-top:6px}
+.wr-poppetjes i{width:22px; height:34px; background:var(--wr-ink); opacity:.22;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 34'%3E%3Ccircle cx='11' cy='7' r='6'/%3E%3Cpath d='M2 34V22c0-5 4-8 9-8s9 3 9 8v12z'/%3E%3C/svg%3E") center/contain no-repeat;
+          mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 34'%3E%3Ccircle cx='11' cy='7' r='6'/%3E%3Cpath d='M2 34V22c0-5 4-8 9-8s9 3 9 8v12z'/%3E%3C/svg%3E") center/contain no-repeat}
+.wr-poppetjes i.vol{opacity:1}
+.wr-kaart.wr-nieuw .wr-poppetjes i{animation:wr-stip .35s calc(.3s + var(--j) * 60ms) cubic-bezier(.3,1.5,.5,1) both}
+.wr-ring{--p:50; width:104px; height:104px; border-radius:50%; display:grid; place-items:center; margin:4px 0;
+  background:conic-gradient(var(--wr-accent) calc(var(--p) * 1%), rgba(255,255,255,.18) 0);
+  -webkit-mask:radial-gradient(circle, transparent 54%, #000 55%); mask:radial-gradient(circle, transparent 54%, #000 55%)}
+.wr-ring b{display:none}
+
+/* het podium: hier staat Vesti; het vult de rest van de kaart */
+.wr-podium{position:relative; z-index:1; flex:1 1 auto; min-height:150px}
+.wr-vesti{position:absolute; bottom:0}
+.wr-teken svg{display:block; width:100%; height:100%}
+.plek-midden .wr-vesti, .plek-silhouet .wr-vesti{left:50%; bottom:calc(6px + env(safe-area-inset-bottom)); height:min(92%, 400px); aspect-ratio:232/258; transform:translateX(-50%)}
+.plek-rechts .wr-vesti{right:2%; bottom:calc(4px + env(safe-area-inset-bottom)); height:min(88%, 340px); aspect-ratio:232/258}
+.plek-links .wr-vesti{left:2%; bottom:calc(4px + env(safe-area-inset-bottom)); height:min(88%, 340px); aspect-ratio:232/258}
+.plek-links .wr-teken{transform:scaleX(-1)}
+.wr-teken{width:100%; height:100%}
+/* gluurt over de onderrand: alleen zijn koppie en pootjes */
+.plek-onder .wr-vesti{right:0; bottom:-3px; width:min(74%, 320px); aspect-ratio:140/144}   /* tegen de rechterrand: de tekening kapt de staart recht af, zo valt dat samen met de rand van het scherm */
+/* gluurt van rechts het beeld in (gekanteld) */
+.plek-zij .wr-vesti{right:0; bottom:8%; height:min(88%, 250px); aspect-ratio:1}
+.plek-zij .wr-teken{position:absolute; inset:0; transform:translateX(6%) rotate(-90deg)}
+/* silhouet op de teaser: nog geheim */
+.plek-silhouet .wr-teken{filter:brightness(0) drop-shadow(0 0 22px rgba(143,216,245,.75)); opacity:.92}
+.wr-vraag{position:absolute; right:6%; top:-4%; font-family:var(--display); font-weight:800; font-size:4.2rem; line-height:1; color:#8fd8f5; text-shadow:0 0 20px rgba(143,216,245,.7)}
+/* wolkje */
+.wr-wolk{position:absolute; z-index:3; pointer-events:none; width:max-content; max-width:210px; padding:9px 13px; border-radius:16px;
+  background:#fffdf7; color:#22302a; border:1.5px solid #2a1a10; font-size:14px; font-weight:700; line-height:1.35; box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.wr-wolk::after{content:""; position:absolute; width:12px; height:12px; background:inherit; border:1.5px solid #2a1a10; border-left:0; border-top:0}
+/* het wolkje: js/wrapped.js (plaatsWolk) zet het naast Vesti's hoofd; data-staart zegt waar het puntje zit */
+.wr-wolk[data-staart="rechts"]::after{transform:rotate(-45deg); right:-7.5px; bottom:16px}
+.wr-wolk[data-staart="links"]::after{transform:rotate(135deg); left:-7.5px; bottom:16px}
+.wr-wolk[data-staart="onder"]::after{transform:rotate(45deg); left:20px; bottom:-7.5px}
+.wr-wolk[data-staart="onder-r"]::after{transform:rotate(45deg); right:20px; bottom:-7.5px}
+.wr-wolk:not([data-staart])::after{display:none}
+/* denkwolkje: ronder, en twee bolletjes richting Vesti in plaats van een puntje */
+.wr-wolk.gedachte{border-radius:26px; font-style:italic}
+.wr-wolk.gedachte::after, .wr-wolk.gedachte::before{content:""; position:absolute; background:inherit; border:1.5px solid #2a1a10; border-radius:50%; transform:none}
+.wr-wolk.gedachte::after{width:13px; height:13px}
+.wr-wolk.gedachte::before{width:8px; height:8px}
+.wr-wolk.gedachte[data-staart="rechts"]::after{right:-16px; bottom:6px} .wr-wolk.gedachte[data-staart="rechts"]::before{right:-27px; bottom:-2px}
+.wr-wolk.gedachte[data-staart="links"]::after{left:-16px; bottom:6px} .wr-wolk.gedachte[data-staart="links"]::before{left:-27px; bottom:-2px}
+.wr-wolk.gedachte[data-staart="onder"]::after{left:18px; bottom:-15px} .wr-wolk.gedachte[data-staart="onder"]::before{left:10px; bottom:-26px}
+.wr-wolk.gedachte[data-staart="onder-r"]::after{right:18px; bottom:-15px} .wr-wolk.gedachte[data-staart="onder-r"]::before{right:10px; bottom:-26px}
+/* wat voor speler ben jij */
+.wrapped.wr-k-turkoois{--wr-bg:#3fd0c0; --wr-bg2:#16928f; --wr-blob:#c8fff4; --wr-ink:#06302d; --wr-zacht:#0e4a45; --wr-accent:#5a3aa8; --wr-vlak:rgba(255,255,255,.35); --wr-lijn:rgba(6,48,45,.1)}
+.wr-k-turkoois .wr-kaart::before{filter:invert(1) opacity(.09)}
+.wr-type{font-family:var(--display); font-weight:800; font-size:clamp(2.4rem, 12vw, 3.3rem); line-height:1; letter-spacing:-.01em}
+.wr-type.klein{font-size:1.6rem; color:var(--wr-accent); margin-bottom:2px}
+.wr-kaart.wr-nieuw .wr-type:not(.klein){animation:wr-pop .7s .35s cubic-bezier(.3,1.6,.5,1) both}
+/* het cadeautje vóór de eerste kaart */
+.wr-midden{align-items:center; text-align:center}
+.wr-midden .wr-kop, .wr-midden .wr-lead{margin-inline:auto}
+.plek-cadeau{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; padding-bottom:calc(24px + env(safe-area-inset-bottom))}
+.wr-pakje{all:unset; cursor:pointer; position:relative; z-index:6; width:min(66vw, 260px); -webkit-tap-highlight-color:transparent}
+.wr-pakje:focus-visible{outline:2px solid #8fd8f5; outline-offset:6px; border-radius:16px}
+.wr-cadeau{display:block; width:100%; height:auto; overflow:visible}
+.wr-cadeau .wr-deksel, .wr-cadeau .wr-doos{transform-box:fill-box; transform-origin:50% 100%}
+.wr-knoppen.midden{justify-content:center}
+.wr-kaart.wr-nieuw .wr-cadeau{animation:wr-schud 2.2s 1s ease-in-out infinite}
+.wr-kaart.wr-nieuw .wr-pakje{animation:wr-pop .8s .2s cubic-bezier(.3,1.5,.5,1) both}
+.wr-kaart.wr-open-cadeau .wr-cadeau{animation:none}
+.wr-kaart.wr-open-cadeau .wr-deksel{animation:wr-deksel .75s cubic-bezier(.3,.7,.4,1) forwards}
+.wr-kaart.wr-open-cadeau .wr-doos{animation:wr-doos .85s .15s ease-in forwards}
+.wr-kaart.wr-open-cadeau .wr-in, .wr-kaart.wr-open-cadeau .wr-knoppen{transition:opacity .4s; opacity:0}
+.wr-kaart.wr-open-cadeau::after{content:""; position:absolute; inset:0; background:radial-gradient(circle at 50% 62%, #fff 0, rgba(255,255,255,.85) 18%, transparent 60%); animation:wr-flits .9s .3s ease-out both; pointer-events:none}
+@keyframes wr-schud{0%,70%,100%{transform:none} 74%{transform:rotate(-5deg)} 78%{transform:rotate(5deg)} 82%{transform:rotate(-4deg)} 86%{transform:rotate(3deg)} 90%{transform:none}}
+@keyframes wr-deksel{to{transform:translate(18%, -160%) rotate(28deg); opacity:0}}
+@keyframes wr-doos{30%{transform:scale(1.06, .92)} to{transform:scale(.6); opacity:0}}
+@keyframes wr-flits{from{opacity:0} 40%{opacity:1} to{opacity:0}}
+/* stralen en confetti (entree en slot) */
+.wr-stralen{position:absolute; left:50%; bottom:38%; width:1100px; height:1100px; margin:-550px 0 0 -550px; transform-origin:50% 50%; translate:0 50%;
+  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.2) 0 9deg, transparent 9deg 22deg);
+  -webkit-mask:radial-gradient(circle, #000 8%, transparent 46%); mask:radial-gradient(circle, #000 8%, transparent 46%);
+  animation:wr-draai 26s linear infinite}
+.wr-k-mint .wr-stralen{background:repeating-conic-gradient(from 0deg, rgba(108,74,182,.16) 0 9deg, transparent 9deg 22deg)}
+.wr-confetti{position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden}
+.wr-confetti i{position:absolute; top:-24px; left:var(--x); width:9px; height:15px; border-radius:2px; transform:rotate(var(--r));
+  animation:wr-val var(--t) var(--d) linear infinite}
+.wr-confetti i:nth-child(3n){width:11px; height:11px; border-radius:50%}
+
+/* voortgang bovenin, sluiten en tikvlakken */
+.wr-balk{position:fixed; z-index:84; top:calc(12px + env(safe-area-inset-top)); left:14px; right:62px; display:flex; gap:4px}
+.wr-balk i{flex:1; height:4px; border-radius:2px; background:var(--wr-ink); opacity:.28}
+.wr-balk i.klaar, .wr-balk i.nu{opacity:1}
+.wr-dicht{position:fixed; z-index:85; top:calc(2px + env(safe-area-inset-top)); right:10px; width:44px; height:44px; color:var(--wr-ink); background:transparent; border:0}
+@media (min-width:700px){
+  .wr-balk{top:calc(50% - min(820px, 94vh) / 2 + 14px); left:calc(50% - min(440px, 92vw) / 2 + 16px); right:auto; width:calc(min(440px, 92vw) - 76px)}
+  .wr-dicht{top:calc(50% - min(820px, 94vh) / 2 + 4px); right:calc(50% - min(440px, 92vw) / 2 + 6px)}
+}
+.wr-tik{all:unset; position:fixed; z-index:3; top:60px; bottom:0; cursor:pointer; -webkit-tap-highlight-color:transparent}
+.wr-tik.terug{left:0; width:33%}
+.wr-tik.verder{right:0; width:67%}
+.wrapped.wr-laatste .wr-tik.verder{display:none}
+
+/* bewegen: elke plek komt op zijn eigen manier binnen */
+.wr-kaart.wr-nieuw .wr-in > *{animation:wr-in .45s cubic-bezier(.2,.7,.3,1) both}
+.wr-kaart.wr-nieuw .wr-in > :nth-child(2){animation-delay:.08s}
+.wr-kaart.wr-nieuw .wr-in > :nth-child(3){animation-delay:.16s}
+.wr-kaart.wr-nieuw .wr-in > :nth-child(n+4){animation-delay:.24s}
+.wr-kaart.wr-nieuw .plek-midden .wr-teken{animation:wr-pop .8s .15s cubic-bezier(.3,1.5,.5,1) both}
+.wr-kaart.wr-nieuw .plek-rechts .wr-teken{animation:wr-hop-r .6s .15s cubic-bezier(.3,1.3,.5,1) both}
+.wr-kaart.wr-nieuw .plek-links .wr-teken{animation:wr-hop-l .6s .15s cubic-bezier(.3,1.3,.5,1) both}
+.wr-kaart.wr-nieuw .plek-onder .wr-teken{animation:wr-gluur .7s .2s cubic-bezier(.3,1.4,.5,1) both}
+.wr-kaart.wr-nieuw .plek-zij .wr-vesti{animation:wr-zij .7s .2s cubic-bezier(.3,1.3,.5,1) both}
+.wr-kaart.wr-nieuw .plek-silhouet .wr-teken{animation:wr-wiebel 2.4s .3s ease-in-out infinite}
+.wr-kaart.wr-nieuw .wr-vraag{animation:wr-puls 1.6s ease-in-out infinite}
+.wr-kaart.wr-nieuw .wr-wolk{animation:v-wolk .4s .7s cubic-bezier(.3,1.4,.5,1) both}
+.wr-kaart.wr-nieuw .wr-titel{animation:wr-pop .7s .55s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes wr-in{from{opacity:0; transform:translateY(16px)}}
+@keyframes wr-pop{0%{opacity:0; transform:scale(.25) translateY(30%)} 60%{opacity:1; transform:scale(1.08)} 80%{transform:scale(.97)} 100%{transform:none}}
+@keyframes wr-hop-r{from{opacity:0; transform:translate(40%, 20%) rotate(12deg)}}
+@keyframes wr-hop-l{from{opacity:0; transform:scaleX(-1) translate(40%, 20%) rotate(12deg)} to{transform:scaleX(-1)}}
+@keyframes wr-gluur{from{transform:translateY(100%)}}
+@keyframes wr-zij{from{transform:translateX(110%)}}
+@keyframes wr-wiebel{0%,100%{transform:rotate(0)} 25%{transform:rotate(-3deg) translateY(-2%)} 75%{transform:rotate(3deg)}}
+@keyframes wr-puls{0%,100%{transform:scale(1); opacity:.85} 50%{transform:scale(1.15); opacity:1}}
+@keyframes wr-stip{from{transform:scale(0)}}
+@keyframes wr-draai{to{rotate:360deg}}
+@keyframes wr-val{0%{transform:translateY(0) rotate(var(--r))} 100%{transform:translateY(calc(100vh + 60px)) rotate(calc(var(--r) + 540deg))}}
+@media (prefers-reduced-motion:reduce){
+  .wr-kaart, .wr-kaart *, .wr-stralen{animation:none !important; transition:none !important}
+  .wr-confetti{display:none}
+}
