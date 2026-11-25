@@ -298,6 +298,80 @@ const TESTS = [
       await t.beeld("duelcasus");
   } },
 
+  /* update 29: Vestigia Wrapped 2026. Het voorbeeld gebruikt vaste gegevens (demoData in js/wrapped.js), dus geen database. */
+  { naam: "wrapped-voorbeeld", url: "?wrapped=demo", thema: ["licht", "donker"], stappen: async t => {
+      /* eerst het cadeautje: pas na ‘Uitpakken’ begint de Wrapped */
+      await t.zie("#wrUitpakken", "het cadeautje met ‘Uitpakken’");
+      await t.beeld("cadeau");
+      await t.klik("#wrUitpakken"); await t.wacht(1100);
+      /* Vesti's entree: eerst zijn silhouet (‘er is iemand die je wil ontmoeten’), dan de onthulling */
+      t.klopt(await t.app(() => document.getElementById("wrapped").dataset.kaart) === "psst", "de Wrapped begint niet met het silhouet van Vesti");
+      await t.zie("#wrapped .plek-silhouet svg", "het silhouet van Vesti");
+      const gezien = [];
+      for (let n = 0; n < 15; n++){
+        const k = await t.app(() => document.getElementById("wrapped").dataset.kaart);
+        gezien.push(k); await t.beeld(k);
+        if (k === "slot") break;
+        await t.klik("#wrapped .wr-tik.verder");
+        await t.wacht(250);
+      }
+      for (const k of ["hoi", "cijfers", "type", "reeks", "favoriet", "nemesis", "beste", "platen", "vergelijk", "samen", "lastig", "slot"])
+        t.klopt(gezien.includes(k), `kaart ‘${k}’ kwam niet langs (wel: ${gezien.join(", ")})`);
+      /* terug met de linkerkant, en weer verder */
+      await t.klik("#wrapped .wr-tik.terug");
+      t.klopt(await t.app(() => document.getElementById("wrapped").dataset.kaart) === "lastig", "terugtikken ging niet naar de vorige kaart");
+      await t.klik("#wrapped .wr-tik.verder");
+      /* nemesis: boomkruiper en taigaboomkruiper (tweelingen) tellen in beide richtingen samen; das en vos lijken niet */
+      const nm = await t.app(() => Wrapped.nemesis([{ a: "boomkruiper", b: "kortsnavelboomkruiper", n: 5 }, { a: "kortsnavelboomkruiper", b: "boomkruiper", n: 2 }, { a: "das", b: "vos", n: 3 }]));
+      t.klopt(nm && nm.soort === "boomkruiper" && nm.met === "kortsnavelboomkruiper" && nm.n === 7, `nemesis klopt niet: ${JSON.stringify(nm)}`);
+      /* de deelafbeelding wordt gemaakt */
+      const grootte = await t.app(() => Wrapped.beeld().then(b => b ? b.size : 0));
+      t.klopt(grootte > 20000, `de deelafbeelding is leeg of te klein (${grootte} bytes)`);
+      await t.zie("#wrDeel", "de knop ‘Deel je Wrapped’");
+      await t.klik("#wrKlaar");
+      await t.nietZie("#wrapped", "de Wrapped na ‘Klaar’");
+      t.klopt(await t.app(() => localStorage.getItem("vestigia:wrapped-gezien") === "1" && document.documentElement.classList.contains("vesti-aan")),
+        "na de Wrapped staat Vesti niet aan");
+  } },
+  { naam: "wrapped-te-weinig-casussen", url: "?wrapped=demo&weinig=1", stappen: async t => {
+      await t.klik("#wrUitpakken"); await t.wacht(1100);
+      await t.zie("#wrapped .wr-in", "de Wrapped");
+      await t.klik("#wrapped .wr-tik.verder"); await t.klik("#wrapped .wr-tik.verder");
+      t.klopt(await t.app(() => document.getElementById("wrapped").dataset.kaart) === "nognietgenoeg", "onder de 5 casussen hoort de kaart ‘volgend jaar’ te komen");
+      await t.beeld("weinig");
+      for (let n = 0; n < 3; n++) await t.klik("#wrapped .wr-tik.verder");
+      t.klopt(await t.app(() => document.getElementById("wrapped").dataset.kaart) === "slot", "de laatste kaart kwam niet");
+      await t.nietZie("#wrDeel", "de deelknop zonder eigen Wrapped");
+      await t.page.keyboard.press("Escape"); await t.wacht(200);
+      await t.nietZie("#wrapped", "de Wrapped na Escape");
+  } },
+  { naam: "wrapped-zonder-naam", url: "?wrapped=demo&gast=1", op: ["telefoon"], stappen: async t => {
+      await t.klik("#wrUitpakken"); await t.wacht(1100);
+      await t.zie("#wrapped .wr-in", "de Wrapped");
+      await t.klik("#wrapped .wr-tik.verder"); await t.klik("#wrapped .wr-tik.verder");
+      await t.zie("#wrapped h2:has-text('Nog geen naam')", "de oproep om een naam te kiezen");
+  } },
+  { naam: "wrapped-vanzelf-via-wachtrij", url: "?wrapped=demo&vanzelf=1", op: ["telefoon"], stappen: async t => {
+      await t.zie("#wrUitpakken", "het cadeautje van de Wrapped die vanzelf opent");
+      await t.klik("#wrDicht");
+      await t.wacht(400);
+      await t.nietZie("#wachtPop .vi-vesti", "Vesti die zich nóg een keer voorstelt");
+  } },
+  { naam: "wrapped-niet-voor-januari", stappen: async t => {
+      await t.nietZie("#wrapped", "de Wrapped in november");
+      t.klopt(await t.app(() => document.getElementById("menuWrappedRij").hidden), "‘Wrapped 2026’ staat al in het menu vóór 1 januari");
+  } },
+  { naam: "wrapped-menu-januari-zonder-internet", datum: "2027-01-20T10:00:00", stappen: async t => {
+      await t.sluitPopups();
+      await t.nietZie("#wrapped", "de Wrapped die na 15 januari nog vanzelf opent");
+      await t.klik("#menuBtn");
+      await t.zie("#menuWrapped", "‘Wrapped 2026’ in het menu");
+      await t.klik("#menuWrapped");
+      await t.klik("#wrUitpakken"); await t.wacht(1100);
+      await t.zie("#wrOpnieuw", "‘Probeer opnieuw’ zonder internet");
+      await t.beeld("zonder-internet");
+  } },
+
   { naam: "advent-december", datum: "2026-12-05T10:00:00", stappen: async t => {
       await t.wacht(800); await t.beeld("december"); await t.sluitPopups();
   } },
