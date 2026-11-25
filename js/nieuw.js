@@ -47,11 +47,12 @@ const Nieuw = (() => {
     grotebosmuis: "2026-11-15",        // update 30: de grote bosmuis
     patrijs: "2026-11-15",             // update 47: de patrijs (live 15 november)
     scholekster: "2026-11-23",         // update 105: de scholekster (live 23 november)
+    soorten68: "2026-11-25",           // update 68: dwergspitsmuis en aal (dag van de livegang; aanpassen als die later is)
     weetjes: "2026-11-17",             // update 37: ‘Wist je dat?’ (live 17 november 10:38)
     expert45: "2026-11-19",            // update 45: expert levert meer op; de dag van de livegang (zie EXPERT_VANAF)
     uitslagtabs: "2026-11-24", dexweergave: "2026-11-24"   // update 64: uitslag in tabbladen, compact Vestiarium (dag van de livegang)
   };
-  const WIJZIGING = new Set(["zoekgroepen", "bronnen", "statistiek-na-casus", "verward-statistiek", "soorten14", "grotebosmuis", "patrijs", "scholekster", "weetjes", "expert45", "uitslagtabs", "dexweergave"]);
+  const WIJZIGING = new Set(["zoekgroepen", "bronnen", "statistiek-na-casus", "verward-statistiek", "soorten14", "grotebosmuis", "patrijs", "scholekster", "soorten68", "weetjes", "expert45", "uitslagtabs", "dexweergave"]);
   /* speelde je al een dagcasus vóór die dag? (het logboek gaat via Supabase mee naar je andere apparaten) */
   function veteraan(id){
     const d = VANAF[id]; if (!d) return true;
@@ -77,6 +78,7 @@ const Nieuw = (() => {
     spoor: `<span class="nw-ic kerst"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><ellipse cx="12" cy="15.5" rx="4.2" ry="3.6"/><ellipse cx="6.5" cy="9.5" rx="1.8" ry="2.3"/><ellipse cx="10" cy="6.5" rx="1.8" ry="2.3"/><ellipse cx="14" cy="6.5" rx="1.8" ry="2.3"/><ellipse cx="17.5" cy="9.5" rx="1.8" ry="2.3"/></svg></span>`,
     /* update 30: pootafdruk in de gewone kleur (de rode ‘spoor’ hoort bij de adventkalender) */
     veer: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><path d="M16 8 2 22"/><path d="M17.5 15H9"/></svg></span>`,
+    vis: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c3-5 9-7 14-4l4-3v14l-4-3c-5 3-11 1-14-4z"/><circle cx="7" cy="11" r="0.6" fill="currentColor"/></svg></span>`,   // update 68: de aal
     poot: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><ellipse cx="12" cy="15.5" rx="4.2" ry="3.6"/><ellipse cx="6.5" cy="9.5" rx="1.8" ry="2.3"/><ellipse cx="10" cy="6.5" rx="1.8" ry="2.3"/><ellipse cx="14" cy="6.5" rx="1.8" ry="2.3"/><ellipse cx="17.5" cy="9.5" rx="1.8" ry="2.3"/></svg></span>`,
     level: `<span class="nw-ic"><b>7</b></span>`,
     xp: `<span class="nw-ic"><svg aria-hidden="true" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9Z"/></svg></span>`,
@@ -142,6 +144,12 @@ const Nieuw = (() => {
     { id: "scholekster", titel: "Scholekster", actie: nieuwOefenen(["scholekster"]),
       stappen: [
         { ic: "veer", kop: "Nieuwe soort: de scholekster", tekst: `De scholekster staat nu in je ${NAAM.vestiarium}, als plaat nº 560. Hij heeft vier casussen, van het wad tot een plat dak in de stad. ${wanneer("scholekster")}` }
+      ] },
+    /* update 68: de dwergspitsmuis en de aal, samen in één melding (via de wachtrij, hieronder) */
+    { id: "soorten68", titel: "Nieuwe soorten", actie: nieuwOefenen(["dwergspitsmuis", "aal"]),
+      stappen: [
+        { ic: "poot", kop: "Nieuwe soort: de dwergspitsmuis", tekst: `Het kleinste zoogdier van Nederland staat nu in je ${NAAM.vestiarium}, als plaat nº 152. Hij heeft vier casussen, van een laagveenmoeras tot een uilenbraakbal. ${wanneer("dwergspitsmuis")}` },
+        { ic: "vis", kop: "Nieuwe soort: de aal", tekst: `De aal staat nu in je ${NAAM.vestiarium}, als plaat nº 409. Hij valt niet onder de soortenbescherming, maar is wel ernstig bedreigd; dat zie je bij zijn status. Hij heeft vier casussen, van de Afsluitdijk tot een polder in Friesland. ${wanneer("aal")}` }
       ] },
     /* update 45 (met update 37): één melding voor wie al speelde, via de wachtrij (hieronder); een kaart valt weg als je
        pas na dat onderdeel begon */
@@ -277,6 +285,19 @@ Wachtrij.voeg({ id: "scholekster", prio: 2.615, combi: true, naam: "Scholekster"
   toon(){
     try { localStorage.setItem("vestigia:nieuw:scholekster", "1"); } catch(e){}
     return Nieuw.toon(Nieuw.ONDERDELEN.find(o => o.id === "scholekster"));
+  } });
+
+/* update 68: één keer ‘Nieuwe soort: de dwergspitsmuis’ en ‘… de aal’, in de combi-pop-up, direct na de scholekster. Alleen
+   voor wie al een dagcasus speelde vóór VANAF.soorten68, en hooguit 4 weken (Nieuw.vers). */
+Wachtrij.voeg({ id: "soorten68", prio: 2.616, combi: true, naam: "Dwergspitsmuis en aal",
+  kan(){
+    if (Date.now() < Date.parse("2026-11-25T00:00:00+01:00")) return false;    // pas vanaf de livegang (VANAF.soorten68)
+    try { if (localStorage.getItem("vestigia:nieuw:soorten68")) return false; } catch(e){ return false; }
+    return Nieuw.vers("soorten68") && Nieuw.veteraan("soorten68");
+  },
+  toon(){
+    try { localStorage.setItem("vestigia:nieuw:soorten68", "1"); } catch(e){}
+    return Nieuw.toon(Nieuw.ONDERDELEN.find(o => o.id === "soorten68"));
   } });
 
 /* update 14: één keer ‘Nieuw: libellen en kevers’, na de dwaalgast, het duel, de levels, de adventkalender en de uitleg

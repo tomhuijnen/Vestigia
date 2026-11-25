@@ -1,6 +1,6 @@
 {
  "uitleg": "Wat live staat. Het controlescript bewaakt dat id's, platennummers, casussen en het dagschema nooit verschuiven. Bijwerken met: node tools/controle.mjs --vastleggen",
- "vastgelegd": "2026-11-24",
+ "vastgelegd": "2026-11-25",
  "soorten": {
   "das": {
    "n": "Das",
@@ -165,6 +165,11 @@
   "gewone-bosspitsmuis": {
    "n": "Gewone bosspitsmuis",
    "no": 102,
+   "casussen": 4
+  },
+  "dwergspitsmuis": {
+   "n": "Dwergspitsmuis",
+   "no": 152,
    "casussen": 4
   },
   "huisspitsmuis": {
@@ -574,8 +579,8 @@
   },
   "aal": {
    "n": "Aal",
-   "no": null,
-   "casussen": 0
+   "no": 409,
+   "casussen": 4
   },
   "boomklever": {
    "n": "Boomklever",
@@ -951,7 +956,7 @@
   "gewone-zeehond#4",
   "bosmuis#2",
   "vermiljoenkever#1",
-  "sierlijke-witsnuitlibel#4",
+  "dwergspitsmuis#3",
   "edelhert#2",
   "hop#4",
   "grote-bonte-specht#3",
@@ -974,7 +979,7 @@
   "gewone-baardvleermuis#4",
   "pimpelmees#1",
   "vos#3",
-  "bosuil#3",
+  "aal#4",
   "groene-specht#2",
   "oehoe#3",
   "brilduiker#2",
@@ -1029,7 +1034,7 @@
   "woelrat#4",
   "bunzing#2",
   "kwabaal#2",
-  "ooievaar#1",
+  "dwergspitsmuis#2",
   "noordse-woelmuis#3",
   "elrits#1",
   "damhert#3",
@@ -1065,7 +1070,7 @@
   "konijn#1",
   "vinpootsalamander#3",
   "hop#1",
-  "gekraagde-roodstaart#3",
+  "aal#1",
   "eidereend#3",
   "das#1",
   "hamster#2",
@@ -1132,14 +1137,14 @@
   "teunisbloempijlstaart#2",
   "rivierrombout#2",
   "ransuil#2",
-  "levendbarende-hagedis#2",
+  "dwergspitsmuis#1",
   "gladde-slang#2",
   "koolmees#2",
   "hazelmuis#2",
   "eikelmuis#1",
   "pimpernelblauwtje#3",
   "woelrat#3",
-  "ree#4",
+  "aal#2",
   "watervleermuis#1",
   "ooievaar#2",
   "pimpelmees#4",

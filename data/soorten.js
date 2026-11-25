@@ -27,7 +27,7 @@ const LABELS = {
   b: { HOL:"Hol of burcht", BOOM:"Boom(holte)", GEB:"Gebouw of bouwwerk", VEG:"In de vegetatie",
        GROND:"Bodem of strooisel", WATER:"In het water", STEEN:"Muur of rots" },
   w: { ACT:"Actief", SLAAP:"Winterslaap/-rust", TREK:"Trekt weg", LARVE:"Als ei, larve of pop" },
-  r: { HR:"Streng beschermd (EU)", BAL:"Nationaal beschermd", VRJ:"Vogel · nest jaarrond beschermd", VR:"Vogel · nest alleen in gebruik", NB:"Niet beschermd" }
+  r: { HR:"Streng beschermd (EU)", BAL:"Nationaal beschermd", VRJ:"Vogel · nest jaarrond beschermd", VR:"Vogel · nest alleen in gebruik", RL:"Ernstig bedreigd · niet wettelijk beschermd", NB:"Niet beschermd" }
 };
 
 const REGIME_INFO = {
@@ -36,6 +36,8 @@ const REGIME_INFO = {
   BAL: "Beschermd door Nederlandse regels, niet door Europese. Je mag het dier niet opzettelijk doden of vangen, en zijn vaste voortplantings- en rustplaatsen niet opzettelijk beschadigen of vernielen. Voor algemene soorten geven de meeste provincies een vrijstelling bij ruimtelijke ingrepen; voor zeldzame soorten niet. (art. 11.54 en bijlage IX Bal)",
   VRJ: "Alle wilde vogels zijn beschermd. Deze soort gebruikt zijn nest jaar na jaar, dus het nest is ook buiten het broedseizoen beschermd. Sommige provincies hebben een eigen lijst. (Vogelrichtlijn, art. 11.37 Bal; landelijke basistabel jaarrond beschermde nesten, categorie 1–4)",
   VR: "Alle wilde vogels zijn beschermd. Het nest is alleen beschermd zolang de vogel het gebruikt; bij een paar soorten ook daarbuiten, als daar zwaarwegende redenen voor zijn. (Vogelrichtlijn, art. 11.37 Bal; nestcategorie 5)",
+  /* update 68: de aal valt niet onder de soortenregels, maar is wel ernstig bedreigd (IUCN) en valt onder het EU-herstelplan */
+  RL: "Niet beschermd door de soortenregels van de Omgevingswet, maar wel ernstig bedreigd: de soort staat als ‘ernstig bedreigd’ op de Rode Lijst van de IUCN. Voor de aal geldt een Europees herstelplan (EU-aalverordening 1100/2007), met regels voor visserij en vismigratie. Ook geldt de zorgplicht: je mag hem niet zomaar schade doen.",
   NB: "Niet beschermd door de soortenregels van de Omgevingswet. Wel geldt voor alle dieren de zorgplicht: je mag ze niet zomaar schade doen."
 };
 
@@ -51,6 +53,7 @@ const ALIASES = {
   "Korenwolf": "hamster",                             // andere naam voor de hamster: ‘korenwolf’ zoeken vindt de hamster (13-11-2026)
   "Halsbandmuis": "grote-bosmuis",                    // andere namen voor de grote bosmuis, als zoekwoord (update 30, 15-11-2026)
   "Geelhalsbosmuis": "grote-bosmuis",
+  "Paling": "aal",                                    // andere naam voor de aal, als zoekwoord (update 68, 25-11-2026)
   "Middelste groene kikker": "middelste-groene-kikker"  // hernoemd naar bastaardkikker, de naam van RAVON (update 37, 17-11-2026)
 };
 
@@ -1175,6 +1178,40 @@ const SPECIES = [
       "De vochtige strooisellaag onder de varens.",
       "Een klein dier met een lange, puntige snuit snuffelt fel rond; het ziet slecht, maar ruikt en voelt goed.",
       "Driekleurig, met een grijswitte buik."
+    ] }
+  ] },
+{ id:"dwergspitsmuis", no:152, g:"Z", n:"Dwergspitsmuis", s:"Sorex minutus", r:"BAL", l:9, zz:"A", twin:null,
+  h:["MOER","HALF","HEI"], a:["DAG","NACHT"], v:["ONG"], b:["VEG","GROND"], w:["ACT"],
+  x:"gewone-bosspitsmuis",
+  t:"De gewone bosspitsmuis is groter, met een driekleurige vacht en een kortere staart. Deze soort is tweekleurig, met de kleurgrens laag op de flank, en heeft een relatief lange, dicht behaarde staart die aan de basis ingesnoerd is.",
+  cs:[
+    { bron:"Zodion, soortpagina dwergspitsmuis", sl:{ i:1, t:"De hoogste dichtheden vind je in moerassige gebieden met dichte, vochtige begroeiing. Uitgestrekte bossen, polders en de stad mijdt hij." }, wn:[
+      "Noordwest-Overijssel, juli. Een warme, vochtige ochtend.",
+      "Een laagveenmoeras met rietlanden, trilvenen en elzenbroek.",
+      "Een dichte, vochtige strooisellaag onder ruig riet en zeggen.",
+      "In een inloopval (met vergunning) zit een fel, schril piepend diertje van nog geen 5 gram.",
+      "Een tweekleurige vacht met de grens laag op de flank, en een relatief lange, dicht behaarde staart."
+    ] },
+    { bron:"Zodion, soortpagina dwergspitsmuis", sl:{ i:3, t:"Resten in braakballen van uilen, vooral van kerkuil en bosuil, leveren de meeste Nederlandse verspreidingsgegevens van deze soort op." }, wn:[
+      "Gelderland, maart.",
+      "Een kleinschalig landschap met hooilanden, heggen en een oude schuur.",
+      "Onder een uilenkast in de schuur liggen tientallen zwarte, glanzende braakballen.",
+      "Tussen de muizenschedels in een uitgeplozen braakbal zitten een paar piepkleine schedeltjes met rood gekleurde tandpunten.",
+      "Die schedeltjes zijn duidelijk kleiner dan die van de andere insecteneters in de braakbal."
+    ] },
+    { bron:"Zodion, soortpagina dwergspitsmuis", sl:{ i:3, t:"In de winter leeft hij meer bovengronds en heeft hij een groter territorium. Zonder voedsel houdt hij het hooguit acht uur vol." }, wn:[
+      "Drenthe, januari. Een koude, droge week.",
+      "Een heideveld met verspreide berken en vliegdennen.",
+      "Een gangetje onder een pol pijpenstrootje, met een balletje van droog gras ernaast.",
+      "Een diertje zo groot als een walnoot rent bovengronds tussen de heidestruikjes door, rust even en jaagt dan verder op spinnen.",
+      "Een smalle snuit, oren die wegvallen in de vacht, en een staart die aan de basis duidelijk ingesnoerd is."
+    ] },
+    { bron:"Zodion, soortpagina dwergspitsmuis", sl:{ i:2, t:"Hij graaft zelf geen gangen, maar gebruikt de gangen van andere kleine zoogdieren. Zijn nest is een balletje van gras of mos, meestal boven de grond." }, wn:[
+      "Noord-Holland, september.",
+      "Een duingebied met duinroosjes, kruipwilg en vochtige duinvalleien.",
+      "Een gangetje van een woelmuis onder het mos, aan de rand van een vochtige vallei.",
+      "Een piepklein diertje met een lange, beweeglijke snuit laat een hoog gepiep horen dat je net kunt horen.",
+      "Zandbruin van boven en grauwwit van onder; de staart is bijna zo lang als het lijf."
     ] }
   ] },
 { id:"huisspitsmuis", no:103, g:"Z", n:"Huisspitsmuis", s:"Crocidura russula", r:"BAL", l:11, zz:null, twin:null,
@@ -3611,8 +3648,40 @@ const SPECIES = [
   h:["STIL"], a:["DAG"], v:["PLANT","ONG"], b:["WATER"], w:["ACT"] },
 { id:"snoek", no:null, g:"F", n:"Snoek", s:"Esox lucius", r:"NB", l:80, zz:null, twin:null,
   h:["STIL","MOER"], a:["DAG","SCHEMER"], v:["VIS"], b:["WATER"], w:["ACT"] },
-{ id:"aal", no:null, g:"F", n:"Aal", s:"Anguilla anguilla", r:"NB", l:70, zz:null, twin:null,
-  h:["STIL","STROOM"], a:["NACHT"], v:["ONG","VIS"], b:["WATER"], w:["ACT"] },
+{ id:"aal", no:409, g:"F", n:"Aal", s:"Anguilla anguilla", r:"RL", l:70, zz:"A", twin:null,
+  h:["STIL","STROOM","ZEE"], a:["NACHT"], v:["ONG","VIS"], b:["WATER"], w:["SLAAP","TREK"],
+  x:"rivierprik",
+  t:"Een prik heeft geen kaken maar een ronde zuigmond, geen borstvinnen en een rij van zeven kieuwopeningen achter het oog. Deze soort heeft kaken, borstvinnen vlak achter de kop en één kieuwspleet.",
+  cs:[
+    { bron:"Sportvisserij Nederland, kennisdocument Europese aal", sl:{ i:3, t:"Jonge dieren trekken in Nederland vooral van maart tot juni de binnenwateren in: 's nachts en met vloed, zodra het water ongeveer 10 °C is." }, wn:[
+      "Den Oever, april. Een nacht met vloed.",
+      "De Afsluitdijk, waar het zoete water van het IJsselmeer via de spuisluizen de Waddenzee in stroomt.",
+      "Het zoute water vlak voor de sluisdeuren.",
+      "In het licht van een zaklamp zwemmen duizenden doorzichtige diertjes van 6 tot 9 centimeter tegen de stroom in.",
+      "Bijna zonder pigment; alleen op de kop en de staartpunt zit wat kleur."
+    ] },
+    { bron:"Sportvisserij Nederland, kennisdocument Europese aal", sl:{ i:3, t:"Hij is vooral 's nachts actief en kan over land kruipen naar ander water, zolang zijn huid niet uitdroogt." }, wn:[
+      "Friesland, juli. Een warme, vochtige nacht.",
+      "Een veenweidepolder met sloten rond een groot meer.",
+      "Een sloot met een slibrijke bodem en een oever vol holen tussen het riet.",
+      "Een lang, slangachtig dier kruipt uit het water en glijdt over het natte gras naar de volgende sloot.",
+      "Rug-, staart- en aarsvin vormen één doorlopende zoom; buikvinnen ontbreken."
+    ] },
+    { bron:"Sportvisserij Nederland, kennisdocument Europese aal; RAVON, De status van de Europese aal in Nederland", sl:{ i:3, t:"Voor de trek naar de Sargassozee krijgt hij een zilveren buik, zwarte borstvinnen en veel grotere ogen. Hij trekt vooral in donkere, onstuimige nachten met veel afvoer." }, wn:[
+      "IJsselmeer, september. Een stormachtige, donkere nacht.",
+      "Een groot, zoet meer achter een dijk.",
+      "De uitstroom van een gemaal dat polderwater het meer in pompt.",
+      "Lange, zilverig glanzende dieren met opvallend grote ogen zwemmen het open water op, richting de sluizen.",
+      "Een zilveren buik, een donkere rug en zwarte borstvinnen, en geen buikvinnen."
+    ] },
+    { bron:"Sportvisserij Nederland, kennisdocument Europese aal", sl:{ i:3, t:"In de winter eet hij vrijwel niets en rust hij ingegraven in de modder. Hij graaft zich staart eerst in, met een kurkentrekkerbeweging." }, wn:[
+      "Overijssel, januari.",
+      "Uiterwaarden langs een grote rivier, met oude kleiputten.",
+      "De bodem van een kleiput, met slib onder een dikke laag rottend blad.",
+      "Bij het baggeren komen een paar lange, slijmerige dieren tevoorschijn; ze werken zich staart eerst en draaiend terug de modder in.",
+      "Een bruingroene rug, een gelige buik, piepkleine schubben en een bek die doorloopt tot onder het oog."
+    ] }
+  ] },
 { id:"boomklever", no:544, g:"B", n:"Boomklever", s:"Sitta europaea", r:"VR", l:14, zz:"A", twin:null,
   h:["BOS","BEB"], a:["DAG"], v:["ONG","PLANT"], b:["BOOM"], w:["ACT"],
   x:"grote-bonte-specht",
