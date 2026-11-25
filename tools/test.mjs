@@ -399,6 +399,25 @@ const TESTS = [
   } },
 
   /* B3: expert verloren: de uitslag noemt je gokken bij naam (eerst stond er de interne id, bijv. ‘(hamster)’) */
+  /* update 68: dwergspitsmuis en aal. De aal heeft een eigen status (RL) en is dus te gokken, ook als ‘paling’. */
+  { naam: "nieuwe-soorten-dwergspitsmuis-aal", op: ["telefoon"], stappen: async t => {
+      const k = await t.app(() => ["dwergspitsmuis", "aal"].map(id => KIESBAAR.some(s => s.id === id) && TARGETS.some(s => s.id === id)));
+      t.klopt(k.every(Boolean), "dwergspitsmuis en aal horen allebei te gokken en speelbaar te zijn");
+      await t.gok("Paling");
+      const g = await t.app(() => S.guesses.slice());
+      t.klopt(g.includes("aal") || (await t.app(() => S.target)) === "aal", "‘Paling’ wordt niet herkend als de aal");
+      await t.sluitPopups();
+      await t.app(() => { Nieuw.toon(Nieuw.ONDERDELEN.find(o => o.id === "soorten68")); });
+      await t.zie("#wachtPop:not([hidden])", "de melding over de nieuwe soorten");
+      const tekst1 = await t.page.locator("#wachtBody").innerText();
+      t.klopt(tekst1.includes("dwergspitsmuis") && tekst1.includes("152"), "de eerste stap noemt de dwergspitsmuis niet");
+      await t.beeld("melding-1");
+      await t.klik("#nwVolg");
+      const tekst2 = await t.page.locator("#wachtBody").innerText();
+      t.klopt(tekst2.includes("aal") && tekst2.includes("409"), "de tweede stap noemt de aal niet");
+      await t.beeld("melding-2");
+  } },
+
   { naam: "expert-verloren-namen", op: ["telefoon"], stappen: async t => {
       await t.klik("#modeExpert"); await t.sluitPopups();
       const a = await t.fout(0); await t.gok(a);

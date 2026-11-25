@@ -44,7 +44,7 @@ const DAGSCHEMA = [
   "gewone-zeehond#4"                , //  39 · di 15 dec 2026
   "bosmuis#2"                       , //  40 · wo 16 dec 2026
   "vermiljoenkever#1"               , //  41 · do 17 dec 2026
-  "sierlijke-witsnuitlibel#4"       , //  42 · vr 18 dec 2026
+  "dwergspitsmuis#3"                , //  42 · vr 18 dec 2026
   "edelhert#2"                      , //  43 · za 19 dec 2026
   "hop#4"                           , //  44 · zo 20 dec 2026
   "grote-bonte-specht#3"            , //  45 · ma 21 dec 2026
@@ -67,7 +67,7 @@ const DAGSCHEMA = [
   "gewone-baardvleermuis#4"         , //  62 · do 7 jan 2027
   "pimpelmees#1"                    , //  63 · vr 8 jan 2027
   "vos#3"                           , //  64 · za 9 jan 2027
-  "bosuil#3"                        , //  65 · zo 10 jan 2027
+  "aal#4"                           , //  65 · zo 10 jan 2027
   "groene-specht#2"                 , //  66 · ma 11 jan 2027
   "oehoe#3"                         , //  67 · di 12 jan 2027
   "brilduiker#2"                    , //  68 · wo 13 jan 2027
@@ -122,7 +122,7 @@ const DAGSCHEMA = [
   "woelrat#4"                       , // 117 · wo 3 mrt 2027
   "bunzing#2"                       , // 118 · do 4 mrt 2027
   "kwabaal#2"                       , // 119 · vr 5 mrt 2027
-  "ooievaar#1"                      , // 120 · za 6 mrt 2027
+  "dwergspitsmuis#2"                , // 120 · za 6 mrt 2027
   "noordse-woelmuis#3"              , // 121 · zo 7 mrt 2027
   "elrits#1"                        , // 122 · ma 8 mrt 2027
   "damhert#3"                       , // 123 · di 9 mrt 2027
@@ -158,7 +158,7 @@ const DAGSCHEMA = [
   "konijn#1"                        , // 153 · do 8 apr 2027
   "vinpootsalamander#3"             , // 154 · vr 9 apr 2027
   "hop#1"                           , // 155 · za 10 apr 2027
-  "gekraagde-roodstaart#3"          , // 156 · zo 11 apr 2027
+  "aal#1"                           , // 156 · zo 11 apr 2027
   "eidereend#3"                     , // 157 · ma 12 apr 2027
   "das#1"                           , // 158 · di 13 apr 2027
   "hamster#2"                       , // 159 · wo 14 apr 2027
@@ -225,14 +225,14 @@ const DAGSCHEMA = [
   "teunisbloempijlstaart#2"         , // 220 · ma 14 jun 2027
   "rivierrombout#2"                 , // 221 · di 15 jun 2027
   "ransuil#2"                       , // 222 · wo 16 jun 2027
-  "levendbarende-hagedis#2"         , // 223 · do 17 jun 2027
+  "dwergspitsmuis#1"                , // 223 · do 17 jun 2027
   "gladde-slang#2"                  , // 224 · vr 18 jun 2027
   "koolmees#2"                      , // 225 · za 19 jun 2027
   "hazelmuis#2"                     , // 226 · zo 20 jun 2027
   "eikelmuis#1"                     , // 227 · ma 21 jun 2027
   "pimpernelblauwtje#3"             , // 228 · di 22 jun 2027
   "woelrat#3"                       , // 229 · wo 23 jun 2027
-  "ree#4"                           , // 230 · do 24 jun 2027
+  "aal#2"                           , // 230 · do 24 jun 2027
   "watervleermuis#1"                , // 231 · vr 25 jun 2027
   "ooievaar#2"                      , // 232 · za 26 jun 2027
   "pimpelmees#4"                    , // 233 · zo 27 jun 2027
