@@ -73,6 +73,7 @@ De database weet op een paar plekken iets over de soorten dat niet uit `data/soo
 - [ ] **Platengrens** (`_vestigia_platen_grens`): rekent met `g >= 8`. Controleren of dat nog klopt met meer soorten.
 - [ ] **Medailles**: tabel `medaille_soorten` en de avatars per medaille in `shop_items`. Moeten aansluiten op de nieuwe soortenlijst.
 - [ ] **Duelcasussen**: tabel `duel_casussen` vullen met `node tools/duelcasussen.mjs` (gaat niet vanzelf).
+- [ ] **Specialisttitels en Wandelende veldgids**: goud van de groep ophogen met het aantal soorten (update 68), en de drempel van mijlpaal `alles1` gelijk aan het aantal soorten in `duel_casussen` (de rookproef controleert dat sinds 064).
 - [ ] **Grenzen in `save_progress`**: maximaal 500 platen en 100 trofeeën. Met veel meer soorten kan de 500 te krap worden.
 - [ ] Daarna in de app: `node tools/controle.mjs` en `node tools/test.mjs`; in de database: `node test/draai.mjs`.
 
