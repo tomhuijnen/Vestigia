@@ -34,20 +34,22 @@ Elke reparatie heeft een test in `tools/test.mjs` die de fout nabootst. Komt de 
 | D5 | info | `tools/export.sql` liet `security_invoker=true` van de view `app_fouten_overzicht` weg, dus een nieuwe export zou de view onveiliger opschrijven dan hij live is. Live is het in orde. | Export en `schema/04` gerepareerd, export gecontroleerd tegen live. |
 | — | gereedschap | Een voorstel kon je niet testen voordat het live ging. | `node test/draai.mjs --met-voorstellen` laadt ook `voorstellen/` en draait `test/voorstellen.sql`. |
 
-## 3. Besluit nodig van Tom
+## 3. Besloten door Tom: week- en maandprijzen vastleggen (25 november)
 
-**D1 (middel): week- en maandprijzen kunnen achteraf verschuiven.**
-De eikels voor week en maand worden niet vastgelegd, maar bij elke opvraag van de portemonnee opnieuw berekend uit de uitslagen. Twee dingen kunnen die uitslagen achteraf veranderen:
+**D1 (middel): week- en maandprijzen konden achteraf verschuiven.**
+De eikels voor week en maand werden niet bewaard, maar bij elke opvraag van de portemonnee opnieuw berekend uit de uitslagen. Twee dingen konden die uitslagen achteraf veranderen:
 
-1. Op maandag wordt de dagcasus van zondag nog geaccepteerd (`p_day >= vandaag − 1`). Speelt iemand die zondagavond laat of maandagochtend, dan kan de weekwinnaar van de vorige week nog veranderen. Bij de maandgrens precies zo.
-2. Een verborgen speler die later een naam kiest (`claim_name`), telt opeens mee in oude ranglijsten.
+1. Op maandag wordt de dagcasus van zondag nog geaccepteerd (`p_day >= vandaag − 1`, voor wie offline speelde). Bij de maandgrens precies zo.
+2. Een verborgen speler die later een naam kiest (`claim_name`), telde opeens mee in alle oude ranglijsten, ook van weken geleden.
 
-Gevolg: iemand kan eikels ‘kwijtraken’ die al uitgegeven zijn, en het saldo kan negatief worden. Het gebeurt zelden, maar voelt voor een speler als diefstal.
+Gevolg: iemand kon eikels kwijtraken die al uitgegeven waren, en het saldo kon negatief worden.
 
-De keuzes:
-- **Prijzen vastleggen** in een tabel zodra een week of maand echt voorbij is (dus na de extra dag). Eerlijkst en duidelijk; een kleine wijziging in de database.
-- **Alleen de marge** van één dag inbouwen in de berekening (een week telt pas mee als hij ook voor late spelers dicht is). Kleiner, maar punt 2 blijft bestaan.
-- Zo laten.
+**Tom koos: prijzen vastleggen.** Dat staat klaar als voorstel `voorstellen/062-prijzen-vastleggen.sql` in de database-repo (nog niet live):
+- Een week wordt op **dinsdag** vastgelegd, een maand op de **2e** van de volgende maand: dan kan er echt niets meer bij komen. Daarna verandert hij nooit meer, ook niet door een gekozen naam of nieuwe prijsbedragen.
+- Op **maandag** (en op de 1e) telt de afgelopen periode voorlopig mee zoals nu, zodat de pop-up ‘Je week in Vestigia’ gewoon eikels laat vliegen. Alleen binnen die ene dag kan een prijs nog schuiven door een late uitslag van zondag.
+- Het vastleggen gebeurt bij elke opvraag van de portemonnee en elke nacht via pg_cron.
+- Bij het live zetten verandert er voor niemand iets: alle oude weken en maanden worden vastgelegd met precies de uitkomst van nu.
+- Getest in `test/voorstellen.sql`: maandag, dinsdag, een late zondaguitslag, een verborgen speler die later een naam kiest, hogere prijsbedragen, en de maandgrens.
 
 ## 4. Alleen genoteerd (geen actie nu)
 
