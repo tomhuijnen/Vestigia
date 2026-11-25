@@ -18,7 +18,8 @@
      url       wat er achter het adres komt, bijv. "?duel=demo"
      op        apparaten: ["telefoon", "laptop"] (standaard beide)
      thema     ["licht"] (standaard) of ["licht", "donker"]
-     datum     andere vaste datum, bijv. "2026-12-12T10:00:00"
+     datum     andere vaste datum, bijv. "2026-12-12T10:00:00" (met +01:00 erachter als het uur ertoe doet)
+     tijdzone  tijdzone van het toestel, bijv. "Asia/Tokyo" (standaard Europe/Amsterdam)
      speler    true = bekende speler (welkom en uitleg al gezien); standaard true
      stappen   async (t) => { ... } met de hulpjes van t (zie maakHulp) */
 import fs from "fs";
@@ -115,7 +116,7 @@ function maakHulp(page, info){
 /* ---------- één test op één apparaat in één thema ---------- */
 async function draai(browser, base, test, apparaat, thema){
   const ctx = await browser.newContext(Object.assign({ colorScheme: thema === "donker" ? "dark" : "light", locale: "nl-NL",
-    timezoneId: "Europe/Amsterdam", serviceWorkers: "block" }, APPARATEN[apparaat]));
+    timezoneId: test.tijdzone || "Europe/Amsterdam", serviceWorkers: "block" }, APPARATEN[apparaat]));
   /* nooit naar de echte database */
   await ctx.route(/supabase\.co/, r => r.abort("internetdisconnected"));
   const fouten = [];
@@ -373,6 +374,41 @@ const TESTS = [
 
   { naam: "advent-december", datum: "2026-12-05T10:00:00", stappen: async t => {
       await t.wacht(800); await t.beeld("december"); await t.sluitPopups();
+  } },
+
+  /* ---------- bugjacht 24 november 2026 (BUGJACHT.md): elke gevonden fout krijgt een test die hem nabootst ---------- */
+
+  /* B1: de app blijft over middernacht open. ‘Dagcasus’ hoort dan de casus van vandaag te geven, niet die van gisteren. */
+  { naam: "dagcasus-na-middernacht", datum: "2026-11-24T23:58:00+01:00", op: ["telefoon"], stappen: async t => {
+      await t.gok(await t.doel()); await t.sluitPopups();
+      let s = await t.stand(); t.klopt(s.status === "won", "de dagcasus van 24 november is niet gewonnen");
+      t.klopt(await t.app(() => S.caseNo - 1) === 18, "de test begint niet op dag 18 (24 november)");
+      await t.page.clock.runFor(5 * 60 * 1000); await t.wacht(300); await t.sluitPopups();
+      t.klopt(await t.app(() => todayIndex()) === 19, "na middernacht is het nog geen dag 19");
+      await t.speelkring("dag"); await t.sluitPopups();
+      const na = await t.app(() => ({ dag: S.caseNo - 1, status: S.status, mode: S.mode }));
+      t.klopt(na.mode === "daily" && na.dag === 19 && na.status === "playing",
+        `na middernacht hoort ‘Dagcasus’ de casus van 25 november te geven, maar het is dag ${na.dag} (${na.status})`);
+  } },
+
+  /* B2: een toestel in een andere tijdzone speelt dezelfde dagcasus als Nederland (zoals de server rekent).
+     00:30 in Tokio op 25 november is 16:30 op 24 november in Nederland: dus nog de casus van 24 november (dag 18). */
+  { naam: "dagcasus-andere-tijdzone", tijdzone: "Asia/Tokyo", datum: "2026-11-25T00:30:00+09:00", op: ["telefoon"], stappen: async t => {
+      const r = await t.app(() => ({ dag: todayIndex(), caseNo: S.caseNo }));
+      t.klopt(r.dag === 18 && r.caseNo === 19, `in Tokio hoort het nog dagcasus #19 (24 november in Nederland) te zijn, niet #${r.caseNo}`);
+  } },
+
+  /* B3: expert verloren: de uitslag noemt je gokken bij naam (eerst stond er de interne id, bijv. ‘(hamster)’) */
+  { naam: "expert-verloren-namen", op: ["telefoon"], stappen: async t => {
+      await t.klik("#modeExpert"); await t.sluitPopups();
+      const a = await t.fout(0); await t.gok(a);
+      const b = await t.fout(1); await t.gok(b);
+      const s = await t.stand(); t.klopt(s.status === "lost", `na twee foute expertgokken hoort de casus verloren te zijn (nu ${s.status})`);
+      await t.sluitPopups();
+      const tekst = await t.page.locator("#resultCard").innerText();
+      t.klopt(tekst.includes(a) && tekst.includes(b), `de uitslag noemt niet allebei je gokken (${a}, ${b})`);
+      const ids = await t.app(() => S.guesses);
+      t.klopt(!ids.some(id => tekst.includes(`(${id}`)), "de uitslag toont een interne id in plaats van de naam");
   } }
 ];
 

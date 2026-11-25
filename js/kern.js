@@ -41,7 +41,8 @@ function expertPunten(clues, tries, dag){
 /* ---------- hulpfuncties ---------- */
 const $ = id => document.getElementById(id);
 const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
-const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+/* ook de enkele aanhaling (bugjacht 24 november): spelersnamen mogen een ' bevatten, en een tekst tussen '…' in HTML breekt daar anders af */
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 /* Een vliegend doel volgt de pagina (update 19). Eikels, XP en adventvakjes vliegen naar het saldo of de levelring
    rechtsboven; scrol je tijdens de vlucht (of schuift de pagina zelf naar de uitslag), dan verschuift dat doel. Deze lus
    meet het doel elke frame opnieuw en zet het spook (de kopie van de knop) erop. zoek() geeft een DOMRect of null,
@@ -203,7 +204,24 @@ function pickDaily(d, history){
   return { id: c.id, k: c.k };
 }
 function daily(i){ while (DAILY.length <= i) DAILY.push(pickDaily(DAILY.length, DAILY)); return DAILY[i]; }
-function todayIndex(){ const d = new Date(); return Math.max(0, Math.round((Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) - START) / DAY)); }
+/* Bugjacht 24 november: het dagnummer volgt de Nederlandse kalender, net als de server (_vestigia_day) en de adventkalender.
+   Eerst telde de datum van het toestel: wie in een andere tijdzone speelde (vakantie in Griekenland, Azië), kreeg na
+   middernacht daar al de casus van morgen, en de server weigerde die score (‘Deze dagcasus is verlopen’). Zonder Intl
+   (de tools draaien kern.js zonder) blijft de datum van het toestel. */
+const NL_DAG = (() => { try { return typeof Intl !== "undefined" ? new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Amsterdam", year: "numeric", month: "numeric", day: "numeric" }) : null; } catch(e){ return null; } })();
+let _dagCache = { t: -1, d: 0 };
+function todayIndex(){
+  const nu = Date.now(), sec = Math.floor(nu / 1000);
+  if (_dagCache.t === sec) return _dagCache.d;           // wordt vaak in lussen aangeroepen: hooguit één keer per seconde rekenen
+  const d = new Date(nu);
+  let j = d.getFullYear(), m = d.getMonth(), dg = d.getDate();
+  if (NL_DAG) try {
+    const p = {}; for (const x of NL_DAG.formatToParts(d)) p[x.type] = +x.value;
+    if (p.year && p.month && p.day){ j = p.year; m = p.month - 1; dg = p.day; }
+  } catch(e){}
+  _dagCache = { t: sec, d: Math.max(0, Math.round((Date.UTC(j, m, dg) - START) / DAY)) };
+  return _dagCache.d;
+}
 function dailyTarget(i){ return BY_ID.get(daily(i).id); }
 
 /* ---------- opslag ----------
